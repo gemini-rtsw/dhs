@@ -1,0 +1,224 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: gen/doc/gen_bit.3
+.\"*
+.\"*	Date			: Sep 27, 1995
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: gen_bit.3
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 09/27/95
+.\"*
+.\"*	Written by		: Norm Hill
+.\"*
+.\"*	Modification History:
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH gen_bit 3 "24 Mar 1995" "CADC"
+.SH NAME
+gen_bit, bitand, bitcmp, bitcomp, bitor, bitprint, bitscan, bitshift, bitxor \- Perform bit operations on byte arrays.
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "gen_types.h"
+#include "gen_bit.h"
+.ft
+.fi
+.LP
+.TP 7n
+byte
+.RB * bitand ( 
+byte
+.RI * array1 ,
+byte
+.RI * array2 ,
+byte
+.RI * result ,
+int
+.I length
+)
+.TP 7n
+int 
+.BR bitcmp ( 
+byte
+.RI * array1 ,
+byte
+.RI * array2 ,
+int
+.I length
+)
+.TP 7n
+byte
+.RB * bitcomp ( 
+byte
+.RI * array ,
+byte
+.RI * result ,
+int
+.I length
+)
+.TP 7n
+byte
+.RB * bitor ( 
+byte
+.RI * array1 ,
+byte
+.RI * array2 ,
+byte
+.RI * result ,
+int
+.I length
+)
+.TP 7n
+int
+.BR bitprint ( 
+char
+.RI * string ,
+byte
+.RI * array ,
+int
+.I length
+)
+.TP 7n
+byte
+.RB * bitscan ( 
+char
+.RI * string ,
+byte
+.RI * result ,
+int
+.I length
+)
+.TP 7n
+byte
+.RB * bitshift ( 
+byte
+.RI * array ,
+byte
+.RI * result ,
+int
+.IR length ,
+int
+.I shift
+)
+.TP 7n
+byte
+.RB * bitxor ( 
+byte
+.RI * array1 ,
+byte
+.RI * array2 ,
+byte
+.RI * result ,
+int
+.I length
+)
+.Es
+.SH DESCRIPTION
+These routines do various manipulations on bit strings stored by
+byte arrays.  All of these functions allow the length of the bit
+strings to be specified in bits.  If any partial bytes are specified,
+the high order bits of the byte will be used.
+.LP
+.B bitand(\|)
+does a logical and of the bits in byte 
+.I array1 
+and byte 
+.I array2
+and puts the result into
+.IR result .
+The number of bits in the arrays is specified by 
+.IR length .
+The return value is result.
+.LP
+.B bitcmp(\|)
+compares the bits in 
+.I array1 
+to byte 
+.I array2
+and returns 0 if the arrays are equal, a value < 0 if 
+.I array1
+< 
+.IB array2 ,
+or a value > 0 if 
+.I array1
+> 
+.IB array2 .
+The number of bits in the arrays is specified by 
+.IR length .
+.LP
+.B bitcomp(\|)
+does a ones complement of the bits in
+.I array1 
+and puts the result into
+.IR result .
+The number of bits in the array is specified by 
+.IR length .
+The return value is result.
+.LP
+.B bitor(\|)
+does a logical or of the bits in byte 
+.I array1 
+and byte 
+.I array2
+and puts the result into
+.IR result .
+The number of bits in the arrays is specified by 
+.IR length .
+The return value is result.
+.LP
+.B bitprint(\|)
+formats the byte array in
+.I array
+into character string
+.IR string .
+The number of bits in the arrays is specified by 
+.IR length .
+The size of 
+.I string 
+must be at least 
+.RI ( length
+* 2) + 3.
+.LP
+.B bitscan(\|)
+Scans a string formatted like "0x0123..." into a bit array.
+.I string 
+is the input string, 
+.I result 
+is the output bit string, and 
+.I length
+is the length of the bit string.  Any bytes not set in the
+input string will be set to zero.
+The return value is result.
+.LP
+.B bitshift(\|)
+Does a shift of the bit array.  This function is not implemented.
+.LP
+.B bitxor(\|)
+does a exclusive or of the bits in byte 
+.I array1 
+and byte 
+.I array2
+and puts the result into
+.IR result .
+The number of bits in the arrays is specified by 
+.IR length .
+The return value is result.
+.SH NOTES
+.LP
+These functions use the same error checking as the string routines,
+i.e. if anything goes wrong a segmentation fault will be the result.
+
+.SH BUGS
+.LP
+None known.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre

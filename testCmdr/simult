@@ -1,0 +1,285 @@
+#!/usr/bin/tcsh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	testCmdr/scripts/simult
+#*
+#*   Purpose:
+#*	This script allows a single command to be used to start more than
+#*	one program to be run at the same time, allows a specified delay
+#*	between the start of the programs, and allows programs to be killed
+#*	after a specified delay.
+#*
+#*   Date		: Mar 23, 1999
+#*
+#*   SCCS data		: %Z%
+#*	Module Name	: %M%
+#*	Version Number	: %I%
+#*	Release Number	: %R%
+#*	Last Updated	: %G%
+#*
+#*   Programmer		: Norm Hill
+#*
+#*   Modification History:
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+
+set	in_command = 0
+set	delay_set = 0
+set	kill_set = 0
+set	kill_cond_set = 0
+set	command_count = 0
+set	error_flag = 0
+set	commands
+set	command_pid
+set	delay
+set	kill
+set	kill_cond
+set	kill_cond_cmd
+set	temp_file_1 = /tmp/simult.tmp.1.$$
+set	temp_file_2 = /tmp/simult.tmp.2.$$
+
+
+#
+# parse the command line.
+#
+
+while ( "$1" != "" )
+    switch ( "$1" )
+	#
+	# Set the delay for the command.
+	#
+
+	case "-delay":
+	    if ( ! $in_command || $delay_set || "$2" == "" ) then
+		set error_flag = 1
+		break
+	    endif
+
+	    shift
+	    @ delay[$command_count] = $1
+	    set delay_set = 1
+	    shift
+	    breaksw
+
+
+	#
+	# Set the kill time for the command.
+	#
+
+	case "-kill":
+	    if ( ! $in_command || $kill_set || "$2" == "" ) then
+		set error_flag = 1
+		break
+	    endif
+
+	    shift
+	    @ kill[$command_count] = $1
+	    set kill_set = 1
+	    shift
+	    breaksw
+
+
+	#
+	# Set a conditional kill for a command.
+	#
+
+	case "-kill_cond":
+	    if ( ! $in_command || $kill_cond_set || "$2" == "" || 	\
+		    "$3" == "" ) then
+		set error_flag = 1
+		break
+	    endif
+
+	    shift
+	    @ kill_cond[$command_count] = $1
+	    if ( $kill_cond[$command_count] <= 0 ) then
+		@ kill_cond[$command_count] = 1
+	    endif
+	    shift
+	    set kill_cond_cmd[$command_count] = "$1"
+	    set kill_cond_set = 1
+	    shift
+	    breaksw
+
+
+	#
+	# Set up a new command.
+	#
+
+	default:
+	    set in_command = 1
+	    set delay=($delay 0)
+	    set kill=($kill:q -)
+	    set kill_cond=($kill_cond:q -)
+	    set kill_cond_cmd=($kill_cond_cmd:q -)
+	    @ command_count++
+	    set commands=($commands:q "$1")
+	    set command_pid = ( $command_pid 0 )
+	    set kill_set = 0
+	    set kill_cond_set = 0
+	    set delay_set = 0
+
+	    shift
+	    breaksw
+    endsw
+end
+
+
+#
+# Check for errors and if one has occured, print the usage message.
+#
+
+if ( $error_flag || $command_count == 0 ) then
+    echo "usage: simult { cmd1 [options] } ..."
+    echo "       [ -delay <int> ] - Delay the command int seconds before execution."
+    echo "       [ -kill <int> ] - Kill command int seconds after it is started."
+    echo "       [ -kill_cond <int> <condition> ] - Every int seconds, test the"
+    echo "                  conditon and kill the command if the condition is true."
+    exit 1
+endif
+
+set i=0
+
+#
+# Create file containing a list of actions with the time at which they 
+# should occur as the first column.
+#
+
+rm -f $temp_file_1
+set num_actions = 0
+foreach command ( $commands:q )
+    @ i++
+    echo "$delay[$i] run $i">> $temp_file_1
+    @ num_actions++
+    if ( "$kill[$i]" != "-" ) then
+	#
+	# The kill time is the start time of the command, plus the kill time
+	# given on the command line.
+	#
+
+	@ kill_time = $kill[$i] + $delay[$i]
+	echo "$kill_time kill $i">> $temp_file_1
+	@ num_actions++
+    endif
+    if ( "$kill_cond[$i]" != "-" ) then
+	#
+	# The kill time is the start time of the command, plus the kill time
+	# given on the command line.
+	#
+
+	@ kill_time = $kill_cond[$i] + $delay[$i]
+	echo "$kill_time kill_cond $i">> $temp_file_1
+	@ num_actions++
+    endif
+end
+
+
+#
+# Sort the file into time order.
+#
+
+sort -n $temp_file_1 > $temp_file_2
+rm -f $temp_file_1
+
+
+#
+# Loop through each of the actions, executing them at the appropriate time.
+#
+
+set i=0
+set current_time = 0
+while ( $i < $num_actions )
+    @ i++
+
+    #
+    # Get the details of the action from the list in the file.
+    #
+
+    set action = `head -n $i $temp_file_2 | tail -1`
+
+
+    #
+    # If the action time is in the future, sleep until it is time for the 
+    # action.
+    #
+
+    if ( $action[1] > $current_time ) then
+	@ sleep_time = $action[1] - $current_time
+	sleep $sleep_time
+	set current_time = $action[1]
+    endif
+
+
+    #
+    # If this was a run action, run the command.
+    #
+
+    if ( "$action[2]" == "run" ) then
+	echo "Executing: $commands[$action[3]] at $current_time"
+	eval "$commands[$action[3]] &"
+	set command_pid[$action[3]] = $!
+    endif
+
+
+    #
+    # If this was a kill action, kill the command.
+    #
+
+    if ( "$action[2]" == "kill" ) then
+	echo "Killing: $commands[$action[3]] at $current_time $command_pid[$action[3]]"
+	kill $command_pid[$action[3]]
+    endif
+
+
+    #
+    # If this was a kill_cond action, Check to see if the command 
+    # should be killed.
+    #
+
+    if ( "$action[2]" == "kill_cond" ) then
+	@ kill_time = $kill_cond[$action[3]] + $current_time
+	eval "if ( $kill_cond_cmd[$action[3]] ) then		\
+	    echo 'Killing: $commands[$action[3]] at $current_time'	\
+	    kill $command_pid[$action[3]]				\
+	else if ( { kill -0 $command_pid[$action[3]] } ) then		\
+	    echo '$kill_time kill_cond $action[3]'>> $temp_file_1	\
+	    @ num_actions++						\
+	    sort -n $temp_file_1 > $temp_file_2				\
+	    rm $temp_file_1						\
+	endif"
+    endif
+end
+wait
+
+rm -f $temp_file_1
+rm -f $temp_file_2
+echo "done"
+
+exit 0

@@ -1,0 +1,225 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: tp/doc/tp.3
+.\"*
+.\"*	Purpose
+.\"*	    Contains the man page for the tp library.
+.\"*
+.\"*	Date			: March 19, 1999
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: tp.3
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/23/99
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.
+.de Ty
+.ft 1
+.fi
+.RE
+.PP
+.ie n .TP 12n
+.el .TP 16n
+..
+.
+.\"			\" Td macro to display the type definition.
+.de Td
+.PP
+.RS
+.ft 3
+.nf
+.ie n .in 10n 53n
+.ta 25n 60n
+..
+.
+.\"			\" Ss macro to start a structure definition.
+.de Ss
+.PP
+.RS
+.nf
+.ft 3
+.ie n .ta 12n 26n 55n
+.el .ta 16n 40n 70n
+..
+.\"			\" Es macro to end a structure definition.
+.de Es
+.ft 1
+.fi
+.RE
+.PP
+..
+.\"
+.TH tp 3 19/03/99 "CADC"
+.SH NAME 
+tp \- tape library routines.
+.sp 1
+.ta 5c 10c 10c 20c
+tp_device_type	tp_init	tp_script_get
+tp_type_get
+
+
+.SH SYNOPSIS
+.LP
+.nf
+.ft
+#include "gen_types.h"
+#include "gen_msg.h"
+#include "tp.h"
+.ft
+.fi
+.LP
+
+.TP 7n
+int 
+tp_device_type( char * \fIdevice\fR, char * \fItype\fR);
+.TP 7n
+int 
+tp_init( void );
+.TP 7n 
+int 
+tp_script_get( char * \fItape_script_type\fR, TP_SCRIPTS ** \fIscript_names\fR); 
+
+.SH DEFINITIONS
+The following structure data types and global variables are defined in the
+.B tp.h
+header file.
+.PP
+.ti 2
+.B STRUCTURES
+.Ty
+TP_SCRIPTS
+This is a structure which contains the script names used to ingest, retrieve,
+and name a particular tape script type.  
+Ingesting is the process where the information found
+on the tape is placed into an Archive database, retrieval is the extraction
+of data off of the tape, and name detection involves determining the tapes
+identifying name.  The members of the structure are:
+.Ss
+char	*tp_type;	/\(** The data type of the tape.	\(**/ 
+char	*tp_ingest;	/\(** Ingestion script.		\(**/
+char	*tp_retrieve;	/\(** Retrieval script.		\(**/
+char	*tp_name;	/\(** Name extraction script.	\(**/
+.Se
+.PP
+.ti 2
+.B GLOBAL VARIABLES
+.Ty
+tp_msg
+This is a character array which contains the success, warning, and/or
+error messages that the 
+.B tp
+library reports.  See the 
+.I gen_msg
+UNIX man page for more information.
+
+
+.SH DESCRIPTION
+The \fBtp\fR library provides an interface to tape devices.
+
+The library has its own configuration file,
+.I libTp.config,
+which contains all required configuration information.
+
+The various library functions are briefly described below:
+.Ty
+tp_device_type(\|)
+This function determines if a particular device is loaded and is a tape device.
+The physical tape type is returned by this function in the \fItp_type\fR
+parameter.
+.Ty
+tp_init()
+Initializes the tape
+.RB ( tp )
+library.  This includes the reading of the 
+.RB ( tp ) 
+library's configuration file.
+.Ty
+tp_script_get()
+Gets the script names for ingesting, retrieving, and determining the name 
+determining for
+a particular tape script type.  A tape script type uniquely determines the
+scripts to use for ingestion, retrieval and name name determination.
+
+.SH FILES
+.SS libTp.config
+The 
+.B tp
+library requires a configuration file which contains information
+about tape scripts.  The file should be named
+.I libTp.config
+and located in a directory specified by a 
+.B CONFIG_DIR
+environment variable ( see the 
+.B ENVIRONMENT VARIABLES
+section ).  The ingest script and retrieve script values are mandatory; 
+the name script value is optional.
+The configuration file format is as follows:
+
+.nf
+.na
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 80n 88n 96n 104n 112n 120n 
+
+
+#
+# keyword       type	ingest_script	retrieve_script  name_script
+# -------       ----    -------------   ---------------  -----------
+#
+
+type		CFHT1	tpIngestTar	tpRetrieveTar	 tpCfhtName
+type		CFHT2	tpIngestTar	tpRetrieveTar
+.fi
+
+
+.SH ENVIRONMENT VARIABLES 
+Environment variable  
+.B LIBTP_CONFIG_DIR 
+can be set to the path of a directory containing the configuration file.  If  
+.B LIBTP_CONFIG_DIR 
+is not set, the environment variable  
+.B DEFAULT_CONFIG_DIR 
+should be set to a path where the configuration file can be found. 
+
+.SH DIAGNOSTICS
+All of the  
+.B tp
+library functions return a 0 value upon
+successful completion. Otherwise a non-zero number is returned.
+
+.SH SEE ALSO
+.BR gen_msg ( 3 ),
+.BR mtio ( 7i )
+on solaris, and
+.BR mt ( 7 )
+on hpux.
+ 
+.SH BUGS 
+On HP\-UX the mtio library is used to determine the tape device
+type.  If the value of this library is not correct then the 
+.B tp
+library will not correctly determine the device type.  
+DDS tape devices have been incorrectly identified as 8mm 
+EXABYTE tape devices in the past.
+
+.SH AUTHORS 
+Shannon Jaeger
+.br
+
+
+National Research Council of Canada  
+.br 
+Herzberg Institute of Astrophysics 
+.br 
+Canadian Astronomy Data Centre 
+		
+
+

@@ -1,0 +1,314 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <1998>				(c) <1998>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-	ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsPut.1
+.\"
+.\" PURPOSE:
+.\" Describe dhsPut.
+.\"
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:23  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.6  1998/08/10 17:58:57  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.5  1997/11/18 20:14:14  nhill
+.\" Removed the -f option. Added the -noLast opiton. Changed the behaviour
+.\" for setting the last flag.
+.\"
+.\" Revision 1.4  1997/10/29 21:46:06  jaeger
+.\" fixed typo's
+.\"
+.\" Revision 1.3  1997/10/17 18:29:57  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.2  1997/10/17 18:13:24  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.1  1997/09/26 22:37:48  dunn
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.TH dhsPut  1 17/09/97 "CADC"
+
+.SH NAME
+
+.B dhsPut
+\- Performs bulk data puts to a Data Server.  Also sends some control 
+commands.
+
+
+.SH SYNOPSIS
+
+.B dhsPut
+
+.B -d dataServerIdentityString
+.B -ip dataServerIpAddress
+[
+.B -t RAW|FITS|DS|QL
+] [
+.B -l PERM|TEMP
+] [
+.B -debug NONE|MIN|FULL
+] [
+.B -n datasetName
+] [
+.B -id dhsPutIdentityString
+] [
+.B -noLast
+] [
+.B -bufZero
+] [
+.B -V
+] [
+.B  [-f filename ] ... -f filename
+] [
+.B  [filename ] ... filename
+]
+
+
+.SH DESCRIPTION
+
+.B dhsPut 
+performs bulk data puts and sends lifetime commands to a Data Server.  Options 
+include setting the lifetime for the data, setting the last flag, sending a
+zero sized buffer, setting the debug mode, choosing a dataset name and setting 
+the datatype.
+
+
+.SH OPERATION
+
+.B dhsPut
+registers with imp given the command line identity string
+.B dhsPutIdentityString.
+If no identity
+string is given then is registers with the identity string "dhsPut".
+It will then connect to the Data Server listed in the command line,
+.B dataServerIdentityString
+at IP address
+.B dataServerIpAddress.
+
+
+The bulk data put type options are
+.B RAW, FITS, DS, or QL.  
+The default data
+type is RAW.  Data types of DS and QL expect the input file to be
+composed of SDS structures and exported to a file.  Refer to 
+ICD 3 commands on how to create the file.  Data type
+of QL means the data is sent only to the Quick Look Server.
+
+The 
+.B -l 
+lifetime option of permanent (
+.B PERM
+) or temporary (
+.B TEMP
+) will cause a command to be sent to the Data Server prior to sending
+data.  This will set the lifetime of the data.  If this command 
+returns an error then the data will not be sent.
+
+More than one file can be sent to the Data Server using the
+.B -f filename
+option.  The dataset
+name used will be the name of the file without any path
+specification.
+The last flag will be set for each bulk data put command.
+
+The 
+.B -n datasetName 
+option will set the dataset name used in the bulk data put, regardless
+of the filenames.  If there are multiple files to be sent, they will
+all have the same name and only the last file sent will have the
+last flag set.  This is useful when chunks of a single
+dataset are being sent, and the last flag need only be set on 
+the last chunk.
+
+The
+.B -noLast
+option means that the last flag will not be set for any bulk data put
+commands.
+
+The
+.B -bufZero
+option means that in addition to the data sent, a last bulk data put
+will be sent to the Data Server with a zero buffer size and last flag 
+set.  If no data files are specified then only a
+zero length buffer is sent to the Data Server.
+
+The status, returned messages string and/or attribute value list will be printed
+for each file sent.
+
+
+.SH OPTIONS
+
+.TP
+.B -d dataServerIdentityString
+This is the imp identity of the Data Server that dhsPut will connect to.  This
+server must already be running.
+.TP
+.B -ip dataServerIpAddr
+This is the IP Address of the Data Server that dhsPut will connect to.  
+.TP
+.B -t RAW|FITS|DS|QL
+Data types.  These are the data types used in the bulk data call to the data
+server.  Data types of DS and QL indicates that the file has been created 
+with SDS structures and exported.  The default data type is RAW.
+.TP
+.B -l PERM|TEMP
+Lifetime of the dataset.  This will set the lifetime of the dataset.  
+The default is to not send any lifetime commands.
+.TP
+.B -debug NONE|MIN|FULL
+Debug mode.  Depending on the mode set, it will print off various degrees of 
+error messages.  The default mode is NONE.
+.TP
+.B -id dhsPutIdentityString
+This is the imp identity string of this executable.  This is the identity 
+string used by imp to identify this executable.  The default is "dhsPut".
+.TP
+.B -n datasetName ...-n datasetName
+This is used as the dataset name used in the bulk data put.  If there is
+more than one file to be sent, all of them will have this name.  The 
+default is to use the name of the file.
+.TP
+.B -noLast
+Don't set the last flag for any file sent. This allows chunks of a 
+single dataset to be sent over several calls to 
+.B dhsPut.
+.TP
+.B -bufZero
+After all data has been sent, then one more buffer of length zero is
+sent to the Data Server with the last flag set (unless otherwise specified
+by the 
+.B -noLast
+option).
+.TP
+.B -V
+Version.  Print version number and quit.
+
+.TP
+.B -f filename ...-f filename
+This is the name of the file containing the data the send to the data
+server.
+
+.TP
+.B filename ... filename
+This is the same as the
+.B -f 
+option above.
+
+
+.SH EXAMPLES
+
+To put a raw file, "foo" to the Data Server called "dataServer" at
+daxka :
+.IP
+.B dhsPut -d dataServer -ip daxka
+.B -f foo
+.LP
+This command will open the file called "foo" in the current directory, read
+it in, and do a bulk data put to the Data Server called dataServer on
+machine daxka with a dataset name of foo.
+
+To put a FITS file, "../fits/foo2" to the Data Server called "dataServer" at daxka :
+.IP
+.B dhsPut -d dataServer -ip daxka 
+.B -t FITS ../fits/foo2
+.LP
+This command will open the file called "../fits/foo2" relative to the current
+directory, read it in, and do a bulk data put to the Data Server with a 
+dataset name of foo2 and data type of FITS.
+
+To put the same FITS file with a different name to the Data Server called "dataServer" at daxka :
+.IP
+.B dhsPut -d dataServer -ip daxka
+.B -t FITS ../fits/foo2 -n otherName
+.LP
+This command will open the file called "../fits/foo2" relative to the current
+directory, read it in, and do a bulk data put to the Data Server.  The dataset
+name will be "otherName" and the data type will be FITS.
+
+To set the lifetime of the dataset to temporary and put a FITS file, 
+"../fits/foo3" to a Data Server called "dataServer" at daxka :
+.IP
+.B dhsPut -d dataServer -ip daxka
+.B -t FITS -l TEMP ../fits/foo3
+.LP
+This command will open the file called "../fits/foo2" relative to the current
+directory, read it in, and do a bulk data put to the Data Server.  The 
+dataset name will be foo3, data type of FITS and lifetime of temporary.
+
+To put 3 DS chunks with a file name of "m51" to the Data Server called "dataServer" at daxka :
+
+.IP
+.B dhsPut -d dataServer -ip daxka
+.B -t DS ../ds/foo4 ../ds/foo5 
+.B ../ds/foo6 -n m51 
+.LP
+This command will open the files "../ds/foo4", "../ds/foo5", and "../ds/foo6"
+relative to the current directory, read each one in and do a bulk data put
+of each of those files.  Only the last one will have the last flag set.
+The dataset name will be m51, data type of DS and lifetime of temporary.
+
+
+.SH DIAGNOSTICS
+
+Returns 0 upon successful completion, otherwise -1.
+Prints the command status, any string returned, and the attribute
+value list from the Data Server.
+
+
+.SH SEE ALSO
+
+.BR dhsData (1).
+.BR dhsGet (1).
+
+
+.SH BUGS
+None.
+
+
+
+.SH AUTHORS
+Jennifer Dunn
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

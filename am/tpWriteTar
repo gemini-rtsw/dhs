@@ -1,0 +1,543 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1999.				(c) 1999.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	tp/scripts/tpWrite
+#*
+#*   Purpose:
+#*	This script can be used to write tapes.  It is intended to be used
+#*	with mediaWrite.
+#*
+#*   Date		: Feb 25, 1999
+#*
+#*   SCCS data		: @(#)
+#*	Module Name	: tpWriteTar
+#*	Version Number	: 1.6
+#*	Release Number	: 1
+#*	Last Updated	: 05/04/99
+#*
+#*   Programmer		: Shannon Jaeger
+#*
+#*   Modification History:
+#*	99/03/17 SDJ	: Added num_files argument.
+#*	99/04/09 SDJ	: Added optional -simulate command-line arg.
+#*			  Device Name now composed from device_info and
+#*			  "n" is always appended to the end.
+#*	99/04/15 SDJ	: Changed script to use "path" to find the gnu
+#*			  tar and mt applications.
+#*	99/04/29 SDJ	: Added relative path support.
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+umask 002
+
+set exec_name = $0
+set exec_name = $exec_name:t
+
+
+#
+# Parse command line.
+#
+
+if ( $#argv != 8 && $#argv != 9 ) then
+   goto USAGE
+endif
+
+if ( $#argv == 9 && "$9" != "-simulate" ) then
+    goto USAGE
+else if ( $#argv == 9 ) then
+    set simulate = 1
+else
+    set simulate = 0
+endif
+
+
+#
+# Parse the arguments.
+#
+
+set volume_name = $1
+set config_file_path = $2 #Not used
+set log_file_path = $3 
+set work_path = $4
+set dev_info = $5
+set num_copies = $6
+set num_files = $7 
+set data_path = $8 
+
+set input_file = "/tmp/tpWrite.input.$$"
+set output_file = "/tmp/tpWrite.output.$$"
+set file_list = "/tmp/tpWrite.filelist.$$"
+set incr = `expr \( $num_files / 20 \) + 1`
+
+#
+# Check for relative path
+#
+
+set current_dir = `pwd`
+set result = `echo $log_file_path | grep "^/.*"` 
+if ( "$result" == "" ) then
+    set log_file_path = "$current_dir/$log_file_path"
+endif
+
+set result = `echo $data_path | grep "^/.*"` 
+if ( "$result" == "" ) then
+    set data_path = "$current_dir/$data_path"
+endif
+
+
+
+#
+# Go to the work directory.
+#
+
+cd $work_path
+if ( $status ) then
+    echo Error: Unable to change to directory \"$work_path\"
+    sleep 10
+    exit 1
+endif
+set noglob
+
+
+#
+#  Remove any log file if present.
+#
+
+if ( -e $log_file_path ) then
+    rm -f $log_file_path
+    if ( $status ) then
+        echo Error: Unable to remove file \"$log_file_path\".
+        sleep 10
+        exit 1
+    endif
+endif
+
+
+#
+# Continue parsing input (device info) and find out how many files we have.
+#
+
+
+set device_name = `echo $dev_info | awk 'BEGIN { FS="," ; } { print $1 }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+set density = `echo $dev_info | awk 'BEGIN { FS="," ; } { print $2 }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+if ( "$density" != "" ) then
+    set device_name = "${device_name}${density}n"
+else
+    set device_name = "${device_name}n"
+endif
+
+set length = `echo $dev_info | awk 'BEGIN { FS="," ; } NF > 2{ print $3; } NF <= 2 { printf( "" ); }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+
+#
+# If in simulate mode use /dev/null as the device.  However,
+# make sure the device given is valid.
+#
+
+ls $device_name >> /dev/null
+if ( $status ) then
+    echo "Error: No such device or address as $device_name" >> $log_file_path
+    exit 1
+endif
+
+
+if ( $simulate ) then
+    set device_name = /dev/null
+endif
+
+
+#
+# Create the list of files that will go on the tape.
+#
+
+set sed_str = `echo $data_path | sed -e 's/\//\\\//g'`
+find $data_path -type f | sed -e 's/'$sed_str'//' | sed -e 's/^\///g' | sort > $input_file
+if ( $status ) then
+    echo Error: Unable to read files in directory \"$data_path\". >> $log_file_path
+    exit 1
+endif
+
+set num_files_found = `cat $input_file | wc -l`
+if ( $status ) then
+    echo Error: Unable to read temporary file \"$input_file\". >> $log_file_path
+    exit 1
+endif
+
+
+if ( $num_files != $num_files_found ) then
+    echo "Error: Number of files expected was $num_files and" >> $log_file_path
+    echo "       the number of files found was $num_files_found" >> $log_file_path
+    exit 1
+endif
+
+
+#
+# Determine if which flavor of "mt" we use.  It is different
+# on solaris and hpux.
+#
+
+set gnu_tar = tar
+set gnu_mt = mt
+
+switch( "`/bin/uname -rms`" )
+    case SunOS*4.*:
+    case SunOS*5.*:
+	set os = "sun"
+	set advance = 0
+        breaksw
+    case HP-UX*:
+	set os = "hp"
+	set advance = 1
+        breaksw
+    default:
+	set os = "unknown"
+	set advance = 1
+endsw
+if ( $status ) then 
+    echo "Error:  Unable to determine the operating system. >> $log_file_path
+    exit 1
+endif
+
+
+#
+# Disabable interupts
+#
+
+# onintr -
+
+
+#
+# Create the volume
+#
+
+touch $volume_name
+if ( $status ) then
+    echo Error: Unable to create volume \"$volume_name\". >> $log_file_path
+    exit 1
+endif
+    
+
+#
+# Create the tape(s).
+#
+
+set num_verify = 0
+set i = 1
+
+while ( $i <= $num_copies )
+    #
+    # Make a copy of the input file so we don't trash it.
+    #
+
+    set input_file_cp = "$input_file.$i"
+    cp $input_file $input_file_cp
+
+
+    #
+    # Prompt user.
+    #
+    
+    /usr/bin/echo "\007"
+    if ( $i > 1 ) then
+        echo "Please remove copy number $i from the tape device $device_name"
+	echo "and insert a blank ${length} tape into the device."
+        echo -n "Press return when you are ready to create the next copy. "
+        set input = $<
+    else
+        echo "Please put a ${length} blank tape into device $device_name"
+        echo -n "and press return when you are ready to start recording. "
+        set input = $<
+    endif
+
+    
+    #
+    # Check the device and rewind the tape
+    #
+
+    echo "$gnu_mt -f $device_name erase" >> $log_file_path
+    if ( ! $simulate ) then
+    #    $gnu_mt -f $device_name erase >>& $log_file_path
+	if ( $status ) then
+	    echo Error: Device \"$device_name\" is not available. >> $log_file_path
+	    exit 1
+	endif
+    endif
+
+    echo "$gnu_mt -f $device_name rewind" >> $log_file_path
+    if ( ! $simulate ) then
+	$gnu_mt -f $device_name rewind >>& $log_file_path
+	if ( $status ) then
+	    echo Error: Device \"$device_name\" is not available. >> $log_file_path
+	    exit 1
+	endif
+    endif
+
+
+    #
+    # Write the volume name, 0 length file at the front of the tape.
+    # 
+
+    echo "***             Writing Copy $i                ***"
+    echo "***             Writing Copy $i                ***" >> $log_file_path
+
+    echo "$gnu_tar cvfl $device_name $volume_name" >> $log_file_path
+    $gnu_tar cvfl $device_name $volume_name >>& $log_file_path
+    if ( $status ) then
+    	echo " " >> $log_file_path
+	echo Error: Unable to create volume \"$volume_name\" on >> $log_file_path
+	echo        on device \"$device_name\". >> $log_file_path
+	goto STATS
+    endif
+
+    
+    #
+    # Write the data
+    #
+
+    set num_written = 1
+    set num_files = $num_files_found
+    set verified = 1
+    while ( $num_files > 0 )
+	#
+	# Display percentage done message.
+	#
+	echo "" | awk '{percent = ( written / total ) * 100; printf "%2.f%% has been written.\n", percent; }' total=$num_files_found written=$num_written
+	
+
+	head -n $incr $input_file_cp > $file_list
+	if ( $status ) then
+	    echo "Error: Unable to get number of files." >> $log_file_path
+	    goto STATS
+	endif
+
+	@ num_files -= $incr
+	if ( $num_files < 0 ) then
+	     set num_files = 0
+	endif
+
+	cp $input_file_cp $output_file
+	if ( $status ) then
+	    echo "Error: Unable to copy temp" >> $log_file_path
+	    goto STATS
+	endif
+
+	tail -$num_files $output_file > $input_file_cp
+	if ( $status ) then
+	    echo "Error: Unable to truncate file list." >> $log_file_path
+	    goto STATS
+	endif
+
+	cd $data_path
+	if ( $status ) then
+	    echo Error: Unable to change to data directory \"$data_path\". >> $log_file_path
+	    goto STATS
+	endif
+
+	echo "$gnu_tar cvfl $device_name -T $file_list " >> $log_file_path
+        $gnu_tar cvfl $device_name -T $file_list >& $log_file_path.tmp
+        if ( $status ) then
+	    echo " " >> $log_file_path
+	    echo 'Error: Unable to write the following files to tape:' >>$log_file_path
+	    cat $file_list >> $log_file_path
+	    echo " " >> $log_file_path
+	    goto STATS
+	endif
+
+	cd $work_path
+	if ( $status ) then
+	    echo Error: Unable to change to directory \"$work_path\"  >> $log_file_path
+	    goto STATS
+	endif
+
+
+	#
+	# Make sure all files that were suppose to be written were
+	# written to the tape.
+	# 
+
+	set errors = `grep "tar:" $log_file_path.tmp | wc -l`
+	set num_files_written = `egrep '^a.*blocks$' $log_file_path.tmp | wc -l`
+	set num_files_expected = `cat $file_list | wc -l`
+	cat $log_file_path.tmp >> $log_file_path
+	rm -f $log_file_path.tmp
+
+	if ( $errors > 0  || \
+	    $num_files_written == $num_files_expected ) then
+	    set verified = 0
+	endif
+
+	if ( ! $simulate && $verified == 1 ) then
+	    echo "$gnu_mt -f $device_name bsf 2" >> $log_file_path
+	    $gnu_mt -f $device_name bsf 2 >>& $log_file_path
+	    if ( $status ) then
+		echo "Error: Unable to rewind the tape for verification." >> $log_file_path
+		set verified = 0
+	    endif
+
+
+	    if ( $advance ) then
+		echo "$gnu_mt -f $device_name fsf 1" >> $log_file_path
+	        $gnu_mt -f $device_name fsf 1
+		if ( $status ) then
+		    echo "Error: Unable to rewind the tape for verification." >> $log_file_path
+		    set verified = 0
+		endif
+	    endif
+
+	    echo "$gnu_tar tvfl $device_name -T $file_list" >> $log_file_path
+	    $gnu_tar tvfl $device_name -T $file_list >>& $log_file_path
+    	    if ( $status ) then
+		echo "Error: Unable to verify the tape contents." >> $log_file_path
+		set verified = 0
+	    endif
+	endif # ( $verified == 1 )
+
+
+	@ num_written += $num_files_expected
+	if ( $num_written > $num_files_found ) then
+	    set num_written = $num_files_found
+	endif
+    end # while ( $num_files > 0 )
+
+
+    #
+    # Update the log file to indicate whether or not the copy was written.
+    #
+
+    if ( $verified == 1 ) then
+	echo "***       Copy $i was successfully written     ***"
+	echo "$exec_name - Copy $i was successfully written" >> $log_file_path
+	@ num_verify += 1
+    else
+	echo "***      Copy $i was unsuccessfully written    ***"
+	echo "$exec_name - Errors occured when writting copy $i." >> $log_file_path
+    endif
+    echo ""
+    echo "" >> $log_file_path
+
+
+    #
+    # Rewind and eject the tape
+    #
+
+    echo "$gnu_mt -f $device_name rewoffl" >> $log_file_path
+    if ( ! $simulate ) then
+	$gnu_mt -f $device_name rewoffl >>& $log_file_path
+	if ( $status ) then
+	    echo Error: Unable to rewind tape in device  \"$device_name\" >> $log_file_path
+	endif
+    endif
+
+    rm $input_file_cp
+
+    @ i += 1
+end  # while ( $i <= $num_copies )
+
+
+
+   
+
+
+#
+# Determine what tar did.
+#
+
+STATS:
+if ( -e $log_file_path ) then
+    set num_copies = `egrep '^'${exec_name}'.*successfully written$' $log_file_path | wc -l`
+    set num_errors = `grep "tar:" $log_file_path | wc -l `
+    set num_verify_errors = `expr $num_copies - $num_verify`
+    @ num_copies -= $num_verify_errors
+else
+    set num_copies = 0
+    set num_erros = 0
+    set num_verify_errors =0
+endif
+
+echo "$exec_name - Number of copies:    $num_copies" >> $log_file_path
+echo "$exec_name - Number verified:     $num_verify" >> $log_file_path
+echo "$exec_name - Number of errors:    $num_errors" >> $log_file_path
+echo "$exec_name - Number of verify:    $num_verify_errors" >> $log_file_path
+
+
+echo "$exec_name - Number of copies:        $num_copies" 
+echo "$exec_name - Number verified:         $num_verify" 
+echo "$exec_name - Number of errors:        $num_errors" 
+echo "$exec_name - Number of verify errors: $num_verify_errors"
+echo " "
+sleep 5
+
+
+/usr/bin/rm -f $input_file $output_file $file_list
+if ( $num_copies > 0 && $num_errors == 0 && $num_verify_errors == 0 ) then
+    echo  "tpWrite completed succcessfully"
+    sleep 7
+    exit 0
+else
+    echo  "tpWrite completed with errors"
+    sleep 7
+    exit 1
+endif
+    
+
+#
+# Display usage information.
+#
+
+USAGE:
+    echo "USAGE: tpWrite <volume_name> <config_file> <log_file_path> <work_path> <device_info> <num_copies> <num_files> <data_path> [-simulate]"
+    echo ""	
+    echo "              volume name      -Name of disk in upper-case"
+    echo "              config_file      -Fully specified path and name of the"
+    echo "                                configuration file."
+    echo "              log_file_path    -Fully specified path and name of the"
+    echo "                                log file."
+    echo "              work_path        -Fully specified path to the work directory."
+    echo "              device_info       deviceName."
+    echo "              num_copies       -Number of copies to make."
+    echo "              num_files:        Number of files to put on the tape."
+    echo "              data_path        -Fully specified path to the directory which"
+    echo "                                contains the data to be written."
+    echo "              [-simulate]      -Run in simulate mode."
+    sleep 10
+exit 1

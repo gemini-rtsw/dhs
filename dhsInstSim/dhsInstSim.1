@@ -1,0 +1,474 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <year>				(c) <year>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-		ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsInstSim.1
+.\"
+.\" PURPOSE:
+.\" Describe the DHS Instrument Simulator.
+.\"
+.\"
+.\"INDENT-OFF*
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.\" Ty macro to start an indent for each type def.
+.de Ty
+.ie n .TP 14n
+.el .TP 16n
+..
+./"
+.TH dhsInstSim  1 01/13/98 "CADC"
+
+
+.SH NAME
+dhsInstSim
+\- Instrument Simulator for the Gemini DHS.
+
+
+.SH SYNOPSIS
+.B dhsInstSim
+.B -i inputFile
+.B -id identity
+.B -ds dataServer
+.B -ip IP Address
+[
+.B -s time |
+.B -now
+] [
+.B -ql
+] [
+.B -buffs numBuffers
+] [
+.B -debug NONE | MIN | FULL 
+] [
+.B -?
+]
+
+
+.SH DESCRIPTION
+The DHS Instrument Simulator, as its name suggests, 
+simulates one or more instruments communicating with the Gemini DHS. 
+It is intended to be used for testing the DHS or viewing 
+data with the DHS QuickLook facility. 
+ 
+
+.SH OPERATION
+.B dhsInstSim 
+takes as a required parameter the path of an input file with a 
+specific format. The input file describes a timed sequence to 
+read data files and send them to the DHS. This input file contains 
+the list of files containing either entire datasets or 
+chunks of data and times at which 
+the files are to be sent to the DHS. The times are given in 
+millisecond offsets from a zero time, which may be specified 
+with the 
+.B -s  
+or 
+.B -now
+flags.
+
+Datasets in the DHS world may have one or more contributors. To 
+support this, the DHS systems allow data to be sent in chunks, 
+where a chunk may contain header information as well as data. 
+To simulate this, the 
+.B dhsInstSim 
+input file syntax supports sending datasets 
+in chunks, as well as sending chunks from multiple senders. 
+To utilise this multiple-senders functionality, one can invoke 
+.B dhsInstSim 
+from two command-lines at once, having two running copies of 
+.B dhsInstSim 
+at once, with both simultaneously sending data
+to the DHS. The example input file below illustrates this concept. 
+
+To operate 
+.B dhsInstSim 
+on a remote host, the DRAMA task 
+.B master 
+must be running on the remote host before 
+.B dhsInstSim 
+is run. 
+
+.B dhsInstSim
+must be run from the command-line with the 
+.BR -id , 
+.BR -ip , 
+.BR -ds 
+and
+.B -i 
+flags, and either the 
+.B -s
+or
+.B -now
+flag, or it will exit with a command-line usage error.
+
+.SH COMMANDS
+.B dhsInstSim
+is a command and data sender - a DHS client. 
+As such, it responds to no DHS commands. 
+
+
+.SH OPTIONS
+.TP
+.B -i inputFile
+Input.  Path to the input file. May be an absolute path or relative to
+the current directory.
+.TP
+.B -id identity
+Identity.  The identity with which the Instrument Simulator will 
+identify itself to the DHS. The identity specified with the 
+.B -id
+flag must match the identity in the 
+.B Sender Identity 
+field of the input file for data chunks that 
+.B dhsInstSim
+is to send. 
+.TP
+.B -ds dataServer
+dataServer.  The identity of the DHS server with which the Instrument 
+Simulator will attempt to communicate. If the 
+.B -ql 
+flag is set, this may be the identity of the DHS QuickLook Server.
+If the 
+.B -ql
+flag is not set, this should be the identity of the DHS Data Server.
+.TP
+.B -ip IP Address
+Address.  The IP Address of the server named with the 
+.B -ds 
+flag. This can be numeric (a dotted quad) or a hostname or a fully 
+qualified domain name.
+.TP
+.B -s time
+Start time.  The time to start the Instrument Simulator. May be used to 
+exactly specify the start time of one Instrument Simulator, or
+when running more than one Instrument Simulator, to synchronize 
+their start times. Time is to be given in 24-hour time in the 
+format 
+.BR HH:MM .
+Either this flag or the 
+.B -now
+flag must be specified on the command line.
+.TP
+.B -now
+Start now.  The Instrument Simulator is to start sending its data 
+immediately upon completion of reading the input file, instead 
+of waiting for a specified start time. Either this flag or the 
+.B -s
+flag must be specified on the command line.
+.TP
+.B -ql
+QuickLook.  The data is to be sent to the DHS QuickLook Server 
+instead of the DHS Data Server. If this option is used, the identity 
+of the QuickLook Server must be specified with the 
+.B -ds 
+flag. 
+.TP
+.B -buffs numBuffers
+Number of Buffers.  If this flag is used, the Instrument Simulator 
+will attempt to use 
+.B numBuffers
+send buffers when sending its output. If this flag is not set, 
+.B dhsInstSim 
+will default to use two send buffers. Setting 
+.B numBuffers 
+> 1 will result in parallel transfers if the server specified with the 
+.B -ds
+flag cannot keep up to the attempted data transfer rate.
+.TP
+.B -debug NONE | MIN | FULL 
+Debug mode.  Depending on the mode set, 
+.B dhsInstSim 
+will print various degrees of status and error messages during
+its execution.  
+.TP
+.B -?
+Help.  Print help message and exit.
+
+.SH FILES
+.SS inputFile
+.B dhsInstSim
+requires an input file to schedule its tasks. Following is an example 
+input file. Due to the width of the file, this next section of the manpage 
+is best viewed in quite a wide xterm window. Blank lines in the input 
+file are ignored. The fields in each row will be described below the 
+example file.
+
+.nf
+.na
+
+#
+# File                                    Dataset     Sender     Relative   File   Last   Are we  Life   List of     QuickLook
+# Path                                    Name        Identity   Time       Type   Flag   Master? Time   Contribs    Streams
+# ----                                    -------     --------   --------   ----   ----   ------- ----   --------    ---------
+#
+ 
+/usr/scratch/wfs/wfs1.1.sds                wfs1        WFS           1       Q      F      T       T     WFS         waveFrontSensor
+/usr/scratch/wfs/wfs1.2.sds                wfs1        WFS          250      Q      F      F
+/usr/scratch/wfs/wfs1.3.sds                wfs1        WFS          500      Q      F      F
+/usr/scratch/wfs/wfs1.4.sds                wfs1        WFS          750      Q      F      F
+/usr/scratch/wfs/wfs1.5.sds                wfs1        WFS         1000      Q      F      F
+/usr/scratch/wfs/wfs1.6.sds                wfs1        WFS         1250      Q      F      F
+/usr/scratch/wfs/wfs1.7.sds                wfs1        WFS         1500      Q      F      F
+/usr/scratch/wfs/wfs1.8.sds                wfs1        WFS         1750      Q      F      F
+/usr/scratch/wfs/wfs1.9.sds                wfs1        WFS         2000      Q      F      F
+/usr/scratch/wfs/wfs1.10.sds               wfs1        WFS         2250      Q      T      F
+
+/usr/scratch/gmos/gmos1.1.sds              gmos1       GMOS        2500      D      F      T       P     "GMOS, OCS" "gmosScience, "gmosEngineering"
+/usr/scratch/gmos/gmos1.2.sds              gmos1       GMOS        2750      D      F      F 
+/usr/scratch/gmos/gmos1.3.sds              gmos1       GMOS        3000      D      F      F 
+/usr/scratch/gmos/gmos1.4.sds              gmos1       GMOS        3250      D      F      F 
+/usr/scratch/gmos/gmos1.5.sds              gmos1       GMOS        3500      D      F      F 
+/usr/scratch/gmos/gmos1.6.sds              gmos1       GMOS        3750      D      F      F 
+/usr/scratch/gmos/gmos1.7.sds              gmos1       GMOS        4000      D      F      F 
+/usr/scratch/gmos/gmos1.8.sds              gmos1       GMOS        4250      D      F      F 
+/usr/scratch/gmos/gmos1.9.sds              gmos1       GMOS        4500      D      F      F 
+/usr/scratch/gmos/gmos1.10.sds             gmos1       GMOS        4750      D      T      F
+/usr/scratch/gmos/gmos1.fromOCS.sds        gmos1       OCS         4750      D      T      F
+.ad
+.fi
+
+Fields in the input file are as follows:
+.TP 
+.B File Path
+This is the full path of the data file to read and send. This may be 
+an absolute file path as shown above, or may also be a path relative 
+to the current directory.
+.TP 
+.B Dataset Name
+This is the name of the dataset that 
+.B dhsInstSim
+will use to group the data it sends to DHS. 
+.TP 
+.B Sender Identity
+This is the DHS identifier of the Instrument Simulator which will send 
+the data file. 
+.B dhsInstSim 
+will only read records from the input file where the identity in this field
+matches the identity set with the 
+.B -id
+flag on 
+.BR dhsInstSim 's
+command line. In this way, a single input file can be used as input 
+to multiple simultaneous executions of 
+.B dhsInstSim
+to simulate multiple sources sending data simultaneously. 
+.TP 
+.B Relative Time
+This is the offset at which time the data file will be sent. It is 
+an integer number of milliseconds from the zero time indicated by either the 
+.B -s
+or
+.B -now
+flags.
+.TP 
+.B File Type
+.B dhsInstSim
+can send four types of data:
+
+.B \'D' 
+DHS dataset format for Permanent or Temporary store
+.br 
+.B \'Q' 
+DHS dataset format for QuickLook display only
+.br
+.B \'F' 
+FITS format
+.br 
+.B \'R' 
+Raw file
+
+FITS and Raw data can only have one single contributor (see List of Contribs)
+whereas DHS datasets can have multiple contributors.
+.TP 
+.B Last Flag
+Set to 
+.B \'T' 
+if this is the last chunk of data to send for a dataset. Set to 
+.B 'F' 
+otherwise.
+.TP 
+.B Are we Master?
+The 'master' of the dataset may set the Life Time, List of Contributors, 
+and QuickLook Streams which will apply to the dataset. If these attributes 
+are set, it must be when the the first chunk of data is sent. They are 
+indicated on the 
+first line of the dataset in the input file. To set these three attributes 
+of the dataset, the sender must be 'master' of the dataset, indicated by 
+.B \'T' 
+in the 'Are we Master?' field. Only one chunk of the dataset can 
+be 'master', and this must be the first chunk of the dataset. Data chunks 
+which are not 'master' will have 
+.B \'F' 
+in this field.
+.TP 
+.B Life Time
+Set to 
+.B \'P' 
+if the lifetime is to be set to Permanent, or 
+.B \'T' 
+for Temporary. Lifetime is only set by the 'master' data chunk.
+.TP 
+.B List of Contribs
+This field contains the list of contributors. DHS allows multiple 
+data sources to contribute to a dataset, provided they have been specified
+in a contributor list. This is simulated by running multiple copies of
+.BR dhsInstSim .
+For an executing 
+.B dhsInstSim
+to contribute to a dataset, its identity must be specified in the 
+list of contributors in the 'master' dataset chunk. This is the same
+identity which should be specified on the command line with the
+.B -id
+flag, and should also match the 
+.B Sender Identity 
+field of data chunks to be sent by that running copy of 
+.BR dhsInstSim . 
+
+A single contributor is set by merely entering the name of the contributor 
+in this field.   Multiple contributors must be set by entering a 
+double-qoute-surrounded, comma-delimited list.
+.TP 
+.B QuickLook Streams
+This field contains this list of QuickLook streams to which the data 
+will be sent. Multiple QuickLook streams may be specified if desired.
+Once again, a single stream is set by merely entering 
+the stream's name in this field. Multiple streams must be set by entering 
+a double-qoute-surrounded, comma-delimited list.
+
+
+.SH EXAMPLES
+Given the above (somewhat complicated) syntax for the input file and 
+the command line, here is an example intended to demonstrate the 
+flexibility offered by the syntax:
+
+Suppose that we want to simulate 
+the DHS receiving two datasets from three sources: 
+a WaveFront Sensor (WFS), Gemini Multi-Object Spectrograph (GMOS), and 
+the Observatory Control System (OCS).
+
+Suppose that the DHS will receive a dataset from 
+WFS, and subsequently GMOS will send a dataset with OCS adding static header
+data.  The WFS dataset is to be sent 
+to the "waveFrontSensor" QuickLook Stream, with a temporary lifetime, and for 
+QuickLook only. The GMOS dataset is to be sent to the "gmosScience" and 
+the "gmosEngineering" QuickLook Streams, with permanent lifetime and as 
+a regular DHS dataset. Suppose that the DHS dataserver has identity 'DHS' 
+and is running on the machine at IP Address 200.100.50.5, and that the
+simulation will start at 'high noon'. 
+
+The simulation will require three simultaneously executing 
+.BR dhsInstSim 's,
+each using the same input file from the above example. They will need to 
+start at the same time, so the 
+.B -s
+option must be used to synchronize their start times. The following 
+command lines should be used: 
+
+.B dhsInstSim -id WFS -s 12:00 -ds 
+.B DHS -ip 200.100.50.5 -input input.example
+
+.B dhsInstSim -id GMOS -s 12:00 -ds 
+.B DHS -ip 200.100.50.5 -input input.example
+
+.B dhsInstSim -id OCS -s 12:00 -ds 
+.B DHS -ip 200.100.50.5 -input input.example
+
+The 
+.B dhsInstSim 
+with 
+.B -id WFS 
+(the WFS Simulator) will select lines from the input file with the 
+.B Sender Identity 
+field equal to 'WFS'. These lines will be sequenced by
+.B dhsInstSim
+and the data will be prepared to be sent. Similarly, the 
+.B dhsInstSim
+with
+.B -id GMOS 
+(the GMOS Simulator) will select lines from the input file with the 
+.B Sender Identity 
+field equal to 'GMOS' and  the 
+.B dhsInstSim
+with 
+.B -id OCS 
+(the OCS Simulator) will select lines from the input file with the 
+.B Sender Identity 
+field equal to 'OCS'.
+
+At 12:00, the start time specified in the three command lines, the WFS
+Simulator will set its contributor list to be only itself, and the 
+QuickLook stream to be "waveFrontSensor". It will then commence 
+sending its data. At 2250 milliseconds it will send its last chunk of data,
+with the "last" flag set.
+
+At 2500 milliseconds, the GMOS Simulator will set its contributor list 
+to include itself and "OCS", allowing the OCS Simulator to contribute 
+its static header data. It also sets the QuickLook streams to include 
+"gmosScience" and "gmosEngineering, before commencing sending its data. 
+At 4750 milliseconds it completes sending its data. Simultaneously, 
+at 4750 milliseconds, the OCS Simulator sends its static header data 
+to complete the dataset. 
+
+.SH ENVIRONMENT VARIABLES
+None required. 
+
+.SH DIAGNOSTICS
+Returns 0 upon successful completion, otherwise returns a non-zero integer. 
+
+.SH SEE ALSO
+.BR fits2sds (1) 
+
+.SH DOCUMENTS
+.B Definition of the Flexible Image 
+.B Transport System (FITS),
+Proposed Standard, NOST 100-1.0, March 8, 1993, 
+NASA Science Office of Standards and Technology
+
+.B Self-defining Data System (SDS), 
+AAO/SDS_07, Jeremy Bailey, 
+Anglo-Australian Observatory, Version 1.2, 9 September, 1992
+
+.SH BUGS
+None known.
+
+.SH AUTHORS
+Steve Cockayne
+.br
+Norman Hill
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+

@@ -1,0 +1,140 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: cd/doc/cd.1
+.\"*
+.\"*	Date			: Mar 09, 1999
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: cd.3
+.\"*	    Version Number	: 1.2
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/23/99
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*	    99/03/23 SDJ	: Fixed types and added macros.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.de Ty
+.ft 1
+.fi
+.RE
+.PP
+.ie n .TP 12n
+.el .TP 16n
+..
+.
+.\"			\" Td macro to display the type definition.
+.de Td
+.PP
+.RS
+.ft 3
+.nf
+.ie n .in 10n 53n
+.ta 25n 60n
+..
+.
+.\"			\" Ss macro to start a structure definition.
+.de Ss
+.PP
+.RS
+.nf
+.ft 3
+.ie n .ta 12n 26n 55n
+.el .ta 16n 40n 70n
+..
+.\"			\" Es macro to end a structure definition.
+.de Es
+.ft 1
+.fi
+.RE
+.PP
+..
+.\"
+.TH cd 3 19/03/99 "CADC"
+.SH NAME 
+cd \- routines for CD\-ROM devices.
+.sp 1
+.ta 5c 10c 10c 20c 
+cd_check_mnt
+
+.SH SYNOPSIS
+.LP
+.nf
+.ft
+#include "gen_types.h"
+#include "gen_msg.h"
+#include "cd.h"
+.ft
+.fi
+.LP
+
+.TP 7n
+int
+cd_check_mnt( char * \fImount_point\fR, char * \fIdiskname\fR, 
+time_t \fIcreation_date\fR)
+
+.SH DEFINITIONS
+The only definition in the
+.B cd
+library is the global variable:
+.Ty
+cd_msg
+This is a character array which contains the success, warning, and/or
+error messages the 
+.B cd
+library reports.  See the 
+.I gen_msg
+UNIX man page for more information.
+
+.SH DESCRIPTION
+The
+.B cd
+library provides an interface to CD\-ROM devices.  
+
+.Ty
+cd_check_mnt(\|)
+Checks that a specified path is on a CD.  It gets the actual mount
+point and the name of the CD.  This function knows about the \fIhrfs\fR
+supplied by tracer, and the system files tracer uses to track the file
+systems.
+
+.SH DIAGNOSTICS
+All of the  
+.B cd
+library functions return a 0 value upon
+successful completion. Otherwise a non-zero number is returned.
+
+.SH NOTES
+Under hpux software is not aware of the tracer system files.
+
+.SH SEE ALSO
+.BR mnttab (4)
+on solaris,
+.BR fsctl (2)
+on hpux,
+and
+.BR gen_msg (3)
+
+
+.SH BUGS
+.LP
+None Known
+
+.SH AUTHOR
+.LP
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+

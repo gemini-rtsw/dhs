@@ -1,0 +1,101 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: gen/doc/gen_msg.3 
+.\"*
+.\"*	Date			: Sept 11, 1992
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: gen_msg.3
+.\"*	    Version Number	: 1.4
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/24/95
+.\"*
+.\"*	Written by		: Robyn Blaber
+.\"*
+.\"*	Modification History    : None
+.\"*	
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH gen_msg 3 "03/24/95" "CADC"
+.SH NAME
+gen_msg, msg_append, msg_clear, msg_format \- operations on messages.
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "gen_types.h"
+#include "gen_msg.h"
+.ft
+.fi
+.LP
+.nf
+.ta 0.8i
+.ft B
+void	msg_append( msg1, msg2 )
+char	\(**msg1, \(**msg2
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	msg_clear( msg )
+char	\(**msg;
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	msg_format( buffer, prefix, num_msgs, msgs, status, args )
+char	\(**buffer, \(**prefix;
+int	num_msgs;
+MSG	*msgs;
+int	status;
+va_list	args;
+
+.SH DESCRIPTION
+.LP
+.B msg_append(\|)
+modifies its first argument
+.IR msg1,
+by appending
+.I msg2
+to the end of it.
+.LP
+.B msg_clear(\|)
+clears its argument string
+.IR msg,
+by setting the first character of the string to the
+end-of-string character.
+.LP
+.B msg_format(\|)
+formats the 
+.I buffer 
+according to the status using the message
+array 
+.IR msgs,
+and arguments provided in
+.IR args.
+The messages must occur in order of decreasing status.
+Note: The
+.B <varargs.h> 
+library must be included for the use of multiple arguments.
+
+.SH NOTES
+.LP
+The maximum message size is 2048 characters.
+
+.SH SEE ALSO
+.LP
+.B varargs(3V).
+
+.SH BUGS
+.LP
+None known.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre

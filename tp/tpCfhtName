@@ -1,0 +1,133 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	tpCfhtName	
+#*
+#*   Purpose:
+#*	Read the first file on tape on the <device> and send the output
+#*	to name_file.  Log the status on status_file if an error occure 
+#*	during the execution of the script.
+#*
+#*   Date		: Feb 20, 1998
+#*
+#*   SCCS data		: @(#)
+#*	Module Name	: tpCfhtName
+#*	Version Number	: 1.5
+#*	Release Number	: 1
+#*	Last Updated	: 01/14/99
+#*
+#*   Programmer		: George Zhang
+#*
+#*   Modification History:
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+#
+#  Check the arguments
+#
+
+if ( $#argv != 3 ) then
+    echo "Usage: tpCfhtName <device> <name_file> <status_file>"
+    exit 1
+endif
+
+
+#
+#  Set variables
+#
+
+set device = $1
+set name_file = $2
+set status_file = $3
+set gnutar = /usr/local/bin/tar
+
+
+#
+#  Check that the files can be created.
+#
+
+foreach file ( $status_file $name_file )
+    rm -f $file
+    if ( $status ) then
+        exit 1
+    endif
+    touch $file
+    if ( $status ) then
+        exit 1
+    endif
+end
+
+echo $0 $* >>& $status_file
+
+
+#
+#  Rewind the tape
+#
+
+echo "mt -f $device rewind"  >>& $status_file
+mt -f $device rewind >>& $status_file
+if ( $status ) then
+    exit 1
+endif
+
+
+#  
+#  Read the tape until EOF, grep for CFHT and stripping off the "_TAR"
+#  from the tape name.
+#
+
+echo "tar tf $device"  >>& $status_file
+( $gnutar tf $device | grep CFHT | sed 's/_TAR//' >! $name_file ) >>& $status_file 
+if ( $status ) then
+    exit 1
+endif
+
+	
+#
+#  Ensure that there is only one name in the file.
+#
+
+echo "wc -w $name_file" >>& $status_file
+set word = `wc -w $name_file`
+if ( $word[1] != 1 ) then
+    wc -w $name_file >>& $status_file
+    exit 1
+endif
+
+
+#
+#  Ensure that the name has no leading path.
+#
+
+set name = `cat $name_file`
+set name = $name:t
+echo $name >! $name_file
+
+rm -f $status_file
+exit 0

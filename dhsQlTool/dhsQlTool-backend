@@ -1,0 +1,282 @@
+#!/bin/sh
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997				(c) 1997
+# National Research Council		Conseil national de recherches
+# Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+# All rights reserved			Tous droits reserves
+# 					
+# NRC disclaims any warranties,		Le CNRC denie toute garantie
+# expressed, implied, or statu-		enoncee, implicite ou legale,
+# tory, of any kind with respect	de quelque nature que se soit,
+# to the software, including		concernant le logiciel, y com-
+# without limitation any war-		pris sans restriction toute
+# ranty of merchantability or		garantie de valeur marchande
+# fitness for a particular pur-		ou de pertinence pour un usage
+# pose.  NRC shall not be liable	particulier.  Le CNRC ne
+# in any event for any damages,		pourra en aucun cas etre tenu
+# whether direct or indirect,		responsable de tout dommage,
+# special or general, consequen-	direct ou indirect, particul-
+# tial or incidental, arising		ier ou general, accessoire ou
+# from the use of the software.		fortuit, resultant de l'utili-
+# 					sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsQlTool/scripts/dhsQlTool
+#
+# PURPOSE:
+# This is the script to start the DHS Quick Look Tool.
+#
+#INDENT-OFF*
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+#INDENT-ON*
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+#
+
+
+#
+# This file is both a shell script and a tcl script. When executed as
+# a shell script, only the code in the "set X ..." list is executed, 
+# and the shell is terminated when the "exit" is seen. When executed
+# as a tcl script, the "set X ..." is seen as a list assignment, and
+# combined with the unset X is effectivly a no-op.
+#
+# The effect of shell code is to set up the QLT_TMP_DIR variable to
+# point to the temporary directory for the QLT, to execute this same
+# file as a tcl script, and to remove the temporary directory and its
+# contents after the script exits.
+#
+
+set X { 								\
+    "$0" "$@"; 								\
+    QLT_TMP_DIR=/tmp/dhsQlTool.$$;					\
+    export QLT_TMP_DIR;							\
+    mkdir -p $QLT_TMP_DIR;						\
+    trap "rm -rf $QLT_TMP_DIR; exit"  0 INT;				\
+    shift 2; 								\
+    export GEMINI_BASE;							\
+    export OCS_BASE;							\
+    export DHS_BASE;							\
+    GEMINI_BASE=${GEMINI_BASE:=/gemini};				\
+    OCS_BASE=${OCS_BASE:=$GEMINI_BASE/ocs};				\
+    DHS_BASE=${DHS_BASE:=$GEMINI_BASE/dhs};				\
+    echo $# ;	\
+    if [ $# -ge 2 ] ; then 						\
+	DISPLAY=$2 ;							\
+	export DISPLAY ; 						\
+    fi;									\
+    if [ $# -ge 3 ] ; then						\
+	CDHSQLTOOL_PLUGIN=$3 ; 						\
+	export CDHSQLTOOL_PLUGIN ; 					\
+    fi;									\
+    echo "display is now $DISPLAY"; 					\
+    echo "QlPlugin is now $CDHSQLTOOL_PLUGIN"; 				\
+    echo $OCS_BASE/bin/solaris/ocswish "$1"; 				\
+    $OCS_BASE/bin/solaris/ocswish "$1"; 				\
+exit 0 									\
+}; unset X
+
+
+#
+# __source_path is the directory from which this file was loaded. Other
+# Quick Look Tool source files will be loaded from a path relative to
+# this directory.
+#
+
+set __source $argv0
+set __source_path [ file dirname $argv0 ]
+if { $__source_path == "." } {
+    set __source_path "[ pwd ]"
+    set __source "[ pwd ]/$__source"
+} elseif { [ string index $__source_path 0 ] != "/" } {
+    set __source_path "[ pwd ]/$__source_path"
+    set __source "[ pwd ]/$__source"
+}
+set _qltHelpDir "$__source_path/../html"
+
+#
+# Set the application name and a name unique to this application. Note
+# that this name must be unique, even between hosts, since it is used
+# as the IMP application name.
+#
+
+set appName	dhsQlt
+set uniqueName	[join "dhsQlc [ exec hostname ] [ pid ]" "" ]
+
+
+#
+# the environment variable $SKYCAT_LIBRARY should point to the directory
+# containing the Tcl library files
+#
+
+if {[info exists env(SKYCAT_LIBRARY)]} {
+    set skycat_library $env(SKYCAT_LIBRARY)
+} else {
+    set skycat_library ../library
+}
+
+
+#
+# RTD_LIBRARY has a similar meaning for the rtd module 
+#
+
+if {[info exists env(RTD_LIBRARY)]} {
+    set rtd_library $env(RTD_LIBRARY)
+} else {
+    set rtd_library ../../rtd/library
+    if {! [file isdirectory $rtd_library]} {
+	set rtd_library ../../../rtd/rtdimg/library
+	if {! [file isdirectory $rtd_library]} {
+	    puts "can't find RTD Tcl library files, try setting RTD_LIBRARY env variable"
+	    exit 1
+	}
+    }
+}
+
+
+#
+# make sure the tcl library files are found
+#
+
+set auto_path "$skycat_library $rtd_library $auto_path"
+
+
+#
+# add blt library to auto_path
+#
+
+if {[info exists env(BLT_LIBRARY)]} {
+    lappend auto_path $env(BLT_LIBRARY)
+}
+
+
+#
+# add iwidgets library to auto_path
+#
+
+if {[info exists env(IWIDGETS_LIBRARY)]} {
+    lappend auto_path $env(IWIDGETS_LIBRARY)
+}
+
+if {[catch {package require Iwidgets} msg]} {
+	puts "error loading Iwidgets package $msg"
+	exit 1
+}
+
+if {[catch {package require Rtd} msg]} {
+	puts "error loading RTD package $msg"
+	exit 1
+}
+
+
+if {[catch {package require Cat} msg]} {
+	puts "error loading Cat package $msg"
+	exit 1
+}
+
+set ocsBase $env(OCS_BASE)
+set dhsBase $env(DHS_BASE)
+
+
+#
+# Make sure the OCS package is loaded.  Note, that the Ocspkg renames,
+# creates its own exit command, which doesn't behave like the Tcl/Tk
+# exit command.  So there are some fixed here for that.
+#
+
+if { [ info commands exit ] != "" } {
+    rename exit dhsExit
+}
+
+if {[catch {package require Ocspkg} msg]} {
+	puts "error loading Ocspkg package $msg"
+	dhsExit 1
+}
+
+if { [ info commands dhsExit ] != "" } {
+    rename exit ocsExit
+    proc exit {{value {}} } {
+	ocsExit
+	dhsExit "$value"
+    }
+}
+
+
+if {[catch {package require Skycat} msg]} {
+	puts "error loading Skycat package $msg"
+	dhsExit 1
+}
+
+if {[catch {package require Tclutil} msg]} {
+	puts "error loading Tclutil package $msg"
+	dhsExit 1
+}
+
+
+#
+# print errors also on stderr
+#
+
+utilPrintErrors
+
+
+#
+#  Source the skycat code.
+#
+
+#source $ocsBase/scripts/eso/skycat/SkyCat.tcl
+source $ocsBase/scripts/eso/skycat/SkyCat.tcl
+
+
+#
+# Get the data processing package.
+#
+
+if { [ info exists env(L) ] } {
+    lappend auto_path $env(L)
+}
+lappend auto_path $dhsBase/lib/solaris-mt
+if {[catch {package require qldp} msg]} {
+	puts "error loading qldp package $msg"
+	exit 1
+}
+
+
+#
+# Source the DHS Quick Look Tool code.
+#
+
+source $__source_path/../tcl/dhsQlTool.tcll
+
+
+#
+#  Set up the temporary directory.
+#
+
+if {[info exists env(QLT_TMP_DIR)]} {
+    set tmpDir $env(QLT_TMP_DIR)
+} else {
+    set tmpDir /tmp
+}
+
+
+#
+# Initialize the OCSWish command acceptors.
+#
+
+# cQlServer::init
+
+
+#
+# Start the dhsQlTool widget.
+#
+
+TopLevelWidget::start CDhsQlTool 

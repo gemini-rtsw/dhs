@@ -1,0 +1,110 @@
+#!/bin/csh -f
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998				(c) 1998
+# National Research Council		Conseil national de recherches
+# Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+# All rights reserved			Tous droits reserves
+# 					
+# NRC disclaims any warranties,		Le CNRC denie toute garantie
+# expressed, implied, or statu-		enoncee, implicite ou legale,
+# tory, of any kind with respect	de quelque nature que se soit,
+# to the software, including		concernant le logiciel, y com-
+# without limitation any war-		pris sans restriction toute
+# ranty of merchantability or		garantie de valeur marchande
+# fitness for a particular pur-		ou de pertinence pour un usage
+# pose.  NRC shall not be liable	particulier.  Le CNRC ne
+# in any event for any damages,		pourra en aucun cas etre tenu
+# whether direct or indirect,		responsable de tout dommage,
+# special or general, consequen-	direct ou indirect, particul-
+# tial or incidental, arising		ier ou general, accessoire ou
+# from the use of the software.		fortuit, resultant de l'utili-
+# 					sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# ddMerge
+#
+# PURPOSE:
+# Merges different data dictionary files while ensuring consistent
+# format and unique instrument/attribute/value triplets.
+#
+#INDENT-OFF*
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:04  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+#INDENT-ON*
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+#
+
+set format = /tmp/ddMake_awk_format.$USER
+set unique = /tmp/ddMake_awk_unique.$USER
+set format_str = '%-2s %-5s\t%-8s\t%s\t%-8s\t%s\t%s\t%s\t%s\t\"%s\"\n'
+
+if ( $#argv == 0 ) then
+    echo "Usage: ddMerge file1 [file2 ... ]"
+    exit 1
+endif
+
+
+#
+#  Create awk script to uniformly format all dd entries to allow
+#  proper sorting.
+#
+
+cat >! $format << _EOF_
+BEGIN {
+    FS = "\"";
+}
+{
+    split( \$1, a, " " );
+    printf( "$format_str", a[1], a[2], a[3], a[4], a[5], \
+	    a[6], a[7], a[8], a[9], \$2 );
+}
+_EOF_
+
+
+#
+#  Create awk script to reject duplicate instrument/attribute/keyword
+#  triplets.  This unfortunately does not give a choice as to which
+#  of the duplicates it keeps; it only keeps the first occurence.
+#
+
+cat >! $unique << _EOF_
+BEGIN {
+    FS = "\"";
+    prev_inst = "";
+    prev_attr = "";
+    prev_key = "";
+}
+{
+    split( \$1, a, " " );
+    if ( a[2] != prev_inst || a[3] != prev_attr || a[5] != prev_key )
+    {
+	printf( "$format_str", a[1], a[2], a[3], a[4], a[5], \
+		a[6], a[7], a[8], a[9], \$2 );
+	prev_inst = a[2];
+	prev_attr = a[3];
+	prev_key = a[5];
+    }
+}
+_EOF_
+
+echo "#"
+echo "#  Instrument	Attribute	Data	Keyword		Gemini 	Null	Array	Column	Comment"
+echo "#		Name in SDS	Type	Name in Fits	Mandat	Value	Value	Name"
+echo "#  ------------	---------------	-------	---------------	-------	-------	-------	-------	-----------------"
+echo "#"
+
+cat $argv[*] | grep -v '^#' | awk -f $format | sort -u | awk -f $unique
+
+\rm $format
+\rm $unique

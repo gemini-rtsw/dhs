@@ -1,0 +1,327 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name:			mediaCleanup/doc/mediaCleanup.1
+.\"*
+.\"*	Purpose:
+.\"*        Manpage for mediaCleanup.
+.\"*
+.\"*	Date			: Jan 27, 1997
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: mediaCleanup.1
+.\"*	    Version Number	: 1.6
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 04/27/99
+.\"*
+.\"*	Written by		: Steve Cockayne
+.\"*
+.\"*	Modification History:
+.\"*	  97/07/16 SEC  : Added section on finishing internal requests.
+.\"*	  99/02/03 SDJ	: Added security and example section.  Also 
+.\"*			  updated to reflect changes in AM lib.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH MEDIACLEANUP 1 08/12/1998 "CADC"
+
+.SH NAME
+.B mediaCleanup 
+\- Cleans up after a unit of physical media is made.
+
+.SH SYNOPSIS
+.B mediaCleanup
+.B \-i 
+.I mediaId
+.B \-n
+.I mediaName
+[
+.B -rollback
+] [
+.B -V
+] [
+.B -v
+]
+
+.SH DESCRIPTION
+.B mediaCleanup 
+performs the necessary cleanup tasks after files have
+been grouped together into a unit by 
+.B mediaQueue
+and written to physical media (such as CD-ROM) by a media creation
+program such as
+.B mediaWrite.
+.B mediaCleanup
+keeps a full log of its activities in the file:
+
+.I mediaCleanup.mediaId.mediaName.log
+
+The tasks performed by
+.B mediaCleanup 
+are as follows:
+
+.IP 1.
+The removal of the hard links to the data created in
+the 
+.B Retrieval Data Stage.
+
+.IP 2.
+Removal of files from the 
+.B Media Data Stage area. 
+This cleans out the 
+.B Media Data Stage 
+area so it can be used by another media creation program. 
+
+.IP 3.
+Updating the media table. Removal of files from the
+.B Retrieval Data Stage 
+area frees up space in the Data Stage area, 
+such that a media ID whose data stage space was previously
+full should be able to retrieve more files after
+.B mediaCleanup
+has run. This third task is achieved though a status change in the media
+table in the
+.B Archive Media
+database. 
+
+.IP 4.
+The removal of the media_stages table entry corresponding
+to 
+.I mediaId
+and
+.I mediaName.
+The purpose of the media_stages table is to `reserve' a Media Data Stage
+directory for a unit of media,
+so that only one directory is used by only one  media unit at
+one time. In this way, no other process is
+able to write into or read from the directory while it is `reserved'.
+This is analogous to a hotel registry,  where only one guest is allowed
+per room at one time. Other guests cannot register and use the room
+until the guest whose name is in the registry checks out. 
+.B mediaCleanup 
+performs this `checking-out' procedure, freeing up the Media Data Stage
+directory for use by a new 
+.B cdMake 
+application. 
+
+.IP 5.
+Update the media_units table. The media creation
+process is `complete', the media data stage has been cleaned
+up, so the table status must be updated to reflect completion
+of the task. For archive requests, the status remains unchanged;
+it is expected there will be more data. For externally generated user-media 
+requests, the status of the request will be changed to complete if
+all files have been written to physical medium(s).
+.LP
+
+.SH OPERATION
+The 
+.B \-i
+.I mediaId
+and 
+.B \-n
+.I mediaName
+parameters must be specified on the command line or 
+.B mediaCleanup 
+will exit with an error. 
+
+.SH OPTIONS
+.TP
+.B \-rollback
+Rollback cleanup. The database is modified to show the media unit
+is in the "queued" state. The media unit can then be reprocessed by
+restoring the data to the staging directory, and then proceeding
+with the media creation process starting at the preparation step.
+.TP
+.B \-v
+Verbose.  Print all information and error messages to standard output,
+.I stdout.
+.TP
+.B \-V
+Version.  Print version numbers and quit.
+.TP
+.B \-? \-h \-help
+Help.     Print the usage message and quit.
+
+.SH USAGE
+.B mediaCleanup 
+requires no operator input while it is running.
+
+.SH EXAMPLES
+.TP 3
+.B 1.
+The following example shows  how
+.B mediaCleanup 
+will typically be run.  A given
+media unit is cleaned up.
+.RS 5 
+.sp 1n
+.nf
+.BR "example% mediaCleanup \-i " 2 " \-n " USER3_002
+.IB "messages from " mediaCleanup
+.sp 1n
+.fi
+.RE
+.RS 3
+The data created during the preparation and writing of media unit
+.B USER3_002
+will be removed from the file system. 
+.RE
+.TP 3
+.B 2.
+The following  example is run in verbose mode.  This means 
+all activities of 
+.B mediaCleanup
+will be displayed on standard output for the operator to see.
+.RS 5
+.sp 1n
+.ft
+.nf
+.BR "example% mediaCleanup \-i " 3 "  \-n " ARCH4_0823 " \-v"
+.IB "messages from " mediaCleanup
+.sp 1n
+.fi
+.RE
+.RS 3
+The data created during the preparation and writing of media unit
+.B ARCH4_0823,
+will be removed from the file system. 
+.RE
+
+
+.SH FILES
+.SS ~/.dbrc
+The
+.I ~/.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.BR mediaCleanup.
+More specifically, it contains information about SYBASE servers, 
+databases, user names and associated passwords. 
+
+A database reference must contain a server/database pair followed
+by the user's name and password. Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following order:
+ 
+.I server database username password
+
+Each item should be separated by whitespace (spaces and/or tabs).
+If a required database is not included in the 
+.I ~/.dbrc 
+file, 
+.B mediaCleanup
+will prompt for a user's name and password.
+ 
+
+.SS libAm.config
+.B mediaCleanup
+uses the CADC
+.B Archive Media 
+.RB ( am )
+library which requires its own configuration file.  Refer
+to the 
+.B am
+man page for more information on this file.
+ 
+.SH SECURITY
+In order to ensure a secure
+.I ~/.dbrc
+file,
+.B mediaCleanup
+requires that the
+file resides in the directory specified by the 
+.B HOME 
+environment variable, and the file protection must restrict read and write 
+access to the file owner. 
+
+.SH TABLES
+.B mediaCleanup
+gets the information necessary to prepare media units from the 
+.B Archive Media
+.RB ( am )
+database tables.  The location of the 
+.B am 
+database, and the name of the
+tables are specified in the configuration file for the 
+.RB ( am )
+library. These tables must exist for 
+.B mediaCleanup
+to run correctly.
+
+The following is a list of SYBASE tables that must be present for 
+.B mediaCleanup
+to run correctly:
+.TP
+.B archiveMedia..media
+.TP
+.B archiveMedia..media_files
+.TP
+.B archiveMedia..media_units
+.TP
+.B archiveMedia..media_stages
+
+
+.SH ENVIRONMENT VARIABLES
+The environment variable 
+.B LIBAM_CONFIG_DIR
+may be set to the path of the directory where the 
+.B am
+library configuration file can be found. If
+.B LIBAM_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR
+should be set to the path where the file can be found.
+ 
+The environment variable
+.B HOME
+must be set to the user's home directory.  If this environment variable
+is not set correctly,
+.B mediaCleanup
+may not find the correct
+.I~/.dbrc
+file containing database information.
+
+The shell path variable
+.B path
+should include the locations of the
+.B xterm  
+executable, the third party media authoring software
+and the script indicated in the
+.I libAm.config
+configuration file with the 
+.B scripts
+keyword.
+
+.SH DIAGNOSTICS
+.B mediaCleanup
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non-zero number is returned. 
+
+.SH SEE ALSO
+.BR mediaWrite (1)
+.BR am (3), 
+.BR db (3).
+
+.SH BUGS
+None known.
+
+.SH AUTHORS
+Marc LeBlanc
+.br
+Steve Cockayne
+.br
+Shannon Jaeger
+.bf
+
+National Research Council of Canada
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+

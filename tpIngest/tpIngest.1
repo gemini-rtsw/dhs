@@ -1,0 +1,302 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"* (c) 1998				(c) 1998.
+.\"* National Research Council		Conseil national de recherches
+.\"* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\"* All rights reserved		Tous droits reserves
+.\"* 					
+.\"* NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\"* expressed, implied, or statu-	enoncee, implicite ou legale,
+.\"* tory, of any kind with respect	de quelque nature que se soit,
+.\"* to the software, including		concernant le logiciel, y com-
+.\"* without limitation any war-	pris sans restriction toute
+.\"* ranty of merchantability or	garantie de valeur marchande
+.\"* fitness for a particular pur-	ou de pertinence pour un usage
+.\"* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\"* in any event for any damages,	pourra en aucun cas etre tenu
+.\"* whether direct or indirect,	responsable de tout dommage,
+.\"* special or general, consequen-	direct ou indirect, particul-
+.\"* tial or incidental, arising	ier ou general, accessoire ou
+.\"* from the use of the software.	fortuit, resultant de l'utili-
+.\"* 					sation du logiciel.
+.\"*
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: tpIngest/doc/tpIngest.1
+.\"*
+.\"*	Date			: Apr 8, 1998
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: tpIngest.1
+.\"*	    Version Number	: 1.2
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 04/15/99
+.\"*
+.\"*	Written by		: George Zhang 
+.\"*
+.\"*	Modification History:
+.\"*	    99/04/09 SDJ	: Added example and security sections.
+.\"*				  No longer assumes it is being used with DHS.
+.\"*				  Added -help command-line arg.  Made File
+.\"*				  section complete. Spelling and Grammar.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH TPINGEST  1 04/15/99 "CADC"
+
+.SH NAME
+tpIngest
+\- Ingests an archive tape into the archive tables.
+
+.SH SYNOPSIS
+.B tpIngest
+.B -d
+.I device
+.B -t
+.I type
+[
+.B -a 
+.I archive
+] [
+.B -r
+.I Don't prompt on re-ingest.
+] [
+.B -v
+] [
+.B -V
+]
+
+.SH DESCRIPTION
+.B tpIngest
+is a utility which ingests the tape name and files on a tape into the 
+archive database tables.
+
+.SH OPERATION
+If a tape has been created then
+.B tpIngest
+can be used to add its contents to the archive database.  The archive
+database tables are defined in the configuration file for the 
+.B AD
+library.
+.B tpIngest
+will insert into the database the tape name (volume) and the
+file names on tape.  This will allow for the automatic retrieval 
+of data, the Gemini DHS
+.B dataServer 
+performs such a task.
+
+If the tape name is already in the database then the operator will be 
+prompted to re-ingest the information. 
+
+.SH OPTIONS
+.TP
+.B -a
+.I Archive.	
+If this is a new tape, then this archive name will 
+be entered into the database.
+.TP
+.B -r
+.I No prompt.
+Don't prompt on re-ingest.
+.TP
+.B -v
+.I Verbose.	
+Print all information and error messages to user's console.
+.TP
+.B -V
+.I Version.	
+Print version numbers and quit.
+.TP
+.B -? -h -help
+.I Help.	
+Print the usage message and quit.
+
+.SH EXAMPLES
+.TP 3
+.B 1.
+The following example shows a tape being ingested into the archive database.
+In this example the \-r command line option is given which means the tape
+is automatically re-ingested if it has been already ingested.
+.RS 8n
+.sp 1n
+.nf
+.BR "example% tpIngest \-d " /dev/rmt/0ln " \-t " TP_ARCH " \-r"
+.BR "                      .  .  ."
+.BR "(ti7)    " "Put the tape in source drive /dev/rmt/0mn"
+.BR "         " "Ready(Y/N)? " Y
+.BR "(ti11)   " "Enter the tape name please : " SCI_0128
+.BR "(ti14)   " "Auto re-ingesting tape: `SCI_128'."
+.IB "messages from " tpIngest
+.sp 1n
+.fi
+.RE
+.RS 3
+In this example we will be using the tape device located at
+/dev/rmt/0ln.  The name of this device suggest we are using
+a low density tape.  The scripts used to read the tape are
+those specified for the "TP_ARCH" tape type in the 
+.B tp 
+library's configuration file.  In this case there is no script
+which automatically determines the name of the tape so the 
+operator was prompted for the name of the tape.
+
+.TP 3
+.B 2.
+The following example shows a tape being ingested into the archive database.
+.RS 8n
+.sp 1n
+.nf
+.BR "example% tpIngest \-d " /dev/rmt/2hn " \-t " TP_ARCH1
+.BR "                      .  .  ."
+.BR "(ti7)    " "Put the tape in source drive /dev/rmt/0mn"
+.BR "         " "Ready(Y/N)? " Y
+.BR "(ti6)    " "Volume already exists in the archive with the name 'SCI_322'."
+.BR "         " "Would you like to re-ingest this tape (Y/N)? " Y
+.IB "messages from " tpIngest
+.sp 1n
+.fi
+.RE
+.RS 3
+In this example we will be using the tape device located at
+/dev/rmt/0hn.  The name of this device suggest we are using
+a high density tape.  The scripts used to read the tape are
+those specified for the "TP_ARCH1" tape type in the 
+.B tp 
+library's configuration file.  In this case there is a script
+which automatically determines the name of the tape so the 
+operator is not prompted for the name of the tape.  However, this
+tape was already ingested into the archive so the operator is asked
+if the tape is to be re-ingested.
+
+
+.SH FILES
+.SS
+.B ~/.dbrc
+The
+.I ~/.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.B tpIngest
+.  A database reference must contain a server/database pair followed
+by the user's name and password. Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following order:
+
+.I server database username password
+
+Each item should be separated by whitespace (spaces and/or tabs).
+If a required database is not included in the 
+.I ~/.dbrc 
+file, 
+.B tpIngest
+will prompt for the user's name and password.
+
+.SS libAd.config 
+.B tpIngest
+uses the CADC  
+.B Archive 
+.RB ( ad ) 
+library which requires its own configuration file.  Refer 
+to the  
+.B ad  
+man page for more information on this file. 
+
+.SS libTp.config 
+.B tpIngest
+uses the CADC tape
+.RB ( tp ) 
+library for handling tapes
+which requires its own configuration file.  Refer 
+to the  
+.B tp  
+man page for more information on this file. 
+ 
+.SH SECURITY 
+In order to ensure a secure 
+.I ~/.dbrc 
+file, 
+.B tpIngest
+requires that the 
+file resides in the directory specified by the  
+.B HOME  
+environment variable, and the file protection must restrict read and write  
+access to the file owner. 
+
+.SH TABLES
+.B tpIngest
+uses the archive database to determine if the tape name already exists
+and updates the archive tables.
+
+The location of the archive database and the name of the tables
+are specified in the configuration file for the CADC 
+.I ad 
+library.
+
+The following is a list of SYBASE tables that must be present for
+.B tpIngest
+to run correctly:
+.TP
+.B archive..tps
+.TP
+.B archive..tpfiles
+
+.SH ENVIRONMENT VARIABLES
+The environment variable
+.B LIBAD_CONFIG_DIR 
+may be set to the path of the 
+directory where the 
+.B ad
+configuration file can be found. If
+.B LIBAD_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR 
+should be set to the path of the directory where the file can be found. 
+
+The environment variable
+.B LIBTP_CONFIG_DIR 
+may be set to the path of the 
+directory where the 
+.B tp
+configuration file can be found. If
+.B LIBTP_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR 
+should be set to the path of the directory where the file can be found. 
+
+The shell's path variable should include the location of the scripts
+used to obtain the tape name and contents of the tape.  These scripts
+are listed in the 
+.B tp
+library's configuration file.
+
+
+.SH DIAGNOSTICS
+.B tpIngest
+returns a 0 value to the calling environment upon successful
+completion.  Otherwise a non-zero value is returned.
+
+.SH SEE ALSO
+.BR ad (3),
+.BR tp (3).
+
+.SH BUGS
+None known.
+
+.SH AUTHORS
+Shannon Jaeger
+.br
+George Zhang
+.br
+
+
+National Research Council of Canada
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

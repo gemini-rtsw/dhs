@@ -1,0 +1,218 @@
+#!/usr/bin/tcsh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1999.				(c) 1999.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	dvdPrep/scripts/dvdPrep
+#*
+#*   Purpose:
+#*	To prepare a physical volume, image of a DVD, on magnetic disk.
+#*
+#*   Date		: Mar 9, 1999
+#*
+#*   SCCS data          : @(#) 
+#*      Module Name     : dvdPrep 
+#*      Version Number  : 1.2 
+#*      Release Number  : 1 
+#*      Last Updated    : 04/01/99 
+#*
+#*   Programmer		: Shannon Jaeger
+#*
+#*   Modification History:
+#*      98/12/15 SDJ	: Modified from cdPrepRunMkiosfs-111
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+umask 002
+
+set exec_name = $0
+set exec_name = $exec_name:t
+
+
+#
+# Parse command line.
+#
+
+if ( $#argv != 5 ) then
+    goto usage
+endif
+
+
+set volume_name = $1
+set config_file_path = $2
+set log_file_path = $3
+set work_path = $4
+set data_path = $5
+
+set dot_file = 
+
+set noglob
+
+
+#
+#  Go to the work path.
+#
+ 
+cd $work_path
+if ( $status ) then
+    echo Error: Unable to change to directory \`$work_path\'
+    sleep 10
+    exit 1
+endif
+
+
+#
+#  Remove any dot file, log files, and physical volume files if present.
+#
+
+if ( -e $log_file_path ) then
+    rm -f $log_file_path
+    if ( $status ) then
+	echo Error: Unable to remove \`$log_file_path\`
+	sleep 10
+        exit 1
+    endif
+endif
+
+if ( -e $dot_file ) then
+    rm -f $dot_file
+    if ( $status ) then
+	echo Error: Unable to remove \`$dot_file\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+ 
+
+if ( -e $volume_name.vol ) then
+    rm -f $volume_name.vol
+    if ( $status ) then
+	echo Error: Unable to remove \`$volume_name.vol\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+
+if( $config_file_path != "none" ) then
+    cp $config_file_path $dot_file
+    if ( $status ) then
+	echo Error: Unable to create \`$config_file_path\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+ 
+#
+#  Disable interrupts.
+#
+ 
+onintr -
+
+
+#
+#  Run prep software
+#
+
+echo "***   Creating physical volume with mksiofs    ***"
+???
+set exit_status = $status
+if ( $exit_status ) then
+    echo "???" >> $log_file_path
+    echo "Error: ??? failed to created volume.  Return value is $exit_status" >> $log_file_path
+
+    exit 1
+endif
+
+#
+#  Parse the log file and add to it the number of copies, number of 
+#  of errors, number of files copied..
+#
+ 
+if ( -e $log_file_path ) then
+    set image_size = `grep 'extents written' $log_file_path | sed -e 's/(//' | sed -e 's/)//' | awk 'BEGIN {FS=" " ; } { print $4 ; }'`
+    set num_extents = `grep 'Total extents scheduled to be written' $log_file_path | awk 'BEGIN {FS="=" ; } { print $2 ; }'`
+    set num_extents_written = `grep 'Total extents actually written' $log_file_path | awk 'BEGIN {FS="=" ; } { print $2 ; }'`
+    set num_errors = `expr $num_extents - $num_extents_written`
+    set num_files_copied = `cat $log_file_path | awk 'BEGIN {FS=" " ; } { print $3 ; }' | grep "$data_path" | wc -l`
+
+else
+    set file_size = 0
+    set num_errors = 0
+    set num_files_copied = 0
+endif
+
+
+if ( $image_size > 0 ) then
+    set num_images = 1
+    set image_size = `grep 'extents written' $log_file_path | awk 'BEGIN {FS="(" ; } { print $2 ; }'`
+else
+    set num_images = 0
+    set image_size = "0 Mb)"
+endif
+set num_files = `find $data_path -type f | wc -l`
+
+
+echo " " >> $log_file_path
+echo "$exec_name - Number of images:            $num_images" >> $log_file_path
+echo "$exec_name - Size of image:               ($image_size" >> $log_file_path
+echo "$exec_name - Number of errors:            $num_errors" >> $log_file_path
+echo "$exec_name - Number of files found:       $num_files" >> $log_file_path
+echo "$exec_name - Number of files prepared:    $num_files_copied" >> $log_file_path
+
+#
+#  If no problems thus far, remove link directory structure. 
+#
+
+if ( $num_images > 0 && $num_errors == 0 && $num_files == $num_files_copied ) then 
+    echo "***    Completed preparing physical volume     ***"
+    echo "dvdPrep done"
+    echo ""
+    exit 0
+else
+    echo "***        Did NOT create physical volume      ***"
+    echo "dvdPrep done"
+    echo ""
+    exit 1
+endif
+ 
+
+
+#
+# Display usage Information.
+#
+
+usage:
+    echo "USAGE: runGear <volume_name> <config_file> <log_file_path> <work_path> <input_file_path> <data_stage_path> <data_path>"
+    echo ""	
+    echo "              volume name:      Name of disk in upper-case."
+    echo "              config_file:      Fully specified path and name of the"
+    echo "                                configuration file."
+    echo "              log_file_path:    Fully specified path and name of log file."
+    echo "              work_path:        Fully specified path to the work directory."
+    echo "              data_path:        Fully specified path to the directory which"
+    echo "                                contains the data to be prepared."
+ exit 1

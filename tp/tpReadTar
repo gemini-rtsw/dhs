@@ -1,0 +1,161 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	tpReadTar	
+#*
+#*   Purpose:
+#*	Read the whole tape on the <device>.
+#*
+#*   Date		: Jan 26, 1998
+#*
+#*   SCCS data          : @(#) 
+#*      Module Name     : tpReadTar 
+#*      Version Number  : 1.1 
+#*      Release Number  : 1 
+#*      Last Updated    : 03/17/99 
+#*
+#*   Programmer		: George Zhang
+#*
+#*   Modification History:
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+#
+#   Check the arguments
+#
+
+if ( $#argv != 1 ) then
+    echo "Usage: tpReadTar <device>"
+    exit 1
+endif
+
+
+#
+#   Set variables
+#
+
+set device = $1
+set logDir = "~cadcops/cfht"
+set hour = "%H"
+set min = "%M"
+set dateStamp = `date "+%y%m%d${hour}${min}%S"`
+
+
+set logFile = $logDir/tpReadTar."$device:t".$dateStamp.log
+set tape_offset = 0
+set stop = 0
+set gnutar = /usr/local/bin/tar
+set tape_offset = 0
+
+
+#
+#  Check that the log file can be created.
+#
+
+date > $logFile
+if ( $status ) then
+    exit 1
+endif
+
+
+#
+#   Rewind the tape
+#
+
+echo "mt -f $device rewind"
+mt -f $device rewind
+if ( $status ) then
+    exit 1
+endif
+
+
+#  
+#   Read each of the tape's partitions until EOF.
+#
+
+set stop_read = `mt -f $device status`
+foreach signal ( $stop_read )
+    if ( $signal == "EOT" ) then
+        set stop = "EOT" 
+        break
+    endif
+end
+
+while ( 1 )
+
+    #
+    #  Read the files in the current offset.
+    #
+
+    echo "Reading tape offset $tape_offset" | tee -a $logFile
+    $gnutar xvf $device | tee -a $logFile 
+    set stop = $status
+    if ( $stop ) then
+	#
+	#   Check if we reach the end of the tap EOT.
+	#
+
+	set stop_read = `mt -f $device status`
+	foreach signal ( $stop_read )
+	    if ( $signal == "EOT" ) then
+		set stop = "EOT" 
+	    endif
+	end 
+	break
+    endif
+
+    
+    #
+    #  If this is the first tape offset, see if it contains
+    #  a CFHT-CADC*_TAR file.
+    #
+
+    if ( $tape_offset == 0 ) then
+	set newName = `grep 'CFHT.*CADC.*TAR' $logFile`
+	if ( $newName != "" ) then
+	    set newName = $newName:t
+	    set newLog = $logDir/tpReadTar.$newName.log
+	    mv $logFile $newLog
+	    set logFile = $newLog
+	    rm -f $newName
+	endif
+    endif
+
+    @ tape_offset++
+end
+
+
+if ( $stop != "EOT" ) then
+    exit 1
+endif
+
+echo "mt -f $device rewoff"
+mt -f $device offline >& /dev/null &
+date >> $logFile
+exit 0
