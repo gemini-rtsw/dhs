@@ -777,21 +777,21 @@ static int      parseLogs
 	    {
 		if ( strstr( line, "copies" ) != NULL &&
 			sscanf( line, "%*s %*s %*s %*s %*s %d", 
-				&numWritten ) != NULL )
+				&numWritten ) != 0 )
 		{
 		    copiesSeen = TRUE;
 		    *totalWritten += numWritten;
 		}
 		else if ( strstr( line, "errors" ) != NULL &&	
 			sscanf( line, "%*s %*s %*s %*s %*s %d", 
-				&numErrors ) != NULL )
+				&numErrors ) != 0 )
 		{
 		    errorsSeen = TRUE;
 		    totalErrors += numErrors;
 		}
 		else if ( strstr( line, "verify" ) != NULL &&
 			sscanf( line, "%*s %*s %*s %*s %*s %*s %d", 
-				&numVerifyErrors ) != NULL )
+				&numVerifyErrors ) != 0 )
 		{
 		    verifySeen = TRUE;
 		    totalVerifyErrors += numVerifyErrors;

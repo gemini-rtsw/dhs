@@ -43,7 +43,6 @@
 -*/
 
 #include <memory.h>
-#include <varargs.h>
 #include <sys/types.h>
 #include <unistd.h>
 

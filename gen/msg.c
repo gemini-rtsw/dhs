@@ -64,7 +64,7 @@
  */
 
 int		sys_nerr;
-//extern	char	*sys_errlist[];
+/* extern	char	*sys_errlist[];*/
 
 #define MSG_INDENT_LENGTH	10
 #define	MSG_NOT_FOUND		"Message not found."

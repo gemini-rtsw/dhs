@@ -65,7 +65,7 @@
 #include "local_press.h"
 #include "gzip.h"
 
-// XXX allan: no fork1 on linux
+/* XXX allan: no fork1 on linux */
 #ifdef linux
 #define fork1 fork
 #endif

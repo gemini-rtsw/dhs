@@ -88,7 +88,7 @@ int		globalsInit
     globals.g_identity          = NULL;
     globals.g_dataServer        = NULL;
     globals.g_dataServIP        = NULL;
-    globals.g_connect           = NULL;
+    globals.g_connect           = 0;
     globals.gSimList		= NULL;
     globals.gSynchTimeStr	= NULL;
 

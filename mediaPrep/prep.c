@@ -210,25 +210,25 @@ static int      parseLog
         {
 	    if ( strstr( line, "errors" ) != NULL &&
 		    sscanf( line, "%*s %*s %*s %*s %*s %d", 
-		    &numErrors ) != NULL )
+		    &numErrors ) != 0 )
 	    {
 		errorsSeen = TRUE;
 	    }
 	    else if ( strstr( line, "images" ) != NULL &&
 		    sscanf( line, "%*s %*s %*s %*s %*s %d", 
-		    numPhysvols ) != NULL )
+		    numPhysvols ) != 0 )
 	    {
 		imagesSeen = TRUE;
 	    }
 	    else if ( strstr( line, "prepared" ) != NULL &&
 		    sscanf( line, "%*s %*s %*s %*s %*s %*s %d",
-		    numPreped ) != NULL )
+		    numPreped ) != 0 )
 	    {
 		prepSeen = TRUE;
 	    }
 	    else if ( strstr( line, "found" ) != NULL &&
 		    sscanf( line, "%*s %*s %*s %*s %*s %*s %d",
-		    &numFiles ) != NULL )
+		    &numFiles ) != 0 )
 	    {
 		foundSeen = TRUE;
 	    }
