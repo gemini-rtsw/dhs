@@ -76,6 +76,7 @@
 
 #include <sybfront.h>
 #include <sybdb.h>
+#include <errno.h>
 #include <sys/stat.h>
 
 #include "gen_types.h"

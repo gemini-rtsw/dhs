@@ -116,6 +116,14 @@ AC_SUBST(TCLTK_ROOT)
 test -f $TCLTK_ROOT/lib/tclConfig.sh && . $TCLTK_ROOT/lib/tclConfig.sh
 AC_SUBST(TCL_VERSION)
 
+dnl SKYCAT settings
+if test "$SKYCAT_INSTALL" = "" ; then
+    SKYCAT_INSTALL=`dirname $PWD`/skycat
+    test -d $SKYCAT_INSTALL || SKYCAT_INSTALL=/ocs/software/dev/packages/skycat
+    test -d $SKYCAT_INSTALL || SKYCAT_INSTALL=/usr/local
+fi
+AC_SUBST(SKYCAT_INSTALL)
+
 dnl CFITSIO settings
 if test "$CFITSIO" = "" ; then
     CFITSIO=`dirname $PWD`/cfitsio
@@ -125,9 +133,11 @@ AC_SUBST(CFITSIO)
 
 dnl EPICS settings
 if test "$EPICS" = "" ; then
-    EPICS=`dirname $PWD`/epics/base
-    test -d $EPICS || EPICS=/ocs/software/dev/packages/epics/epics/base
+    EPICS=`dirname $PWD`/epics
+    test -d $EPICS || EPICS=/usr/local/epics
+    test -d $EPICS || EPICS=/ocs/software/dev/packages/epics/epics
 fi
+EPICS=$EPICS/base
 AC_SUBST(EPICS)
 
 dnl Drama settings

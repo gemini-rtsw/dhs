@@ -25,7 +25,6 @@ SUBDIRS = \
 	fh \
 	arrayMath \
 	qldp \
-	fitsio \
 	dhsCommand \
 	dhsConsole \
 	dhsData \
