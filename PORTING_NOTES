@@ -81,27 +81,3 @@ The following changes were not required for compiling, but for running:
 
 * Pass a non-null (pthread_t) argument as first arg to pthread_create()
 
-
-Solaris Build Notes
-===================
-
-* For the Solaris Epics library: If you don't want to recompile it
-  using the new gcc compiler, you will get an undefined reference to 
-  the old libstdc++.so (referenced by libCom.so). Since recompiling 
-  would mean porting Epics to the new gcc, it is easier to temporarilly 
-  move the Epics shared libs out of the way, so they are not linked 
-  when compiling DHS or ocsC++. The alternative may be to compile a more 
-  recent version of Epics or download one that uses a compatible libstdc++.so.
-
-
-* For the Linux build, I originally included the shared lib path option
-  (with -wl,rpath <dir1>:<dir2>:...)
-  but the Solaris gcc didn't like that (uses different linker).
-  So now you need to make sure all the shared library dirs are in your LD_LIBRARY_PATH.
-  (This makes sense, since the target installation might have different path names.)
-
-* On solaris, you shouldn't include dependent libraries on the command line when
-  building a shared library. This seems to work on Linux too.
-
-* For solaris apps, additional system libraries need to be linked: -lsocket -lnsl 
-  (-lrt -ldl), and sometimes -lpthread.
