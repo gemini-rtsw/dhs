@@ -1,6 +1,0 @@
-# Makefile
-
-NAME = @NAME@
-SOURCES = @SOURCES@
-
-include ../conf/cc_lib.mk
