@@ -99,7 +99,8 @@ all: setup
 setup: install_dirs
 	@for i in $(EXTERNAL_LIBS) ; do \
 	    if test -f $$i ; then \
-	        ln -fs $$i release/lib ;\
+		rm -f release/lib/`basename $$i` ;\
+	        ln -s $$i release/lib ;\
 	    else \
 	        echo "*** Missing library: $$i" ;\
 		exit 1 ;\
