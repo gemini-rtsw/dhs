@@ -33,9 +33,10 @@ DRAMA_LDLIBS = -L${IMP_DIR}/${DRAMA_OS} -limp -L${SDS_DIR}/${DRAMA_OS} -lsds -L$
 
 
 # Root dir for Tcl include files and libs
+TCL_VERSION = @TCL_VERSION@
 TCLTK_ROOT = @TCLTK_ROOT@
 TCLTK_INCLUDES = -I$(TCLTK_ROOT)/include
-TCLTK_LDLIBS = -L$(TCLTK_ROOT)/lib -ltcl8.4 -ltk8.4
+TCLTK_LDLIBS = -L$(TCLTK_ROOT)/lib -ltcl$(TCL_VERSION) -ltk$(TCL_VERSION)
 
 # Root dir for Sybase include files and libs
 SYBASE = @SYBASE@

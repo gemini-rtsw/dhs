@@ -308,7 +308,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS TOP CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CPP EGREP RANLIB ac_ct_RANLIB build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYBASE TCLTK_ROOT CFITSIO EPICS DRAMA_OS DRAMA DRAMA_CONFIG DRAMA_STATUS IMP_DIR SDS_DIR ERS_DIR LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS TOP CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CXX CXXFLAGS ac_ct_CXX INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CPP EGREP RANLIB ac_ct_RANLIB build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYBASE TCLTK_ROOT TCL_VERSION CFITSIO EPICS DRAMA_OS DRAMA DRAMA_CONFIG DRAMA_STATUS IMP_DIR SDS_DIR ERS_DIR LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -4827,8 +4827,10 @@ test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
 if test "$TCLTK_ROOT" = "" ; then
     TCLTK_ROOT=/usr
     test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/usr/local
-    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.3
+    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.4
 fi
+
+test -f $TCLTK_ROOT/lib/tclConfig.sh && . $TCLTK_ROOT/lib/tclConfig.sh
 
 
 if test "$CFITSIO" = "" ; then
@@ -4851,9 +4853,8 @@ esac
 echo "drama OS = $DRAMA_OS"
 
 
-tmp=../drama*/release
-DRAMA=`echo $tmp`
-if test "$DRAMA" = "$tmp" ; then
+DRAMA=../drama-v1.4.2/release
+if test ! -d $DRAMA ; then
     echo " *** Can't find DRAMA release dir (expected $DRAMA) ***"
     exit 1
 fi
@@ -5567,6 +5568,7 @@ s,@target_vendor@,$target_vendor,;t t
 s,@target_os@,$target_os,;t t
 s,@SYBASE@,$SYBASE,;t t
 s,@TCLTK_ROOT@,$TCLTK_ROOT,;t t
+s,@TCL_VERSION@,$TCL_VERSION,;t t
 s,@CFITSIO@,$CFITSIO,;t t
 s,@EPICS@,$EPICS,;t t
 s,@DRAMA_OS@,$DRAMA_OS,;t t

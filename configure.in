@@ -110,9 +110,11 @@ dnl Tcl settings
 if test "$TCLTK_ROOT" = "" ; then
     TCLTK_ROOT=/usr
     test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/usr/local
-    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.3
+    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.4
 fi
 AC_SUBST(TCLTK_ROOT)
+test -f $TCLTK_ROOT/lib/tclConfig.sh && . $TCLTK_ROOT/lib/tclConfig.sh
+AC_SUBST(TCL_VERSION)
 
 dnl CFITSIO settings
 if test "$CFITSIO" = "" ; then
@@ -137,9 +139,8 @@ esac
 echo "drama OS = $DRAMA_OS"
 AC_SUBST(DRAMA_OS)
 
-tmp=../drama*/release
-DRAMA=`echo $tmp`
-if test "$DRAMA" = "$tmp" ; then
+DRAMA=../drama-v1.4.2/release
+if test ! -d $DRAMA ; then
     echo " *** Can't find DRAMA release dir (expected $DRAMA) ***"
     exit 1
 fi
