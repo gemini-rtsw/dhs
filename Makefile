@@ -66,8 +66,9 @@ RELEASE_DIRS = \
 	release/lib \
 	release/scripts \
 	release/sql \
+	release/tcl \
 	release/config \
-	release/doc \
+	release/html \
 	release/man \
 	release/man/man1 \
 	release/man/man3 \
@@ -95,14 +96,16 @@ install_dirs: FORCE
 
 # install generated files in release dir
 install: install_dirs
-	cp */*.h release/include
-	cp ${SCRIPTS} release/scripts
-	cp */*.config release/config
-	cp */html/*.html release/doc
-	cp */*.sql release/sql
-	cp */*.1 release/man/man1
-	cp */*.3 release/man/man3
-	cp */*.n release/man/mann
-	for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) $@) done
+	-cp -f */*.h release/include
+	-cp -uf ${SCRIPTS} release/scripts
+	#-cp -uf */*.config release/config
+	-cp -f */html/*.html release/html
+	#-cp -uf */*.sql release/sql
+	-cp -f */*.tcl release/tcl; (cd release/tcl; tclsh$(TCL_VERSION) ./mkIndex.tcl)
+	-cp -f */*.1 release/man/man1
+	-cp -f */*.3 release/man/man3
+	-cp -f */*.n release/man/mann
+	-cp -f dhsQlTool/dhsQlTool-backend release/bin
+	-for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) $@) done
 
 FORCE:

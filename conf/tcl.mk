@@ -10,3 +10,6 @@
 all install clean:
 
 
+index tclIndex: FORCE
+	tclsh$(TCL_VERSION) ./mkIndex.tcl
+

@@ -1,4 +1,4 @@
-# $Id: config.tcl,v 1.1.1.1 2002-11-24 20:29:36 brighton Exp $
+# $Id: config.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -49,6 +49,9 @@
 #		configuration to the file.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:36  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -103,8 +106,8 @@
 #***********************************************************************
 #
 
-class CDhsConfigure {
-    inherit		TopLevelWidget
+itcl::class CDhsConfigure {
+    inherit util::TopLevelWidget
 
 
     #
@@ -178,7 +181,7 @@ body		CDhsConfigure::constructor {
     global	env
 
 
-    TopLevelWidget::constructor -center 0 -standalone 0
+    util::TopLevelWidget::constructor -center 0 -standalone 0
 
     eval	itk_initialize $args
 
@@ -238,12 +241,12 @@ body		CDhsConfigure::constructor {
     #
 
     itk_component add dataServerAddr {
-	    entryfield $itk_interior.dsAddr -labelmargin 5		\
+	    Entryfield $itk_interior.dsAddr -labelmargin 5		\
 		    -labeltext "Data Server Address"
     }
 
     itk_component add dataServerName {
-	    entryfield $itk_interior.dsName -labelmargin 5		\
+	    Entryfield $itk_interior.dsName -labelmargin 5		\
 		    -labeltext "Data Server Name"
     }
 
@@ -519,7 +522,7 @@ body		CDhsConfigure::load {
 body		CDhsConfigure::loadFile {
     fileName
 } {
-    CConfigGen	config 
+    set config [CConfigGen $w_.config]
 
 
     foreach item [ array names dcConfigData ] {
@@ -535,27 +538,27 @@ body		CDhsConfigure::loadFile {
     [ winfo parent $itk_interior ].customStreamWidget clear
     [ winfo parent $itk_interior ].streamWidget unSubscribeAll
 
-    config configOpenFile $fileName
+    $config configOpenFile $fileName
 
-    if { [ config configGet qlServer 					\
+    if { [ $config configGet qlServer 					\
 	    [ code $this setQlServer ] ] != "SUCCESS" } {
 	error "Unable to read Quick Look Server configuration information."
     }
 
-    if { [ config configGet dataServer 				\
+    if { [ $config configGet dataServer 				\
 	    [ code $this setDataServer ] ] != "SUCCESS" } {
 	error "Unable to read dataserver configuration information."
     }
 
-    config configGet customStream [ code $this setCustomStream ]
-    config configGet autoCut [ code $this setAutoCut ]
-    config configGet displayNewest [ code $this setDisplayNewest ]
-    config configGet autoSkip [ code $this setAutoSkip ]
-    config configGet imageArithmetic [ code $this setImageArith ]
+    $config configGet customStream [ code $this setCustomStream ]
+    $config configGet autoCut [ code $this setAutoCut ]
+    $config configGet displayNewest [ code $this setDisplayNewest ]
+    $config configGet autoSkip [ code $this setAutoSkip ]
+    $config configGet imageArithmetic [ code $this setImageArith ]
 
-    config configClose
+    $config configClose
 
-    delete object config
+    delete object $config
 }
 
 #

@@ -1,4 +1,4 @@
-# $Id: dhsQlTool.tcl,v 1.2 2003-01-15 18:23:35 brighton Exp $
+# $Id: dhsQlTool.tcl,v 1.3 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -39,6 +39,9 @@
 #		- Constructor for the CDhsQlTool class.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2003/01/15 18:23:35  brighton
+# fixed pthread_create call, Makefile changes
+#
 # Revision 1.1.1.1  2002/11/24 20:29:48  brighton
 # Imported sources
 #
@@ -91,7 +94,7 @@
 #
 
 itk::usual CDhsQlTool {}
-class cat::CDhsQlTool {
+itcl::class CDhsQlTool {
    inherit skycat::SkyCat
 
 
@@ -172,7 +175,7 @@ body		CDhsQlTool::constructor {
     # Initialize the OCSWish command acceptors.
     #
 
-    if { [ catch { cQlServer::initialize } ] != 0  } {
+    if { [ catch { cQlServer::initialize } msg ] != 0  } {
 	#
 	# An error occured, display an error message.
 	#
@@ -184,7 +187,7 @@ body		CDhsQlTool::constructor {
     }
     
     $itk_component(dqtCtl) initialize
-    if { [ catch { $itk_component(dqtCtl) initialize } ] != 0  } {
+    if { [ catch { $itk_component(dqtCtl) initialize } msg ] != 0  } {
 	#
 	# An error occured, display an error message.
 	#

@@ -1,4 +1,4 @@
-# $Id: dhsQltCtl.tcl,v 1.1.1.1 2002-11-24 20:29:48 brighton Exp $
+# $Id: dhsQltCtl.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -120,6 +120,9 @@
 #			- Return the current list of selected streams.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:48  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -205,8 +208,9 @@
 #
 
 itk::usual	CDhsCustomStreams
-class CDhsCustomStreams {
-    inherit	TopLevelWidget
+
+itcl::class CDhsCustomStreams {
+    inherit	util::TopLevelWidget
 
 
     #
@@ -271,8 +275,8 @@ usual CDhsCustomStreams {
 #***********************************************************************
 #
 
-class CDhsImageArithmetic {
-    inherit	TopLevelWidget
+itcl::class CDhsImageArithmetic {
+    inherit	util::TopLevelWidget
 
 
     #
@@ -344,8 +348,8 @@ usual CDhsImageArithmetic {
 #
 
 itk::usual	CDhsQltCtl
-class cat::CDhsQltCtl {
-    inherit	TopLevelWidget
+itcl::class CDhsQltCtl {
+    inherit	util::TopLevelWidget
 
 
     #
@@ -396,8 +400,8 @@ usual CDhsQltCtl {
 #
 
 itk::usual	CDhsStreamSelect
-class CDhsStreamSelect {
-    inherit	TopLevelWidget
+itcl::class CDhsStreamSelect {
+    inherit	util::TopLevelWidget
 
 
     #
@@ -459,7 +463,7 @@ body	CDhsCustomStreams::constructor {
     parent
     args 
 } {
-    TopLevelWidget::constructor -center 0 -standalone 0 		\
+    util::TopLevelWidget::constructor -center 0 -standalone 0 		\
 	    -title "Define Custom Streams"
 
     eval itk_initialize $args 
@@ -521,7 +525,7 @@ body	CDhsCustomStreams::constructor {
     #
 
     itk_component add streamEntry {
-	entryfield $itk_interior.entry -width 40 			\
+	Entryfield $itk_interior.entry -width 40 			\
 		-labeltext "Enter new custom stream"			\
 		-labelpos n -command [ code $this addStream ]
     }
@@ -1167,7 +1171,7 @@ body	CDhsImageArithmetic::constructor {
     set iaDataFName {}
 
 
-    TopLevelWidget::constructor -center 0 -standalone 0 		\
+    util::TopLevelWidget::constructor -center 0 -standalone 0 		\
 	    -title "Image Arithmetic Setup"
 
     eval itk_initialize $args
@@ -1181,7 +1185,7 @@ body	CDhsImageArithmetic::constructor {
     frame $itk_interior.fullFrameId
     pack $itk_interior.fullFrameId -side top -expand yes -fill x
     itk_component add datasetName {
-    	entryfield $itk_interior.datasetName -width 30 			\
+    	Entryfield $itk_interior.datasetName -width 30 			\
 	-labeltext "Operand dataset" -labelpos n			\
     }
     $parent add_short_help $itk_component(datasetName)			\
@@ -1195,7 +1199,7 @@ body	CDhsImageArithmetic::constructor {
     #
 
     itk_component add frameId {
-    	entryfield $itk_interior.frameId -width 10 			\
+    	Entryfield $itk_interior.frameId -width 10 			\
 	-labeltext "Operand frame" -labelpos n				\
     }
     $parent add_short_help $itk_component(frameId)			\
@@ -1230,8 +1234,9 @@ body	CDhsImageArithmetic::constructor {
 
     itk_component add operatorButton {
 	optionmenu $itk_interior.operand -labeltext "Operator" 		\
-		-labelpos n -items $iaOperatorList
+		-labelpos n
     }
+    eval $itk_component(operatorButton) insert end $iaOperatorList
     $parent add_short_help $itk_component(operatorButton)		\
 	    {Select the operator for the image arithmetic.}
     pack $itk_component(operatorButton) -side bottom -expand yes 	\
@@ -1670,7 +1675,7 @@ body	CDhsQltCtl::constructor {
 } {
     global _qltHelpDir
 
-    TopLevelWidget::constructor -center 1 -standalone 0			\
+    util::TopLevelWidget::constructor -center 1 -standalone 0			\
 	    -title "Quick Look Tool Control Panel"
 
 
@@ -2206,7 +2211,8 @@ body		CDhsQltCtl::selectFrame {
 body		CDhsQltCtl::setFrameList {
 } {
     $itk_component(frameList) clear
-    $itk_component(frameList) configure -items [ cQltFrame::allFrames ]
+    #$itk_component(frameList) configure -items [ cQltFrame::allFrames ]
+    eval $itk_component(frameList) insert end  [cQltFrame::allFrames]
 }
 
 #
@@ -2268,7 +2274,8 @@ body	CDhsQltCtl::streamSet {
     # Set the contents of the subscribed streams listbox.
     #
 
-    $itk_component(streamList) configure -items $streamList
+    #$itk_component(streamList) configure -items $streamList
+    eval $itk_component(streamList) insert end $streamList
 }
 
 #
@@ -2308,7 +2315,7 @@ body	CDhsStreamSelect::constructor {
     parent
     args 
 } {
-    TopLevelWidget::constructor -center 0 -standalone 0			\
+    util::TopLevelWidget::constructor -center 0 -standalone 0			\
 	    -title "Stream Select"
 
     eval itk_initialize $args 

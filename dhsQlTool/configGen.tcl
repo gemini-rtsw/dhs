@@ -1,4 +1,4 @@
-# $Id: configGen.tcl,v 1.1.1.1 2002-11-24 20:29:33 brighton Exp $
+# $Id: configGen.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -50,6 +50,9 @@
 # cConfigGen	: lower cased method to CConfigGen class.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:33  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -104,7 +107,7 @@
 #***********************************************************************
 #
 
-class	CConfigGen {
+itcl::class	CConfigGen {
     #
     # Public methods and data
     #

@@ -156,7 +156,7 @@ esac
 echo "drama OS = $DRAMA_OS"
 AC_SUBST(DRAMA_OS)
 
-DRAMA=../drama-v1.4.2/release
+DRAMA=../drama-v1.5.0/release
 if test ! -d $DRAMA ; then
     echo " *** Can't find DRAMA release dir (expected $DRAMA) ***"
     exit 1

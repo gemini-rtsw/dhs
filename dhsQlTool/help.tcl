@@ -1,4 +1,4 @@
-# $Id: help.tcl,v 1.1.1.1 2002-11-24 20:29:50 brighton Exp $
+# $Id: help.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cHelp		: Lowercased access method to the CHelp class.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:50  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -128,7 +131,7 @@
 #***********************************************************************
 #
 
-class CHelp {
+itcl::class CHelp {
     #
     # Public methods and data
     #

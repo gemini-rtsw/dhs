@@ -32,6 +32,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:56  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -68,7 +71,7 @@ set X { 								\
     GEMINI_BASE=${GEMINI_BASE:=/gemini};				\
     OCS_BASE=${OCS_BASE:=$GEMINI_BASE/ocs};				\
     DHS_BASE=${DHS_BASE:=$GEMINI_BASE/dhs};				\
-    echo $# ;	\
+    echo $# ;	                                                        \
     if [ $# -ge 2 ] ; then 						\
 	DISPLAY=$2 ;							\
 	export DISPLAY ; 						\
@@ -79,9 +82,9 @@ set X { 								\
     fi;									\
     echo "display is now $DISPLAY"; 					\
     echo "QlPlugin is now $CDHSQLTOOL_PLUGIN"; 				\
-    echo $OCS_BASE/bin/solaris/ocswish "$1"; 				\
-    $OCS_BASE/bin/solaris/ocswish "$1"; 				\
-exit 0 									\
+    echo ocswish "$1"; 			                            	\
+    ocswish "$1"; 			                        	\
+exit 0					               			\
 }; unset X
 
 
@@ -102,6 +105,9 @@ if { $__source_path == "." } {
 }
 set _qltHelpDir "$__source_path/../html"
 
+set dhs_library [file dirname $__source_path]/tcl
+lappend auto_path $dhs_library
+
 #
 # Set the application name and a name unique to this application. Note
 # that this name must be unique, even between hosts, since it is used
@@ -111,6 +117,14 @@ set _qltHelpDir "$__source_path/../html"
 set appName	dhsQlt
 set uniqueName	[join "dhsQlc [ exec hostname ] [ pid ]" "" ]
 
+package require Tclx
+package require Itcl
+package require Itk
+package require Iwidgets
+
+namespace import -force itcl::*
+namespace import -force itk::*
+namespace import -force iwidgets::*
 
 #
 # the environment variable $SKYCAT_LIBRARY should point to the directory
@@ -123,64 +137,6 @@ if {[info exists env(SKYCAT_LIBRARY)]} {
     set skycat_library ../library
 }
 
-
-#
-# RTD_LIBRARY has a similar meaning for the rtd module 
-#
-
-if {[info exists env(RTD_LIBRARY)]} {
-    set rtd_library $env(RTD_LIBRARY)
-} else {
-    set rtd_library ../../rtd/library
-    if {! [file isdirectory $rtd_library]} {
-	set rtd_library ../../../rtd/rtdimg/library
-	if {! [file isdirectory $rtd_library]} {
-	    puts "can't find RTD Tcl library files, try setting RTD_LIBRARY env variable"
-	    exit 1
-	}
-    }
-}
-
-
-#
-# make sure the tcl library files are found
-#
-
-set auto_path "$skycat_library $rtd_library $auto_path"
-
-
-#
-# add blt library to auto_path
-#
-
-if {[info exists env(BLT_LIBRARY)]} {
-    lappend auto_path $env(BLT_LIBRARY)
-}
-
-
-#
-# add iwidgets library to auto_path
-#
-
-if {[info exists env(IWIDGETS_LIBRARY)]} {
-    lappend auto_path $env(IWIDGETS_LIBRARY)
-}
-
-if {[catch {package require Iwidgets} msg]} {
-	puts "error loading Iwidgets package $msg"
-	exit 1
-}
-
-if {[catch {package require Rtd} msg]} {
-	puts "error loading RTD package $msg"
-	exit 1
-}
-
-
-if {[catch {package require Cat} msg]} {
-	puts "error loading Cat package $msg"
-	exit 1
-}
 
 set ocsBase $env(OCS_BASE)
 set dhsBase $env(DHS_BASE)
@@ -215,12 +171,6 @@ if {[catch {package require Skycat} msg]} {
 	dhsExit 1
 }
 
-if {[catch {package require Tclutil} msg]} {
-	puts "error loading Tclutil package $msg"
-	dhsExit 1
-}
-
-
 #
 # print errors also on stderr
 #
@@ -233,17 +183,13 @@ utilPrintErrors
 #
 
 #source $ocsBase/scripts/eso/skycat/SkyCat.tcl
-source $ocsBase/scripts/eso/skycat/SkyCat.tcl
+source $env(SKYCAT_LIBRARY)/SkyCat.tcl
 
 
 #
 # Get the data processing package.
 #
 
-if { [ info exists env(L) ] } {
-    lappend auto_path $env(L)
-}
-lappend auto_path $dhsBase/lib/solaris-mt
 if {[catch {package require qldp} msg]} {
 	puts "error loading qldp package $msg"
 	exit 1
@@ -254,7 +200,7 @@ if {[catch {package require qldp} msg]} {
 # Source the DHS Quick Look Tool code.
 #
 
-source $__source_path/../tcl/dhsQlTool.tcll
+source $__source_path/../tcl/dhsQlTool.tcl
 
 
 #
@@ -279,4 +225,5 @@ if {[info exists env(QLT_TMP_DIR)]} {
 # Start the dhsQlTool widget.
 #
 
-TopLevelWidget::start CDhsQlTool 
+puts "XXX auto_path = $auto_path"
+util::TopLevelWidget::start CDhsQlTool 

@@ -1,4 +1,4 @@
-# $Id: stgUtils.tcl,v 1.1.1.1 2002-11-24 20:25:49 brighton Exp $
+# $Id: stgUtils.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -57,6 +57,9 @@
 # writeDialog		: Pop-up dialogue window displayed when writing.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:25:49  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -475,7 +478,7 @@ proc	displayRequestInfo {
 
 
     #
-    # Create an entryfield for each of the media request records.
+    # Create an Entryfield for each of the media request records.
     #
 
     set labels { "Request Id" "Request Type" "Media Type" 		\
@@ -494,7 +497,7 @@ proc	displayRequestInfo {
 
 	global reqStatus
 	$statusObject link stoReq${reqNum}$status reqStatus($status${reqNum})
-	$sBox add entryField $status 					\
+	$sBox add EntryField $status 					\
 	    -labeltext "[ lindex $labels $sIndex ]:"			\
 	    -justify right				       		\
 	    -labelmargin 30						\

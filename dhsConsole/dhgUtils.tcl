@@ -1,4 +1,4 @@
-# $Id: dhgUtils.tcl,v 1.1.1.1 2002-11-24 20:25:41 brighton Exp $
+# $Id: dhgUtils.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -48,6 +48,9 @@
 #			  in simulate mode.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:25:41  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -442,7 +445,7 @@ proc	displayResource {
 	   -labelvariable resStatus(name$resNum) ]
     $statusObj link res${resNum}Fullname resStatus(fullname$resNum)
 
-    $sBox add entryField fullname -textfont $_dhgDefaults(entryFont)	\
+    $sBox add EntryField fullname -textfont $_dhgDefaults(entryFont)	\
     	-labeltext "Full Name:" 					\
     	-justify right							\
 	-relief ridge							\
@@ -461,7 +464,7 @@ proc	displayResource {
     } 
 
     $statusObj link res${resNum}Type resStatus(type$resNum)
-    $sBox add entryField type -textfont $_dhgDefaults(entryFont)	\
+    $sBox add EntryField type -textfont $_dhgDefaults(entryFont)	\
     	-labeltext "Type:" 						\
     	-justify right							\
 	-relief ridge						\
@@ -471,7 +474,7 @@ proc	displayResource {
 	"The type of resource being monitored."
 
     $statusObj link res${resNum}Units resStatus(units$resNum)
-    $sBox add entryField units 	-labeltext "Units:"			\
+    $sBox add EntryField units 	-labeltext "Units:"			\
     	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -482,7 +485,7 @@ proc	displayResource {
 	"The units the max, used, and available values are presented in."
 
     $statusObj link res${resNum}Max resStatus(max$resNum)
-    $sBox add entryField max -labeltext "Maximum:" 			\
+    $sBox add EntryField max -labeltext "Maximum:" 			\
 	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -492,7 +495,7 @@ proc	displayResource {
 	"The maximum amount available of a resource."
 
     $statusObj link res${resNum}Used resStatus(used$resNum)
-    $sBox add entryField used -labeltext "Used:" 			\
+    $sBox add EntryField used -labeltext "Used:" 			\
 	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -501,7 +504,7 @@ proc	displayResource {
     [ winfo toplevel $parent ] add_short_help [ $sBox component used ]	\
 	"The current amount of a resource that is used."
 
-    $sBox add entryField avail -labeltext "Available:" 			\
+    $sBox add EntryField avail -labeltext "Available:" 			\
 	-justify right 							\
 	-relief ridge							\
 	-state disabled							\
@@ -510,7 +513,7 @@ proc	displayResource {
     [ winfo toplevel $parent ] add_short_help [ $sBox component avail ]	\
 	"The current amount of a resource that is available."
 
-    $sBox add entryField cap -labeltext "Capacity:" 			\
+    $sBox add EntryField cap -labeltext "Capacity:" 			\
 	-justify right 							\
 	-relief ridge							\
 	-state disabled							\
@@ -572,7 +575,7 @@ proc	displayResource {
 # 	3. Add the menus to the menubar.
 #	4. Add a "health" LED.
 # 	5. Foreach status item monitored for the subsystem create an
-#	   entryfield with the value being monitored, except health
+#	   Entryfield with the value being monitored, except health
 #	   descriptions which are comboboxes.
 # 	6. Make sure the status items are aligned.
 # 	7. Set-up context sensitive help.
@@ -801,7 +804,7 @@ proc	displaySubsystem  {
 		-editable false						\
 		-labeltext [ lindex $descList $i ]             		\
 		-relief ridge						\
-		-textfont $_dhgDefaults(entryFont)			\
+		-textfont $_dhgDefaults(EntryFont)			\
 		-unique false
 
 	    #
@@ -813,7 +816,7 @@ proc	displaySubsystem  {
 		-command "getLogLength $logWin \"$upperSub Health Description\""
 
 	} else {
-	    $top.$lowerSub add entryField $status			\
+	    $top.$lowerSub add EntryField $status			\
 		-labeltext [ lindex $descList $i ]             		\
 		-relief ridge						\
 		-state disabled						\
@@ -821,7 +824,7 @@ proc	displaySubsystem  {
 	
 
 	    #
-	    # Associciate a variable with the entryfield
+	    # Associciate a variable with the Entryfield
 	    #
 
 	    _dhgStatus link ${lowerSub}$status ${lowerSub}Status($status)

@@ -1,4 +1,4 @@
-# $Id: qltFrame.tcl,v 1.1.1.1 2002-11-24 20:29:53 brighton Exp $
+# $Id: qltFrame.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -55,6 +55,9 @@
 #			  since the last time the data processing was done.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:53  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -135,7 +138,7 @@
 #***********************************************************************
 #
 
-class cQltFrame {
+itcl::class cQltFrame {
     #
     # Public methods and data
     #
