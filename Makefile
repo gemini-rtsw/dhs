@@ -78,39 +78,12 @@ RELEASE_DIRS = \
 	release/man/man3 \
 	release/man/mann
 
-# external shared libraries used
-EXTERNAL_LIBS = \
-	$(IMP_DIR)/${DRAMA_OS}/libimp.so \
-	$(SDS_DIR)/${DRAMA_OS}/libsds.so \
-	$(ERS_DIR)/${DRAMA_OS}/libers.so \
-	$(TCLTK_ROOT)/lib/libtcl$(TCL_VERSION).so \
-	$(TCLTK_ROOT)/lib/libtk$(TCL_VERSION).so \
-	$(SYBASE)/lib/libsybdb.so \
-	$(EPICS)/lib/${EPICS_LIB_OS}/libca.so \
-	$(EPICS)/lib/${EPICS_LIB_OS}/libCom.so \
-	$(CFITSIO)/libcfitsio.so
-
 
 # compile
 all: install_dirs
 	for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) all install)  || exit 1 ; done
 
-# Copy external shared libraries to the release lib dir, so the LD_LIBRARY_PATH
-# does not need to include so many directories.
-# Uses tar and wildcards to make sure to get both the *.so files and the
-# *.so.version files.
-setup: install_dirs
-	@d=`pwd`/release/lib ;\
-	for i in $(EXTERNAL_LIBS) ; do \
-	    if test -f $$i ; then \
-		b=`basename $$i` ;\
-		rm -f $$d/$$b* ;\
-		(cd `dirname $$i`; tar cf - $$b* | (cd $$d; tar xvf -)) ;\
-	    else \
-	        echo "*** Missing library: $$i" ;\
-		exit 1 ;\
-	    fi ;\
-	done
+setup: 
 
 # remove generated files
 clean: FORCE
