@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: FitsIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $" 
+ * "@(#) $Id: FitsIO.C,v 1.3 2003-04-02 10:33:22 brighton Exp $" 
  *
  * FitsIO.C - method definitions for class FitsIO, for operating on
  *            Fits files.
@@ -13,7 +13,7 @@
  * Allan Brighton  16/02/98  renamed check_decompress to check_compress and added check
  *                           for bitpix=16 for H_COMPRESS.
  */
-static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
+static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.3 2003-04-02 10:33:22 brighton Exp $";
 
 
 #include <cstdio>
@@ -265,9 +265,7 @@ int FitsIO::cfitsio_error()
     }
     fits_clear_errmsg();
     if (i) {
-	//os << ends;
 	error("cfitsio: ", os.str().c_str());
-	//free(os.str());
     }
     return ERROR;
 }

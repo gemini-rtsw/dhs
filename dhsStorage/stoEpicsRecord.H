@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:09  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:31:26  brighton
 // Imported sources
 //
@@ -84,7 +87,6 @@
 
 #define STO_ERV_UNKNOWN		"-"
 #define STO_ERV_BLANK		""
-#define	STO_NULL_CHAR		'\0'
 
 static	char	trueString[] = "True";
 static	char	falseString[] = "False";
@@ -582,17 +584,16 @@ void		cStoEpicsRecord< cUserClass, cParentClass, cStatusClass >::flush
 	{
 	    if ( erTransFunction == 0 ) 
 	    {
-		oss << erValue << STO_NULL_CHAR;
+		oss << erValue;
 	    }
 	    else
 	    {
-		oss << (erPParentObject->*erTransFunction)( erValue ) 
-			<< STO_NULL_CHAR;
+		oss << (erPParentObject->*erTransFunction)( erValue );
 	    }
 	}
 	else
 	{
-	    oss << STO_ERV_UNKNOWN << STO_NULL_CHAR;
+	    oss << STO_ERV_UNKNOWN;
 	}
 	cStaStatus::update( erName, oss.str().c_str(), status );
 	cStaStatus::flush( status );

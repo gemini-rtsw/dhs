@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: error.C,v 1.2 2002-11-27 17:15:09 brighton Exp $"
+ * "@(#) $Id: error.C,v 1.3 2003-04-02 10:33:22 brighton Exp $"
  *
  * error.C - error reporting routines
  * 
@@ -13,8 +13,9 @@
  *                 08/12/98  Changed for egcs compiler 
  * Allan Brighton  01/04/99  Replaced sys_errlist[] with strerror()
  *                           to get around porting problems
+ *                 20/01/03  Updated for gcc-3.2.1
  */
-static const char* const rcsId="@(#) $Id: error.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
+static const char* const rcsId="@(#) $Id: error.C,v 1.3 2003-04-02 10:33:22 brighton Exp $";
 
 
 #include <cstdarg>
@@ -67,7 +68,9 @@ int error(const char* msg1, const char* msg2, int code)
  */
 int sys_error(const char* msg1, const char* msg2)
 {
+#ifndef errno
     extern int errno;
+#endif
     char* s = strerror(errno);
     if (s == NULL)
 	return error(msg1, msg2);

@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: Compress.C,v 1.2 2002-11-27 17:15:09 brighton Exp $
+ * $Id: Compress.C,v 1.3 2003-04-02 10:33:22 brighton Exp $
  *
  * Compress.C - method definitions for class Compress
  *             (based on Archive/CADC press routines)
@@ -9,7 +9,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  2 Aug 96  Created
  */
-static const char* const rcsId="@(#) $Id: Compress.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
+static const char* const rcsId="@(#) $Id: Compress.C,v 1.3 2003-04-02 10:33:22 brighton Exp $";
 
 
 #include <sys/types.h>
@@ -17,7 +17,6 @@ static const char* const rcsId="@(#) $Id: Compress.C,v 1.2 2002-11-27 17:15:09 b
 #include <fcntl.h>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
