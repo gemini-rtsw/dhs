@@ -5,7 +5,7 @@
 TOP = ..
 
 # Root dhsClient source dir
-DHS_CLIENT_TOP = $(TOP)/../dhsClient
+DHS_CLIENT_TOP = @DHS_CLIENT_INSTALL_BASE@
 
 # Release install directory
 RELEASE_DIR = $(TOP)/release

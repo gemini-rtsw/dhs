@@ -100,6 +100,13 @@ AC_CANONICAL_SYSTEM
 AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
 AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
 
+dnl dhsClient settings
+if test "$DHS_CLIENT_INSTALL_BASE" = "" ; then
+    DHS_CLIENT_INSTALL_BASE=`dirname $PWD`/dhsClient
+fi
+AC_SUBST(DHS_CLIENT_INSTALL_BASE)
+
+dnl CFITSIO settings
 dnl Sybase settings (XXX needs work)
 SYBASE=/opt/sybase-12.5/OCS-12_5
 test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
