@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: qldp.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
+static char rcsid[] = "$Id: qldp.C,v 1.3 2003-05-20 17:37:27 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -40,6 +40,9 @@ static char rcsid[] = "$Id: qldp.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:09  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:35:07  brighton
 // Imported sources
 //
@@ -533,7 +536,7 @@ int		dpSet
 
     try
     {
-	char		**list;		// This is used when extracting sub-
+	const char	**list;		// This is used when extracting sub-
 					// lists from the arguments.
 	int		llength;	// Length of sub-lists.
 	cQldpStatus	status;		// DHS status variable.
@@ -609,7 +612,7 @@ int		dpSet
 	{
 	    delete originalImage;
 	}
-	originalImage = new cImage( list[0], list[1] );
+	originalImage = new cImage( (char*)list[0], (char*)list[1] );
 	free( list );
 
 
@@ -651,7 +654,7 @@ int		dpSet
 	    // The operand is an image, create a new cImage for the operand.
 	    //
 
-	    operandImage = new cImage( list[0], list[1] );
+	    operandImage = new cImage( (char*)list[0], (char*)list[1] );
 
 
 	    //
@@ -821,11 +824,11 @@ int	Qldp_Init
 )
 {
 
-    Tcl_CreateCommand( interp, "dpSet", dpSet, (ClientData) NULL, 
+    Tcl_CreateCommand( interp, "dpSet", (Tcl_CmdProc*)dpSet, (ClientData) NULL, 
 	    (Tcl_CmdDeleteProc *) NULL );
-    Tcl_CreateCommand( interp, "dpApply", dpApply, (ClientData) NULL, 
+    Tcl_CreateCommand( interp, "dpApply", (Tcl_CmdProc*)dpApply, (ClientData) NULL, 
 	    (Tcl_CmdDeleteProc *) NULL );
-    Tcl_CreateCommand( interp, "dpClear", dpClear, (ClientData) NULL, 
+    Tcl_CreateCommand( interp, "dpClear", (Tcl_CmdProc*)dpClear, (ClientData) NULL, 
 	    (Tcl_CmdDeleteProc *) NULL );
 
     Tcl_PkgProvide( interp, "qldp", "1.0" );
