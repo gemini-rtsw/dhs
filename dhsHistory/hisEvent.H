@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:08  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:28:07  brighton
 // Imported sources
 //
@@ -69,7 +72,6 @@
 #include <list>
 #include <map>
 
-// #include "queue.h" XXX allan: can't find header file
 #include <queue>
 
 #include <stack>

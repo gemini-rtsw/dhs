@@ -1,0 +1,76 @@
+Porting Notes
+=============
+
+Below is a list of some of the changes made to get DHS to compile
+with gcc-3.2.1 under RedHat-7.2. 
+
+(Most of the non-trivial changes are commented with the string "XXX allan")
+
+
+* Changed the syntax for standard #include files from:
+  <file.h> to <file> (for C++) and <cfile> for C.
+  
+  For example: change <iostream.h> to <iostream> and
+  change <stdio.h> to <cstdio>.
+
+  The Standard C++ Header files are:
+
+     algorithm bitset complex deque exception fstream functional
+     iomanip ios iosfwd iostream istream iterator limits list locale map
+     memory new numeric ostream queue set sstream stack stdexcept streambuf
+     typeinfo utility valarray vector
+
+  The Standard C Header files are:
+ 
+     assert ctype errno float iso646 limits locale math setjmp signal
+     stdarg stddef stdio stdlib string time
+
+
+* Added std:: namespace prefix to all standard C++ names.
+  (For example: std::iostream, std::string, std::list, std::endl).
+
+
+* Replaced gets() with fgets(), tmpnam and tempnam with a new
+  utility routine (gen_tempnam()), mktemp() with mkstemp(), 
+  since gcc complains about these.
+
+
+* Replaced some #ifdef solaris/#ifdef hpux code with configure based
+  variables and code blocks. 
+
+* Fixed portability and "out of date" problems with mnttab.h/mntent.h
+  (media mounting code).
+
+* Added #ifdef code to handle system specific calls, such as fork1()
+
+* Replaced calls to "fusage()" with "statvfs()"
+
+* Fixed a number of problems with varargs/stdargs usage
+
+* Added numerous casts to please the compiler
+
+* Changed some methods from private to public as required by the compiler
+
+* Replaced lots of NULLs with 0s, as required by the compiler.
+
+* Fixed a number of obvious bugs that were missed by previous compilers
+
+* For the Linux port, had to compile some EPICS libraries from the sources
+  (not all will compile, but enough to get DHS to compile)
+
+* Updated outdated CFITSIO code usage (fits_set_mem_buff, etc.)
+
+* Replaced list.erase() with list.clear() (erase was no longer defined)
+
+* Had to replace the null first arg to attribute.info() with a dummy parameter
+  in numerous places, to please the compiler
+
+* Replaced heder file <strstream> with <sstream>
+* Replaced ostrstream with ostringstream (ostrstream is deprecated)
+* Same for istrstream (istringstream)
+  (Note that ostringstream is not compatible, so code changes were
+   needed)
+
+* Changed process thread id init values to 0, from -1 (type is unsigned)
+
+
