@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:33:07  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -66,9 +69,7 @@
 #include <errno.h>
 #include <genMutex.H>
 
-#ifdef HAVE_BOOL_H
-#include <bool.h>
-#endif
+#include "genBool.H"
 
 //
 //***********************************************************************
@@ -355,4 +356,4 @@ bool		cCond::timedWait
 	throw s;
     }
 }
-#endif // GENCOND_H
+#endif /* GENCOND_H */

@@ -103,11 +103,25 @@ AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
 dnl Sybase settings
 if test "$SYBASE" = "" ; then
     SYBASE=/opt/sybase-12.5/OCS-12_5
+    test ! -d $SYBASE && SYBASE=/ocs/software/dev/packages/sybase/M1000
 fi
 AC_SUBST(SYBASE)
 
-dnl Drama settings
+dnl CFITSIO settings
+if test "$CFITSIO" = "" ; then
+    CFITSIO=`dirname $PWD`/cfitsio
+    test ! -d $CFITSIO && CFITSIO=/ocs/software/dev/packages/cfitsio
+fi
+AC_SUBST(CFITSIO)
 
+dnl EPICS settings
+if test "$EPICS" = "" ; then
+    EPICS=`dirname $PWD`/epics/base
+    test ! -d $EPICS && EPICS=/ocs/software/dev/packages/epics/epics/base
+fi
+AC_SUBST(EPICS)
+
+dnl Drama settings
 case "$host_os" in
     linux-gnu)     DRAMA_OS=linux_x86;;
     solaris*)      DRAMA_OS=sun4_solaris;;

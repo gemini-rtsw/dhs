@@ -53,9 +53,7 @@ extern "C"
 #include "gen_msg.h"
 }
 
-#ifdef HAVE_BOOL_H
-#include <bool.h>
-#endif
+#include "genBool.H"
 
 #include "dhsGenStatus.H"
 

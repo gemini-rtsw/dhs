@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: list.C,v 1.1.1.1 2002-11-24 20:27:15 brighton Exp $";
+static char rcsid[] = "$Id: list.C,v 1.2 2002-11-25 10:32:32 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -73,6 +73,9 @@ static char rcsid[] = "$Id: list.C,v 1.1.1.1 2002-11-24 20:27:15 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:27:15  brighton
+// Imported sources
+//
 // Revision 1.4  2002/02/25 19:04:10  tpaz
 // *** empty log message ***
 //
@@ -154,9 +157,7 @@ static char rcsid[] = "$Id: list.C,v 1.1.1.1 2002-11-24 20:27:15 brighton Exp $"
 //  Includes
 //
 
-#ifdef HAVE_BOOL_H
-#include "bool.h"
-#endif
+#include "genBool.h"
 
 #include <iostream.h>
 //#include <pthread.h>

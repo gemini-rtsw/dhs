@@ -38,13 +38,13 @@ SYBASE_INCLUDES = -I$(SYBASE)/include
 SYBASE_LDLIBS = -L$(SYBASE)/lib -lsybdb
 
 # Base dir for Epics
-EPICS = $(TOP)/../epics/base
+EPICS = @EPICS@
 EPICS_INCLUDES = -I$(EPICS)/include
 EPICS_LDLIBS = -L$(EPICS)/lib/${HOST_ARCH} -lca -lCom
 
 
 # CFITSIO (relative to the source dirs)
-CFITSIO = $(TOP)/../cfitsio
+CFITSIO = @CFITSIO@
 CFITSIO_INCLUDES = -I$(CFITSIO)
 CFITSIO_LDLIBS = -L$(CFITSIO) -lcfitsio
 

@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:19  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -116,9 +119,7 @@ extern "C"
 #include "dhsSta.H"
 #include "dhsGenSubsystem.H"
 
-#ifdef HAVE_BOOL_H
-#include <bool.h>
-#endif
+#include "genBool.H"
 
 #define	DHS_NO_BULK
 #define	APPLICATION	"dhsStatus"

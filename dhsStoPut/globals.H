@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:59  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -72,9 +75,7 @@ extern "C"
 #include "gen_msg.h"
 }
 
-#ifdef HAVE_BOOL_H
-#include <bool.h>
-#endif
+#include "genBool.H"
 
 #include "dhsGenStatus.H"
 #include "dhs++.H"
