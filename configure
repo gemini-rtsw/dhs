@@ -2136,8 +2136,20 @@ fi
 
 if test "$SYBASE" = "" ; then
     SYBASE=/opt/sybase-12.5/OCS-12_5
+    test ! -d $SYBASE && SYBASE=/ocs/software/dev/packages/sybase/M1000
 fi
 
+
+if test "$CFITSIO" = "" ; then
+    CFITSIO=`dirname $PWD`/cfitsio
+    test ! -d $CFITSIO && CFITSIO=/ocs/software/dev/packages/cfitsio
+fi
+
+
+if test "$EPICS" = "" ; then
+    EPICS=`dirname $PWD`/epics/base
+    test ! -d $EPICS && EPICS=/ocs/software/dev/packages/epics/epics/base
+fi
 
 
 case "$host_os" in
@@ -2367,6 +2379,8 @@ s%@build_cpu@%$build_cpu%g
 s%@build_vendor@%$build_vendor%g
 s%@build_os@%$build_os%g
 s%@SYBASE@%$SYBASE%g
+s%@CFITSIO@%$CFITSIO%g
+s%@EPICS@%$EPICS%g
 s%@DRAMA_OS@%$DRAMA_OS%g
 s%@DRAMA@%$DRAMA%g
 s%@DRAMA_CONFIG@%$DRAMA_CONFIG%g
