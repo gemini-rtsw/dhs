@@ -92,15 +92,20 @@ EXTERNAL_LIBS = \
 
 
 # compile
-all: setup
+all: install_dirs
 	for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) all install)  || exit 1 ; done
 
-# Copy external libraries and include files to a central 
+# Copy external shared libraries to the release lib dir, so the LD_LIBRARY_PATH
+# does not need to include so many directories.
+# Uses tar and wildcards to make sure to get both the *.so files and the
+# *.so.version files.
 setup: install_dirs
-	@for i in $(EXTERNAL_LIBS) ; do \
+	@d=`pwd`/release/lib ;\
+	for i in $(EXTERNAL_LIBS) ; do \
 	    if test -f $$i ; then \
-		rm -f release/lib/`basename $$i` ;\
-	        ln -s $$i release/lib ;\
+		b=`basename $$i` ;\
+		rm -f $$d/$$b* ;\
+		(cd `dirname $$i`; tar cf - $$b* | (cd $$d; tar xvf -)) ;\
 	    else \
 	        echo "*** Missing library: $$i" ;\
 		exit 1 ;\
