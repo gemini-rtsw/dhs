@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: list.C,v 1.2 2002-11-25 10:32:32 brighton Exp $";
+static char rcsid[] = "$Id: list.C,v 1.3 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -73,6 +73,9 @@ static char rcsid[] = "$Id: list.C,v 1.2 2002-11-25 10:32:32 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/25 10:32:32  brighton
+// added genBool.H
+//
 // Revision 1.1.1.1  2002/11/24 20:27:15  brighton
 // Imported sources
 //
@@ -157,9 +160,9 @@ static char rcsid[] = "$Id: list.C,v 1.2 2002-11-25 10:32:32 brighton Exp $";
 //  Includes
 //
 
-#include "genBool.h"
+#include "genBool.H"
 
-#include <iostream.h>
+#include <iostream>
 //#include <pthread.h>
 
 #include "genCond.H"
@@ -172,7 +175,7 @@ extern "C"
 #include "gen_config.h"
 #include "gen_eptr.h"
 
-#include <time.h>
+#include <ctime>
 #include "sf.h"
 }
 
@@ -383,7 +386,7 @@ cDtsChunkInfo		*cDtsDatasetList::findChunk
     checkStat( status, return(NULL) );
 
 
-    i = cdlChunkList.find( string( source ) );
+    i = cdlChunkList.find( std::string( source ) );
 
     if ( i == cdlChunkList.end() )
     {
@@ -823,7 +826,7 @@ void	cDtsDatasetList::add
     //  Now add this to the dataset list.
     //
 
-    cdlDataList[ string( cdlDatasetName ) ] = this;
+    cdlDataList[ std::string( cdlDatasetName ) ] = this;
 }
 
 //
@@ -1505,7 +1508,7 @@ cDtsDatasetList		*cDtsDatasetList::datasetNameFind
     //  Search the dataset list.
     //
 
-    i = cdlDataList.find( string( datasetName ) );
+    i = cdlDataList.find( std::string( datasetName ) );
 
     if ( i == cdlDataList.end() )
     {
@@ -1664,7 +1667,7 @@ cDtsDatasetList		*cDtsDatasetList::datasetNameVerify
     else
     {
     
-	i = cdlDataList.find( string( *datasetName ) );
+	i = cdlDataList.find( std::string( *datasetName ) );
 
 	if ( i == cdlDataList.end() )
 	{
@@ -1990,7 +1993,7 @@ cDtsDatasetList		*cDtsDatasetList::datasetNameVerify
 	//  Search the dataset list.
 	//
 
-	i = cdlDataList.find( string( *datasetName ) );
+	i = cdlDataList.find( std::string( *datasetName ) );
 
 	if ( i == cdlDataList.end() )
 	{
@@ -2547,7 +2550,7 @@ void		cDtsDatasetList::resetChunkList
     //  Find the dataset object in the dataset list.
     //
 
-    i = cdlDataList.find( string( datasetName ) );
+    i = cdlDataList.find( std::string( datasetName ) );
 
     if ( i != cdlDataList.end() )
     {
@@ -2647,7 +2650,7 @@ void		cDtsDatasetList::setChunkList
     
 	checkNull( ( pChunk = new cDtsChunkInfo( tokens[j] )), 
 		status, VOID ); 
-	cdlChunkList[string(pChunk->name())] = pChunk;
+	cdlChunkList[std::string(pChunk->name())] = pChunk;
 	cdlNumChunks = 0;
     }
     free( tmp );
@@ -2920,7 +2923,7 @@ void	 cDtsUniqueList::add
     //  Now add this to the unique list.
     //
 
-     culUniqueList[ string( culUniqueName ) ] = this;
+     culUniqueList[ std::string( culUniqueName ) ] = this;
 }
 
 //
@@ -3450,7 +3453,7 @@ void cDtsUniqueList::uniqueNameVerify
     //  First find out if its already in the list, and add it if not there.
     //
 
-    i = culUniqueList.find( string( *uniqueName ) );
+    i = culUniqueList.find( std::string( *uniqueName ) );
 
     if ( i == culUniqueList.end() )
     {

@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/25 10:32:33  brighton
+// added genBool.H
+//
 // Revision 1.1.1.1  2002/11/24 20:30:19  brighton
 // Imported sources
 //
@@ -107,7 +110,7 @@
 #ifndef GLOBALS_H
 #define	GLOBALS_H
 
-#include <stdarg.h>
+#include <cstdarg>
 
 extern "C"
 {

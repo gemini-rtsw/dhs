@@ -179,6 +179,5 @@ if test "$ERS_DIR" = "$tmp" ; then
 fi
 AC_SUBST(ERS_DIR)
 
-
 AC_OUTPUT(conf/include.mk)
 

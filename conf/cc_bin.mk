@@ -15,13 +15,19 @@ PROGRAM = $(NAME)
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJECTS) ${LOCAL_LIBS}
-	$(CC) -o $(PROGRAM) $(OBJECTS) $(LDFLAGS) $(LDLIBS)
+	$(CXX) -o $(PROGRAM) $(OBJECTS) $(LDFLAGS) $(LDLIBS)
 
 install:
-	cp $(PROGRAM) $(RELEASE_DIR)
+	cp $(PROGRAM) $(RELEASE_DIR)/bin
 
 clean:
 	rm -f $(OBJECTS) $(PROGRAM)
 
 etags:
 	etags ${ETAGS_SOURCES}
+
+# Automatic dependencies (from GNU make doc example)
+%.d: %.c
+	set -e; $(CC) -MM $(CFLAGS) $< | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; [ -s $@ ] || rm -f $@
+
+-include $(SOURCES:.c=.d)

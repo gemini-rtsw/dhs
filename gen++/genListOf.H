@@ -37,6 +37,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:33:09  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -139,10 +142,8 @@ template < class cUserClass, class cIndex, class cStatus >
 class 	cListOf
 {
     public:
-	typedef	map < cIndex, cUserClass *, less< cIndex > >
-			tObjectList;
-	typedef tObjectList::iterator
-			iObjectList;
+	typedef	std::map < cIndex, cUserClass *, std::less< cIndex > > tObjectList;
+	typedef typename tObjectList::iterator iObjectList;
 	typedef	void (cUserClass::*tForEachFn) ( void *, cStatus & );
 	typedef void (cUserClass::*tLockFn) ( void );
 
@@ -204,7 +205,7 @@ class 	cListOf
 	static cRwLock	loRwLock;
 };
 template< class cUserClass, class cIndex, class cStatus >
-	map< cIndex, cUserClass *, less< cIndex > >
+	std::map< cIndex, cUserClass *, std::less< cIndex > >
 	cListOf< cUserClass, cIndex, cStatus >::loObjectList;
 template < class cUserClass, class cIndex, class cStatus >
 	cRwLock cListOf< cUserClass, cIndex, cStatus >::loRwLock;
@@ -260,7 +261,7 @@ template< class cUserClass, class cIndex, class cStatus >
     				//	 to the list.
 )
 {
-    pair<int, cListOf *>	
+    std::pair<int, cListOf *>	
 		*arg;
     pthread_attr_t		// Thread attributes.
 		attr;
@@ -295,7 +296,7 @@ template< class cUserClass, class cIndex, class cStatus >
 
 	    key = loRwLock.preLock();
 	    loInList = true;
-	    arg = new pair<int, cListOf *> ( key, this );
+	    arg = new std::pair<int, cListOf *> ( key, this );
 
 	    pthread_attr_init( &attr );
 	    pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
@@ -355,7 +356,7 @@ template< class cUserClass, class cIndex, class cStatus >
     void
 )
 {
-    pair<int, cIndex>	
+    std::pair<int, cIndex>	
 		*arg;
     pthread_attr_t		// Thread attributes.
 		attr;
@@ -391,7 +392,7 @@ template< class cUserClass, class cIndex, class cStatus >
 	    //
 
 	    key = loRwLock.preLock();
-	    arg = new pair<int, cIndex> ( key, loObjectIndex );
+	    arg = new std::pair<int, cIndex> ( key, loObjectIndex );
 
 	    pthread_attr_init( &attr );
 	    pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
@@ -510,13 +511,13 @@ void		*cListOf< cUserClass, cIndex, cStatus >::deleteThread
     				//	 pthread_create
 )
 {
-    pair<int, cIndex>	
+    std::pair<int, cIndex>	
 		*arg;
     iObjectList	i;
     int		key;
     cIndex	index;
 
-    arg = (pair<int, cIndex> *) pArg;
+    arg = (std::pair<int, cIndex> *) pArg;
     key = arg->first;
     index = arg->second;
     delete arg;
@@ -723,12 +724,12 @@ void		*cListOf< cUserClass, cIndex, cStatus >::insertThread
     				//	 pthread_create
 )
 {
-    pair<int, cListOf *>	
+    std::pair<int, cListOf *>	
 		*arg;
     int		key;
     cListOf	*pObj;
 
-    arg = (pair<int, cListOf *> *) pArg;
+    arg = (std::pair<int, cListOf *> *) pArg;
     key = arg->first;
     pObj = arg->second;
     delete arg;

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:12 brighton Exp $";
+static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:12 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:12  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -97,11 +100,11 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:12 brighton Exp $"
 // DHS_NO_SERVER symbol will speed up compilation a little.
 //
 
-#include <iostream.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
-#include <time.h>
+#include <ctime>
 
 extern "C"
 {
@@ -458,9 +461,9 @@ int	main
     
     if ( argc < 4 || argc > 6 )
     {
-	cout << "usage: dhsCmdSender <clientName> <serverAddress> "
+	std::cout << "usage: dhsCmdSender <clientName> <serverAddress> "
 		"<serverName> [ -printResult ] [ -timeCommand ]"
-		<< endl;
+		<< std::endl;
 	exit( -1 );
     }
 
@@ -476,9 +479,9 @@ int	main
 	}
 	else
 	{
-	    cout << "usage: dhsCmdSender <clientName> <serverAddress> "
+	    std::cout << "usage: dhsCmdSender <clientName> <serverAddress> "
 		    "<serverName> [ -printResult ] [ -timeCommand ]"
-		    << endl;
+		    << std::endl;
 	    exit( -1 );
 	}
     }
@@ -530,13 +533,13 @@ int	main
 	connect.open( status );
 
 
-	for ( cin.getline( dataLine, sizeof( dataLine ) );
-		! cin.eof() && status == DHS_S_SUCCESS; )
+	for ( std::cin.getline( dataLine, sizeof( dataLine ) );
+		! std::cin.eof() && status == DHS_S_SUCCESS; )
 	{
 	    strtokens( dataLine, 20, tokens, &numTokens );
 	    if ( numTokens == 0 || tokens[0][0] == '#' )
 	    {
-		cin.getline( dataLine, sizeof( dataLine ) );
+		std::cin.getline( dataLine, sizeof( dataLine ) );
 		continue;
 	    }
 
@@ -553,10 +556,10 @@ int	main
 	    {
 		pCmd = new cmd( tokens[0], printResponse );
 
-		for ( cin.getline( dataLine, sizeof( dataLine ) );
-			! cin.eof() && status == DHS_S_SUCCESS && 
+		for ( std::cin.getline( dataLine, sizeof( dataLine ) );
+			! std::cin.eof() && status == DHS_S_SUCCESS && 
 			dataLine[0] == '\t';
-			cin.getline( dataLine, sizeof( dataLine ) ) )
+			std::cin.getline( dataLine, sizeof( dataLine ) ) )
 		{
 		    strtokens( dataLine, 2000, tokens, &numTokens );
 		    if ( numTokens >= 3 )
@@ -654,13 +657,13 @@ int	main
 				1000000000;
 		    }
 		    sprintf( aTimeStr, "%5.3f", aTime );
-		    cout << endl << "Time until command accepted: " << 
-			    aTimeStr << endl;
+		    std::cout << std::endl << "Time until command accepted: " << 
+			    aTimeStr << std::endl;
 		}
 	    }
 	    else
 	    {
-		cin.getline( dataLine, sizeof( dataLine ) );
+		std::cin.getline( dataLine, sizeof( dataLine ) );
 	    }
 	}
 
@@ -672,17 +675,17 @@ int	main
 
 	if ( status != DHS_S_SUCCESS )
 	{
-	    cout << "status: " << status << endl;
+	    std::cout << "status: " << status << std::endl;
 	    for ( DHS_STATUS s1 = DHS_S_SUCCESS; s1 == DHS_S_SUCCESS; )
 	    {
 		msg = cDhs::message( errNum, errLev, s1 );
-		cout << msg << endl;
+		std::cout << msg << std::endl;
 		cDhs::messageClear( s1 );
 	    }
 	    throw status;
 	}
 
-	//cout << "exiting" << endl;
+	//std::cout << "exiting" << std::endl;
     }
     catch( const DHS_STATUS s )
     {
@@ -695,16 +698,16 @@ int	main
         // Error in the dhs library.
         //
  
-        cout << "Error in the dhs library: " << s << endl;
+        std::cout << "Error in the dhs library: " << s << std::endl;
         str = cDhs::message( st, el, s1 );
         for ( ; s1 == DHS_S_SUCCESS;
                 str = cDhs::message( st, el, s1 ) )
         {
-            cout << str << endl;
+            std::cout << str << std::endl;
             cDhs::messageClear(s1);
         }
         return( -1 );
     }
 
-    //cout << "done" << endl;
+    //std::cout << "done" << std::endl;
 }

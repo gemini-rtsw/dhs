@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:21  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -102,26 +105,26 @@
 
 class cStoConnection :
 	public cDhsConnection,
-	public cListOf< cStoConnection, string, cStoStatus >
+	public cListOf< cStoConnection, std::string, cStoStatus >
 {
     public:
-	typedef list< cStoConnection * >		notL;
-	typedef list< cStoConnection * >::iterator	notIt;
+	typedef std::list< cStoConnection * >		notL;
+	typedef std::list< cStoConnection * >::iterator	notIt;
 
 
 	//
 	// Constructors, Deconstructors.
 	//
 
-	inline		cStoConnection( string )
-			:   cListOf< cStoConnection, string, cStoStatus >
+	inline		cStoConnection( std::string )
+			:   cListOf< cStoConnection, std::string, cStoStatus >
 				( "", false )
 			{
 			};
 	inline		cStoConnection( char *identity, char *ipAddress,
 				bool = true )
-			:   cListOf< cStoConnection, string, cStoStatus >
-				( string( identity ), true ),
+			:   cListOf< cStoConnection, std::string, cStoStatus >
+				( std::string( identity ), true ),
 			    cDhsConnection( ipAddress, identity )
 			{
 			};

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: dbm.C,v 1.1.1.1 2002-11-24 20:26:54 brighton Exp $";
+static char rcsid[] = "$Id: dbm.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -69,6 +69,9 @@ static char rcsid[] = "$Id: dbm.C,v 1.1.1.1 2002-11-24 20:26:54 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:26:54  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -135,7 +138,7 @@ static char rcsid[] = "$Id: dbm.C,v 1.1.1.1 2002-11-24 20:26:54 brighton Exp $";
 //  Includes
 //
 
-#include <iostream.h>
+#include <iostream>
 #include "genMutex.H"
 
 extern "C"
@@ -2420,9 +2423,9 @@ void	cDtsDatasetTable::fileListGet
 (
     cDtsStatus	&status,		// (mod) Function return status.
     char	selectType,		// (in)  Select type.
-    map< string,				// Sort key of datatype string.
+    std::map< std::string,				// Sort key of datatype string.
     cDtsDatasetTable *,				// Into this containr this type
-    less<string> >				// Sorting mechanizm.
+    std::less<std::string> >				// Sorting mechanizm.
     		&tableInfo		// Provides access to containr
 					//        information.
 )
@@ -2574,7 +2577,7 @@ void	cDtsDatasetTable::fileListGet
 		    dateNotified, received, lifetime, health, oldpFlag, ssFlag,
 		    format, contrib );
 
-	    tableInfo[ string( datasetName ) ] = pTable;
+	    tableInfo[ std::string( datasetName ) ] = pTable;
 
 	}
     }

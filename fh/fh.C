@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: fh.C,v 1.1.1.1 2002-11-24 20:32:52 brighton Exp $";
+static char rcsid[] = "$Id: fh.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -48,6 +48,9 @@ static char rcsid[] = "$Id: fh.C,v 1.1.1.1 2002-11-24 20:32:52 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:32:52  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -94,7 +97,7 @@ static char rcsid[] = "$Id: fh.C,v 1.1.1.1 2002-11-24 20:32:52 brighton Exp $";
 //  Includes
 //
 
-#include <iostream.h>
+#include <iostream>
 
 extern "C"
 {
@@ -321,7 +324,7 @@ void		cHdrParser::checkFitsTable
 	    //  do, check that the data type matches. Otherwise, add it.
 	    //
 
-	    i = listPtr.find( string( row->ddrColName ) );
+	    i = listPtr.find( std::string( row->ddrColName ) );
 	    if ( i != listPtr.end() )
 	    {
 		if ( (*i).second->hdrRow->ddrType !=  row->ddrType )
@@ -368,7 +371,7 @@ void		cHdrParser::checkFitsTable
 		
 		pColList = new cHdrParseList( row, row->ddrKeyword, 
 			value );
-		listPtr[ string( row->ddrColName ) ] = pColList;
+		listPtr[ std::string( row->ddrColName ) ] = pColList;
 	    }
 	}
 
@@ -1072,7 +1075,7 @@ void		cHdrParser::parseHeader
 	    //
 	    
 	    pColList = new cHdrParseList( row, keyword, value );
-	    hdrListPtr[ string( keyword ) ] = pColList;
+	    hdrListPtr[ std::string( keyword ) ] = pColList;
 	}
     }
 
@@ -1200,7 +1203,7 @@ void	cHdrParser::remainingCols
 	}
 	j++;
 
-	i = listPtr.find( string( row->ddrKeyword ) );
+	i = listPtr.find( std::string( row->ddrKeyword ) );
 
 
 	//
@@ -1229,7 +1232,7 @@ void	cHdrParser::remainingCols
 		//Do not add to the db. Decided against that.
 		// pColList = new cHdrParseList( row, row->ddrKeyword, 
 		//	    row->ddrNullVal);
-		//listPtr[ string( row->ddrKeyword ) ] = pColList;
+		//listPtr[ std::string( row->ddrKeyword ) ] = pColList;
 	    }
 	}
 

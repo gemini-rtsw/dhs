@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: ImageIO.C,v 1.1.1.1 2002-11-24 20:21:34 brighton Exp $" 
+ * "@(#) $Id: ImageIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $" 
  *
  * ImageIO.C - method definitions for class ImageIO, for managing image
  *             I/O and storage
@@ -14,14 +14,14 @@
  *                           class FitsIO or other class derived from
  *                           ImageIORep.
  */
-static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.1.1.1 2002-11-24 20:21:34 brighton Exp $";
+static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 
 #include <netinet/in.h>
-#include <math.h>
-#include <stdlib.h>
-#include "error.h"
-#include "ImageIO.h"
+#include <cmath>
+#include <cstdlib>
+#include "error.H"
+#include "ImageIO.H"
 
 
 /*

@@ -78,11 +78,10 @@ all clean: FORCE
 
 distclean: clean
 	rm -f config.status config.cache config.log confdefs.h include.mk
-	rm -rf release
+	rm -rf release */*.d
 
 install:
 	for i in ${RELEASE_DIRS}; do test -d $$i || mkdir $$i; done
-	cp */*.a release/lib
 	cp */*.h release/include
 	cp ${SCRIPTS} release/scripts
 	cp */*.1 release/man/man1

@@ -72,6 +72,7 @@
 #include "gen_str.h"
 #include "gen_msg.h"
 #include "gen_eptr.h"
+#include "gen_util.h"
 
 #include "ad.h"
 #include "db.h"
@@ -560,10 +561,11 @@ static int	ingest_tape
     AD_TP_LOCATION
     		location;
     int 	status;
-    char	tmp_list[L_tmpnam];	/* The file info from the tape 	*/
+    char*	tmp_list;	/* The file info from the tape 	*/
     FILE	*tmpfp;
 
-    (void) tmpnam( tmp_list );
+    /* tmpnam( tmp_list ); XXX allan: gcc complains about tmpnam() */
+    tmp_list = gen_tempnam( "/tmp", "ingest-" );
 
 
     /*
@@ -604,6 +606,8 @@ static int	ingest_tape
     (void) fclose( tmpfp );
     TI_CHECK_SYSTEM( unlink( tmp_list ), "unlink" );
 
+    if (tmp_list != NULL)
+	free(tmp_list); /* XXX allan */
     
     /*
      *  If end of directory was reached, add the tape to the tape table.

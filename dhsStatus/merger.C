@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: merger.C,v 1.1.1.1 2002-11-24 20:30:28 brighton Exp $";
+static char rcsid[] = "$Id: merger.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -39,6 +39,9 @@ static char rcsid[] = "$Id: merger.C,v 1.1.1.1 2002-11-24 20:30:28 brighton Exp 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:28  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -105,7 +108,7 @@ static char rcsid[] = "$Id: merger.C,v 1.1.1.1 2002-11-24 20:30:28 brighton Exp 
     char	*name,		// (in)  Name of the merged record.
     int		numValues,	// (in)  Number of values in the values list.
     char	**values	// (in)  List of possible values for the record.
-) : cListOf< cStaMerger, string, cStaStat >( name, true )
+) : cListOf< cStaMerger, std::string, cStaStat >( name, true )
 {
     int		i;
     cDhsSubsystem::iterator

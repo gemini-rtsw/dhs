@@ -72,9 +72,9 @@
 class 	cPutList
 {
     public:
-	typedef map< string,		// Sort key is of datatype string.
+	typedef std::map< std::string,		// Sort key is of datatype string.
 		     cPutList *,	// Insert into this containr this type
-		     less<string> >	// This is the sorting mechanizm.
+		     std::less<std::string> >	// This is the sorting mechanizm.
 		tPutList;		// This var. provides access to containr
 	typedef tPutList::iterator	// This provides an iterator to containr
 		iterator;

@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:24:43  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -69,8 +72,8 @@
 //***********************************************************************
 //
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 #include <pthread.h>
 

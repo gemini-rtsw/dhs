@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:06 brighton Exp $";
+static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:06 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:06  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -55,8 +58,8 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:06 brighton Exp $"
 //  Includes
 //
  
-#include <iostream.h>
-#include <signal.h>
+#include <iostream>
+#include <csignal>
 
 #include "globals.H"
 #include "sim.H"

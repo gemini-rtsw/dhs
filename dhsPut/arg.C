@@ -166,7 +166,7 @@ void		argInit
 	    //
 	    
 	    //putDhs::setNewLabel();
-	    cout << "new not implemented at this time" << endl; 
+	    std::cout << "new not implemented at this time" << std::endl; 
 	    status.E_USAGE( status );
 	}
 	else if ( strcmp( argv[i], "-id" ) == 0 )

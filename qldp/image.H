@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:35:02  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -59,8 +62,8 @@
 
 #ifndef IMAGE_H
 #define	IMAGE_H
-#include "Mem.h"
-#include "FitsIO.h"
+#include "Mem.H"
+#include "FitsIO.H"
 
 //
 //***********************************************************************

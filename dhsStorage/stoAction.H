@@ -42,6 +42,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:20  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -188,9 +191,9 @@ class	cStoAction
 	// Typedefs - We'll use the list to be a queue. 
 	//
 
-	typedef list< cStoAction * >
+	typedef std::list< cStoAction * >
 			tActionQueue;		// List type.
-	typedef list< cStoAction * >::iterator
+	typedef std::list< cStoAction * >::iterator
 			iActionQueue;		// Iterator type.
 
 
@@ -305,7 +308,7 @@ class	cStoAction
 					// Media ID.
 	cStoEpicsRecord<cStoActionType, cStoAction, cStoStatus>
 			saActionType;	// Action type.
-	cStoEpicsRecord<string, cStoAction, cStoStatus>
+	cStoEpicsRecord<std::string, cStoAction, cStoStatus>
 			saOption;	// Option.
 	cStoEpicsRecord<bool, cStoAction, cStoStatus>
 			saInUse;	// is this epics record in use?

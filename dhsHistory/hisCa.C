@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: hisCa.C,v 1.1.1.1 2002-11-24 20:28:12 brighton Exp $";
+static char rcsid[] = "$Id: hisCa.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -42,7 +42,7 @@ static char rcsid[] = "$Id: hisCa.C,v 1.1.1.1 2002-11-24 20:28:12 brighton Exp $
 //***********************************************************************
 //
 
-#include <iostream.h>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -780,7 +780,7 @@ boolean		cHisCa::channel
 
     if ( numTokens == 2 )
     {
-	i = hcChannelList.find( string( tokens[1] ) );
+	i = hcChannelList.find( std::string( tokens[1] ) );
 	if ( i != hcChannelList.end() )
 	{
 	    //
@@ -937,5 +937,5 @@ void     cHisCa::chanListAdd
     // Add to channel list.
     //
 
-    hcChannelList[ string( hcChannelName ) ] = this;
+    hcChannelList[ std::string( hcChannelName ) ] = this;
 }

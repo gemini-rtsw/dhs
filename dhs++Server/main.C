@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:02 brighton Exp $";
+static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:02 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:02  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -69,11 +72,11 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:30:02 brighton Exp $"
 //  improved by eliminating the client header files.
 //
 
-#include <iostream.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstdlib>
 #include <unistd.h>
 #include <fcntl.h>
-#include <signal.h>
+#include <csignal>
 
 #include "dhsGenSignal.H"
 #include "dhsGenStatus.H"
@@ -166,8 +169,8 @@ void 		cCmd::exec()
     //  Print the command name.
     //
 
-    cout << "default handler" << endl;
-    cout << name() << endl;
+    std::cout << "default handler" << std::endl;
+    std::cout << name() << std::endl;
 
     print( status );
     usleep( rand()/2000 );
@@ -278,8 +281,8 @@ void cCmd2::exec
     //  Print the command name
     //
 
-    cout << "cmd2 handler" << endl;
-    cout << name() << endl;
+    std::cout << "cmd2 handler" << std::endl;
+    std::cout << name() << std::endl;
 
 
     //
@@ -302,17 +305,17 @@ void cCmd2::exec
     //
 
     attrib.info( attribName, type, ndims, dims, &pData, status );
-    cout << "name: " << attribName << " type: " << type << " ndims: " 
-	    << ndims << " data: " << *(double *) pData << endl;
+    std::cout << "name: " << attribName << " type: " << type << " ndims: " 
+	    << ndims << " data: " << *(double *) pData << std::endl;
     
     attrib.info( attribName, type, status );
-    cout << "name: " << attribName << " type: " << type << endl;
+    std::cout << "name: " << attribName << " type: " << type << std::endl;
 
     attrib.info( ndims, dims, &pData, status );
-    cout << " ndims: " << ndims << " data: " << *(double *) pData << endl;
+    std::cout << " ndims: " << ndims << " data: " << *(double *) pData << std::endl;
 
     attrib.info( &pData, status );
-    cout << " data: " << *(double *) pData << endl;
+    std::cout << " data: " << *(double *) pData << std::endl;
 
 
     //
@@ -363,7 +366,7 @@ void cCmd2::exec
     for ( DHS_STATUS s1 = DHS_S_SUCCESS; s1 != DHS_S_NO_MESSAGE; )
     {
 	msg = (char*)cDhs::message( errNum, errLev, s1 );
-	cout << msg << endl;
+	std::cout << msg << std::endl;
 	cDhs::messageClear( s1 );
     }
     
@@ -433,7 +436,7 @@ void cQuit::exec()
     DHS_STATUS	status( DHS_S_SUCCESS );
 
 
-    cout << "quitting" << endl;
+    std::cout << "quitting" << std::endl;
 
 
     //
@@ -508,7 +511,7 @@ class	cError: public cDhsError
 
 void cError::error()
 {
-    cout << message() << endl;
+    std::cout << message() << std::endl;
 }
 
 //
@@ -569,8 +572,8 @@ class	cError2: public cDhsError
 
 void cError2::error()
 {
-    cout << "connection request" << endl;
-    cout << message() << endl;
+    std::cout << "connection request" << std::endl;
+    std::cout << message() << std::endl;
 }
 
 //
@@ -656,9 +659,9 @@ void		cPutRequest::exec
     cDhsAvList	respAvList;	// Response avList
 
 
-    cout << "put handler" << endl;
-    cout << length() << endl;
-    cout << label() << endl;
+    std::cout << "put handler" << std::endl;
+    std::cout << length() << std::endl;
+    std::cout << label() << std::endl;
 
 
     //
@@ -703,8 +706,8 @@ void		cPutRequest::exec
 
 	if ( status == DHS_S_SUCCESS )
 	{
-	    cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		    nDims << " dims: " << dims[0] << " " << dims[1] << endl;
+	    std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		    nDims << " dims: " << dims[0] << " " << dims[1] << std::endl;
 	    //
 	    //  Get the subframe from the frame and print some information
 	    //  about it.
@@ -716,22 +719,22 @@ void		cPutRequest::exec
 
 	    if ( status == DHS_S_SUCCESS )
 	    {
-		cout << "name: " << name << " type: " << dataType << 
+		std::cout << "name: " << name << " type: " << dataType << 
 			" nDims: " << nDims << " dims: " << dims[0] << 
-			" " << dims[1] << endl;
+			" " << dims[1] << std::endl;
 	    }
 	    else
 	    {
 		status = DHS_S_SUCCESS;
-		cout << "error finding subframe test frame2" << endl << 
-			cDhs::message( status ) << endl;
+		std::cout << "error finding subframe test frame2" << std::endl << 
+			cDhs::message( status ) << std::endl;
 	    }
 	}
 	else
 	{
 	    status = DHS_S_SUCCESS;
-	    cout << "error finding test frame2" << endl <<
-		    cDhs::message( status ) << endl;
+	    std::cout << "error finding test frame2" << std::endl <<
+		    cDhs::message( status ) << std::endl;
 	}
 
 
@@ -745,14 +748,14 @@ void		cPutRequest::exec
 
 	if ( status == DHS_S_SUCCESS )
 	{
-	    cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		    nDims << " dims: " << dims[0] << " " << dims[1] << endl;
+	    std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		    nDims << " dims: " << dims[0] << " " << dims[1] << std::endl;
 	}
 	else
 	{
 	    status = DHS_S_SUCCESS;
-	    cout << "error finding frame 12" << endl <<
-		    cDhs::message( status ) << endl;
+	    std::cout << "error finding frame 12" << std::endl <<
+		    cDhs::message( status ) << std::endl;
 	}
 
 
@@ -763,8 +766,8 @@ void		cPutRequest::exec
 	av = attribFind( "long", status );
 	av.info( name, dataType, nDims, dims, (void **) &pData, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " value: " << *pData << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " value: " << *pData << std::endl;
 
 
 	//
@@ -777,8 +780,8 @@ void		cPutRequest::exec
 	av.info( (void **) &pData, status );
 	av.info( name, dataType, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " value: " << *pData << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " value: " << *pData << std::endl;
     }
 #endif
     //
@@ -874,8 +877,8 @@ void		cPutRequest2::exec
     cDhsAvList	respAvList;	// Response avList
 
 
-    cout << "put handler 2" << endl;
-    cout << length() << endl;
+    std::cout << "put handler 2" << std::endl;
+    std::cout << length() << std::endl;
 
 
     //
@@ -915,8 +918,8 @@ void		cPutRequest2::exec
 	frame.info( name, dataType, status );
 	frame.info( nDims, dims, (void **) &pData, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " dims: " << dims[0] << " " << dims[1] << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " dims: " << dims[0] << " " << dims[1] << std::endl;
 
 
 	//
@@ -927,8 +930,8 @@ void		cPutRequest2::exec
 	frame2 = frame.frameFind( "test frame2", status );
 	frame2.info( name, dataType, nDims, dims, (void **) &pData, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " dims: " << dims[0] << " " << dims[1] << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " dims: " << dims[0] << " " << dims[1] << std::endl;
 
 
 	//
@@ -938,8 +941,8 @@ void		cPutRequest2::exec
 	frame = frameFind( 12, status );
 	frame.info( name, dataType, nDims, dims, (void **) &pData, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " dims: " << dims[0] << " " << dims[1] << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " dims: " << dims[0] << " " << dims[1] << std::endl;
 
 
 	//
@@ -949,8 +952,8 @@ void		cPutRequest2::exec
 	av = attribFind( "long", status );
 	av.info( name, dataType, nDims, dims, (void **) &pData, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " value: " << *pData << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " value: " << *pData << std::endl;
 
 
 	//
@@ -963,8 +966,8 @@ void		cPutRequest2::exec
 	av.info( (void **) &pData, status );
 	av.info( name, dataType, status );
 
-	cout << "name: " << name << " type: " << dataType << " nDims: " << 
-		nDims << " value: " << *pData << endl;
+	std::cout << "name: " << name << " type: " << dataType << " nDims: " << 
+		nDims << " value: " << *pData << std::endl;
     }
     respAvList.add( "respAtt", DHS_DT_STRING, "put request2: value of string",
 	    status );
@@ -1040,7 +1043,7 @@ void cGetRequest::exec
     cDhsAvList	respAvList;	// Response avList
 
 
-    cout << "Get handler" << " type: " << type() << endl;
+    std::cout << "Get handler" << " type: " << type() << std::endl;
     
 
     //
@@ -1142,7 +1145,7 @@ void cGetRequest2::exec
     cDhsAvList	respAvList;	// Response avList
 
 
-    cout << "Get handler 2" << " type: " << type() << endl;
+    std::cout << "Get handler 2" << " type: " << type() << std::endl;
     
 
     //
@@ -1221,7 +1224,7 @@ int	main
     
     if ( argc < 2 || argc > 3 )
     {
-	cout << "usage: dhs++Server [ -noStrict ] <serverName>" << endl;
+	std::cout << "usage: dhs++Server [ -noStrict ] <serverName>" << std::endl;
 	exit (-1);
     }
 
@@ -1244,7 +1247,7 @@ int	main
 
     dhsGenSignal( dhsStatus, SIGINT, sigHandler, NULL );
 
-    cout << "starting" << endl;
+    std::cout << "starting" << std::endl;
     try
     {
 	DHS_STATUS	status = DHS_S_SUCCESS;
@@ -1311,7 +1314,7 @@ int	main
 	cDhsGetHandler<cGetRequest2> getHandler2( true, DHS_BD_GT_FITS );
 
 
-	cout << "after init" << endl;
+	std::cout << "after init" << std::endl;
 
 	//  dhsl.debugLevel( DHS_DEBUG_OFF, status );
 	
@@ -1322,7 +1325,7 @@ int	main
 
 	dhsl.start( status );
 
-	cout << "after event Loop" << endl;
+	std::cout << "after event Loop" << std::endl;
     }
     catch( const DHS_STATUS s )
     {
@@ -1330,7 +1333,7 @@ int	main
 	//  Handle error from the DHS library.
 	//
 
-	cout << "died with status: " << s << endl;
+	std::cout << "died with status: " << s << std::endl;
 	return( s );
     }
     catch( const char * s )
@@ -1339,10 +1342,10 @@ int	main
 	// Some memory allocation errors will cause this exception.
 	//
 
-	cout << "died with string: " << s << endl;
+	std::cout << "died with string: " << s << std::endl;
 	return( -1 );
     }
-    cout << "done" << endl;
+    std::cout << "done" << std::endl;
 }
 
 static void	sigHandler

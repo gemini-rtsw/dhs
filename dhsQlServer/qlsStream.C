@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: qlsStream.C,v 1.1.1.1 2002-11-24 20:29:26 brighton Exp $";
+static char rcsid[] = "$Id: qlsStream.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@ static char rcsid[] = "$Id: qlsStream.C,v 1.1.1.1 2002-11-24 20:29:26 brighton E
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:29:26  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -165,7 +168,7 @@ cQlsStream::tStreamList
     //  Add the stream to the list of streams.
     //
     
-    qlsStreamList[string( name )] = this;
+    qlsStreamList[std::string( name )] = this;
 }
 
 //
@@ -483,7 +486,7 @@ cQlsStream	*cQlsStream::find
     // Try to find an existing stream in the list of streams.
     //
 
-    if ( ( i = qlsStreamList.find( string( streamName ) ) ) == 
+    if ( ( i = qlsStreamList.find( std::string( streamName ) ) ) == 
 	    qlsStreamList.end() )
     {
 	//

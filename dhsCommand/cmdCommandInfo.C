@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: cmdCommandInfo.C,v 1.1.1.1 2002-11-24 20:25:24 brighton Exp $";
+static char rcsid[] = "$Id: cmdCommandInfo.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -67,6 +67,9 @@ static char rcsid[] = "$Id: cmdCommandInfo.C,v 1.1.1.1 2002-11-24 20:25:24 brigh
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:24  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -143,7 +146,7 @@ static char rcsid[] = "$Id: cmdCommandInfo.C,v 1.1.1.1 2002-11-24 20:25:24 brigh
 //***********************************************************************
 //
 
-#include <algo.h>
+#include <algorithm>
 #include <unistd.h>
     
 extern "C"
@@ -285,7 +288,7 @@ boolean		cCmdCommandInfo::appliesToCmd
 	//
 
 	ret = FALSE;
-	for ( j = (cDhsSubsystem::iterator)cciSubsystemList.begin(); j != cciSubsystemList.end(); j++ )
+	for ( j = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); j != cciSubsystemList.end(); j++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *j;
 
@@ -381,7 +384,7 @@ cCmdAttributeInfo
     cCmdAttributeInfo::constIterator
 		i;
 
-    i = cciAttributeList.find( string( attribName ) );
+    i = cciAttributeList.find( std::string( attribName ) );
     if ( i == cciAttributeList.end() )
     {
 	return( NULL );
@@ -489,7 +492,7 @@ cCmdAttributeInfo
 	}
     }
 
-    cciCommandMap[ string( cciName ) ] = this;
+    cciCommandMap[ std::string( cciName ) ] = this;
 }
 
 //
@@ -676,7 +679,7 @@ void		cCmdCommandInfo::attributeAdd
 )
 {
     checkStat( status, return );
-    cciAttributeList[string(pAttrInfo->name())] = pAttrInfo;
+    cciAttributeList[std::string(pAttrInfo->name())] = pAttrInfo;
 }
 
 //
@@ -1216,7 +1219,7 @@ cCmdCommandInfo	*cCmdCommandInfo::find
 {
     iterator		i;
 
-    i = cciCommandMap.find( string( commandName ) );
+    i = cciCommandMap.find( std::string( commandName ) );
     if ( i == cciCommandMap.end() )
     {
 	status.E_CMD_NAME( status, commandName );
@@ -1315,7 +1318,7 @@ void		cCmdCommandInfo::reSend
 	// sending the command to each subsystem.
 	//
 
-	for ( i = (cDhsSubsystem::iterator)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
+	for ( i = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *i;
 
@@ -1513,7 +1516,7 @@ void	cCmdCommandInfo::riReSend
 	//
 
 	cciMutex.lock();
-	for ( i = (cDhsSubsystem::iterator)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
+	for ( i = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *i;
 	    if ( ! ( *pSubsystem == PREFIX ) )

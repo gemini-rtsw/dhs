@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:28:51  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -153,18 +156,18 @@ class	cDhsPutRequest;
 
 class cQlsDataset: 
 	public cRwLock,
-	public cListOf< cQlsDataset, string, cQlsStatus >
+	public cListOf< cQlsDataset, std::string, cQlsStatus >
 {
     public:
 	friend class cQlsFrame;
 
-	typedef map < string, cQlsFrame *, less<string> >
+	typedef std::map < std::string, cQlsFrame *, std::less<std::string> >
 			tFrameList;
 	typedef tFrameList::iterator
 			iFrameList;
 	typedef void (*tForEachFrameFn)( cQlsFrame &, void *, cQlsStatus & );
 
-			cQlsDataset( string, bool = true );
+			cQlsDataset( std::string, bool = true );
 			~cQlsDataset( void );
 	void		cardAdd( char *, cQlsStatus & );
 	void		chunkAdd( cDhsPutRequest *, cQlsStatus & );

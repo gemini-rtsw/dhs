@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:24  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -472,7 +475,7 @@ class cStaMon
 	static timespec		absTime;	// Current time.
 	static bool		checking;	// Check resources?
 	static cCond		checkRes;	// Cond. variable for above.
-	static list<cStaMon*>	classList;	// List of class instances.
+	static std::list<cStaMon*>	classList;	// List of class instances.
 	static long		frequency;	// Freq. of checking.
 	static int		numResources;	// Number of resources monitored.
 	static bool		cmSimulate;	// True if in simulate mode.
@@ -642,7 +645,7 @@ class	cStaMonDb : cStaMon
 			*dbConnection;	// The database connection.
 	static cMutex	dbProcMutex;	// Mutex prevents miuse of db lib.
 	static char 	*dbServerName;	// Database server name.
-	static list<tStaDb*>
+	static std::list<tStaDb*>
 			dbList;		// List of magnetic disks.
 
 	//
@@ -767,7 +770,7 @@ class 	cStaMonMd : cStaMon
 	// Data.
 	//
 
-	static list<tStaMd*>
+	static std::list<tStaMd*>
 			mdList;			// List of magnetic disks.
 
 	//

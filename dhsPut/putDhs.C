@@ -53,7 +53,7 @@
 //
 
 
-#include <iostream.h>
+#include <iostream>
 
 
 #include "globals.H"
@@ -63,7 +63,7 @@ extern "C"
 {
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 }
 
 static void	delHandler( cDhsHandler *handler )
@@ -142,7 +142,7 @@ void		putDhsError::error
 	//  Log the error, then print the message.
 	//
 
-	cout << "Error, file not sent successfully : " << message() << endl;
+	std::cout << "Error, file not sent successfully : " << message() << std::endl;
     }
 }
 
@@ -691,11 +691,11 @@ void		putDataset::done
 
     if ( cs == DHS_CS_ERROR ||  !status.ok() )
     {
-	cout << "Put Request FAILED for dataset     : "<< label();
+	std::cout << "Put Request FAILED for dataset     : "<< label();
     }
     else if ( cs == DHS_CS_DONE )
     {
-	cout << "Put Request SUCCESSFUL for dataset : "<< label();
+	std::cout << "Put Request SUCCESSFUL for dataset : "<< label();
     }
 
     if ( cs != DHS_CS_BUSY )
@@ -712,16 +712,16 @@ void		putDataset::done
 	attrib.info( &datasetName, dhsStatus);
 	if ( dhsStatus == DHS_S_SUCCESS)
 	{
-	    cout << endl << "              Dataset name returned: "<< (char *) datasetName;
+	    std::cout << std::endl << "              Dataset name returned: "<< (char *) datasetName;
 	}
 
 	if ( string != NULL )
 	{
-	    cout << endl << "message: " << string << endl;
+	    std::cout << std::endl << "message: " << string << std::endl;
 	}
 	else
 	{
-	    cout << endl;
+	    std::cout << std::endl;
 	}
     }
 

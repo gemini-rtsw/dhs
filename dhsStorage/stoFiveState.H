@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:27  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -60,7 +63,7 @@
 #ifndef STOFIVESTATE_H
 #define	STOFIVESTATE_H
 
-#include <iostream.h>
+#include <iostream>
 #include "globals.H"
 
 
@@ -132,8 +135,8 @@ class cStoFiveState
 			    static cStoFiveState fiveStateUnknown;
 			    return( fiveStateUnknown );
 			};
-	inline friend ostream 
-			&operator<<( ostream &os, cStoFiveState &fs )
+	inline friend std::ostream 
+			&operator<<( std::ostream &os, cStoFiveState &fs )
 			{
 			    char	buffer[40];
 			    fs.state2str( &buffer[0] );

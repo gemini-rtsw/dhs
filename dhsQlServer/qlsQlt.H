@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:28:56  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -76,9 +79,8 @@
 #ifndef QLSQLT_H
 #define	QLSQLT_H
 
-#include <list.h>
+#include <list>
 
-// #include <queue.h> XXX allan: can't find header
 #include <queue>
 
 #include "genListOf.H"
@@ -128,7 +130,7 @@ class	cQlsQlt:
 	static void	*commandThread( void * );
 	void		qltNotify( cQlsFrame &, const char *, cQlsStatus & );
 
-	queue< cQlsNotifyCmd *, list< cQlsNotifyCmd * > >
+	std::queue< cQlsNotifyCmd *, std::list< cQlsNotifyCmd * > >
 			qqtCommandQueue;
 	bool		qqtExitThread;
 	cCond		qqtQueueCond;

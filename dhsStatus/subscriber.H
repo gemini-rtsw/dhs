@@ -38,6 +38,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:25  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -61,8 +64,8 @@
 
 #ifndef SUBSCRIBER_H
 #define	SUBSCRIBER_H
-#include <list.h>
-#include <stack.h>
+#include <list>
+#include <stack>
 
 extern "C" {
 #include "gen_types.h"
@@ -101,12 +104,12 @@ extern "C" {
 //
 
 class cStaSubscriber:
-	    public cListOf< cStaSubscriber, string, cStaStat >
+	    public cListOf< cStaSubscriber, std::string, cStaStat >
 {
     friend class cStaSubscribe;
 
     public:
-	typedef list<cDhsClientCommand *> tUpdateQueue;
+	typedef std::list<cDhsClientCommand *> tUpdateQueue;
 
 			cStaSubscriber( DHS_CONNECT, char *, char * );
 			cStaSubscriber( char * );

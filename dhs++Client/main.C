@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:10 brighton Exp $";
+static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:10 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:10  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -76,9 +79,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:25:10 brighton Exp $"
 // DHS_NO_SERVER symbol will speed up compilation a little.
 //
 
-#include <iostream.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 
 #define	DHS_NO_SERVER
 #include "dhs++.H"
@@ -149,7 +152,7 @@ void		cError::error()
     // text.
     //
 
-    cout << message() << endl;
+    std::cout << message() << std::endl;
 }
 
 //
@@ -217,8 +220,8 @@ void		cError2::error()
     // text.
     //
 
-    cout << "debugMessage" << endl;
-    cout << message() << endl;
+    std::cout << "debugMessage" << std::endl;
+    std::cout << message() << std::endl;
 }
 
 //
@@ -332,7 +335,7 @@ void		cmd::done
     const cDhsAvList	&avList
 )
 {
-    cout << "command done" << endl;
+    std::cout << "command done" << std::endl;
 
     response( cs, msg, avList );
 
@@ -394,11 +397,11 @@ void		cmd::response
     DHS_STATUS		status( DHS_S_SUCCESS );
 
 
-    cout << "command response" << endl;
-    cout << "state: " << cs << endl;
+    std::cout << "command response" << std::endl;
+    std::cout << "state: " << cs << std::endl;
     if ( msg != NULL )
     {
-	cout << "message: " << msg << endl;
+	std::cout << "message: " << msg << std::endl;
     }
 
 
@@ -493,7 +496,7 @@ class putDataset: public cDhsPutDataset
     cond.lock();
     counter ++;
     cond.unlock();
-    cout << "counter: " << counter << endl;
+    std::cout << "counter: " << counter << std::endl;
 }
 
 //
@@ -540,7 +543,7 @@ class putDataset: public cDhsPutDataset
     cond.lock();
     counter ++;
     cond.unlock();
-    cout << "counter: " << counter << endl;
+    std::cout << "counter: " << counter << std::endl;
 }
 
 //
@@ -591,7 +594,7 @@ class putDataset: public cDhsPutDataset
     cond.lock();
     counter ++;
     cond.unlock();
-    cout << "counter: " << counter << endl;
+    std::cout << "counter: " << counter << std::endl;
 }
 
 //
@@ -636,7 +639,7 @@ class putDataset: public cDhsPutDataset
     cond.lock();
     counter --;
     cond.unlock();
-    cout << "counter: " << counter << endl;
+    std::cout << "counter: " << counter << std::endl;
 
 
     //
@@ -700,7 +703,7 @@ void	putDataset::done
 
     if ( string != NULL )
     {
-	cout << "string: " << string << endl;
+	std::cout << "string: " << string << std::endl;
     }
 
 
@@ -713,7 +716,7 @@ void	putDataset::done
 
     if ( isDone( status ) )
     {
-	cout << "put is complete" << endl;
+	std::cout << "put is complete" << std::endl;
 	delete this;
     }
 }
@@ -853,7 +856,7 @@ void	getDataset::done
     DHS_STATUS	status( DHS_S_SUCCESS );
 
 
-    cout << "type: " << type() << endl;
+    std::cout << "type: " << type() << std::endl;
 
 
     //
@@ -866,12 +869,12 @@ void	getDataset::done
 
     if ( cs == DHS_CS_DONE )
     {
-	cout << "get is complete" << endl;
+	std::cout << "get is complete" << std::endl;
     }
 
     if ( string != NULL )
     {
-	cout << "get done string: " << string << endl;
+	std::cout << "get done string: " << string << std::endl;
     }
     print( status );
 }
@@ -947,12 +950,12 @@ int	main
     const char		*str;
 
 
-    cout << "starting" << endl;
+    std::cout << "starting" << std::endl;
 
     if ( argc != 4 )
     {
-	cout << "usage: dhs++Client <clientName> <serverAddress> <serverName>"
-		<< endl;
+	std::cout << "usage: dhs++Client <clientName> <serverAddress> <serverName>"
+		<< std::endl;
 	exit( -1 );
     }
 
@@ -989,7 +992,7 @@ int	main
 	cDhsConnection	connect( argv[2], argv[3] );
 
 
-	cout << "after init" << endl;
+	std::cout << "after init" << std::endl;
 
 	
 	//
@@ -1105,7 +1108,7 @@ int	main
 	//  failed.
 	//
 
-	cout << "status: " << status << endl;
+	std::cout << "status: " << status << std::endl;
 
 
 	//
@@ -1271,11 +1274,11 @@ int	main
 
 	if ( status != DHS_S_SUCCESS )
 	{
-	    cout << "status: " << status << endl;
+	    std::cout << "status: " << status << std::endl;
 	    for ( DHS_STATUS s1 = DHS_S_SUCCESS; s1 == DHS_S_SUCCESS; )
 	    {
 		msg = cDhs::message( errNum, errLev, s1 );
-		cout << msg << endl;
+		std::cout << msg << std::endl;
 		cDhs::messageClear( s1 );
 	    }
 	    throw status;
@@ -1370,17 +1373,17 @@ int	main
 
 	if ( status != DHS_S_SUCCESS )
 	{
-	    cout << "status: " << status << endl;
+	    std::cout << "status: " << status << std::endl;
 	    for ( DHS_STATUS s1 = DHS_S_SUCCESS; s1 == DHS_S_SUCCESS; )
 	    {
 		msg = cDhs::message( errNum, errLev, s1 );
-		cout << msg << endl;
+		std::cout << msg << std::endl;
 		cDhs::messageClear( s1 );
 	    }
 	    throw status;
 	}
 
-	cout << "exiting" << endl;
+	std::cout << "exiting" << std::endl;
     }
     catch( const DHS_STATUS s )
     {
@@ -1393,16 +1396,16 @@ int	main
 	// Error in the dhs library.
 	//
 
-	cout << "Error in the dhs library: " << s << endl;
+	std::cout << "Error in the dhs library: " << s << std::endl;
 	str = cDhs::message( st, el, s1 );
 	for ( ; s1 == DHS_S_SUCCESS; 
 		str = cDhs::message( st, el, s1 ) )
 	{
-	    cout << str << endl;
+	    std::cout << str << std::endl;
 	    cDhs::messageClear( s1 );
 	}
 	return( -1 );
     }
 
-    cout << "done" << endl;
+    std::cout << "done" << std::endl;
 }

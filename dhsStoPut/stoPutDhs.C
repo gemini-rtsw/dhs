@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: stoPutDhs.C,v 1.1.1.1 2002-11-24 20:31:15 brighton Exp $";
+static char rcsid[] = "$Id: stoPutDhs.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -69,6 +69,9 @@ static char rcsid[] = "$Id: stoPutDhs.C,v 1.1.1.1 2002-11-24 20:31:15 brighton E
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:15  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -78,7 +81,7 @@ static char rcsid[] = "$Id: stoPutDhs.C,v 1.1.1.1 2002-11-24 20:31:15 brighton E
 //***********************************************************************
 //
 
-#include <iostream.h>
+#include <iostream>
 
 
 #include "globals.H"
@@ -89,7 +92,7 @@ extern "C"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 #include <netdb.h>
 #include "dhs.h"
 #include "gen_types.h"
@@ -198,7 +201,7 @@ void		cStoPutDhsError::error
 	//  Log the error, then print the message.
 	//
 
-	cout << "Error, file not put successfully : " << message() << endl;
+	std::cout << "Error, file not put successfully : " << message() << std::endl;
     }
 }
 
@@ -297,9 +300,9 @@ void            cStoPutDhsCmd::done
 
     if ( msg != NULL )
     {
-	cout <<  endl << "message: " <<  msg;
+	std::cout <<  endl << "message: " <<  msg;
     }
-    cout << endl;
+    std::cout << std::endl;
     
 }
 
@@ -1478,7 +1481,7 @@ void		cStoPutDhs::archiveFileAvail
 	if ( sdSimulate )
 	{
 	    status.S_FILE_AVAIL( status, pStoPutList->getSrcName() );
-	    cout << "Sto Request SUCCESSFUL for File : "<< pStoPutList->getFileId();
+	    std::cout << "Sto Request SUCCESSFUL for File : "<< pStoPutList->getFileId();
 	}
 	else
 	{
@@ -1664,7 +1667,7 @@ void		cStoPutDhs::userMediaRequest
 	status.S_USR_MEDIA_REQ( status );
 	for( int j = 0; j < pStoPutList->size(); j++ )
 	{
-	    cout << "Sto Request SUCCESSFUL for File : "<< fileIds[j];
+	    std::cout << "Sto Request SUCCESSFUL for File : "<< fileIds[j];
 	}
     }
     else
@@ -1824,11 +1827,11 @@ void		cPutFile::done
 
     if ( cs == DHS_CS_ERROR ||  !status.ok() )
     {
-	cout << "StoPut Request FAILED for File     : "<< label();
+	std::cout << "StoPut Request FAILED for File     : "<< label();
     }
     else if ( cs == DHS_CS_DONE )
     {
-	cout << "Sto Request SUCCESSFUL for File : "<< label();
+	std::cout << "Sto Request SUCCESSFUL for File : "<< label();
     }
 
     if ( cs != DHS_CS_BUSY )
@@ -1845,7 +1848,7 @@ void		cPutFile::done
 	attrib.info( &fileId, dhsStatus);
 	if ( dhsStatus == DHS_S_SUCCESS)
 	{
-	    cout << endl << "              File name returned: "<< (char *) fileId;
+	    std::cout << std::endl << "              File name returned: "<< (char *) fileId;
 	}
 
 
@@ -1855,9 +1858,9 @@ void		cPutFile::done
 	
 	if ( msg != NULL )
 	{
-	    cout << endl << "message: " <<  msg;
+	    std::cout << std::endl << "message: " <<  msg;
 	}
-	cout << endl;
+	std::cout << std::endl;
     }
 }
 

@@ -44,7 +44,7 @@
 #ifndef GLOBALS_H
 #define	GLOBALS_H
 
-#include <stdarg.h>
+#include <cstdarg>
 
 extern "C"
 {

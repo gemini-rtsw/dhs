@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:27:46  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -133,7 +136,7 @@ class 	cDhsSubsystem
 	    private:
 	};
 
-	typedef	vector<cDhsSubsystem *> tSysList;
+	typedef	std::vector<cDhsSubsystem *> tSysList;
 	typedef	tSysList::iterator	iterator;
 
 	enum{ SYSTEM_NAME_LENGTH = 4 };

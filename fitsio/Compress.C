@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: Compress.C,v 1.1.1.1 2002-11-24 20:21:26 brighton Exp $
+ * $Id: Compress.C,v 1.2 2002-11-27 17:15:09 brighton Exp $
  *
  * Compress.C - method definitions for class Compress
  *             (based on Archive/CADC press routines)
@@ -9,22 +9,22 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  2 Aug 96  Created
  */
-static const char* const rcsId="@(#) $Id: Compress.C,v 1.1.1.1 2002-11-24 20:21:26 brighton Exp $";
+static const char* const rcsId="@(#) $Id: Compress.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <strstream.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #include <unistd.h>
-#include "error.h"
-#include "Mem.h"
-#include "Compress.h"
+#include "error.H"
+#include "Mem.H"
+#include "Compress.H"
 
 extern "C" {
 #include "gen_types.h"

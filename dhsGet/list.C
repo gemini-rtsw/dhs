@@ -122,7 +122,7 @@ cGetList::tGetList	cGetList::cgtGetList;	// List of dataset names to get.
     //  Now add this datasetname to the dataset list.
     //
 
-     cgtGetList[ string( cgtDatasetName ) ] = this;
+     cgtGetList[ std::string( cgtDatasetName ) ] = this;
     
 }
 

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: stoNotify.C,v 1.1.1.1 2002-11-24 20:32:09 brighton Exp $";
+static char rcsid[] = "$Id: stoNotify.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -39,6 +39,9 @@ static char rcsid[] = "$Id: stoNotify.C,v 1.1.1.1 2002-11-24 20:32:09 brighton E
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:32:09  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -219,13 +222,13 @@ void		cStoNotify::execute
     char	attributeName[128];
     cStoMedia	*pMedia;		// Ptr to media object. 
     cStoStatus	status;			// Program status. 
-    list < AM_FILE >
+    std::list < AM_FILE >
 		fileList;		// List of files. 
-    list < AM_FILE >::iterator
+    std::list < AM_FILE >::iterator
 		fileIter;		// File list iterator
-    list < AM_UNIT >
+    std::list < AM_UNIT >
 		unitList;		// List of units. 
-    list < AM_UNIT >::iterator
+    std::list < AM_UNIT >::iterator
 		unitIter;		// Unit list iterator
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
     boolean	dbBooleanValue;

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: putRequest.C,v 1.1.1.1 2002-11-24 20:25:03 brighton Exp $";
+static char rcsid[] = "$Id: putRequest.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: putRequest.C,v 1.1.1.1 2002-11-24 20:25:03 brighton 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:03  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -78,7 +81,7 @@ static char rcsid[] = "$Id: putRequest.C,v 1.1.1.1 2002-11-24 20:25:03 brighton 
 //***********************************************************************
 //
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <map>
 
 extern "C"
@@ -93,7 +96,7 @@ extern "C"
 #define	DHS_NO_COMMAND
 #include "dhs++.H"
 
-typedef map< DHS_BD_PUT_TYPE, cDhsPutHandlerBase *, less<DHS_BD_PUT_TYPE> >
+typedef std::map< DHS_BD_PUT_TYPE, cDhsPutHandlerBase *, std::less<DHS_BD_PUT_TYPE> >
 		tHandlerList;
 typedef tHandlerList::iterator
 		iHandlerList;
@@ -512,7 +515,7 @@ void		*cDhsPutHandlerBase::execThread
 	    ddsObjectFree = false;
 	}
 	    
-	delete [] (char[])ddsPBuffer;
+	delete [] (char*)ddsPBuffer;
     }
 }
 

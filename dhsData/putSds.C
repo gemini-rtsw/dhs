@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: putSds.C,v 1.1.1.1 2002-11-24 20:27:30 brighton Exp $";
+static char rcsid[] = "$Id: putSds.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -45,6 +45,9 @@ static char rcsid[] = "$Id: putSds.C,v 1.1.1.1 2002-11-24 20:27:30 brighton Exp 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:27:30  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -113,14 +116,14 @@ static char rcsid[] = "$Id: putSds.C,v 1.1.1.1 2002-11-24 20:27:30 brighton Exp 
 //  Includes
 //
 
-#include <iostream.h>
+#include <iostream>
 
 #include "globals.H"
 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <wait.h>
 
 extern "C"
@@ -682,7 +685,7 @@ void cDtsPutDs::datasetRecovery
 	if ( execlp( arg0, arg0, arg1, 
 		    destin, dirName, (char *) NULL ) == -1 )
 	{
-	    cout << "execlp() failed to tar file, errno = " << errno << endl;
+	    std::cout << "execlp() failed to tar file, errno = " << errno << std::endl;
 	    _exit( 999 );
 	}
         if ( cdlProcessThreadId == -1 )
@@ -871,7 +874,7 @@ void cDtsPutDs::datasetRecovery
 	if ( execlp( arg0, arg0, arg1, 
 		    destin, dirName, (char *) NULL ) == -1 )
 	{
-	    cout << "execlp() failed to tar file, errno = " << errno << endl;
+	    std::cout << "execlp() failed to tar file, errno = " << errno << std::endl;
 	    _exit( 999 );
 	}
         if ( cdlProcessThreadId == -1 )

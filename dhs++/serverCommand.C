@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: serverCommand.C,v 1.1.1.1 2002-11-24 20:25:05 brighton Exp $";
+static char rcsid[] = "$Id: serverCommand.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -49,6 +49,9 @@ static char rcsid[] = "$Id: serverCommand.C,v 1.1.1.1 2002-11-24 20:25:05 bright
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:05  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -121,7 +124,7 @@ extern "C"
 #include "genRwLock.H"
 
 
-typedef map< DHS_TAG, cDhsServerCommand *, less<DHS_TAG> >
+typedef std::map< DHS_TAG, cDhsServerCommand *, std::less<DHS_TAG> >
 		tCommandList;
 typedef tCommandList::iterator
 		iCommandList;
@@ -129,7 +132,7 @@ typedef tCommandList::iterator
 #define	dscCommandList (*(tCommandList *) cDhsServerCommand::dscPCommandList)
 
 
-typedef map< string, cDhsCmdHandlerBase *, less<string> >
+typedef std::map< std::string, cDhsCmdHandlerBase *, std::less<std::string> >
 		tHandlerList;
 typedef tHandlerList::iterator
 		iHandlerList;
@@ -309,7 +312,7 @@ void		cDhsAbortCmd::exec
     {
 	dchPHandlerList = new tHandlerList;
     }
-    dchHandlerList[ string( dchCommand ) ] = this;
+    dchHandlerList[ std::string( dchCommand ) ] = this;
     rwLock.unlock();
 
 
@@ -364,7 +367,7 @@ void		cDhsAbortCmd::exec
 
 
     rwLock.wLock();
-    dchHandlerList.erase( string( dchCommand ) );
+    dchHandlerList.erase( std::string( dchCommand ) );
 
 
     //
@@ -454,10 +457,10 @@ void		cDhsCmdHandlerBase::cmdCallback
     }
     else
     {
-	if ( ( i = dchHandlerList.find( string( command ) ) ) == 
+	if ( ( i = dchHandlerList.find( std::string( command ) ) ) == 
 		dchHandlerList.end() )
 	{
-	    if ( ( i = dchHandlerList.find( string( "" ) ) ) == 
+	    if ( ( i = dchHandlerList.find( std::string( "" ) ) ) == 
 		    dchHandlerList.end() )
 	    {
 		dhsCmdResponse( connect, tag, DHS_CS_ERROR, 

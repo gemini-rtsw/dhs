@@ -18,10 +18,16 @@ $(PROGRAM): $(OBJECTS) ${LOCAL_LIBS}
 	$(CXX) -o $(PROGRAM) $(OBJECTS) $(LDFLAGS) $(LDLIBS)
 
 install:
-	cp $(PROGRAM) $(RELEASE_DIR)
+	cp $(PROGRAM) $(RELEASE_DIR)/bin
 
 clean:
 	rm -f $(OBJECTS) $(PROGRAM)
 
 etags:
 	etags ${ETAGS_SOURCES}
+
+# Automatic dependencies (from GNU make doc example)
+%.d: %.C
+	set -e; $(CXX) -MM $(CXXFLAGS) $< | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; [ -s $@ ] || rm -f $@
+
+-include $(SOURCES:.C=.d)

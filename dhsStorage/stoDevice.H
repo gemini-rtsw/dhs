@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:23  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -169,20 +172,20 @@ class 	cStoDevice:
 	cStoEpicsRecord<bool, cStoDevice, cStoStatus>
 			sdEpicsRecInUse;// Is the n'th EPICS record in use?
 	int		sdEpicsArrayRow;// Row in the epics array.
-	cStoEpicsRecord<string, cStoDevice, cStoStatus>
+	cStoEpicsRecord<std::string, cStoDevice, cStoStatus>
 			sdLogicalName;	// Logical name of the device.
 	cStoEpicsRecord<int, cStoDevice, cStoStatus>
 			sdNumDevices;	// Number of physical devices 
 					// associated with the logical device.
 	cStoEpicsRecord<int, cStoDevice, cStoStatus>
 			sdRequestId;	// Request id that booked the device.
-	cStoEpicsRecord<string, cStoDevice, cStoStatus>
+	cStoEpicsRecord<std::string, cStoDevice, cStoStatus>
 			sdType;		// Media Type associated with the 
 					// device.
-	cStoEpicsRecord<string, cStoDevice, cStoStatus>
+	cStoEpicsRecord<std::string, cStoDevice, cStoStatus>
 			sdTypeDesc;	// Description associated with the
 					// type.
-	cStoEpicsRecord<string, cStoDevice, cStoStatus>
+	cStoEpicsRecord<std::string, cStoDevice, cStoStatus>
 			sdUnitName;	// Unit name that booked the device.
 };
 #endif // STODEVICE_H

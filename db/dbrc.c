@@ -252,7 +252,7 @@ static int	prompt_info
 	    "Enter information for database %s on server %s\n",
 	    database, server );
     (void) fprintf( stderr, "Username: " );
-    (void) gets( input_str );
+    (void) fgets( input_str, sizeof(input_str), stdin ); // XXX allan: replaced gets
     DB_CHECK_NULL( (*username) = strsav( input_str ) );
 
 
@@ -266,7 +266,7 @@ static int	prompt_info
 
     (void) fprintf( stderr, "Password: " );
     DB_CHECK( set_noecho() );
-    (void) gets( input_str );
+    fgets( input_str, sizeof(input_str), stdin); // allan: replaced gets
     DB_CHECK( set_echo() );
     (void) putc( '\n', stderr );
     DB_CHECK_NULL( (*password) = strsav( input_str ) );

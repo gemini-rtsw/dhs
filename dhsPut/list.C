@@ -124,7 +124,7 @@ cPutList::tPutList	cPutList::cptPutList;	// List of files.
     //  Now add this filename to the put list.
     //
 
-     cptPutList[ string( cptFilename ) ] = this;
+     cptPutList[ std::string( cptFilename ) ] = this;
     
 }
 

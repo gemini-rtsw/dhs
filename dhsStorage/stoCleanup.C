@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: stoCleanup.C,v 1.1.1.1 2002-11-24 20:31:48 brighton Exp $";
+static char rcsid[] = "$Id: stoCleanup.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -37,6 +37,9 @@ static char rcsid[] = "$Id: stoCleanup.C,v 1.1.1.1 2002-11-24 20:31:48 brighton 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:48  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -174,9 +177,9 @@ void		cStoCleanup::execute
     DBPROCESS 	*dbProcess;		// Database process. 
     boolean	dbBooleanValue;		// Return boolean value from the db. 
     int		dbIntValue;		// Return int value from the db.
-    map < string, char *, less< string > >
+    std::map < std::string, char *, std::less< std::string > >
 		dirList;		// List of files.
-    map < string, char *, less< string > >::iterator
+    std::map < std::string, char *, std::less< std::string > >::iterator
 		dirListIter;		// File list iterator
     int		num;
     char	*argv[7];
@@ -240,9 +243,9 @@ void		cStoCleanup::execute
 	{
 	    if ( execvp( cStoNode::cleanupTask(), argv ) == -1 )
 	    {
-		cout << "execlp() failed to start " << 
+		std::cout << "execlp() failed to start " << 
 			cStoNode::cleanupTask() << ", errno = " << errno << 
-			endl;
+			std::endl;
 		_exit( 999 );
 	    }
 	}

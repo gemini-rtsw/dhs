@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: stoPut.C,v 1.1.1.1 2002-11-24 20:32:11 brighton Exp $";
+static char rcsid[] = "$Id: stoPut.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: stoPut.C,v 1.1.1.1 2002-11-24 20:32:11 brighton Exp 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:32:11  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -107,9 +110,9 @@ void		cStoPut::exec
 )
 {
     AM_FILE	amFile;		// A single am file.
-    list<AM_FILE>		// A list of files matching the file id.
+    std::list<AM_FILE>		// A list of files matching the file id.
 		amFileList;
-    list<AM_FILE>::iterator	// Iterator in the list of files.
+    std::list<AM_FILE>::iterator	// Iterator in the list of files.
 		iAmFileList;
     int		amStatus;	// AM library status value.
     DBPROCESS	*dbProcess;	// The database dbprocess.

@@ -38,6 +38,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:00  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:35  tpaz
 //
 //
@@ -92,9 +95,9 @@
 class 	cStoPutList
 {
     public:
-	typedef map< string,		// Sort key is of datatype string.
+	typedef std::map< std::string,		// Sort key is of datatype string.
 		     cStoPutList *,	// Insert into this containr this type
-		     less<string> >	// This is the sorting mechanizm.
+		     std::less<std::string> >	// This is the sorting mechanizm.
 		tStoPutList;		// This var. provides access to containr
 	typedef tStoPutList::iterator	// This provides an iterator to containr
 		iterator;
@@ -154,9 +157,9 @@ class 	cStoPutList
 class 	cMediaTypeList
 {
     public:
-	typedef map< string,		// Sort key is of datatype string.
+	typedef std::map< std::string,		// Sort key is of datatype string.
 		     cMediaTypeList *,	// Insert into this container this type
-		     less<string> >	// This is the sorting mechanizm.
+		     std::less<std::string> >	// This is the sorting mechanizm.
 		tMediaTypeList;		// This var. provides access to container
 	typedef tMediaTypeList::iterator // This provides an iterator to container
 		iterator;

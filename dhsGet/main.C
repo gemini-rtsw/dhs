@@ -47,8 +47,8 @@
 //  Includes
 //
 
-#include <iostream.h>
-#include <signal.h>
+#include <iostream>
+#include <csignal>
 
 #include "globals.H"
 #include "getDhs.H"
@@ -210,7 +210,7 @@ int	main
 	//  Handle error from the DHS library.
 	//
 
-	cout << s.message() << endl;
+	std::cout << s.message() << std::endl;
 	return( -1 );
     }
     catch( const char * s )
@@ -219,7 +219,7 @@ int	main
 	// Some memory allocation errors will cause this exception.
 	//
 
-	cout << "died with string: " << s << endl;
+	std::cout << "died with string: " << s << std::endl;
 	return( -1 );
     }
     catch( const DHS_STATUS s )
@@ -233,12 +233,12 @@ int	main
 	// Error in the dhs library.
 	//
 
-	cout << "Error in the dhs library: " << s << endl;
+	std::cout << "Error in the dhs library: " << s << std::endl;
 	str = cDhs::message( st, el, s1 );
 	for ( ; s1 == DHS_S_SUCCESS; 
 		str = cDhs::message( st, el, s1 ) )
 	{
-	    cout << str << endl;
+	    std::cout << str << std::endl;
 	    cDhs::messageClear( s1 );
 	}
 

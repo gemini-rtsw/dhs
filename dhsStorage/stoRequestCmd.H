@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:33  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -125,7 +128,7 @@ class   cStoRequestCmd: public cDhsServerCommand
 				char *, bool &, cStoStatus & );
 	bool		validPath( const char * );
 	
-	static map< string, string, less< string > >
+	static std::map< std::string, std::string, std::less< std::string > >
 			srcOptionList;	// List of options for each AM	
 					// application.  These are inserted
 					// into the am database when user

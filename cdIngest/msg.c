@@ -283,7 +283,7 @@ int	type;
      *  Retrieve the user's input.
      */
 
-    (void) gets( inputStr );
+    fgets( inputStr, sizeof(inputStr), stdin ); // XXX allan: replaced gets
     if ( sscanf( inputStr, "%1s", reply ) < 1 )
     {
 	reply[0] = 'N';

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: simCmdDefault.C,v 1.1.1.1 2002-11-24 20:30:09 brighton Exp $";
+static char rcsid[] = "$Id: simCmdDefault.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: simCmdDefault.C,v 1.1.1.1 2002-11-24 20:30:09 bright
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:09  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -111,7 +114,7 @@ void		cSimCmdDefault::exec
 		status;		// Status.
  
 
-cout << "in default" << endl;
+std::cout << "in default" << std::endl;
 
  
     //

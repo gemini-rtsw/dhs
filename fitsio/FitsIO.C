@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: FitsIO.C,v 1.1.1.1 2002-11-24 20:21:32 brighton Exp $" 
+ * "@(#) $Id: FitsIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $" 
  *
  * FitsIO.C - method definitions for class FitsIO, for operating on
  *            Fits files.
@@ -13,24 +13,24 @@
  * Allan Brighton  16/02/98  renamed check_decompress to check_compress and added check
  *                           for bitpix=16 for H_COMPRESS.
  */
-static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2002-11-24 20:21:32 brighton Exp $";
+static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <iostream.h>
-#include <strstream.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <iostream>
+#include <sstream>
+#include <cstdlib>
 #include <unistd.h>
-#include <math.h>
-#include <time.h>
-#include "util.h"
-#include "error.h"
+#include <cmath>
+#include <ctime>
 #include "fitsio.h"
-#include "Compress.h"
-#include "Mem.h"
-#include "FitsIO.h"
+#include "util.H"
+#include "error.H"
+#include "Compress.H"
+#include "Mem.H"
+#include "FitsIO.H"
 
 // size of a FITS block
 enum {FITSBLOCK=2880};
@@ -257,17 +257,17 @@ FitsIO* FitsIO::read(const char* filename, int mem_options)
 int FitsIO::cfitsio_error()
 {
     char buf[81];
-    ostrstream os;
+    std::ostringstream os;
     int i = 0;
     while (fits_read_errmsg(buf)) {
-	os << buf << endl;
+	os << buf << std::endl;
 	i++;
     }
     fits_clear_errmsg();
     if (i) {
-	os << ends;
-	error("cfitsio: ", os.str());
-	free(os.str());
+	//os << ends;
+	error("cfitsio: ", os.str().c_str());
+	//free(os.str());
     }
     return ERROR;
 }
@@ -422,83 +422,12 @@ FitsIO* FitsIO::initialize(Mem& header, Mem& data)
     return initialize(header, data, fitsio);
 }
 
-   
-/*
- * Generate a blank image with a FITS header based on the given fields.
- * The arguments are the position as ra, dec, equinox in double degrees,
- * the radius in arcmin, the width and height in pixels and the color
- * to use for the image (the color value for black, for example).
- *
- * If ra < 0, no world coordinate info is added to the header. This will
- * create just a blank image.
- *
- */
-FitsIO* FitsIO::blankImage(double ra, double dec, double equinox, 
-			   double radius, int width, int height,
-			   unsigned long color0)
-{
-    // generate the fits data
-    if (width <= 0 || height <= 0) {
-	error("width and height must be positive integers");
-	return NULL;
-    }
-
-    Mem data(width*height, 0);
-    if (data.status() != 0) 
-	return NULL;
-    char* d = (char*)data.ptr();
-    memset(d, color0, width*height);
-
-    Mem header(FITSBLOCK, 0);	// more than large enough to hold the fields below
-    if (header.status() != 0) 
-	return NULL;
-    ostrstream os((char*)header.ptr(), header.length()); // stream will write to shared memory
- 
-    // generate the fits header
-    double r = radius/60.0;	// radius in degrees
-    
-    put_keyword(os, "SIMPLE", "T");          //FITS header    
-    put_keyword(os, "BITPIX", 8);	     // No.Bits per pixel  
-    put_keyword(os, "NAXIS ", 2);	     // No.dimensions                                   
-    put_keyword(os, "NAXIS1", width);        // Length X axis                                   
-    put_keyword(os, "NAXIS2", height);       // Length Y axis    
-    
-    // this causes the pixels to appear black (if the colormap starts with black)
-    put_keyword(os, "DATAMIN", int(color0));       // min color    
-    put_keyword(os, "DATAMAX", int(color0+256));   // (theoretical) max color
-    
-                              
-    if (ra >= 0) {
-	double cdelt2 = sqrt((r*r)/2.0)/(width/2.0);
-	double cdelt1 = -cdelt2;
-	put_keyword(os, "CTYPE1", "RA---TAN");   // R.A. in tangent plane projection                
-	put_keyword(os, "CTYPE2", "DEC--TAN");   // DEC. in tangent plane projection                
-	put_keyword(os, "CRPIX1", width/2+0.5);  // Refpix of first axis                            
-	put_keyword(os, "CRPIX2", height/2+0.5); // Refpix of second axis                           
-	put_keyword(os, "CRVAL1", ra);           // RA at Ref pix in decimal degrees                
-	put_keyword(os, "CRVAL2", dec);          // DEC at Ref pix in decimal degrees               
-	put_keyword(os, "CDELT1", cdelt1);       // RA pixel step (deg)                             
-	put_keyword(os, "CDELT2", cdelt2);       // DEC pixel step (deg) 
-	put_keyword(os, "EQUINOX", 2000.0);      // default equinox 
-	put_keyword(os, "RADECSYS", "FK5");      // J2000...
-    }
-
-    //put_keyword(os, "BLANK", (int)color0);   // blank pixel value
-
-    char buf[81];
-    sprintf(buf, "%-80s", "END"); // mark the end of the header
-    os << buf << ends;
-
-    // generate the blank image 
-    return new FitsIO(width, height, BYTE_IMAGE, 0.0, 1.0, header, data);
-}
-
 
 /* 
  * write the keyword/value pair to the given stream.
  * (char* value version)
  */
-int FitsIO::put_keyword(ostream& os, const char* keyword, char* value) 
+int FitsIO::put_keyword(std::ostream& os, const char* keyword, char* value) 
 {
     char  buf1[81], buf2[81];
     sprintf(buf1, "%-8s= '%s'", keyword, value);
@@ -512,7 +441,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, char* value)
  * write the keyword/value pair to the given stream.
  * (char value version)
  */
-int FitsIO::put_keyword(ostream& os, const char* keyword, char value) 
+int FitsIO::put_keyword(std::ostream& os, const char* keyword, char value) 
 {
     char  buf1[81], buf2[81];
     sprintf(buf1, "%-8s= %c", keyword, value);
@@ -526,7 +455,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, char value)
  * write the keyword/value pair to the given stream.
  * (int value version)
  */
-int FitsIO::put_keyword(ostream& os, const char* keyword, int value) 
+int FitsIO::put_keyword(std::ostream& os, const char* keyword, int value) 
 {
     char  buf1[81], buf2[81];
     sprintf(buf1, "%-8s= %d", keyword, value);
@@ -539,7 +468,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, int value)
  * write the keyword/value pair to the given stream.
  * (double value version)
  */
-int FitsIO::put_keyword(ostream& os, const char* keyword, double value) 
+int FitsIO::put_keyword(std::ostream& os, const char* keyword, double value) 
 {
     char  buf1[81], buf2[81];
     sprintf(buf1, "%-8s= %f", keyword, value);
@@ -744,28 +673,6 @@ int FitsIO::write(const char *filename) const
     return OK;
 }
 
-
-
-/*
- *  write a (ASCII formatted) copy of the FITS header to the given stream.
- * (format it in 80 char lines and replace any NULL chars with blanks)
- */
-int FitsIO::getFitsHeader(ostream& os) const
-{
-    istrstream is((char*)header_.ptr(), header_.length());
-    char buf[81];
-    while(is.read(buf, 80)) {
-	for (int i = 0; i < 79; i++)
-	    if (!isascii(buf[i]))
-		buf[i] = ' ';
-	buf[79] = '\n';
-	os.write(buf, 80);
-	if (strncmp(buf, "END     ", 8) == 0)
-	    break;
-    }
-    os << ends;
-    return 0;
-}
 
 
 /* 

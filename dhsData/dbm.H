@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:26:26  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -381,8 +384,8 @@ class 	cDtsDatasetTable : public cDtsDbManager
 	static void	fileDel (cDtsStatus &, char * );
 	static void	fileGet (cDtsStatus &, char *, cDtsDatasetTable ** );
 	static void	fileListGet (cDtsStatus &, char, 
-				map< string,cDtsDatasetTable *,
-				less<string> > & );
+				std::map< std::string,cDtsDatasetTable *,
+				std::less<std::string> > & );
 	static void	filePut (cDtsStatus &, char *, cDtsDatasetTable * );
 	static void	fileUpdate (cDtsStatus &, char *, cDtsDatasetTable * );
 	void		getAdFileInfo( cDtsStatus & );

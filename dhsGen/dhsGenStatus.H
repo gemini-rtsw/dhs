@@ -62,6 +62,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/25 10:32:32  brighton
+// added genBool.H
+//
 // Revision 1.1.1.1  2002/11/24 20:27:45  brighton
 // Imported sources
 //
@@ -128,8 +131,8 @@
 
 #include "genBool.H"
 
-#include <stdarg.h>
-#include <iostream.h>
+#include <cstdarg>
+#include <iostream>
 
 extern "C"
 {
@@ -1037,7 +1040,7 @@ private:
 // operator<<
 //
 // INVOCATION:
-// stream << status << endl;
+// stream << status << std::endl;
 //
 // PARAMETERS: (">" input, "!" modified, "<" output)
 // (>) s (ostream &) The stream to print to.
@@ -1064,9 +1067,9 @@ private:
 //***********************************************************************
 //
 
-inline ostream&	operator<<
+inline std::ostream&	operator<<
 ( 
-    ostream	&s, 		// (in)  The stream to print to.
+    std::ostream	&s, 		// (in)  The stream to print to.
     cDhsStatus	&status 	// (in)  The status to print.
 )
 {

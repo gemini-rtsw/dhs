@@ -69,6 +69,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/25 10:32:32  brighton
+// added genBool.H
+//
 // Revision 1.1.1.1  2002/11/24 20:23:34  brighton
 // Imported sources
 //
@@ -99,11 +102,11 @@
 #ifndef ARRAY_H
 #define	ARRAY_H
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "genBool.H"
 
-#include <iostream.h>
+#include <iostream>
 
 #include "dhsGenStatus.H"
 
@@ -983,9 +986,9 @@ cArray<T>	&cArray<T>::operator()
 //
 
 template< class T >
-ostream		&operator<<
+std::ostream		&operator<<
 (
-    ostream	&s,		// (in)  The stream to send to.
+    std::ostream	&s,		// (in)  The stream to send to.
     cArray<T>	&array		// (in)  The array to display.
 )
 {
@@ -1006,7 +1009,7 @@ ostream		&operator<<
 	    }
 	    s << " ";
 	}
-	s << endl;
+	s << std::endl;
     }
 
     return( s );

@@ -30,7 +30,7 @@
 //***********************************************************************
 //
 
-#include <iostream.h>
+#include <iostream>
 #include <sys/types.h>
 #include <unistd.h>
 

@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:36  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -162,10 +165,10 @@
 //
  
 class cStoUnit: 
-	public cListOf< cStoUnit, string, cStoStatus >
+	public cListOf< cStoUnit, std::string, cStoStatus >
 {
     friend
-    			class cListOf< cStoUnit, string, cStoStatus >;
+    			class cListOf< cStoUnit, std::string, cStoStatus >;
     public:
 			cStoUnit( AM_UNIT *, bool );
 

@@ -284,7 +284,7 @@ boolean	prompt_user
      *  Retrieve the user's input.
      */
 
-    (void) gets( inputStr );
+    (void) fgets( inputStr, sizeof(inputStr), stdin );
     if ( sscanf( inputStr, "%1s", reply ) < 1 )
     {
 	reply[0] = 'N';

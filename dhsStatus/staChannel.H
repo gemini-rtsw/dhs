@@ -38,6 +38,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:22  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -101,10 +104,10 @@
 #define	STACHANNEL_H
 
 #include <string>
-#include <string.h>
-#include <map.h>
+#include <cstring>
+#include <map>
 #include <vector>
-#include <algo.h>
+#include <algorithm>
 
 #include "genThreadLock.H"
 #include "genRwLock.H"
@@ -160,11 +163,11 @@ class 	cStaChannel
     friend class cStaSubscribe;
     friend class cStaMerger;
 
-    typedef multimap<cStaChannel::cKey, cStaChannel *, 
-			    less<cStaChannel::cKey> > 
+    typedef std::multimap<cStaChannel::cKey, cStaChannel *, 
+			    std::less<cStaChannel::cKey> > 
 			    tChMap;
-    typedef multimap<cStaChannel::cKey, cStaChannel *, 
-			    less<cStaChannel::cKey> >::iterator 
+    typedef std::multimap<cStaChannel::cKey, cStaChannel *, 
+			    std::less<cStaChannel::cKey> >::iterator 
 				iChMap;
 
     public:
@@ -313,7 +316,7 @@ class 	cStaChannel
 //
 
 class cStaMerger: 
-	public cListOf< cStaMerger, string, cStaStat >
+	public cListOf< cStaMerger, std::string, cStaStat >
 {
     public:
 			cStaMerger( char *, int, char ** );

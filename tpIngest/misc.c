@@ -69,6 +69,7 @@
 #include "gen_str.h"
 #include "gen_msg.h"
 #include "gen_eptr.h"
+#include "gen_util.h"
 #include "ad.h"
 #include "tp.h"
 #include "db.h"
@@ -161,13 +162,14 @@ int 	execute_script
     FILE	*fp;		/* File pointer to the output file.	*/
     char	line[PATH_MAX];	/* The line of status_log file.		*/
     int		line_len;	/* The lenth of the line.		*/
-    char	status_log[L_tmpnam];
+    char*	status_log;
     				/* Log the status while execute script.	*/
     int		status;		/* Function return value.		*/
 
     
     status = TI_SUCCESS;
-    (void) tmpnam( status_log );
+    /* (void) tmpnam( status_log ); XXX allan: gcc complains about tmpnam */
+    status_log = gen_tempnam("/tmp", "tpIngest-" );
 
     if ( ! globals.g_kill )
     {
@@ -235,6 +237,8 @@ int 	execute_script
 	 */
     }
     
+    if (status_log != NULL)
+	free(status_log); /* XXX allan */
 
     return( status );
 }
@@ -266,7 +270,7 @@ int	get_tape_name
     char	buffer[1024];
     FILE	*fp;
     int		status = TI_SUCCESS;
-    char 	tmp_file[L_tmpnam];
+    char* 	tmp_file;
 
 
     if ( globals.g_tp_script->tp_name == NULL ) 
@@ -274,7 +278,7 @@ int	get_tape_name
         format_message( TI_ENTER_TAPE_NAME );
 	print_message( msg, MESS_ERROR, NO_CR );
 	
-	if ( gets( buffer ) != NULL )
+	if ( fgets( buffer, sizeof(buffer), stdin ) != NULL )
 	{
 	    (void) strfit( buffer );
 	    (void) strncpy( globals.g_tape_name, buffer, 
@@ -291,7 +295,8 @@ int	get_tape_name
     }
     else
     {
-	(void) tmpnam( tmp_file );
+	/* (void) tmpnam( tmp_file ); XXX allan: gcc complains about tmpnam() */
+	tmp_file = gen_tempnam("/tmp", "tp" );
 
 
 	/*
@@ -332,6 +337,8 @@ int	get_tape_name
 	(void) strncpy( globals.g_tape_name, buffer,
 	     AD_VOLUMENAME_LEN );
 
+	if (tmp_file != NULL) /* XXX allan */
+	    free(tmp_file);
     }
     
     return( status );

@@ -45,13 +45,13 @@
 //
 
 
-#include <iostream.h>
+#include <iostream>
 
 extern "C"
 {
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 }
 
 #include "globals.H"

@@ -45,7 +45,7 @@
 //
 
 
-#include <iostream.h>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -55,7 +55,7 @@ extern "C"
 {
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 }
 
 #include "fitsio.h"

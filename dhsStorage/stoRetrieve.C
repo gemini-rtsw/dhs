@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: stoRetrieve.C,v 1.1.1.1 2002-11-24 20:32:21 brighton Exp $";
+static char rcsid[] = "$Id: stoRetrieve.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -38,6 +38,9 @@ static char rcsid[] = "$Id: stoRetrieve.C,v 1.1.1.1 2002-11-24 20:32:21 brighton
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:32:21  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -177,9 +180,9 @@ void		cStoRetrieve::execute
     AM_FILE	amFile;			// Am library file structure. 
     cStoFile	*pFile;			// Ptr. to file object.
     cStoGet	*pGet;
-    map < string, cStoFile *, less< string > >
+    std::map < std::string, cStoFile *, std::less< std::string > >
 		fileList;		// List of files. 
-    map < string, cStoFile *, less< string > >::iterator
+    std::map < std::string, cStoFile *, std::less< std::string > >::iterator
 		iter;			// File list iterator
     cDhsConnection
     		*pConnect( NULL );
@@ -248,13 +251,13 @@ void		cStoRetrieve::execute
 		( amStatus == AM_SUCCESS && getStopped() == false );
 		amStatus = amFileGet( AM_FG_NEXT, &amFile, dbProcess ) )
 	{
-	    iter = fileList.find( string( amFile.amfFileId ) );
+	    iter = fileList.find( std::string( amFile.amfFileId ) );
 	    if ( iter == fileList.end() )
 	    {
 		nothingDone = false;
 		checkNull( ( pFile = new cStoFile( &amFile ) ), 
 			status, break );
-		fileList[string(amFile.amfFileId)] = pFile;
+		fileList[std::string(amFile.amfFileId)] = pFile;
 	    }
 	}
 	cStoDbManager::release();

@@ -87,7 +87,8 @@ DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE
 CFLAGS = -g ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
 
 # C++ Compiler options
-CXXFLAGS = $(CFLAGS) -Wno-deprecated
+CXXFLAGS = $(CFLAGS) 
+#-Wno-deprecated
 
 # Linker options
 LDFLAGS = -g
@@ -161,3 +162,4 @@ INSTALL = @INSTALL@
 # Development source dirs
 ETAGS_SOURCES = $(TOP)/*/*.[Cch]
 #${DRAMA}/../drama_source/*/*.c ${DRAMA}/../drama_source/*/*.h
+

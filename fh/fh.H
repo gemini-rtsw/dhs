@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:32:46  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -154,9 +157,9 @@ class 	cHdrParseList
     friend class cHdrParser;
 
     public:
-	typedef 	map< string,		// Sort key of datatype string.
+	typedef 	std::map< std::string,		// Sort key of datatype string.
 		     	cHdrParseList *,	// Into this containr this type
-		     	less<string> >		// Sorting mechanizm.
+		     	std::less<std::string> >		// Sorting mechanizm.
 			tParseList;		// Provides access to containr
 	typedef 	tParseList::iterator	// Provides iterator to containr
 			iterator;

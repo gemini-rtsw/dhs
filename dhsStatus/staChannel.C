@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: staChannel.C,v 1.1.1.1 2002-11-24 20:30:37 brighton Exp $";
+static char rcsid[] = "$Id: staChannel.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -63,6 +63,9 @@ static char rcsid[] = "$Id: staChannel.C,v 1.1.1.1 2002-11-24 20:30:37 brighton 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:37  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -1418,7 +1421,7 @@ cStaChannel	*cStaChannel::newIndex
 {
     tChMap	*chMap;		// Pointer to the map.
     cStaChannel	*pChannel;
-    pair<iChMap, iChMap>	// Range iterators.
+    std::pair<iChMap, iChMap>	// Range iterators.
     		range;
     char	tmpAlias[CHANNEL_NAME_LEN + 1];
     char	tmpName[CHANNEL_NAME_LEN + 1];
@@ -1673,7 +1676,7 @@ cStaChannel	*cStaChannel::find
     int		prefixLen;	// Length of the string before the index.
     const char	*pSuffix;	// Pointer to the text following the index in
     				// the alias.
-    pair<iChMap, iChMap>	// Range iterators.
+    std::pair<iChMap, iChMap>	// Range iterators.
     		range;
     char	tmpAlias[CHANNEL_NAME_LEN + 1];	
 				// Temporary alias name.

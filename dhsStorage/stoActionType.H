@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:21  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -60,7 +63,7 @@
 #ifndef STOACTIONTYPE_H
 #define	STOACTIONTYPE_H
 
-#include <iostream.h>
+#include <iostream>
 
 
 //
@@ -178,8 +181,8 @@ class	cStoActionType
 	// Non-static methods.
 	//
 
-	inline friend ostream
-			&operator<<( ostream &os, cStoActionType &at )
+	inline friend std::ostream
+			&operator<<( std::ostream &os, cStoActionType &at )
 			{
 			    os << at.getActionTypeString();
 			    return( os );

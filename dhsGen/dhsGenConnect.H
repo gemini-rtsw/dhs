@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:27:41  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -143,9 +146,9 @@ class 	cConnectList
 				return( cctIdentityString );
 			    };
 
-	typedef 	map< string,	// Sort key is of datatype string.
+	typedef 	std::map< std::string,	// Sort key is of datatype string.
 		     	cConnectList *,	// Container has this type
-		     	less<string> >	// This is the sorting mechanizm.
+		     	std::less<std::string> >	// This is the sorting mechanizm.
 			tConnectList;	// Provides access to container.
 	typedef tConnectList::iterator
 			iterator;	// Provides an iterator into containr

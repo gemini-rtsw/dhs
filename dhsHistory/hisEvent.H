@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:28:07  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -69,7 +72,7 @@
 // #include "queue.h" XXX allan: can't find header file
 #include <queue>
 
-#include "stack.h"
+#include <stack>
 #include "genMutex.H"
 #include "genCond.H"
 
@@ -224,7 +227,7 @@ class	cHisEvent
 	// Typedefs
 	//
 
-        typedef queue< cHisEvent *, list< cHisEvent * > >
+        typedef std::queue< cHisEvent *, std::list< cHisEvent * > >
 			tEventQueue;        // The queue of events.
 
 	

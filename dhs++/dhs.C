@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: dhs.C,v 1.1.1.1 2002-11-24 20:24:57 brighton Exp $";
+static char rcsid[] = "$Id: dhs.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -67,6 +67,9 @@ static char rcsid[] = "$Id: dhs.C,v 1.1.1.1 2002-11-24 20:24:57 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:24:57  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -169,7 +172,7 @@ static char rcsid[] = "$Id: dhs.C,v 1.1.1.1 2002-11-24 20:24:57 brighton Exp $";
 #include <map>
 #include <list>
 #include <algorithm>
-#include <iostream.h>
+#include <iostream>
 
 #define DHS_NO_SERVER
 #include <dhs++.H>
@@ -183,11 +186,11 @@ extern "C"
 }
 
 
-typedef list< cDhsHandler * >
+typedef std::list< cDhsHandler * >
 		tHandlerList;
 typedef tHandlerList::iterator
 		iHandlerList;
-typedef map< cErrHandlerKey, cDhsErrorHandlerBase *, less<cErrHandlerKey> >
+typedef std::map< cErrHandlerKey, cDhsErrorHandlerBase *, std::less<cErrHandlerKey> >
 		tErrHandlerList;
 typedef tErrHandlerList::iterator
 		iErrHandlerList;
@@ -898,7 +901,7 @@ void		cDhsError::error
     void
 )
 {
-    cout << deMessage << endl;
+    std::cout << deMessage << std::endl;
 }
 
 //

@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: dhsGenTmp.C,v 1.1.1.1 2002-11-24 20:27:51 brighton Exp $";
+static char rcsid[] = "$Id: dhsGenTmp.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: dhsGenTmp.C,v 1.1.1.1 2002-11-24 20:27:51 brighton E
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:27:51  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -61,11 +64,11 @@ static char rcsid[] = "$Id: dhsGenTmp.C,v 1.1.1.1 2002-11-24 20:27:51 brighton E
 //
 
 #include <unistd.h>
-#include <stdarg.h>
+#include <cstdarg>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <errno.h>
+#include <cerrno>
 
 #include "dhsGenTmp.H"
 

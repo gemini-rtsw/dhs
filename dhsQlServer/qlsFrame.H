@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:28:54  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -90,7 +93,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
-#include <vector.h>
+#include <vector>
 #include "genRwLock.H"
 
 class	cQlsDataset;
@@ -179,7 +182,7 @@ class 	cQlsFrame : public cRwLock
 	void		regionsAdd( cDhsAvList &, cQlsStatus & );
     protected:
     private:
-	typedef map< string, int, less<string> >
+	typedef std::map< std::string, int, std::less<std::string> >
 			tKeywordList;
 	typedef tKeywordList::iterator
 			iKeywordList;
@@ -203,7 +206,7 @@ class 	cQlsFrame : public cRwLock
 					// Name of the memory map file.
 	ulong		qfdHeaderSize;	// Size of the header.
 	bool		qfdLastIsEnd;	// Is the last card an end card?
-	vector<long *>	qfdModifiedRegions;
+	std::vector<long *>	qfdModifiedRegions;
 					// This is a list of regions that
 					// have been modified since the last
 					// time the QLTs were notified.

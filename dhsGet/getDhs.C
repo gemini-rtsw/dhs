@@ -52,7 +52,7 @@
 //
 
 
-#include <iostream.h>
+#include <iostream>
 
 
 #include "globals.H"
@@ -61,7 +61,7 @@ extern "C"
 {
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
+#include <cerrno>
 }
 
 static void	delHandler( cDhsHandler *handler )
@@ -159,7 +159,7 @@ void		getDhsError::error
 	//  Log the error, then print the message.
 	//
 
-	cout << "Error, dataset not retrievable : " << message() << endl;
+	std::cout << "Error, dataset not retrievable : " << message() << std::endl;
 	status.display();
     }
 }
@@ -638,11 +638,11 @@ void		getDataset::done
 
     if ( cs == DHS_CS_ERROR ||  !status.ok() )
     {
-	cout << "Get Request FAILED for dataset : "<< label();
+	std::cout << "Get Request FAILED for dataset : "<< label();
     }
     else if ( cs == DHS_CS_DONE )
     {
-	cout << "Get Request SUCCESSFUL for dataset : "<< label();
+	std::cout << "Get Request SUCCESSFUL for dataset : "<< label();
     }
 
     if ( cs != DHS_CS_BUSY )
@@ -655,11 +655,11 @@ void		getDataset::done
 
 	if ( string != NULL )
 	{
-	    cout << endl << "message: " << string << endl;
+	    std::cout << std::endl << "message: " << string << std::endl;
 	}
 	else
 	{
-	    cout << endl;
+	    std::cout << std::endl;
 	}
 
 	//

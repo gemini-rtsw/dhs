@@ -73,6 +73,7 @@
 //***********************************************************************
 //-
 
+extern "C" 
 char		*crc322str
 (
     crc32_t 	crc,		// (in)  The crc value to format.
@@ -98,6 +99,7 @@ char		*crc322str
 //***********************************************************************
 //-
 
+extern "C" 
 char		*crc642str
 (
     crc64_t	crc,		// (in)  The crc value to format.
@@ -147,6 +149,7 @@ XXX */
 //***********************************************************************
 //-
 
+extern "C" 
 crc64_t		 crc_buffer64
 (
     unsigned int		// (in)  The buffer length.

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: Mem.C,v 1.1.1.1 2002-11-24 20:21:39 brighton Exp $" 
+ * "@(#) $Id: Mem.C,v 1.2 2002-11-27 17:15:09 brighton Exp $" 
  *
  * Mem.C - method definitions for class Mem, for managing memory
  *         areas with or without shared memory.
@@ -14,22 +14,22 @@
  * pbiereic        10/11/99  Use _exit() in signal handler, so that the
  *                           message queue of a possible parent process is not closed
  */
-static const char* const rcsId="@(#) $Id: Mem.C,v 1.1.1.1 2002-11-24 20:21:39 brighton Exp $";
+static const char* const rcsId="@(#) $Id: Mem.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
-#include <stdio.h>
-#include <iostream.h>
+#include <cstdio>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
-#include "error.h"
-#include "util.h"
-#include "Mem.h"
-#include "Mem_Map.h"
+#include "error.H"
+#include "util.H"
+#include "Mem.H"
+#include "Mem_Map.H"
 
 /*
  * NOTE: on Solaris2.5, the default limit is 8 shared memory areas per process:

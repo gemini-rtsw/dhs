@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: staMonitor.C,v 1.1.1.1 2002-11-24 20:30:52 brighton Exp $";
+static char rcsid[] = "$Id: staMonitor.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -35,6 +35,9 @@ static char rcsid[] = "$Id: staMonitor.C,v 1.1.1.1 2002-11-24 20:30:52 brighton 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:30:52  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -112,18 +115,18 @@ static char rcsid[] = "$Id: staMonitor.C,v 1.1.1.1 2002-11-24 20:30:52 brighton 
 // 
 //***********************************************************************
     
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <math.h>
-#include <errno.h>
+#include <cstdio>
+#include <cstdlib>
+#include <limits>
+#include <cmath>
+#include <cerrno>
 #include <sys/errno.h>
 #include <sys/stat.h>
 #include <sys/param.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>    
-#include <signal.h>
+#include <csignal>
     
 extern "C"
 {
@@ -227,16 +230,16 @@ int statvfs(const char *, struct statvfs *);
 //***********************************************************************
 	
 struct dbprocess    *cStaMonDb::dbConnection = NULL;
-list<tStaDb*>  	    cStaMonDb::dbList;
+std::list<tStaDb*>  	    cStaMonDb::dbList;
 cMutex		    cStaMonDb::dbProcMutex;
 char		    *cStaMonDb::dbServerName;
     
-list<tStaMd*>  	    cStaMonMd::mdList;
+std::list<tStaMd*>  	    cStaMonMd::mdList;
     
 timespec	    cStaMon::absTime;
 bool		    cStaMon::checking=TRUE;
 cCond		    cStaMon::checkRes;
-list<cStaMon*>	    cStaMon::classList;
+std::list<cStaMon*>	    cStaMon::classList;
 bool		    cStaMon::configFound=FALSE;
 long		    cStaMon::frequency;
 int		    cStaMon::numResources=NULL_RES_NUM;
@@ -802,7 +805,7 @@ void	cStaMon::configAll
     //	Call the config method for each subclass.
     //
     
-    list<cStaMon*>::iterator i;
+    std::list<cStaMon*>::iterator i;
 
     for( i = classList.begin(); i != classList.end(); i++ )
     {
@@ -1145,7 +1148,7 @@ void	cStaMon::start
     // Call each objects init method.
     //
     
-    list<cStaMon*>::iterator i;
+    std::list<cStaMon*>::iterator i;
     for( i = pMonitor->classList.begin(); i != pMonitor->classList.end();
 	 i++ )
     {
@@ -1276,7 +1279,7 @@ void	cStaMon::stop
     }
     else
     {
-	list<cStaMon*>::iterator i;
+	std::list<cStaMon*>::iterator i;
 	for( i = pMonitor->classList.begin(); i != pMonitor->classList.end();
 	     i++ )
 	{
@@ -1425,7 +1428,7 @@ void	cStaMon::testAll
     //  Call the test method for each object.
     //
     
-    list<cStaMon*>::iterator i;
+    std::list<cStaMon*>::iterator i;
     for( i = monitor->classList.begin(); i != monitor->classList.end(); i++ )
     {
 	( (cStaMon*) (*i) )->test( s );
@@ -1510,7 +1513,7 @@ void	cStaMon::updateAll
     // Call updateRes for each object.
     //
     
-    list<cStaMon*>::iterator i;
+    std::list<cStaMon*>::iterator i;
     for( i = classList.begin(); i != classList.end(); i++ )
     {
 	( (cStaMon*) (*i) )->updateRes( status );
@@ -1879,7 +1882,7 @@ void	cStaMonDb::cleanup
     //  Erase all information stored from reading config file previously.
     //
 
-    list<tStaDb*>::iterator	i;
+    std::list<tStaDb*>::iterator	i;
     for( i = dbList.begin(); i != dbList.end(); i++ )
     {
 	if ( ((tStaDb*)(*i))->aliases != NULL )
@@ -2209,7 +2212,7 @@ void	cStaMonDb::test
 
     ok  = TRUE;
 
-    list<tStaDb*>::iterator	i;
+    std::list<tStaDb*>::iterator	i;
     for( i = dbList.begin(); i != dbList.end(); i++ )
     {
 	checkDatabase( ((tStaDb*) (*i))->dbName, s );
@@ -2557,7 +2560,7 @@ void	cStaMonDb::update
     cStaStat	&status		// (mod) Function return value.
 )
 {
-    list<tStaDb*>::iterator	i;
+    std::list<tStaDb*>::iterator	i;
 
     cStaMon::updateRes( status );
     
@@ -2745,7 +2748,7 @@ void	cStaMonMd::cleanup
     //  Erase all magnetic disk information, free memory.
     //
 
-    list<tStaMd*>::iterator	i;
+    std::list<tStaMd*>::iterator	i;
     for( i = mdList.begin(); i != mdList.end(); i++ )
     {
 	if ( ((tStaMd*)(*i))->aliases != NULL )
@@ -3194,7 +3197,7 @@ void	cStaMonMd::test
     
     ok = TRUE;
     
-    list<tStaMd*>::iterator	i;
+    std::list<tStaMd*>::iterator	i;
     for( i = mdList.begin(); i != mdList.end(); i++ )
     {
 	checkPath( ((tStaMd*) (*i))->path, s );
@@ -3396,7 +3399,7 @@ void	cStaMonMd::update
     cStaStat	&status		// (mod) Function return value.
 )
 {
-    list<tStaMd*>::iterator	i;
+    std::list<tStaMd*>::iterator	i;
     cStaStat			tStatus;
 
     cStaMon::updateRes( status );

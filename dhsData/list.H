@@ -38,6 +38,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:26:31  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -220,9 +223,9 @@ class 	cDtsUniqueList : public cDtsLists
 				culMutexUk.unlock();
 			    };
 
-	typedef 	map< string,		// Sort key of datatype string.
+	typedef 	std::map< std::string,		// Sort key of datatype string.
 		     	cDtsUniqueList *,	// Into this containr this type
-		     	less<string> >		// Sorting mechanizm.
+		     	std::less<std::string> >		// Sorting mechanizm.
 			tUniqueList;		// Provides access to containr
 	typedef 	tUniqueList::iterator	// Provides iterator to containr
 			iterator;
@@ -284,9 +287,9 @@ class 	cDtsChunkInfo
 				return ( chiContributor );
 			    };
 
-	typedef 	map< string,		// Sort key is of type string.
+	typedef 	std::map< std::string,		// Sort key is of type string.
 		     	cDtsChunkInfo *,	// Insert into containr type
-		     	less<string> >		// Sorting mechanizm.
+		     	std::less<std::string> >		// Sorting mechanizm.
 			tChunkList;		// Provides access to containr
 	typedef 	tChunkList::iterator	// Provides iterator to containr
 			chunkIterator;
@@ -399,9 +402,9 @@ class 	cDtsDatasetList : public cDtsLists
 				cdlMutexDs.unlock();
 			    };
 
-	typedef 	map< string,		// Sort key is of type string.
+	typedef 	std::map< std::string,		// Sort key is of type string.
 		     	cDtsDatasetList *,	// Insert this type into contr.
-		     	less<string> >		// Is the sorting mechanizm.
+		     	std::less<std::string> >		// Is the sorting mechanizm.
 			tDataList;		// Provides access to containr.
 	typedef 	tDataList::iterator	// Provides iterator to containr
 			iterator;

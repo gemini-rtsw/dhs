@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: con.C,v 1.1.1.1 2002-11-24 20:26:40 brighton Exp $";
+static char rcsid[] = "$Id: con.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -43,6 +43,9 @@ static char rcsid[] = "$Id: con.C,v 1.1.1.1 2002-11-24 20:26:40 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:26:40  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -342,7 +345,7 @@ boolean		cDtsConManager::connectors
 
 	iterator	i;	// Ptr to object in list.
 
-	if ( (i = cctConnectList.find( string( tokens[1] )) ) !=  
+	if ( (i = cctConnectList.find( std::string( tokens[1] )) ) !=  
 		cctConnectList.end() )
 	{
 	    status.E_MULTI_KEYWORD( status, tokens[1], tokens[0] );

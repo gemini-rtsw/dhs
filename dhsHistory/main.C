@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:28:26 brighton Exp $";
+static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -38,6 +38,9 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:28:26 brighton Exp $"
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:28:26  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -78,14 +81,14 @@ static char rcsid[] = "$Id: main.C,v 1.1.1.1 2002-11-24 20:28:26 brighton Exp $"
 //***********************************************************************
 //
 
-#include <iostream.h>
+#include <iostream>
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <signal.h>
-#include <errno.h>
+#include <csignal>
+#include <cerrno>
 #include <pwd.h>
 
 #include "cadef.h"
@@ -251,7 +254,7 @@ int		main
 	//  Handle error from the DHS library.
 	//
 
-	cout << s.message() << endl;
+	std::cout << s.message() << std::endl;
 	return( -1 );
     }
     catch( const char * s )
@@ -260,7 +263,7 @@ int		main
 	// Some memory allocation errors will cause this exception.
 	//
 
-	cout << "died with string: " << s << endl;
+	std::cout << "died with string: " << s << std::endl;
 	return( -1 );
     }
 
@@ -277,10 +280,10 @@ int		main
 
 	str = cDhs::message( st, el, s1 );
 
-	cout << "Error in the dhs library: " << s << endl;
+	std::cout << "Error in the dhs library: " << s << std::endl;
 	for ( ; s1 == DHS_S_SUCCESS; str = cDhs::message( st, el, s1 ) )
 	{
-	    cout << str << endl;
+	    std::cout << str << std::endl;
 	    cDhs::messageClear( s1 );
 	}
 	return( -1 );

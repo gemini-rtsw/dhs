@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: connect.c,v 1.1.1.1 2002-11-24 20:20:09 brighton Exp $";
+static char rcsid[] = "$Id: connect.c,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 /*
  ************************************************************************
  ****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -63,6 +63,9 @@ static char rcsid[] = "$Id: connect.c,v 1.1.1.1 2002-11-24 20:20:09 brighton Exp
  *
  *INDENT-OFF*
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2002/11/24 20:20:09  brighton
+ * Imported sources
+ *
  * Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
  *
  *
@@ -212,6 +215,7 @@ static char rcsid[] = "$Id: connect.c,v 1.1.1.1 2002-11-24 20:20:09 brighton Exp
  ************************************************************************
  */
 
+#include "gen_util.h"
 #include "localDhs.h"
 #include "rwLock.h"
 
@@ -2397,11 +2401,13 @@ static void	sendBulk
 		(void **) &dataPtr, &(pCmd->dcSharedMem), &impStatus ),
 		impStatus, *pStatus, VOID );
 #else	/* !vxWorks */
-	char	*fname;		/* MMAP file name.			*/
+	char*	fname;  	/* MMAP file name.			*/
 	char	baseName[PATH_MAX];
 
-	fname = tempnam( "/tmp", "dhsImp-" );
+	fname = gen_tempnam( "/tmp", "dhsImp-" ); // XXX allan: replaced tempnam
+
 	sprintf( baseName, "%s-sendBulk-%s", fname, dhsLocal.dlImpName );
+
 	impCheck( ImpDefineShared( IMP_SHARE_MMAP, baseName, 0, 
 		pCmd->dcMsgInfo.MessageLength + 4, TRUE, 
 		(void **) &dataPtr, &(pCmd->dcSharedMem), &impStatus ), 

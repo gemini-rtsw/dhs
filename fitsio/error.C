@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: error.C,v 1.1.1.1 2002-11-24 20:21:27 brighton Exp $"
+ * "@(#) $Id: error.C,v 1.2 2002-11-27 17:15:09 brighton Exp $"
  *
  * error.C - error reporting routines
  * 
@@ -14,19 +14,17 @@
  * Allan Brighton  01/04/99  Replaced sys_errlist[] with strerror()
  *                           to get around porting problems
  */
-static const char* const rcsId="@(#) $Id: error.C,v 1.1.1.1 2002-11-24 20:21:27 brighton Exp $";
+static const char* const rcsId="@(#) $Id: error.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <iostream.h>
-#include <strstream.h>
-#ifndef __linux__
-#include <errno.h>
-#endif
-#include <stdio.h>
-#include <string.h>
-#include "error.h"
+#include <cstdarg>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
+#include "error.H"
 
 // static variable holding text of last error messages
 static char errmsg_[5*1024];
@@ -46,21 +44,20 @@ static void (*msghandler_)(const char*) = NULL;
  */
 int error(const char* msg1, const char* msg2, int code)
 {
-    char buf[sizeof(errmsg_)];
-    ostrstream os(buf, sizeof(buf));
-    os << msg1 << msg2 << ends;
+    std::ostringstream os;
+    os << msg1 << msg2;
     
     if (errhandler_)
-	(*errhandler_)(buf);
+	(*errhandler_)(os.str().c_str());
     else
-	print_error(buf);
+	print_error(os.str().c_str());
 
 #ifdef XXXDEBUG
-    cerr << "debug: " << buf << endl;
+    std::cerr << "debug: " << os.str().c_str() << std::endl;
 #endif
 
     errno_ = code;
-    strncpy(errmsg_, buf, sizeof(errmsg_)-1);
+    strncpy(errmsg_, os.str().c_str(), sizeof(errmsg_)-1);
     return ERROR;
 }
 
@@ -75,21 +72,20 @@ int sys_error(const char* msg1, const char* msg2)
     if (s == NULL)
 	return error(msg1, msg2);
 
-    char buf[sizeof(errmsg_)];
-    ostrstream os(buf, sizeof(buf));
-    os << msg1 << msg2 << ": " << s << ends;
+    std::ostringstream os;
+    os << msg1 << msg2 << ": " << s;
 
     if (errhandler_)
-	(*errhandler_)(buf);
+	(*errhandler_)(os.str().c_str());
     else
-	print_error(buf);
+	print_error(os.str().c_str());
 
 #ifdef XXXDEBUG
-    cerr << "debug: " << buf << endl;
+    std::cerr << "debug: " << os.str().c_str() << std::endl;
 #endif
 
     errno_ = errno;
-    strcpy(errmsg_, buf);
+    strncpy(errmsg_, os.str().c_str(), sizeof(errmsg_)-1);
     return ERROR;
 }
 

@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:25:16  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
 //
 //
@@ -101,7 +104,7 @@ class 	cCmdAttributeInfo
     friend class cCmdCommandInfo;
 
     public:
-	typedef map< string, cCmdAttributeInfo*, less<string> > 
+	typedef std::map< std::string, cCmdAttributeInfo*, std::less<std::string> > 
 			tAttributeList;
 	typedef tAttributeList::iterator
 			iterator;
@@ -152,7 +155,7 @@ class 	cCmdCommandInfo
     friend class	cCmdAttributeInfo;
 
     public:
-	typedef map< string, cCmdCommandInfo *, less<string> > 
+	typedef std::map< std::string, cCmdCommandInfo *, std::less<std::string> > 
 			tCommandMap;
 	typedef tCommandMap::iterator	
 			iterator;

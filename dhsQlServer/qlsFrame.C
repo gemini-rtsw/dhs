@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: qlsFrame.C,v 1.1.1.1 2002-11-24 20:29:17 brighton Exp $";
+static char rcsid[] = "$Id: qlsFrame.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -51,6 +51,9 @@ static char rcsid[] = "$Id: qlsFrame.C,v 1.1.1.1 2002-11-24 20:29:17 brighton Ex
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:29:17  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -1032,7 +1035,7 @@ void		cQlsFrame::dataMerge
 	//
 
 	if ( &(qfdDataset->lastFrame()) == NULL || 
-		*this > qfdDataset->lastFrame() )
+	     ! (*this < qfdDataset->lastFrame()) ) // XXX allan: replaced ">" with "!<"
 	{
 	    qfdDataset->lastFrame( *this );
 	}
@@ -1462,7 +1465,7 @@ void		cQlsFrame::regionsAdd
 				// descriptions.
     ulong	dims[7];
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
-    vector<long *>::iterator
+    std::vector<long *>::iterator
     		i;
     int		j;
     long	*region;	// The region being formatted.

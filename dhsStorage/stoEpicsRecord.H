@@ -36,6 +36,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/24 20:31:26  brighton
+// Imported sources
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -73,7 +76,9 @@
 #ifndef STOEPICSRECORD_H
 #define STOEPICSRECORD_H
 
-#include "strstream.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 #include "globals.H"
 
 
@@ -556,13 +561,13 @@ void		cStoEpicsRecord< cUserClass, cParentClass, cStatusClass >::flush
     void
 )
 {
-    cStatusClass
-		status;		// Program status. 
-    const int	bufLen = 128;	// Character buffer length.
-    char	buffer[bufLen];	// Character buffer.
-    ostrstream	oss( buffer, bufLen, ios::out );
-				// Output string stream object.
+    cStatusClass status;		// Program status. 
 
+    // XXX allan: replaced char buffer and ostrstream (deprecated)
+    //const int	bufLen = 128;	// Character buffer length.
+    //char	buffer[bufLen];	// Character buffer.
+    //ostrstream	oss( buffer, bufLen, ios::out );
+    std::ostringstream	oss;    // Output string stream object.
 
 
     //
@@ -589,7 +594,7 @@ void		cStoEpicsRecord< cUserClass, cParentClass, cStatusClass >::flush
 	{
 	    oss << STO_ERV_UNKNOWN << STO_NULL_CHAR;
 	}
-	cStaStatus::update( erName, buffer, status );
+	cStaStatus::update( erName, oss.str().c_str(), status );
 	cStaStatus::flush( status );
 	if ( !status.ok() )
 	{
