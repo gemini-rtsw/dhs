@@ -74,3 +74,10 @@ with gcc-3.2.1 under RedHat-7.2.
 * Changed process thread id init values to 0, from -1 (type is unsigned)
 
 
+Other Changes
+=============
+
+The following changes were not required for compiling, but for running:
+
+* Pass a non-null (pthread_t) argument as first arg to pthread_create()
+

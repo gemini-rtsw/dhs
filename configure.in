@@ -100,11 +100,10 @@ AC_CANONICAL_SYSTEM
 AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
 AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
 
-dnl Sybase settings
-if test "$SYBASE" = "" ; then
-    SYBASE=/opt/sybase-12.5/OCS-12_5
-    test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
-fi
+dnl Sybase settings (XXX needs work)
+SYBASE=/opt/sybase-12.5/OCS-12_5
+test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
+test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
 AC_SUBST(SYBASE)
 
 dnl Tcl settings

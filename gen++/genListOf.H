@@ -37,6 +37,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:09  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:33:09  brighton
 // Imported sources
 //
@@ -263,6 +266,7 @@ template< class cUserClass, class cIndex, class cStatus >
 {
     std::pair<int, cListOf *>	
 		*arg;
+    pthread_t   thread;         // XXX allan: added
     pthread_attr_t		// Thread attributes.
 		attr;
     int		key;
@@ -300,7 +304,7 @@ template< class cUserClass, class cIndex, class cStatus >
 
 	    pthread_attr_init( &attr );
 	    pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
-	    s = pthread_create( NULL, &attr, insertThread, arg );
+	    s = pthread_create( &thread, &attr, insertThread, arg );
 	    pthread_attr_destroy( &attr );
 	    
 	    if ( s != 0 )
@@ -358,6 +362,7 @@ template< class cUserClass, class cIndex, class cStatus >
 {
     std::pair<int, cIndex>	
 		*arg;
+    pthread_t   thread;         // XXX allan: added
     pthread_attr_t		// Thread attributes.
 		attr;
     iObjectList	i;
@@ -396,7 +401,7 @@ template< class cUserClass, class cIndex, class cStatus >
 
 	    pthread_attr_init( &attr );
 	    pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
-	    s = pthread_create( NULL, &attr, deleteThread, arg );
+	    s = pthread_create( &thread, &attr, deleteThread, arg );
 	    pthread_attr_destroy( &attr );
 	    
 	    if ( s != 0 )

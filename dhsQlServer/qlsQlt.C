@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: qlsQlt.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
+static char rcsid[] = "$Id: qlsQlt.C,v 1.3 2003-01-15 18:23:35 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -45,6 +45,9 @@ static char rcsid[] = "$Id: qlsQlt.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:08  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:29:21  brighton
 // Imported sources
 //
@@ -466,7 +469,7 @@ void		cQlsQlt::checkNotify
 // cQlsQlt::commandThread
 //
 // INVOCATION:
-// s = pthread_create( NULL, &attr, commandThread, NULL );
+// s = pthread_create( &thread, &attr, commandThread, NULL );
 //
 // PARAMETERS: (">" input, "!" modified, "<" output)
 // (>) qlt (void *) The qlt object being processed.

@@ -1,0 +1,160 @@
+<!--  $Id: dhgSim.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/sim.html
+#
+# PURPOSE:
+# To provide HTML help informaiton for the "simulation" indicators
+# on the DHS console.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:12  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.4  1998/07/14 19:14:23  jaeger
+# Made Norm's suggested edits.
+#
+# Revision 1.3  1998/05/25 21:54:29  jaeger
+# Moved Subsystem and Resource Overview description into dhsConsole.html,
+# instead of having a separate html file.
+#
+# Revision 1.2  1998/05/25 20:41:43  jaeger
+# Changed to reflect changes in dhsConsole, also added usage information.
+#
+# Revision 1.1  1997/11/13 23:52:16  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Simulation Level</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Simulation Level</H1>
+    The simulation level controls command processing.  In simulate
+    mode commands appear to be processed, but are <B>not</B>.  When
+    not in simulate mode all commands are processed.
+    Note that simulation mode may operate differently for the Data
+    Processing subsystem, which has not been developed yet.
+    <P>
+      The overall DHS simulation level is the highest simulation level 
+      set on any of the DHS subsystems. See the table 
+      <A HREF="#expectedValues">below</A> for the expected value. 
+
+    <H2>Viewing Overall DHS Simulation Level</H2>
+    The simulation level for the
+    entire DHS system appears on the 
+    <A HREF="dhsConsole.html">main window</A>, of the Console beside
+    the text &quot;Simulation Level:&quot;.
+
+    <H2>Viewing Subsystem Simulation Levels</H2>
+    The simulation level of a particular subsystem can be viewed on its
+    subsystem window. It appears beside the text
+    &quot;Simulation Level:&quot; Subsystem windows are displayed when
+    the subsystem's identifier button is 
+    <A HREF="dhgControls.html#button">invoked</A> on the main window of the 
+    <A HREF="dhsConsole.html">Console</A>.
+    See the <A HREF="dhsConsole.html#subsystem">Subsystem Overview</A> 
+    for more information.
+
+    <P><HR>
+    <H2>Changing the Simulation Level</H2>
+    The simulation level can be set with
+    the <A HREF="dhgSimCmd.html">simulation level command</A>.
+    <P>
+      The simulation level remains set until it is set to a new value,
+      such as when DHS is initialized, reset, or shut down.  
+      The simulation level defaults to NONE on start-up or the value given
+      by the optional <CODE>-simulate</CODE> command-line argument.
+
+
+    <P><HR>
+    <A NAME="expectedValues"><H2>Expected Values</H2></A>
+    All Gemini systems are expected to have four simulation levels.
+    Although there are four simulation levels they behave like two.
+    Two of the levels turn on the simulation mode while the other
+    two turn it off (i.e. either a subsystem is in simulation mode
+    or it is not).  
+    Note that simulation may operate differently for the Data
+    Processing subsystem, which has not been developed yet.
+    either
+      the subsystems are in simulate mode or it is not.  The exception
+      to this is the Data Processing subsystems, which have not been
+      implemented yet.
+    <P>
+      The simulation levels are listed in the table below in 
+      increasing order.
+    <P>
+    <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+      <CAPTION ALIIGN="top">Expected Simulation Level Values</CAPTION>
+      <TR><TH>Level</TH>
+	  <TH>Affects on DHS</TH>
+      </TR>
+      <TR> <TD>NONE</TD>
+	<TD>Simulation is turned off.</TD> 
+      </TR>
+      <TR> <TD>VSM</TD>
+	<TD>Operate in &quot;Virtual System Mode&quot;, actions 
+	  may be initiated and checked but the system does not perform
+	  further computations.  This mode is not relevant to
+	  DHS so the simulation mode is set to <B>NONE</B>
+	  instead.</TD> 
+      </TR>
+      <TR> <TD>FAST</TD>
+	<TD>Some internal computations may be performed, but response
+	  times are not realistic. This mode is not relevant to
+	  DHS so the simulation mode is set to <B>FULL</B>
+	  instead.</TD> 
+      </TR>
+      <TR> <TD>FULL</TD>
+	<TD>Full simulation, events and responses are enabled. The subsystem
+	    responds to commands and simulates responses from lower
+	    subsystems.
+      </TR>
+    </TABLE>
+      
+  <P><HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS
+<!-- Created: Mon Nov  3 09:22:23 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 15:55:27 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
+

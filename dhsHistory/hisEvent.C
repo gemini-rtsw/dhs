@@ -361,6 +361,7 @@ void		cHisEvent::startQueueLoop
     cHisStatus	&status		// (mod) Program status. 
 )
 {
+    pthread_t   thread;         // XXX allan: added
     pthread_attr_t
 		attr;		// POSIX thread attributes.
     int         pthread_status;	// pthread_create function return status.
@@ -376,7 +377,7 @@ void		cHisEvent::startQueueLoop
     heQueueLoopDone = false;
     pthread_attr_init( &attr );
     pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
-    pthread_status = pthread_create( NULL, &attr, execThread, NULL );
+    pthread_status = pthread_create( &thread, &attr, execThread, NULL );
     pthread_attr_destroy( &attr );
     if ( pthread_status != 0 )
     {

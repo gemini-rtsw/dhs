@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: dhsGenSignal.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
+static char rcsid[] = "$Id: dhsGenSignal.C,v 1.3 2003-01-15 18:23:35 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: dhsGenSignal.C,v 1.2 2002-11-27 17:15:08 brighton Ex
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:08  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:27:50  brighton
 // Imported sources
 //
@@ -180,6 +183,7 @@ void	dhsGenSignal
     cSig::sigFn	fn;
     int		sig;
     va_list	varg;
+    pthread_t thread; // XXX allan: added
 
 
     checkStat( status, return );
@@ -250,7 +254,7 @@ void	dhsGenSignal
     // Execute the signal handler in a new thread.
     //
 
-    pthread_create( NULL, NULL, sigHandler, NULL );
+    pthread_create(&thread, NULL, sigHandler, NULL ); // XXX allan: added &thread
 }
 
 //

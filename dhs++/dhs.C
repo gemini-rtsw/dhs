@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: dhs.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
+static char rcsid[] = "$Id: dhs.C,v 1.3 2003-01-15 18:23:35 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -67,6 +67,9 @@ static char rcsid[] = "$Id: dhs.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:08  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:24:57  brighton
 // Imported sources
 //
@@ -633,6 +636,7 @@ void		cDhsHandler::threadCreate
     void	*pArg		// (in)  The argument to the function.
 )
 {
+    pthread_t   thread;         // XXX allan: added
     pthread_attr_t		// Thread attributes.
 		attr;
     int		s;		// pthread_create function return status.
@@ -642,7 +646,7 @@ void		cDhsHandler::threadCreate
 
     pthread_attr_init( &attr );
     pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
-    s = pthread_create( NULL, &attr, threadFn, pArg );
+    s = pthread_create( &thread, &attr, threadFn, pArg );
     pthread_attr_destroy( &attr );
 
     if ( s != 0 )

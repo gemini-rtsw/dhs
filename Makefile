@@ -67,6 +67,9 @@ RELEASE_DIRS = \
 	release/include \
 	release/lib \
 	release/scripts \
+	release/sql \
+	release/config \
+	release/doc \
 	release/man \
 	release/man/man1 \
 	release/man/man3 \
@@ -84,6 +87,9 @@ install:
 	for i in ${RELEASE_DIRS}; do test -d $$i || mkdir $$i; done
 	cp */*.h release/include
 	cp ${SCRIPTS} release/scripts
+	cp */*.config release/config
+	cp */html/* release/doc
+	cp */*.sql release/sql
 	cp */*.1 release/man/man1
 	cp */*.3 release/man/man3
 	cp */*.n release/man/mann

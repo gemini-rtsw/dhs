@@ -4819,10 +4819,9 @@ if test $ac_cv_lib_socket_main = yes; then
 fi
 
 
-if test "$SYBASE" = "" ; then
-    SYBASE=/opt/sybase-12.5/OCS-12_5
-    test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
-fi
+SYBASE=/opt/sybase-12.5/OCS-12_5
+test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
+test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
 
 
 if test "$TCLTK_ROOT" = "" ; then

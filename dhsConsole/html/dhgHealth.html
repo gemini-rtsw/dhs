@@ -1,0 +1,178 @@
+<!--  $Id: dhgHealth.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) <year>                            (c) <year>
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/health.html
+#
+# PURPOSE:
+# Provide HTML help information for the "health" indicators for
+# the DHS console.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.4  1998/07/14 19:14:23  jaeger
+# Made Norm's suggested edits.
+#
+# Revision 1.3  1998/05/25 21:54:29  jaeger
+# Moved Subsystem and Resource Overview description into dhsConsole.html,
+# instead of having a separate html file.
+#
+# Revision 1.2  1998/05/25 20:41:43  jaeger
+# Changed to reflect changes in dhsConsole, also added usage information.
+#
+# Revision 1.1  1997/11/13 23:52:16  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Health</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Health</H1>
+    The health of a subsystem indicates how well it is operating and
+    the overall health of DHS is the health of the least healthy
+    subsystem.
+
+    <H2>Viewing Overall DHS Health</H2>
+    The overall health of DHS appears on the main window of the 
+    <A HREF="dhsConsole.html">Console</A>, beside the text "Health:".
+
+    <H2>Viewing Subsystem Health</H2>
+    A subsystem's health appears on the particular subsystem's
+    window, beside the text "Health:". Subsystem windows 
+    can be displayed by <A HREF="dhgControls.html#button">invoking</A>
+    subsystem identifiers (buttons) on the main window of
+    the <A HREF="dhsConsole.html">Console</A>. See the
+    <A HREF="dhsConsole.html#subsystem"> Subsystem Overview</A> for more 
+    information.
+    <P>
+      Also, there is a &quot;health LED&quot; on the 
+      <A HREF="dhsConsole.html">main window</A> of the Console for
+      each subsystem.
+      The LED appears to the left of subsystem's identifier.
+      The colour of an LED indicates the health of the corresponding
+      subsystem. The expected health values and their colours are shown
+      <A HREF="#expectedValues">below</A>. See the
+      <A HREF="dhsConsole.html#subsystem">Subsystem Overview</A>
+      for more information.
+
+    <P><HR>
+    <H2>Changing the Subsystem Health</H2>
+    The health can be set to <FONT COLOR="green">"GOOD"</FONT> with the 
+    <A HREF="dhgResetHealth.html">Reset Health</A> command.
+    <P>
+      The subsystem healths can not be altered in any other way.
+      However, they can change
+      as a side effect of a <A HREF="dhgReset.html">reset</A> or
+      <A HREF="dhgInit.html">initialization</A>.
+
+
+    <P><HR>
+    <A NAME="expectedValues"><H2>Expected Values</H2></A>
+    The expected health values and colours are listed in the table below in
+    increasing severity.  
+
+    <P>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	<TR> <TH>Value</TH>
+	  <TH>Interpretation</TH>
+	</TR>
+	<TR> <TD><FONT COLOR="green">GOOD (green)</FONT></TD>
+	  <TD>System is working well, there are no known problems.</TD>
+	</TR>
+	<TR> <TD><FONT COLOR="yellow">WARNING (yellow)</FONT></TD>
+	  <TD>System is operating but has encountered some minor problems.</TD>
+	</TR>
+	<TR> <TD><FONT COLOR="red">BAD (red)</FONT></TD>
+	  <TD>System is having severe problems and may not be able to
+	    operate.</TD>
+	</TR>
+	<TR> <TD><FONT COLOR="gray">Any other value (gray)</FONT></TD>
+	  <TD>System operating conditions are undetermined.</TD>
+	</TR>
+      </TABLE>
+
+
+    <P><HR>
+    <H2>Viewing Resource Monitoring Health</H2>
+    There is a health LED beside each resource bar on the
+    <A HREF="dhsConsole.html">main window</A>  of the Console.
+    The colour of the LED indicates how healthy the resource monitoring
+    is for that resource. The expected values and colours are shown
+    <A HREF="#expectedValues">below</A>.
+    See the
+    <A HREF="dhsConsole.html#resource">Resource Overview</A> help pages
+    for more information on resource monitoring.
+
+    <P><HR>
+    <H2>Changing the Resource Health</H2>
+    Resource monitoring health can not be changed.  However, it can change
+    when the Status Server is <A HREF="dhgReset.html">reset</A> or
+    <A HREF="dhgInit.html">initialized</A>.
+    
+    <P><HR>
+    <A NAME="expectedValues"><H2>Expected Values</H2></A>
+    The expected health values and colours are listed in the table below in
+    increasing severity.  
+
+    <P>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+      <TR> <TH>Value</TH>
+	  <TH>Interpretation</TH>
+	</TR>
+	<TR> <TD><FONT COLOR="green">GOOD (green)</FONT></TD>
+	  <TD>Resource monitoring is working well, there are no known problems.
+	  </TD>
+	</TR>
+	<TR> <TD><FONT COLOR="red">BAD (red)</FONT></TD>
+	  <TD>System is having severe problems and may not be able to
+	    operate.</TD>
+	</TR>
+      </TABLE>
+
+    <P><HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS
+<!-- Created: Mon Nov  3 10:59:40 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 10:13:27 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
