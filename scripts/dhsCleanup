@@ -35,6 +35,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.1.1.1  2002/11/24 20:21:51  brighton
 # Imported sources
 #
@@ -56,7 +59,7 @@
 cleanup
 
 #find /tmp -user $USER -name 'dhsIm*' -exec rm {} \; > /dev/null 2>&1
-find /tmp -type d -user $USER -name 'dhs*' -print -prune -exec rm -rf {} \; > /dev/null 2>&1
+find /tmp -user $USER -name 'dhs*' -print -prune -exec rm -rf {} \; > /dev/null 2>&1
 
 
 

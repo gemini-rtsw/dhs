@@ -1,4 +1,4 @@
-# $Id: dhsOcsWish.tcl,v 1.3 2004-09-14 09:07:12 brighton Exp $
+# $Id: dhsOcsWish.tcl,v 1.4 2004-10-12 08:55:12 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cQlServer::testCmd - Callback function for when a ping command is received.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/09/14 09:07:12  brighton
+# *** empty log message ***
+#
 # Revision 1.2  2004/09/13 10:18:01  brighton
 # Tested with xpaset and ds9 with new sfits option
 #
@@ -212,6 +215,7 @@ itcl::class cQlServer {
     public common	cQlServerName ".cdhsqltool1"
 #    public common	qlsImageArithName ".dqtCtl.imageArithmetic"
     public common	qlsImageArithName "$cQlServerName.imageArithmetic"
+    public common       xpa [xpaopen ""]
 
 
     #
@@ -294,8 +298,10 @@ body	cQlServer::checkDisplay {
     set frameId [ $frame cget -qfFrameId ]
     set datasetName [ $frame cget -qfDatasetName ]
 #    set image [ $imageName get_image ]
-
+    
+    puts "XXX cQlServer::checkDisplay: $frame == $qlsDisplayFrame"
     if { $frame == $qlsDisplayFrame } {
+
 	#
 	# Update the arithmetic.
 	#
@@ -309,10 +315,22 @@ body	cQlServer::checkDisplay {
 	# Update the image.
 	#
 
-	exec xpaset -p ds9 update
+	# XXX: Note: There are three different ways to tell ds9 to update the image data:
+
+	# XXX 1. use xpaset shell command
+	#puts "XXX exec xpaset -p ds9 update"
+	#exec xpaset -p ds9 update
+
+	# XXX 2. use xpaset tcl command
+	puts [list XXX xpaset $xpa ds9 update "" "" "" names errs 1]
+        #XXX usage: xpaset xpa template paramlist mode buf len names errs n
+        xpaset $xpa ds9 update "" "" "" names errs 1
+
+	# XXX 3. You could also use this Tcl code in the ds9 process, or via the xpa tcl command
 	#global ::current
 	#$current(frame) update
 	
+
 	#
 	#  If the cut or pixel table windows are visible, update them.
 	#
@@ -362,8 +380,20 @@ body	cQlServer::checkDisplay {
 	#  Display the file containing the frame data.
 	#
 
-	exec xpaset -p ds9 file sfits $newHeaderFile $newDataFile
+	# XXX: Note: There are three different ways to tell ds9 to load the image header/data:
+
+	# XXX 1. use xpaset shell command
+	#puts "XXX exec xpaset -p ds9 file sfits $newHeaderFile $newDataFile"
+	#exec xpaset -p ds9 file sfits $newHeaderFile $newDataFile
+
+	# XXX 2. use xpaset tcl command
+	puts [list XXX xpaset $xpa ds9 "file sfits $newHeaderFile $newDataFile" "" "" "" names errs 1]
+        #XXX usage: xpaset xpa template paramlist mode buf len names errs n
+        xpaset $xpa ds9 "file sfits $newHeaderFile $newDataFile" "" "" "" names errs 1
+
+	# XXX 3. You could also use this Tcl code in the ds9 process, or via the xpa tcl command
 	#::LoadSFits $newHeaderFile $newDataFile
+
 
 	#
 	#  If the cut or pixel table windows are visible, update them.
@@ -407,7 +437,6 @@ body	cQlServer::checkDisplay {
 	    set qlsDisplayFrame $frame
 	}
     }
-
 
     #
     # If required, execute the autocut function.

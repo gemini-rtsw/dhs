@@ -1,4 +1,4 @@
-# $Id: misc.tcl,v 1.1.1.1 2002-11-24 20:29:51 brighton Exp $
+# $Id: misc.tcl,v 1.2 2004-10-12 08:55:12 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -41,6 +41,9 @@
 #	  numerically.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:29:51  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #
@@ -101,7 +104,7 @@
 proc	displayAbout {
     {window {.about}}
 } {
-    global __source_path
+    global env
 
 
     #
@@ -124,7 +127,7 @@ proc	displayAbout {
     set version "dhsQlTool 0.07 (c) 1997 NRC/CNRC"
     set text "Gemini Telescopes Quick Look Tool\n(Part of the Gemini Telescopes
 \ Data Handing System)\n\n\n$version"
-    image create bitmap dhsGemini -file "$__source_path/../images/dhsGemini.xbm"
+    image create bitmap dhsGemini -file "$env(DHS_BASE)/images/dhsGemini.xbm"
     messagedialog $window                                               \
         -image dhsGemini                                                \
         -text "$text"						       	\

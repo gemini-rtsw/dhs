@@ -32,6 +32,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/09/13 10:18:01  brighton
+# Tested with xpaset and ds9 with new sfits option
+#
 # Revision 1.1  2004/08/30 09:15:32  brighton
 # Started testing DS9 support
 #
@@ -83,11 +86,11 @@ namespace import -force itcl::*
 namespace import -force itk::*
 namespace import -force iwidgets::*
 
-#if {[catch {package require tclxpa 2.1} msg]} {
-#    puts "Error: Could not load XPA Tcl package"
-#} else {
-#    puts "Loaded XPA Tcl package"
-#}
+if {[catch {package require tclxpa 2.1} msg]} {
+    puts "Error: Could not load XPA Tcl package"
+} else {
+    puts "Loaded XPA Tcl package"
+}
 
 #
 # the environment variable $SKYCAT_LIBRARY should point to the directory

@@ -1,4 +1,4 @@
-# $Id: dhsOcsWish.tcl,v 1.3 2004-08-24 13:57:13 brighton Exp $
+# $Id: dhsOcsWish.tcl,v 1.4 2004-10-12 08:55:12 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cQlServer::testCmd - Callback function for when a ping command is received.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/08/24 13:57:13  brighton
+# Linux port (see PORTING_NOTES, especially the part at the end labeled "Other Changes")
+#
 # Revision 1.2  2004/08/13 20:18:54  brighton
 # Linux test/port
 #
@@ -282,6 +285,7 @@ body	cQlServer::checkDisplay {
     set datasetName [ $frame cget -qfDatasetName ]
     set image [ $imageName get_image ]
 
+    puts "XXX cQlServer::checkDisplay: $frame == $qlsDisplayFrame"
     if { $frame == $qlsDisplayFrame } {
 	#
 	# Update the arithmetic.
@@ -296,6 +300,7 @@ body	cQlServer::checkDisplay {
 	# Update the image.
 	#
 
+	puts "XXX $image mmap update"
 	$image mmap update
 
 
@@ -347,6 +352,7 @@ body	cQlServer::checkDisplay {
 	#  Display the file containing the frame data.
 	#
 
+	puts "XXX $image mmap set $newDataFile 0 0 $newHeaderFile 0 0"
 	$image mmap set $newDataFile 0 0 $newHeaderFile 0 0
 
 

@@ -1,4 +1,4 @@
-# $Id: dhsQltCtl.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
+# $Id: dhsQltCtl.tcl,v 1.2 2004-10-12 08:55:12 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -120,6 +120,9 @@
 #			- Return the current list of selected streams.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.3  2004/08/24 13:57:13  brighton
 # Linux port (see PORTING_NOTES, especially the part at the end labeled "Other Changes")
 #
@@ -375,6 +378,8 @@ itcl::class CDhsQltCtl {
     method		selectFrame {}
     method		streamSet {}
     method		setFrameList {}
+
+    public common       xpa [xpaopen ""]
 }
 usual CDhsQltCtl {
 }
@@ -1709,18 +1714,6 @@ body	CDhsQltCtl::constructor {
 
 
     #
-    # Add the popup to prompt for a dataset name to display.
-    #
-
-    itk_component add datasetPrompt {
-	promptdialog $itk_interior.p -modality application 		\
-		-labeltext "Enter the dataset to display"
-    }
-    $itk_component(datasetPrompt) hide Help
-    $itk_component(datasetPrompt) hide Apply
-
-
-    #
     # Add a dialogMessage popup, for general use.
     #
 
@@ -1965,15 +1958,24 @@ body		CDhsQltCtl::datasetDisplay {
     #
     #  Prompt for the dataset name.
     #
+    set prompt $itk_interior.promptdialog
+    if {! [winfo exists $prompt]} {
+	::iwidgets::Promptdialog $prompt \
+	    -modality application \
+	    -labeltext "Enter the dataset to display"
+    }
+    $prompt hide Help
+    $prompt hide Apply
+    focus [$prompt component prompt component entry]
+    $prompt center
+    $prompt delete 0 end
 
-    $itk_component(datasetPrompt) center
-    $itk_component(datasetPrompt) delete 0 end
-    if { [ $itk_component(datasetPrompt) activate ] } {
+    if { [ $prompt activate ] != "" } {
 	#
 	# Get the dataset name.
 	#
 
-	set dsName [ $itk_component(datasetPrompt) get ]
+	set dsName [ $prompt get ]
 	if { $dsName != "" } {
 	    #
 	    #  Send a command to the quick look server to display the dataset.
@@ -2043,10 +2045,11 @@ body		CDhsQltCtl::displaySave {
 	#
 	# Find the rtdimage object and execute the dump method.
 	#
-
-	# XXX allan FIXME use XPA/ds9 XXX
 	#[ [ cQlServer::getImageName ] get_image ] dump $tmpDir/$dsName-QL.fits
-	
+
+	# use ds9 here instead...
+	puts [list XXX xpaset $xpa ds9 "savefits $tmpDir/$dsName-QL.fits" "" "" "" names errs 1]
+	xpaset $xpa ds9 "file save $tmpDir/$dsName-QL.fits" "" "" "" names errs 1
 
 	#
 	# Send the file to the data server.
