@@ -81,8 +81,6 @@ int f(bool x){return 1;}
 ])
 if test "$ac_cv_cxx_bool" = yes; then
   AC_DEFINE(HAVE_BOOL,,[define if bool is a built-in type])
-else
-  AC_DEFINE(bool,int,[define if bool is not a built-in type])
 fi
 ])
 AC_CXX_BOOL
