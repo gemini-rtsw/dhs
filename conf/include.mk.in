@@ -44,8 +44,22 @@ SYBASE_LDLIBS = -L$(SYBASE)/lib -lsybdb
 
 # Base dir for Epics
 EPICS = @EPICS@
-EPICS_INCLUDES = -I$(EPICS)/include
-EPICS_LDLIBS = -L$(EPICS)/lib/${HOST_ARCH} -lca -lCom
+
+UNAME = $(shell uname)
+EPICS_INC_OS = $(UNAME)
+ifeq ($(EPICS_OS),SunOS)
+    EPICS_INC_OS = solaris
+endif
+EPICS_INCLUDES = -I$(EPICS)/include -I$(EPICS)/include/os/$(EPICS_INC_OS) 
+
+EPICS_LIB_OS = $(UNAME)
+ifeq ($(EPICS_LIB_OS),SunOS)
+    EPICS_LIB_OS = solaris-sparc-gnu
+endif
+ifeq ($(EPICS_LIB_OS),Linux)
+    EPICS_LIB_OS = linux-x86
+endif
+EPICS_LDLIBS = -L$(EPICS)/lib/${EPICS_LIB_OS} -lca -lCom
 
 
 # CFITSIO (relative to the source dirs)
@@ -88,16 +102,6 @@ CXX_INCLUDES = $(INCLUDES) \
 
 # Define options
 DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE 
-
-# C Compiler options
-CFLAGS = -g ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
-
-# C++ Compiler options
-CXXFLAGS = $(CFLAGS) 
-#-Wno-deprecated
-
-# Linker options
-LDFLAGS = -g
 
 # local library dependencies
 LOCAL_LIBS = \
@@ -150,6 +154,9 @@ LOCAL_LDFLAGS = \
 	-L$(TOP)/crc \
 
 
+# Linker options
+LDFLAGS = -g
+
 # Libraries to link
 LDLIBS = ${LOCAL_LDFLAGS} ${LIBS} ${CFITSIO_LDLIBS} ${DRAMA_LDLIBS} ${SYBASE_LDLIBS} $(SYSLIBS) 
 
@@ -161,6 +168,16 @@ CC = @CC@
 
 # C++ compiler
 CXX = @CXX@
+
+# For now, assume gcc, otherwise this needs to go into configure.in
+SHLIB_CFLAGS = -fPIC
+SHLIB_LDFLAGS = -shared
+
+# C Compiler options
+CFLAGS = -g $(SHLIB_CFLAGS) ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
+
+# C++ Compiler options
+CXXFLAGS = $(CFLAGS) 
 
 # Script used to install files
 INSTALL = @INSTALL@

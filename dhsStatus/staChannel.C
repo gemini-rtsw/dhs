@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: staChannel.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
+static char rcsid[] = "$Id: staChannel.C,v 1.3 2003-05-26 11:41:20 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -63,6 +63,9 @@ static char rcsid[] = "$Id: staChannel.C,v 1.2 2002-11-27 17:15:09 brighton Exp 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:09  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:30:37  brighton
 // Imported sources
 //
@@ -2057,8 +2060,8 @@ void		cStaChannel::update
 	    // If the epics channel is not connected, connect to it.
 	    //
 
-	    if ( !scConnected || scValChannel->state != cs_conn ||
-		    scMsgChannel->state != cs_conn )
+	    if ( !scConnected || ca_state(scValChannel) != cs_conn ||
+		    ca_state(scMsgChannel) != cs_conn )
 	    {
 		status.S_CA_CONNECT( status, scName );
 		(void) sprintf( workBuff, "%s.VAL", scName );
