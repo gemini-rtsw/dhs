@@ -2,6 +2,6 @@
 
 NAME = dhs++Client
 SOURCES = main.C
-LIBS =	-ldhs++ -ldhs -lgen -ldhsGen
+LIBS =	-ldhs++ -ldhs -lgen -ldhsGen $(TCLTK_LDLIBS)
 
 include ../conf/cxx_bin.mk

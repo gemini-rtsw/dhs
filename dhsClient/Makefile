@@ -2,6 +2,6 @@
 
 NAME = dhsClient
 SOURCES = main.c
-LIBS =	-ldhs -lgen
+LIBS =	-ldhs -lgen $(TCLTK_LDLIBS)
 
 include ../conf/cc_bin.mk
