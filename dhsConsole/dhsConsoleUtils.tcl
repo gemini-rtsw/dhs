@@ -1,4 +1,4 @@
-# $Id: utils.tcl,v 1.1.1.1 2002-11-24 20:25:55 brighton Exp $
+# $Id: dhsConsoleUtils.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -61,6 +61,9 @@
 # warningDialog		Display a warning message in a dialog box.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:25:55  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 #
 #

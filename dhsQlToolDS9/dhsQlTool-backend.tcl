@@ -50,8 +50,10 @@
 #***********************************************************************
 #
 
+#cmdtrace on
+
 set dhs_base $env(DHS_BASE)
-set dhs_library $dhs_base/lib/dhsQlTool
+set dhs_library $dhs_base/lib/dhsQlToolDS9
 set _qltHelpDir $dhs_library/html
 lappend auto_path $dhs_base/lib $dhs_library
 set debug 0
@@ -131,7 +133,7 @@ utilPrintErrors
 #  Source the skycat code.
 #
 
-source $env(SKYCAT_LIBRARY)/SkyCat.tcl
+#source $env(SKYCAT_LIBRARY)/SkyCat.tcl
 
 #
 # Get the data processing package.

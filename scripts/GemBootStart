@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 #
 # This file is originally /gemini/dhs/scripts/GemBootStart.
 # It is copied to the /etc/rc2.d/S98GemDHS on the DHS server machine
 # as well as /etc/rc2.d/K98GemDHS.  Only edit the original file and
 # then make copies in the system directories.
 
-case `/usr/ucb/whoami` in
+case `whoami` in
 
-'root')
+root)
 	SU="su - gemdhs -c "
 	;;
-'gemdhs')
+gemdhs)
 	SU=""
 	;;
 *)
@@ -19,38 +19,11 @@ case `/usr/ucb/whoami` in
 	;;
 esac
 
-# Set up the environment for this script and all spawned off processes
-DHS_LOG_DIR=/var/dhs
-[ ! -d $DHS_LOG_DIR ] && ( mkdir $DHS_LOG_DIR ; chown gemdhs:staff $DHS_LOG_DIR ; chmod g+w $DHS_LOG_DIR )
-[ ! -d $IMP_SCRATCH ] && ( mkdir $IMP_SCRATCH )
-
 # Set DHS_BASE if not already set
-DHS_BASE=${DHS_BASE:=/gemini/dhs-0.19};
+DHS_BASE=${DHS_BASE:=/gemini/dhs};
 echo "\$DHS_BASE is now \"$DHS_BASE\""
 
-# Set OCS_BASE if not already set
-OCS_BASE=${OCS_BASE:=$DHS_BASE/external/ocs};
-echo "\$OCS_BASE is now \"$OCS_BASE\""
-
-# Set GEMINI_BASE if not already set
-GEMINI_BASE=${GEMINI_BASE:=$DHS_BASE/..};
-echo "\$GEMINI_BASE is now \"$GEMINI_BASE\""
-
-# Set IMP_STARTUP if not already set
-IMP_STARTUP=${IMP_STARTUP:=$DHS_BASE/imp_startup}
-
-# Change LD_LIBRARY_PATH order so that /usr/lib comes after DHS libs
-# so that it gets correct version of libgen.so
-
-#
-#  Removed LD_LIBRARY_PATH. The executables in dhs-0.19 are built against
-#  the /gemini/dhs-0.19 libraries, and so LD_LIBRARY_PATH is not
-#  needed to find the libraries.
-
-# LD_LIBRARY_PATH=$DHS_BASE/lib/solaris:$DHS_BASE/external/lib/solaris:$DHS_BASE/sybase/lib:$OCS_BASE/lib/solaris:$OCS_BASE/external/lib/itcl:$OCS_BASE/external/lib/tclX7.6.0:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH
-
-# echo "Using LD_LIBRARY_PATH = \"$LD_LIBRARY_PATH\""
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$DHS_BASE/lib
 
 dhs_start() {
 	PROG=$1
@@ -64,7 +37,6 @@ dhs_start() {
 	fi
 
 	echo "dhs_start: Starting $PROG$ARGS"
-	#$SU$PROG$ARGS >> $LOG 2>&1 < /dev/null &
         BASEPROG=`basename $PROG`
        	$SU$PROG$ARGS < /dev/null | 2>&1 logger -p local0.debug -t $BASEPROG &
 	sleep 1
@@ -81,17 +53,18 @@ start)
               export DEFAULT_CONFIG_DIR
               echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
 
-	      dhs_start $DHS_BASE/external/bin/solaris/master
+	      dhs_start $DHS_BASE/bin/master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsStatus
+	      dhs_start $DHS_BASE/bin/dhsStatus
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsSim4Data
+	      dhs_start $DHS_BASE/bin/dhsSim4Data
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsData -debug MIN NO_DHS
+	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS
+	      dhs_start $DHS_BASE/bin/dhsData -debug MIN
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsQlServer -master
+	      dhs_start $DHS_BASE/bin/dhsQlServer -master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsCommand
+	      dhs_start $DHS_BASE/bin/dhsCommand
 	      ;;
 	aladfar)
 	      $0 stop
@@ -100,18 +73,18 @@ start)
               export DEFAULT_CONFIG_DIR
               echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
 
-	      dhs_start $DHS_BASE/external/bin/solaris/master
+	      dhs_start $DHS_BASE/bin/master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsStatus
+	      dhs_start $DHS_BASE/bin/dhsStatus
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsSim4Data
+	      dhs_start $DHS_BASE/bin/dhsSim4Data
 	      sleep 20
-	      dhs_start $DHS_BASE/bin/solaris/dhsData -debug MIN NO_DHS -noDb -temp /staging/temp -perm /staging/perm
+	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS -noDb -temp /staging/temp -perm /staging/perm
+	      dhs_start $DHS_BASE/bin/dhsData -debug MIN -noDb -temp /staging/temp -perm /staging/perm
 	      sleep 10
-		# This is a slave QLS connected to the master at the summit.
-	      dhs_start $DHS_BASE/bin/solaris/dhsQlServer -master
+	      dhs_start $DHS_BASE/bin/dhsQlServer -master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsCommand
+	      dhs_start $DHS_BASE/bin/dhsCommand
 	      ;;
 	draco)
 	      $0 stop
@@ -120,9 +93,9 @@ start)
               export DEFAULT_CONFIG_DIR
               echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
 
-	      dhs_start $DHS_BASE/external/bin/solaris/master
+	      dhs_start $DHS_BASE/bin/master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsQlServer
+	      dhs_start $DHS_BASE/bin/dhsQlServer
 	      ;;
 	sabrina)
 	      $0 stop
@@ -131,15 +104,16 @@ start)
               export DEFAULT_CONFIG_DIR
               echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
               cd /var/dhs 
-	      dhs_start $DHS_BASE/external/bin/solaris/master
+	      dhs_start $DHS_BASE/bin/master
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsStatus
+	      dhs_start $DHS_BASE/bin/dhsStatus
 	      sleep 20
-	      dhs_start $DHS_BASE/bin/solaris/dhsData -debug MIN NO_DHS
+	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS
+	      dhs_start $DHS_BASE/bin/dhsData -debug MIN
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsStorage
+	      dhs_start $DHS_BASE/bin/dhsStorage
 	      sleep 10
-	      dhs_start $DHS_BASE/bin/solaris/dhsCommand
+	      dhs_start $DHS_BASE/bin/dhsCommand
 	      ;;
 	*)
 	      echo "DHS does not run on `hostname`"

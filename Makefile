@@ -31,6 +31,7 @@ SUBDIRS = \
 	dhsPut \
 	dhsQlServer \
 	dhsQlTool \
+	dhsQlToolDS9 \
 	dhsStatus \
 	dhsStorage \
 	dhs++Client \
@@ -54,11 +55,13 @@ SUBDIRS = \
 SCRIPTS = \
 	scripts/dhsCleanup \
 	scripts/GemBootStart \
+	scripts/TestBootStart \
 	scripts/MakeClassicalMedia \
 	scripts/MakePrImages \
 	scripts/MakeUserMedia \
 	scripts/newsyslog \
-	dhsQlTool/dhsQlTool
+	dhsQlTool/dhsQlTool \
+	dhsQlToolDS9/dhsQlToolDS9
 
 RELEASE_DIRS = \
 	release \
@@ -68,9 +71,7 @@ RELEASE_DIRS = \
 	release/scripts \
 	release/sql \
 	release/images \
-	release/tcl \
 	release/config \
-	release/html \
 	release/man \
 	release/man/man1 \
 	release/man/man3 \
@@ -98,20 +99,44 @@ depend:
 install_dirs: FORCE
 	@for i in ${RELEASE_DIRS}; do test -d $$i || mkdir $$i; done
 
-# install generated files in release dir
-install: install_dirs
-	-cp -f */*.h release/include
+install_scripts: FORCE
 	-cp -uf ${SCRIPTS} release/scripts
+	(cd release/bin; ln -sf ../scripts/dhsQlTool; ln -sf ../scripts/dhsQlToolDS9)
+
+install_config: FORCE
 	-cp -uf */*.config release/config
-	-cp -f dhs*/html/*.html release/html
+
+install_sql: FORCE
 	-cp -uf */*.sql release/sql
+
+install_xbm: FORCE
 	-cp -f */*.xbm release/images
-	-cp -f */*.tcl release/tcl; (cd release/tcl; tclsh$(TCL_VERSION) ./mkIndex.tcl)
+
+install_includes: FORCE
+	-cp -f */*.h release/include
+
+install_subdirs: FORCE
+	-for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) install) done
+
+install_man: FORCE
 	-cp -f */*.1 release/man/man1
 	-cp -f */*.3 release/man/man3
 	-cp -f */*.n release/man/mann
-	-for i in $(SUBDIRS); do (cd $$i; echo "$$i:"; $(MAKE) $@) done
-	(cd release/bin; ln -sf ../scripts/dhsQlTool)
+
+install_imp: FORCE
+	-cp ${IMP_DIR}/${DRAMA_OS}/master release/bin
+	-cp ${IMP_DIR}/${DRAMA_OS}/receiver release/bin
+	-cp ${IMP_DIR}/${DRAMA_OS}/transmitter release/bin
+	d=`pwd`/release/lib/; \
+	  (cd ${IMP_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -)) ; \
+	  (cd ${ERS_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -)) ; \
+	  (cd ${SDS_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -))
+
+
+# install generated files in release dir
+install: install_dirs install_subdirs install_man install_scripts \
+	install_config install_sql install_xbm install_includes \
+	install_imp
 
 FORCE:
 

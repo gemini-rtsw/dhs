@@ -1,0 +1,113 @@
+<!--  $Id: qltDatasetDisplay.html,v 1.1 2004-08-30 09:15:32 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1999                              (c) 1999
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsQlTool/doc/qltDatasetDiaply.html
+#
+# PURPOSE:
+# On-line help information describing how a particular dataset can be
+# diplayed.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1  2003/01/15 18:23:35  brighton
+# fixed pthread_create call, Makefile changes
+#
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:27  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.1  1999/01/29 22:11:45  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Displaying a Dataset.</title>
+  </head>
+
+  <body>
+    <h1>Displaying a Dataset.</h1>
+    <OL>
+	<LI><A HREF="qltControls.html#menubar">selected</A> the 
+	  &quot;Display Dataset&quot; menu item on the &quot;Dataset&quot;
+	  menu which is available from the 
+	  <A HREF="dhsQltCtl.html">Quick Look Tool Control Panel</A>.
+	  At this point a prompt dialogue will appear.  This dialogue
+	  box is described below.
+	<LI><A HREF="qltControls.html#entry">Enter</A> the desired
+	  dataset in the entry box on the dialogue box.
+        <LI><A HREF="qltControls.html#button">Select</A> the &quot;OK&quot;
+	  button at the bottom of the dialogue window.
+     </OL>
+
+    <P><HR>
+    <H2>Prompt Dialogue</H2>
+    The Dataset Display prompt dialogue will appear after step one is 
+    followed above.  This dialogue is &quot;modal&quot;, which means that all
+    other windows are disabled while this window is viewable.
+    <P>
+      At the top of the window is a box where the desired dataset name is
+      to be <A HREF="qltControls.html#entry">entered</A>.
+    <P>
+      Below the box appears two buttons.  The buttons and their actions
+      are described in the table below.
+    
+     <P>
+      <A NAME="buttons"></A>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+        <CAPTION ALIIGN="top">Button Actions</CAPTION>
+        <TR><TH>Button</TH>
+          <TH ALIGN="center">Action</TH>
+        </TR>
+        <TR> <TD>OK</TD>
+          <TD>Sends the request for the specified dataset to the Quick
+	    Look Server, which requests the dataset from the Data Server.
+	    Also the prompt dialogue is removed from the display when this
+	    button is selected.</TD>
+        </TR>
+        <TR> <TD>Cancel</TD>
+          <TD>Does <B>not</B> send a request for the specified dataset but
+            does removes the prompt dialogue window from the display. </TD> 
+        </TR>
+      </TABLE>
+
+    
+
+    <P><hr>
+    <address><a href="mailto:jaeger@salish">Shannon Jaeger</a></address>
+<!-- Created: Fri Jan 29 11:12:17 PST 1999 -->
+<!-- hhmts start -->
+Last modified: Fri Jan 29 11:58:17 PST 1999
+<!-- hhmts end -->
+  </body>
+</html>

@@ -1,4 +1,4 @@
-# $Id: dhsQlTool.tcl,v 1.4 2004-08-30 09:15:32 brighton Exp $
+# $Id: dhsQlTool.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -38,43 +38,6 @@
 # CDhsQlTool::constructor	
 #		- Constructor for the CDhsQlTool class.
 #
-# $Log: not supported by cvs2svn $
-# Revision 1.3  2004/08/13 20:18:54  brighton
-# Linux test/port
-#
-# Revision 1.2  2003/01/15 18:23:35  brighton
-# fixed pthread_create call, Makefile changes
-#
-# Revision 1.1.1.1  2002/11/24 20:29:48  brighton
-# Imported sources
-#
-# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
-#
-#
-# Revision 1.1.1.1  1999/08/23 19:58:26  cvs-tuc
-# Initial install into CVS of dhs-0.16
-#
-# Revision 1.5  1998/10/08 19:39:33  nhill
-# Changed to allow more configuration information to be saved.
-#
-# Revision 1.4  1998/07/22 05:28:55  jaeger
-# Added a destructor so that the Control Panel object gets deleted.
-#
-# Revision 1.3  1997/11/12 18:28:03  nhill
-# Fixed a typo.
-#
-# Revision 1.2  1997/10/24 22:20:52  nhill
-# Beta check in.
-#
-# Revision 1.1  1997/09/19 17:24:35  nhill
-# Initial revision
-#
-#
-#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
-#***********************************************************************
-#
-
-#
 #***********************************************************************
 #+
 # CLASS NAME:
@@ -98,7 +61,7 @@
 
 itk::usual CDhsQlTool {}
 itcl::class CDhsQlTool {
-   inherit skycat::SkyCat
+   inherit CDhsQltCtl
 
 
     #
@@ -107,8 +70,13 @@ itcl::class CDhsQlTool {
 
     constructor	{ args } { this configure }
     destructor {
-	delete object .dqtCtl
+	puts "CDhsQlTool destructor"
+	if {"$ds9_pid" != ""} {
+	    exec kill $ds9_pid
+	}
     }
+
+    protected variable ds9_pid {}
 
 };
 
@@ -152,8 +120,6 @@ body		CDhsQlTool::constructor {
     global	errorInfo errorCode
 
     eval itk_initialize $args
-    itk_component add dqtCtl { CDhsQltCtl .dqtCtl }
-
 
     #
     # Initialize the OCSWish command acceptors.
@@ -169,13 +135,10 @@ body		CDhsQlTool::constructor {
 	set savedInfo $errorInfo
 	error $msg $savedInfo
     }
-    
-    $itk_component(dqtCtl) initialize
-    if { [ catch { $itk_component(dqtCtl) initialize } msg ] != 0  } {
-	#
-	# An error occured, display an error message.
-	#
 
+    if {[catch {
+	set ds9_pid [ exec ds9 & ]
+    } msg]} {
 	puts $errorInfo
 	puts $msg
 	set savedInfo $errorInfo

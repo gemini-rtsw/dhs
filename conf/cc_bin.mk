@@ -17,7 +17,7 @@ all: $(PROGRAM)
 $(PROGRAM): $(OBJECTS) ${LOCAL_LIBS}
 	$(CXX) -o $(PROGRAM) $(OBJECTS) $(LDFLAGS) $(LDLIBS)
 
-install:
+install: $(INSTALL_TARGET)
 	cp $(PROGRAM) $(RELEASE_DIR)/bin
 
 clean:

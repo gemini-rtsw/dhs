@@ -90,4 +90,4 @@ fi
 echo "display is now \"$DISPLAY\""
 test -z $CDHSQLTOOL_PLUGIN || echo "QlPlugin is now \"$CDHSQLTOOL_PLUGIN\""
 
-exec ocswish $DHS_BASE/lib/dhsQlTool/dhsQlTool-backend.tcl
+exec ocswish $DHS_BASE/lib/dhsQlToolDS9/dhsQlTool-backend.tcl

@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
 #
@@ -35,6 +35,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/11/24 20:21:51  brighton
+# Imported sources
+#
 # Revision 1.1.1.1  2002/09/30 20:33:32  brighton
 # Imported sources
 #
@@ -52,4 +55,8 @@
 
 cleanup
 
-find /tmp -user $USER -name 'dhsIm*' -exec rm {} \;
+#find /tmp -user $USER -name 'dhsIm*' -exec rm {} \; > /dev/null 2>&1
+find /tmp -type d -user $USER -name 'dhs*' -print -prune -exec rm -rf {} \; > /dev/null 2>&1
+
+
+
