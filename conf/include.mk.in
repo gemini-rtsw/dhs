@@ -47,7 +47,7 @@ EPICS = @EPICS@
 
 UNAME = $(shell uname)
 EPICS_INC_OS = $(UNAME)
-ifeq ($(EPICS_OS),SunOS)
+ifeq ($(EPICS_INC_OS),SunOS)
     EPICS_INC_OS = solaris
 endif
 EPICS_INCLUDES = -I$(EPICS)/include -I$(EPICS)/include/os/$(EPICS_INC_OS) 
