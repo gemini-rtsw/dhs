@@ -87,10 +87,10 @@ DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE
 CFLAGS = -g ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
 
 # C++ Compiler options
-CXXFLAGS = $(CFLAGS)
+CXXFLAGS = $(CFLAGS) -Wno-deprecated
 
 # Linker options
-LDFLAGS = -g 
+LDFLAGS = -g
 
 # local library dependencies
 LOCAL_LIBS = \
