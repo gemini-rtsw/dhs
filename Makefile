@@ -88,7 +88,7 @@ install:
 	cp */*.h release/include
 	cp ${SCRIPTS} release/scripts
 	cp */*.config release/config
-	cp */html/* release/doc
+	cp */html/*.html release/doc
 	cp */*.sql release/sql
 	cp */*.1 release/man/man1
 	cp */*.3 release/man/man3
