@@ -20,12 +20,19 @@ This package requires the following external packages:
  SYBASE
  	[http://www.sybase.com/]
   
- EPICS
+ EPICS (3.14.4)
  	[http://www.epics.org/] 
 
-The configure script searches for these packages by first checking
-the environment variables: $DRAMA, $CFITSIO, $SYBASE and $EPICS,
-and then using a default location if those variables are not set.
+ Skycat (2.7.3)
+ 	[ftp://ftp.eso.org/pub/archive/skycat/README.html]
+
+ Tcl/Tk-8.4.1 and extensions (also required to build skycat)
+	[ftp://ftp.eso.org/pub/archive/skycat/README.html]
+
+The configure script searches for these packages by first checking the
+environment variables: $DRAMA, $CFITSIO, $SYBASE and $EPICS,
+SKYCAT_INSTALL, TCLTK_ROOT, and then using a default location if those
+variables are not set.
 
 Once all the required packages are in place, you can configure and
 make DHS as follows:
