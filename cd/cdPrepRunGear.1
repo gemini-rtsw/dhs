@@ -1,0 +1,143 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name:			: cd/doc/cdPrepRunGear.1
+.\"*
+.\"*	Purpose:
+.\"*	    Manpage for cdPrepRunGear.
+.\"*
+.\"*	Date:			: Mar 1, 1998
+.\"*
+.\"*	SCCS data		: %Z%
+.\"*	    Module Name		: %M%
+.\"*	    Version Number	: %I%
+.\"*	    Release Number	: %R%
+.\"*	    Last Updated	: %G%
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*	   98/03/01 SDJ		: Copied from cdMake (vlt project).
+.\"*	    99/02/27 SDJ	: Updated to reflect changes in arguments
+.\"*				  and behavior - basically no longer creates
+.\"*				  the data directory.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH CDPREPRUNGEAR\-33 1 17/12/98 "CADC"
+ 
+.SH NAME
+.B cdPrepRunGear\-33
+\- runs the Elektroson GEAR software to prepare a CD\-ROM for writing.
+ 
+.SH SYNOPSIS
+.B cdPrepRunGear\-33
+.I volume\-name gearrc\-file\-path log\-file\-path
+.I gear\-work\-path data\-path
+
+
+.SH DESCRIPTION
+.B cdPrepRunGear\-33
+is a script that runs the GEAR software to create an image of a CD\-ROM on
+magnetic disk; prepares it for writing.  This image can be burned 
+directly onto a CD\-ROM once it has been created.  The image of the CD\-ROM 
+is placed in the 
+.I gear\-work\-path.
+
+This script places all files in the 
+.I data\-path
+on the magnetic disk image.  It is expected that this directory may
+contain hard links to the actual data.
+
+This script was written to work with an application such as
+.B cdPrep
+or 
+.B mediaPrep
+which interface with SYBASE.
+
+.SH OPERATION
+.B cdPrepRunGear\-33 
+requires seven command-line parameters:
+.TP
+.I volume-name:      
+Name of disk in upper-case.
+.TP
+.I gearrc-file-path: 
+Fully specified path and name of gearrc file.
+.TP
+.I log-file-path:    
+Fully specified path and name of log file.
+.TP
+.I gear-work-path:   
+Fully specified path to the work directory.
+.TP
+.I data\-path
+Fully specified path to the directory which contains the data.
+This directory may contain the data or hard links to the real data.
+
+.SH OPTIONS
+There are no optional command-line arguments for
+.B cdPrepRunGear\-33
+ 
+.SH USAGE
+.B cdPrepRunGear\-33
+may require operator input while it is executing the GEAR software,
+although in normal operation it should not.
+
+.SH EXAMPLES
+.TP 3
+The following example demonstrates how to use
+.B cdWriteRunGear
+.RS 5
+.sp 1n
+.nf
+.BR "example% cdPrepRunGear\-33 " ARCH4_0202 " " /dot_files/gearrc " " /logs/cdPrep
+.BR "        " /staging/media/staging2 " " /staging/arcvhie/staging2
+.sp 1n
+.fi
+.RE
+.RS 3
+In this example copies of volume (unit) 
+.B ARCH4_0202
+will be created in
+.I /staging/media/staging2.
+The configuration file is located at
+.I /dot_files/gearrc
+and the log file is located
+at
+.I /logs/cdPrep.
+The data to be written can be found in
+.I /staging/arcvhie/staging2
+.RE
+
+.SH ENVIRONMENT VARIABLES
+The shell's path variable
+should include the locations of the GEAR,
+.B gear
+executable, the Elektroson CD\-ROM authoring software.
+
+.SH DIAGNOSTICS
+.B cdPrepRunGear\-33
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non-zero number is returned. 
+ 
+.SH SEE ALSO
+.BR cdPrep (1),
+.BR mediaPrep (1).
+ 
+.B GEAR for UNIX User's Manual, Elektroson USA
+ 
+.SH BUGS
+None known.
+ 
+.SH AUTHOR
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

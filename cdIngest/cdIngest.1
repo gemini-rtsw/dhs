@@ -1,0 +1,182 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"* (c) 1996				(c) 1996.
+.\"* National Research Council		Conseil national de recherches
+.\"* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\"* All rights reserved		Tous droits reserves
+.\"* 					
+.\"* NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\"* expressed, implied, or statu-	enoncee, implicite ou legale,
+.\"* tory, of any kind with respect	de quelque nature que se soit,
+.\"* to the software, including		concernant le logiciel, y com-
+.\"* without limitation any war-	pris sans restriction toute
+.\"* ranty of merchantability or	garantie de valeur marchande
+.\"* fitness for a particular pur-	ou de pertinence pour un usage
+.\"* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\"* in any event for any damages,	pourra en aucun cas etre tenu
+.\"* whether direct or indirect,	responsable de tout dommage,
+.\"* special or general, consequen-	direct ou indirect, particul-
+.\"* tial or incidental, arising	ier ou general, accessoire ou
+.\"* from the use of the software.	fortuit, resultant de l'utili-
+.\"* 					sation du logiciel.
+.\"*
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: cdIngest.1
+.\"*
+.\"*	Date			: February 17, 1997
+.\"*
+.\"*
+.\"*   Field SCCS data		: @(#)
+.\"*	Module Name		: cdIngest.1
+.\"*	Version Number		: 1.4
+.\"*	Release Number		: 1
+.\"*	Last Updated		: 03/09/99
+.\"*
+.\"*	Written by		: Jennifer Dunn
+.\"*
+.\"*	Modification History:
+.\"*	  97/07/04 SEC  : Cleaned up. 
+.\"*	  97/07/16 SEC  : Fixed formatting. 
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH CDINGEST  1 03/09/99 "CADC"
+
+.SH NAME
+.B cdIngest
+\- Ingests an archive CD-ROM into the archive tables.
+
+.SH SYNOPSIS
+.B cdIngest
+[
+.B -a
+.I archive
+]
+[
+.B -r
+]
+[
+.B -v
+] [
+.B -V
+]
+[
+[
+.B -b
+]
+.I path ....
+]
+
+.SH DESCRIPTION
+.B cdIngest
+is a utility which ingests the diskname and files on a CD-ROM into the archive tables of the database.
+
+.SH OPERATION
+If a CD-ROM has been created then
+.B cdIngest
+is run to insert into the database information such as the diskname and 
+filenames on disk.  This will allow for the retrieval of data from the 
+dataServer.
+
+If the diskname is already in the database then the operator will be prompted
+to re-ingest the information - regardless of the archive specificed on the 
+command line.
+
+.SH OPTIONS
+.TP
+.B -a
+.I Archive.	
+If this is a new disk, then this archive name will 
+be entered into the database. If the 
+.B -a
+option is not present, the default archive taken from the 
+.B ad
+configuration file is used.
+.TP
+.B -b
+.I Batch.	
+Run in batch mode (no prompting the operator for input). This also implies
+the paths must be specified on the command line.
+.TP
+.B -r
+.I Noprompt.	
+Don't prompt on re-ingest.
+.TP
+.B -v
+.I Verbose.	
+Print all information and error messages to user's console.
+.TP
+.B -V
+.I Version.	
+Print version nunmbers and quit.
+
+.SH FILES
+.SS
+.B ~/.dbrc
+The
+.I ~/.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.B cdIngest
+.  A database reference must contain a server/database pair followed
+by the user's name and password. Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following order:
+
+.I server database username password
+
+Each item should be separated by whitespace (spaces and/or tabs).
+If a required database is not included in the 
+.I ~/.dbrc 
+file, 
+.B cdIngest
+will prompt for a username and password.
+
+.SH TABLES
+.B cdIngest
+uses the archive database to determine if the diskname already exists.
+.B cdIngest
+updates the archive tables.
+
+The location of the archive database and the name of the cdfiles and cds tables
+are specified in the configuration file for the CADC 
+.I ad 
+library.
+
+.SH ENVIRONMENT VARIABLES
+The environment variable
+.B LIBAD_CONFIG_DIR 
+may be set to the path of the directory where the 
+.B ad
+configuration file can be found. If
+.B LIBAD_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR 
+should be set to the path of the directory where the file can be found. 
+
+.SH DIAGNOSTICS
+none.
+
+.SH SEE ALSO
+.BR mediaRetrieve (1),
+.BR ad (3).
+
+.SH BUGS
+None known.
+
+.SH AUTHORS
+Jennifer Dunn
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

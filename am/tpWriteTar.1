@@ -1,0 +1,228 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: tp/doc/tpWriteTar.1
+.\"*
+.\"*	Purpose:
+.\"*		Manpage for tpWriteTar.
+.\"*
+.\"*	Date			: March 17, 1999
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: tpWriteTar.1
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 04/15/99
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH TPWRITETAR 1 08/04/99 "CADC"
+ 
+.SH NAME
+tpWriteTar
+\- uses the GNU 
+.B tar
+(version 1.12) and
+.B mt
+(version 2.4.2) software to write file(s) on tapes.
+ 
+.SH SYNOPSIS
+.B tpWriteTar
+.I volume\-name config\-file\-path log\-file\-path
+.I work\-path device\-information num\-copies 
+.I num\-files data\-path
+[
+.I \-simulate
+]
+
+.SH DESCRIPTION
+.B tpWriteTar
+is a script that runs GNU
+.B tar and
+.B mt
+to write one or more tapes.
+This script assumes that a single tape device is to be used.
+If more than one copy is to be written the operator must manually
+change the tapes in the device.
+
+This script parses the device specific information provided 
+by the
+.I device\-information
+command\-line parameter to obtain the name of the device to use.
+
+Additional information may be expected by the script but it
+will not be used.  For example, 
+.B mediaWrite 
+will automatically pass in the name of a driver to use, which
+may have the value "none".
+
+This script was written to work with an application such as
+.B mediaWrite
+which interface with SYBASE.
+
+.SH OPERATION
+.B tpWriteTar 
+requires eight command\-line parameters:
+.TP
+.I volume\-name:      
+Name of disk in upper\-case
+.TP
+.I config-file\-path: 
+This argument is not used by the script.  However, it is needed in
+order to work with 
+.B mediaWrite.
+.TP
+.I log\-file\-path:    
+Fully specified path and name of log file
+.TP
+.I gear\-work\-path:   
+Fully specified path to the work directory. This directory is
+used to store temporary data.
+.TP
+.I device\-information:
+The device information includes the following: 
+.RS 8
+.nf
+1. \fBdevice name\fR or mount point of the tape device,
+2. \fBtape density\fR is one of: l (low density), m (medium density),
+	h (high density) or "" (no specified density).
+3. \fBtape length\fR is the length of the tape.  This value is used
+	only for displaying to the operator.
+4. \fBread speed\fR or mount point of the tape device,
+5. \fBwrite speed\fR or mount point of the tape device,
+.fi
+.RE
+The read and write speeds are not used and could be eliminated but
+.B mediaWrite
+automatically provides this information.
+All of these values
+are expected to be separated with commas in the order they have been 
+listed.
+.TP
+.I num\-copies:       
+Number of copies to make.
+.TP 
+.I num\-files 
+The number of files to be written to the tape. 
+.TP
+.I data\-path:
+Fully specified path to the directory of data.  This directory contains
+the data which will be written on the tape.
+
+.PP
+This script write several tar files onto the tape.  The first tar file
+contains a zero length file whose
+name matches the name volume name specified by the
+.I volume\-name
+argument. The remaining twenty tar files which follow contain the data.
+The data will be evenly distributed amongst these twenty tar files.
+
+The GNU 
+.B mt
+software is used to position the tape.
+
+
+.SH OPTIONS
+.TP
+.B \-simulate
+Simulate mode.  When this flag is specified \fBtpWriteTar\fR operates in
+simulation mode.  In simulate mode no data is written to the tape.
+
+ 
+.SH USAGE
+.B tpWriteTar
+will require some operator input.  The operator will be prompted
+whenever a new tape needs to be placed in the tape device.
+
+If 
+.B tpWriteTar
+is being run in simulate mode then no data will be written to the
+tape.  Instead the data is written to /dev/null.  All operations are
+performed except the repositioning of the tape and the actual transfer
+of data to the tape.
+
+.SH EXAMPLES
+.PP
+The following example demonstrates how to use
+.B tpWriteTar
+.nf
+.TP
+.B "example% tpWriteTar USER1_002 none /logs/tpWrite \e"
+.B "/staging/media/staging3 /dev/rmt/0,h,90m 1 1203 \e"
+.B "/staging/user/staging3"
+.fi
+.PP
+In this example one copy of volume (unit) 
+.B USER1_002,
+which is located in
+.I /staging/media/staging3
+will be written. There is no configuration file for tar
+and the log file is located
+at
+.I /logs/tpWrite.
+There are 1203 files to be written to the tape in the device
+.I /dev/rmt/0hn,
+which is a high density, 90 meter tape.
+.RE
+.PP
+The following example demonstrates how to run the 
+.B tpWriteTar
+script in simulate 
+mode.
+.nf
+.TP
+.B "example% tpWriteTar USER232_012 none /logs/tpWrite \e"
+.B "/staging/media/staging0 /dev/rmt/1,l,120m 1 29313 \e"
+.B "/staging/user/staging0 -simulate"
+.fi
+.PP
+In this example one copy of volume (unit) 
+.B USER232_012,
+which is located in
+.I /staging/media/staging0
+will be written. There is no configuration file for tar
+and the log file is located
+at
+.I /logs/tpWrite.
+There are 29313 files to be written to the tape in the device
+.I /dev/rmt/0ln,
+which is a low density, 120 meter tape. Note that no data will be
+written to the tape.
+.RE
+
+.SH ENVIRONMENT VARIABLES
+The shell's path variable
+must include the locations of 
+.B tar
+and
+.B mt.
+ 
+.SH DIAGNOSTICS
+.B tpWriteTar
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non\-zero number is returned. 
+ 
+.SH SEE ALSO
+.BR mediaWrite (1), 
+.BR tar (1),
+and
+.BR mt (1). 
+ 
+.SH BUGS
+None known.
+ 
+.SH AUTHOR
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

@@ -1,0 +1,52 @@
+README for the dhs package
+================================
+
+This directory contains the sources for the Gemini DHS (Data Handling
+System).
+
+Building
+--------
+
+This package requires that Drama-1.4.2 (or newer) be installed
+in the directory ../drama-v1.4.2, relative to this directory.
+You can download the sources from ftp://ftp.aao.gov.au/pub/drama/.
+
+Once Drama has been compiled and installed, type:
+
+    configure
+    make
+    make install
+
+This will create a subdirectory of this directory called "release"
+that contains the installed libraries, include files and test
+programs.
+
+
+Running 
+=======
+
+To test the DHS client, you can run the dhsClient application:
+
+ - On the server and client machines (may be the same), run the IMP master task
+
+ - On the server, run: dhsServer <serverName>
+
+ - On the client, run: dhsClient <clientName> <serverHost> <serverName>
+
+
+
+Temporary Note on IMP bug fix (Oct 14, 2002)
+=============================================
+
+If using drama-1.4.2/imp-1.6.1, you need to apply this fix
+to drama-v1.4.2/drama_source/imp/accconnect.c:
+
+Replace line (124):
+    AccMessage.Task = *TaskID;
+
+with:
+   AccMessage.Task.Machine = TaskID->Machine;
+   AccMessage.Task.Pid = htonl(TaskID->Pid);
+
+Newer versions of IMP should already contain this fix.
+If the fix is not applied, 

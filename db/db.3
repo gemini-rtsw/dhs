@@ -1,0 +1,486 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: db/doc/db.3
+.\"*
+.\"*	Date			: Jan 25, 1995
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: db.3
+.\"*	    Version Number	: 1.12
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 12/04/97
+.\"*
+.\"*	Written by		: Norman Hill
+.\"*
+.\"*	Modification History:
+.\"*            16/08/95 paw - 	Added hostname to db_count_app description.
+.\"*            16/08/95 nrh - 	Added function db_strcpy.
+.\"*            18/01/96 S. Cockayne - 	Added BUG entry for db_simple_query().
+.\"*		02/12/97 pdd - added function db_doubledata.
+.\"*		04/12/97 pdd - added db_doubledata to list of functions
+.\"*				under NAME
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH DB 3 "12/15/92" "CADC"
+.SH NAME
+db, db_binarydata, db_close, db_chardata, db_count_app, db_datetime2time, 
+db_doubledata, db_exit, db_floatdata, db_init, db_index_id, db_intdata, 
+db_open, db_simple_query, db_str2time, db_stringdata, db_table_exists, 
+db_time2str, db_timedata \- database acess routines.
+.SH SYNOPSIS
+.LP
+.nf
+#include <time.h>
+
+#include <sybfront.h>
+#include <sybdb.h>
+
+#include "gen_types.h"
+#include "db.h"
+.ft
+.fi
+.LP
+.\".nf
+.\".ta 0.8i
+.TP 7n
+int
+db_binarydata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+byte 
+.RI * s ,
+int
+.I size
+);
+.TP 7n
+int
+db_close( DBPROCESS 
+.RI * dbproc 
+);
+.TP 7n
+int
+db_chardata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+char 
+.RI * s
+);
+.TP 7n
+int
+db_count_app( DBPROCESS
+.RI * dbproc ,
+char
+.RI * application ,
+char
+.RI * hostname ,
+int
+.RI * num_copies
+);
+.TP 7n
+time_t
+db_datetime2time( DBDATETIME
+.RI * datetime 
+);
+.TP 7n
+int
+db_doubledata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+double 
+.RI * f
+);
+.TP 7n
+int
+db_exit( void );
+.TP 7n
+int
+db_floatdata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+float 
+.RI * f
+);
+.TP 7n
+int
+db_init( char 
+.RI * application 
+);
+.TP 7n
+int
+db_index_id( DBPROCESS 
+.RI * dbproc , 
+char 
+.RI * db_name , 
+char
+.RI * table_name ,
+char
+.RI * column_name ,
+int
+.$I * index_id
+);
+.TP 7n
+int
+db_intdata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+int 
+.RI * i
+);
+.TP 7n
+int
+db_open( char 
+.RI * server , 
+char 
+.RI * username ,
+char
+.RI * password , 
+char
+.RI * db_name ,
+boolean
+.IR prompt ,
+DBPROCESS
+.RI ** dbproc
+);
+.TP 7n
+int
+db_simple_query( DBPROCESS 
+.RI * dbproc ,
+char
+.RI * format ,
+.RI ...
+);
+.TP 7n
+time_t
+db_str2time( char 
+.RI * sybase_time ,
+int 
+.I timezone 
+);
+.TP 7n
+void
+db_strcpy( char
+.RI * out_ptr , 
+char 
+.RI * in_ptr
+);
+.TP 7n
+int
+db_stringdata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+char 
+.RI * s ,
+int
+.I size
+);
+.TP 7n
+int
+db_table_exists( DBPROCESS 
+.RI * dbproc , 
+char 
+.RI * db_name , 
+char 
+.RI * table_name , 
+boolean 
+.RI * exists
+);
+.TP 7n
+char
+*db_time2str( long 
+.IR unix_time , 
+int 
+.I timezone 
+);
+.TP 7n
+int
+db_timedata( DBPROCESS
+.RI * dbproc ,
+int
+.IR column ,
+time_t 
+.RI * time
+);
+.SH DESCRIPTION
+The CADC db library supplies a partial interface to the Sybase db library, 
+adding some convenience features and new functionality.  
+The CADC db library also has error handling compatible with the error
+handling generally done in CADC libraries.
+
+This library replaces the Sybase library functions dbinit, dbopen, 
+dbclose and dbexit and adds some new functions, while leaving the 
+other Sybase db library functions available to the application.
+.TP 12n
+db_binarydata(\|)
+Reads a up to a maxiumum of 
+.I size
+bytes from column
+.I c
+of the dbprocess into the byte array pointed to by
+.IR s .
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, DB_TRUNCATED if the data was truncated, 
+or DB_E_DB if an error occurred.
+.TP 
+db_close(\|)
+Replaces the Sybase dbclose function, and closes a dbprocess previously 
+opened with db_open.  This function returns DB_SUCCESS when it succeeds,
+or DB_E_NOT_EXISTS if the dbprocess has never been opened.
+.TP
+db_chardata(\|)
+Reads a character from column
+.I c
+of the dbprocess into 
+.I s.
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, or DB_E_DB if an error occurred.
+.TP
+db_count_app(\|)
+This function sets 
+.I num_copies 
+to the number of applications with the name 
+.I application
+( as set with the db_init function or SYBASE DBSETLAPP macro )
+which currently have dbprocesses open. If the 
+.I hostname 
+is NULL, then it counts all applications running on all hosts. If
+.I hostname 
+is not NULL, then it only counts the applications running on 
+.I hostname.
+Both
+.I application
+and
+.I hostname
+can contain SYBASE wild card characters.
+Multiple connections from a single process which have the same application
+name are only counted once.
+.TP
+db_datetime2time(\|)
+Converts a Sybase date time structure to a unix time.
+.TP
+db_doubledata(\|)
+Reads a double from column
+.I c
+of the dbprocess into the double pointed to by
+.I f.
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, or DB_E_DB if an error occurred.
+.TP
+db_exit(\|)
+Replaces the Sybase dbexit function.
+.B db_exit
+closes all currently opened dbprocesses, and exits the Sybase db library.
+This function returns DB_SUCCESS.
+.TP
+db_floatdata(\|)
+Reads a float from column
+.I c
+of the dbprocess into the float pointed to by
+.I f.
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, or DB_E_DB if an error occurred.
+.TP
+db_init(\|)
+Replaces the Sybase dbinit function, and
+initializes the CADC db library and the Sybase db library.  The argument
+must be string containing the name of the application program.  
+
+If the environment variable 
+.B DB_LOG_DIR
+is set, the file 
+.BR $DB_LOG_DIR /db.log
+will be created, and all messages produced by the library will be written
+to this file.
+
+This function returns DB_SUCCESS on success, DB_E_DB, if an error occurred
+in the Sybase db libraries, DB_E_MEMORY if a memory allocation failure
+occurred, or DB_E_SYSTEM if an error occurred while opening the log file.
+.TP
+db_index_id(\|)
+finds an index on the table specified by the 
+.I db_name 
+and 
+.I table_name
+arguments, and returns the index number of an index whose first column
+is the same as the column specified in 
+.I col_name.
+The dbprocess pointed to by
+.I dbproc
+is used to access the database.
+This function returns DB_SUCCESS if the index was found, DB_NO_INDEX
+if no applicable index was found, DB_E_DB if an error occurred in the
+Sybase db library, or DB_E_MEMORY if a memory allocation failure occurs.
+.TP
+db_intdata(\|)
+Reads an int from column
+.I c
+of the DBPROCESS into the int pointed to by
+.I i.
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, or DB_E_DB if an error occurred.
+.TP
+db_open(\|)
+replaces the Sybase dbopen function, and opens a connection to a database.
+The 
+.I server
+argument specifies the name of the Sybase server to use.  If the 
+.I server
+argument is NULL, db_open will get the server name from the 
+.B DSQUERY
+environment variable, or if 
+.B DSQUERY
+is not set, use "SYBASE" as the server name.
+
+The 
+.I username
+and
+.I password
+arguments should contain the Sybase username and password to use when
+connecting to the database.  If these arguments are NULL, the program
+will look in the users .dbrc file for an appropriate username and password,
+and if none are found and the 
+.I prompt 
+argument is true, the user will be prompted for username and password.
+
+The dbprocess will be returned in the 
+.I dbproc
+argument, and the default database will be the database specified in
+the 
+.I db 
+argument.
+
+.B
+db_open
+returns DB_SUCCESS if the connection was opened, DB_E_DB if an error
+occurred in the Sybase db library, DB_E_IOCTL if there was an error using
+ioctl on the .dbrc file, DB_E_MEMORY if a memory allocation failure
+occurred, DB_E_NO_USER_INF if there is not username and password information
+available, DB_E_PERMIT if the permissions of the .dbrc file are incorrect,
+or DB_E_SYS_SERV if an error occurred in the system services routines.
+
+.TP
+db_simple_query(\|)
+This function provides a simple routine for doing queries to the database.
+The 
+.I format
+argument should contain a printf style format string  and the optional
+arguments should contain the arguments to the format string.  The query
+will be formatted and submitted to the dbprocess pointed to by
+.I dbproc.
+The dbsqlexec and one dbresults function call are automatically performed
+by this function.
+
+.B db_simple_query
+returns DB_SUCCESS if the query was successfully executed, or DB_E_DB if
+an error occurs in the database.
+.TP
+db_str2time(\|)
+This function converts the Sybase date/time string in
+.I sybase_time
+as produced with the 
+Sybase convert style 109, to a unix time value.  The Sybase date is assumed
+to be in the time zone specified with the
+.I timezone
+argument.
+.TP
+db_strcpy(\|)
+This function copies the input string to the output string, duplicating any
+single quotes (\') found.  This allows strings containing single quotes to
+be use in sybase queries.
+.TP
+db_stringdata(\|)
+Reads a up to a maxiumum of 
+.I size
+characters from column
+.I c
+of the dbprocess into the character array pointed to by
+.IR s .
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, DB_TRUNCATED if the string was truncated, 
+or DB_E_DB if an error occurred.
+.TP
+db_table_exists(\|)
+This function verifies the table specified by
+.I db_name
+and 
+.IR table_name .
+The argument 
+.I exists
+is used to return the status of the table to the calling program.
+.B db_table_exists
+returns DB_SUCCESS if the query executed successfully,
+or DB_E_DB if an error occurred in the db library.
+.TP
+db_time2str
+This function creates a formatted date string acceptable to Sybase, given 
+a unix time.  The string will be in the timezone specified in the
+.I timezone 
+argument.
+.TP
+db_timedata(\|)
+Reads sybase datetime from column
+.I c
+of the DBPROCESS into the time_t variable pointed to by
+.I time.
+This function returns DB_SUCCESS on success, DB_NULL_VALUE if a NULL value
+was read, or DB_E_DB if an error occurred.
+.SH ERROR HANDLING
+The CADC db library installs error handlers on the Sybase db library.  The
+error handlers format an error message in the global variable db_msg indicating
+the error that has occurred.  Applications should display the contents of the
+db_msg variable whenever an error code is returned by the CADC db library 
+or in the Sybase db library.
+.SH FILES
+.LP
+File `.dbrc' should be located in the home directory of the user,
+and must be read protected against group and others.  `.dbrc' should
+be formatted as follows:
+.nf
+
+server database username password
+server database username password
+server database username password
+  .
+  .
+  .
+.SH ENVIRONMENT VARIABLES
+The 
+.B SYBASE 
+environment variable must be set to the directory where the Sybase interfaces
+file can be found.
+
+The
+.B DSQUERY
+environment variable can be used to set the default Sybase server name.
+
+The 
+.B DB_LOG_DIR
+environment variable can be used to indicate the the db library should keep
+a separate log of it messages, and to indicate the directory in which 
+the log file should be placed.
+.SH SEE ALSO
+.LP
+gen_types(3)
+
+.SH BUGS
+.LP
+.B db_simple_query()
+
+The maximum length of a query is: 
+
+	MAX(2048, 2 * strlen(format)). 
+
+Check the source code.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre

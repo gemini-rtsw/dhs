@@ -1,0 +1,946 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: ad/doc/ad.1
+.\"*
+.\"*	Date			: Dec 3, 1996
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: ad.3
+.\"*	    Version Number	: 1.9
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/16/99
+.\"*
+.\"*	Written by		: Marc LeBlanc
+.\"*
+.\"*	Modification History:
+.\"*	  97/04/16 SEC : Mod'ed for config changes.
+.\"*	  97/07/04 SEC : Mod'ed for additions and changes to source. 
+.\"*	  97/08/25 SEC : Mod'ed for additions and changes to source.
+.\"*	  98/04/06 gzg : Add tape support.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.\"
+.			\" Ty macro to start an indent for each type def.
+.de Ty
+.ft 1
+.fi
+.RE
+.PP
+.ie n .TP 12n
+.el .TP 16n
+..
+.\"
+.                       \" Td macro to display the type definition.
+.\"
+.de Td
+.PP
+.RS
+.ft 3
+.nf
+.ie n .in 10n 53n
+.ta 25n 60n
+..
+.			\" Ss macro to start a structure definition.
+.de Ss
+.PP
+.RS
+.nf
+.ft 3
+.ie n .ta 12n 26n 55n
+.el .ta 16n 40n 70n
+..
+.			\" Es macro to end a structure definition.
+.\"
+.de Es
+.ft 1
+.fi
+.RE
+.PP
+..
+.\"
+.TH AD 3 02/03/99 "CADC"
+.SH NAME
+ad \- Archive directory access routines.
+.sp 1
+.ta 5c 10c 10c
+ad_archive_info	ad_close	ad_dbinfo_get
+ad_file_del	ad_file_get	ad_file_info
+ad_file_init	ad_file_name	ad_file_put
+ad_init	ad_med_name	ad_med_type	
+ad_remote_get	ad_server_id_get	ad_volume_get
+ad_volume_init	ad_volume_put 
+
+.SH SYNOPSIS
+.LP
+.nf
+#include "sybfront.h"
+#include "sybdb.h"
+
+#include "time.h"
+
+#include "gen_types.h"
+#include "gen_msg.h"
+#include "db.h"
+#include "ad.h"
+.ft
+.fi
+.LP
+.\".nf
+.\".ta 0.8i
+.TP 7n
+AD_ARCHIVE *
+ad_archive_info( AD_ARCHNAME \fIarchive_name\fR );
+.TP 7n
+void
+ad_close( void );
+.TP 7n
+int
+ad_dbinfo_get( AD_MEDIUM \fImedium\fR, char ** \fIdb_server\fR, 
+char ** \fIdatabase\fR, char ** \fIfile_table\fR, char **\fIvolume_table\fR );
+.TP 7n
+int
+ad_file_del( DBPROCESS * \fIdbproc\fR, AD_MEDIUM \fImedium\fR,
+char * \fIvolume_name\fR, char * \fIfile_name\fR);
+.TP 7n
+int
+ad_file_get( AD_FILEGET \fAD_FG_LOCATION\fR, AD_FILE * \fIad_file\fR,
+DBPROCESS * \fIdbproc\fR, AD_MEDIUM \fIAD_MED_CD|AD_MED_MD|AD_MED_VD\fR,  
+char * \fIdisk_name\fR, char * \fIfile_name\fR );
+.TP 7n
+int
+ad_file_get( AD_FILEGET \fAD_FG_LOCATION\fR, AD_FILE * \fIad_file\fR,
+DBPROCESS * \fIdbproc\fR, AD_MEDIUM \fIAD_MED_DB\fR,  
+char * \fIdatabase_name\fR, char * \fItable_name\fR, char* \fIdataset_name\fR );
+.TP 7n
+int
+ad_file_get( AD_FILEGET \fAD_FG_LOCATION\fR, AD_FILE * \fIad_file\fR,
+DBPROCESS * \fIdbproc\fR, AD_MEDIUM \fIAD_MED_OD\fR,  
+char * \fIdisk_name\fR, int \fIoffset\fR );
+.TP 7n
+int
+ad_file_get( AD_FILEGET \fAD_FG_LOCATION\fR, AD_FILE * \fIad_file\fR,
+DBPROCESS * \fIdbproc\fR, AD_MEDIUM \fIAD_MED_TP\fR,  
+char * \fItape_name\fR, char * \fIfile_name\fR, char* \fIlocation\fR );
+.TP 7n
+int
+ad_file_get( AD_FG_NAME, AD_FILE * \fIad_file\fR, DBPROCESS * \fIdbproc\fR,
+AD_MEDIUM \fImedium\fR, AD_ARCHIVE \fI archive\fR, char * \fIfile_name\fR );
+.TP 7n
+int
+ad_file_get( AD_FG_NEXT, AD_FILE * \fIad_file\fR, DBPROCESS * \fIdbproc\fR );
+.TP 7n
+int
+ad_file_get( AD_FG_VOLUME, AD_FILE * \fIad_file\fR, DBPROCESS * \fIdbproc\fR,
+AD_MEDIUM \fI medium\fR, char * \fIvolume_name\fR );
+.TP 7n
+int
+ad_file_info( char * \fIfile_id, char * \fIroot\fR, char * \fIcompression\fR,
+char * \fIformat\fR );
+.TP 7n
+int
+ad_file_init( AD_FILE * \fIad_file\fR, AD_MEDIUM \fImedium\fR );
+.TP 7n
+char *
+ad_file_name( AD_FILE * \fIad_file\fR, char * \fIfile_name\fR );
+.TP 7n
+int
+ad_file_put( AD_FILE *\fIfile\fR, DBPROCESS * \fIdbproc\fR );
+.TP 7n
+int
+ad_init( void );
+.TP 7n
+char *
+ad_med_name( AD_MEDIUM \fImedium\fR );
+.TP 7n
+AD_MEDIUM
+ad_med_type( char * \fImedium_str\fR );
+.TP 7n
+int
+ad_remote_get( AD_REMOTEGET \fI select_type\fR, AD_FILE * \fIad_file\fR,
+DBPROCESS * \fIdbproc\fR, char * \fIfile_id\fR );
+.TP 7n
+int
+ad_server_id_get( DBPROCESS * \fIdbproc\fR, char ** \fIserver_id\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_ARCHIVE, AD_VOLUME * \fIvolume\fR, DBPROCESS \fIdbproc\fR,
+AD_MEDIUM \fImedium\fR, char * \fIarchive\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_LAST, AD_VOLUME * \fIvolume\fR, DBPROCESS \fIdbproc\fR,
+AD_MEDIUM \fImedium\fR, char * \fIarchive\fR, char * \fIvolume_name\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_NAME, AD_VOLUME * \fIvolume\fR, DBPROCESS \fIdbproc\fR,
+AD_MEDIUM \fImedium\fR, char * \fIvolume_name\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_NAME_ORIG, AD_VOLUME * \fIvolume\fR, 
+DBPROCESS \fIdbproc\fR, AD_MED_DB | AD_MED_MD | AD_MED_TP | AD_MED_OD, 
+char * \fIorig_volume_name\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_NAME_ORIG, AD_VOLUME * \fIvolume\fR, 
+DBPROCESS \fIdbproc\fR, AD_MED_CD | AD_MED_VD, char * \fIorig_volume_name\fR,
+time_t \fIcreation_date\fR );
+.TP 7n
+int
+ad_volume_get( AD_VG_NEXT, AD_VOLUME * \fIvolume\fR, DBPROCESS * \fIdbproc\fR );
+.TP 7n
+int
+ad_volume_init( AD_VOLUME * \fIvolume\fR, AD_MEDIUM \fImedium\fR );
+.TP 7n
+int
+ad_volume_put( AD_VOLUME * \fIvolume\fR, DBPROCESS * \fIdbproc\fR );
+
+
+.SH TYPE DEFINITIONS
+The following simple, enumerated, structure, and union data types are defined 
+in the ad.h header file.
+.PP
+.ti 2
+.BR SIMPLE
+.Ty
+AD_ARCHNAME
+This is a character string large enough to contain the name of an archive.
+.Ty
+AD_COMP_EXT
+This is a character string large enough to contain a compression extension.
+.Ty
+AD_FILE_ID
+This is a character string large enough to contain a file ID 
+.Ty
+AD_FMT_EXT
+This is a character string large enough to contain a format extension.
+.Ty
+AD_MEDIA_ID
+This is a character string large enough to contain a media ID.
+.Ty
+AD_MEDNAME
+This is a character string large enough to contain the name of the
+archive media.
+.Ty
+AD_PATH
+This is a character string large enough to contain the largest path
+that can be stored in the archive (255 characters).
+.Ty
+AD_SERVER_ID
+This is a character string large enough to contain a server ID.
+.Ty
+AD_SITE_ID
+This is a character string large enough to contain a site ID.
+.Ty
+AD_SYBNAME
+This is a character string large enough to contain a sybase object name
+(table name or database name).
+.Ty
+AD_TP_LOCATION
+This is a character string (32 characters) to specify the location of 
+the file on tape.
+.Ty
+AD_VOLNAME
+This is a character string large enough to contain a volume name.
+.Ty
+AD_VOLSCRIPT
+This is a character string large enough to contain the name of the
+script used to create the volume.
+.Ty
+AD_VOLTYPE
+This is a character string large enough to contain a volume type string.
+.PP
+.ti 2
+.BR ENUMERATED
+.Ty
+AD_FILEGET
+This is an enumerated data type used to specify the type of search 
+that is to be performed on the files in the database,
+.B ad_file_get
+function.
+The members of this type are:
+.Td
+AD_FG_LOCATION	/\(** Find files by location on source.	\(**/
+AD_FG_NAME	/\(** Find file by file_id.	\(**/
+AD_FG_NEXT	/\(** Find next file in sequence.	\(**/
+AD_FG_VOLUME	/\(** Find files from a volume.	\(**/
+.Ty
+AD_MEDIUM
+This is an enumerated data type for specifying an archive medium.
+The members of this type are:
+.Td
+AD_MED_BEST	/\(** Look for data on the best medium.	\(**/
+AD_MED_CD	/\(** Data is on CD-ROM.	\(**/
+AD_MED_DB	/\(** Data is in the database.	\(**/
+AD_MED_MD	/\(** Data is on magnetic disk.	\(**/
+AD_MED_OD	/\(** Data is on optical disk.	\(**/
+AD_MED_TP	/\(** Data is on tape.	\(**/
+AD_MED_REMOTE	/\(** Data available from remote server.	\(**/
+AD_MED_UNKNOWN	/\(** Medium of the data is unknown.	\(**/
+AD_MED_VD	/\(** Data is on DVD.	\(**/
+.Ty
+AD_REMOTE_GET
+This is an enumerated data type for specifying the type of search that
+is performed when retrieving remote file information with the function
+.B ad_remote_get.
+The members of this type are:
+.Td
+AD_RG_FILE_ID	/\(** Find all remote files.	\(**/
+AD_FG_NEXT	/\(** Find the next file in sequence.	\(**/
+.Ty
+AD_VOLGET
+This is an enumerated dataset used to indicate the type of search that
+is performed on the volumes in the database,
+.B ad_volume_get
+function.  The members of this type are:
+.Td
+AD_VG_ARCHIVE	/\(** Find all volumes in an archive.	\(**/
+AD_VG_LAST	/\(** Find the last volume in a sequence.	\(**/
+AD_VG_NAME	/\(** Find volumes with a name pattern.	\(**/
+AD_VG_NAME_ORIG	/\(** Find volumes by original name.	\(**/
+AD_VG_NEXT	/\(** Find the next volume in sequence.	\(**/
+.PP
+.ti 2
+.BR STRUCTURES
+.Ty
+AD_ARCHIVE
+This is a structure which contains all the information about an archive.
+The members of the structure are:
+.Ss
+AD_ARCHNAME	ada_name;	/\(** Name of the archive.	\(**/
+boolean	ada_upper;	/(** Upper case file identifier?	\(**/
+.Es
+.Ty
+AD_FILE
+This structure contains all information about a file in the archive.
+The members of the structure are:
+.Ss
+AD_ARCHIVE	adf_archive;	/\(** Archive the file belongs to.	\(**/
+char	adf_compression; 
+		/\(** Compression type.		\(**/
+AD_FILENAME	adf_file_id;	/\(** The file identifier.	\(**/
+int	adf_filesize;	/\(** The size of the file.	\(**/
+int	adf_filesize_uncomp;	
+		/\(** The uncompressed size.	\(**/
+		/\(** -1 if size is not known.	\(**/
+char	adf_format;	/\(** Format type.	\(**/
+AD_LOCATION	adf_location;	/\(** Medium specific information	\(**/
+		/\(** about location of file.	\(**/
+boolean	adf_mounted;	/\(** Is the file on-line?	\(**/
+char	adf_status;	/\(** The archive file status.	\(**/
+AD_VOLNAME	adf_volume_name;	
+		/\(** The name of the volume.	\(**/
+AD_MEDIUM	adf_volume_medium;
+		/\(** The medium type.	\(**/
+.Es
+.Ty
+AD_VOLUME
+This structure contains all information about a volume in the archive.
+The members of the structure are:
+.Ss
+AD_ARCHIVE	adv_archive;	/\(** The archive name.	\(**/
+AD_VOLNAME	adv_volume_name;
+		/\(** The volume name.	\(**/
+AD_MEDIUM	adv_medium_type;
+		/\(** The medium type.	\(**/
+AD_VOL_INFO	adv_vol_info; /\(** The medium specific info.	\(**/
+.Ty
+CD_LOCATION
+This structure contains the information required to find a file on CD\-ROM.
+The members of the structure are:
+.Ss
+AD_PATH	cdl_filename;	/\(** File path on CD\-ROM.	\(**/
+AD_PATH	cdl_mount_point;
+		/\(** Mount point of the CD\-ROM.	\(**/
+		/\(** formatted <host>:<path>	\(**/
+.Es
+.ie n .RS 12n
+.el .RS 16n
+The path to the file on 
+.IR host,
+including the host name is
+.IB cdl_mount_point / cdl_filename .
+If the CD\-ROM is not mounted, the mount point will be a null string.
+.RE
+.Ty
+CD_VOL_INFO
+This structure contains all of the CD\-ROM specific information for a 
+volume.  The members of this structure are:
+.Ss
+long	cdv_creation_date;
+		/\(** Unix time of creation.	\(**/
+AD_VOLNAME	cdv_diskname_orig;
+		/\(** Disk name on the volume.	\(**/
+long	cdv_ingest_date;
+		/\(** Unix time of ingest.	\(**/
+boolean	cdv_mounted;	/\(** CD\-ROM mounted?	\(**/
+AD_PATH	cdv_mount_point;
+		/\(** Mount point of the CD\-ROM,	\(**/
+		/\(** in the form host:path	\(**/
+int	cdv_nfiles;	/\(** Number of files on the CD\-ROM.	\(**/
+int	cdv_nkbytes;	/\(** Kilobytes on the CD\-ROM.	\(**/
+AD_VOLTYPE	cdv_type;	/\(** The type of CD\-ROM.	\(**/
+char	cdv_verified;	/\(** Is the volume verified?	\(**/
+.Es
+.Ty
+DB_LOCATION
+This structure contains the information required to find a file in
+the database preview tables.
+The members of the structure are:
+.Ss
+AD_SYBNAME	dbl_database_name;
+		/\(** The db name.	\(**/
+AD_SYBNAME	dbl_table_name;
+		/\(** The table name.	\(**/
+AD_FILENAME	dbl_dataset_name;
+		/\(** The dataset name.	\(**/
+.Es
+.Ty
+DB_VOL_INFO
+This structure contains all of the database specific information for a 
+volume.  The members of this structure are:
+.Ss
+AD_SYBNAME	dbv_database_name;
+		/\(** Db containing the data.	\(**/
+AD_SYBNAME	dbv_table_name;
+		/\(** Table containing the data.	\(**/
+.Es
+.Ty
+MD_LOCATION
+This structure contains the information required to find a file on 
+magnetic disk.
+The members of the structure are:
+.Ss
+AD_PATH	mdl_filename;	/\(** File path on disk.	\(**/
+AD_PATH	mdl_mount_point;
+		/\(** Mount point of the disk.	\(**/
+		/\(** formatted <host>:<path>	\(**/
+.Es
+.ie n .RS 12n
+.el .RS 16n
+The path to the file on 
+.IR host ,
+including the host name is
+.IB mdl_mount_point / mdl_filename .
+If the disk is not mounted, the mount point will be a null string.
+.RE
+.Ty
+MD_VOL_INFO
+This structure contains all of the magnetic disk specific information for a 
+volume.  The members of this structure are:
+.Ss
+boolean	mdv_mounted;	/\(** Is the volume mounted?	\(**/
+AD_PATH	mdv_mount_point;
+		/\(** Mount point of the volume \(**/
+		/\(** in the form host:path	\(**/
+.Es
+.Ty
+OD_LOCATION
+This structure contains the information required to find a file on 
+optical disk.
+The members of the structure are:
+.Ss
+int	odl_dirsectoff;
+		/\(** Directory sector offset.	\(**/
+AD_PATH	odl_filename	/\(** The name of the file.	\(**/
+.Es
+.Ty
+OD_VOL_INFO
+This structure contains all of the optical disk specific information for a 
+volume.  The members of this structure are:
+.Ss
+long	odv_creation_date;
+		/\(** Unix time of vol creation.	\(**/
+long	odv_dirsectoff;
+		/\(** Start sector of the directory.	\(**/
+AD_VOLNAME	odv_diskname_orig;
+		/\(** Name of orig. disk name.		\(**/
+long	odv_ingest_date;
+		/\(** Ingest date.			\(**/
+int	odv_nfiles;	/\(** Num files on the volume.	\(**/
+int	odv_nkbytes;	/\(** Num kilobytes on the volume.	\(**/
+AD_VOLNAME	odv_reverse_name;
+		/\(** Name of the flip side.	\(**/
+AD_VOLTYPE	odv_type;	/\(** Type of optical disk.	\(**/
+char	odv_verified;	/\(** Is the volume verified.	\(**/
+.Es
+.Ty
+RS_LOCATION
+This structure contains the information required to locate a file
+on a remote server. 
+The members of the structure are:
+.Ss
+AD_SERV_ID	rsl_server_id;
+		/\(** Server id.	\(**/
+.Es
+.Ty
+TP_LOCATION
+This structure contains the information required to find a file on 
+tape.
+The members of the structure are:
+.Ss
+AD_PATH		tpl_filename;	
+		/\(** The name of the file.	\(**/
+AD_TP_LOCATION	tpl_location;
+		/\(** The location of tape.	\(**/
+
+.Es
+.Ty
+TP_VOL_INFO
+This structure contains all of the tape specific information for a 
+volume.  The members of this structure are:
+.Ss
+long	tpv_ingest_date;
+		/\(** Ingest date.			\(**/
+int	tpv_nfiles;	/\(** Num files on the volume.	\(**/
+int	tpv_nkbytes;	/\(** Num kilobytes on the volume.	\(**/
+AD_VOLTYPE	tpv_type;	/\(** Type of the tape.	\(**/
+AD_VOLSCRIPT	
+	tpv_tp_script;	
+		/\(** Type of tp scripts to use.	\(**/
+char	tpv_verified;	/\(** Is the volume verified.	\(**/
+.Es
+.Ty
+VD_LOCATION
+This structure contains the information required to find a file on a DVD.
+The members of the structure are:
+.Ss
+AD_Path	vdl_filename;	/\(** The file path.	\(**/
+AD_PATH	vdl_mount_point;
+		/\(** The mount point of the DVD.	\(**/
+		/\(** formatted <host>:<path>	\(**/
+.Es
+.ie n .RS 12n
+.el .RS 16n
+The path to the file on 
+.IR host ,
+including the host name is
+.IB vdl_mount_point / vdl_filename .
+If the DVD is not mounted, the mount point will be a null string.
+.RE
+.Ty
+VD_VOL_INFO
+This structure contains all of the CD\-ROM specific information for a DVD
+volume.  The members of this structure are:
+.Ss
+long	vdv_creation_date;
+		/\(** Unix time of creation.	\(**/
+AD_VOLNAME	vdv_diskname_orig;
+		/\(** Disk name on the volume.	\(**/
+long	vdv_ingest_date;
+		/\(** Unix time of ingest.	\(**/
+boolean	vdv_mounted;	/\(** DVD mounted?	\(**/
+AD_PATH	vdv_mount_point;
+		/\(** Mount point of the DVD,	\(**/
+		/\(** in the form host:path	\(**/
+int	vdv_nfiles;	/\(** Number of files on the DVD.	\(**/
+int	vdv_nkbytes;	/\(** Kilobytes on the DVD.	\(**/
+AD_VOLTYPE	vdv_type;	/\(** The type of DVD.	\(**/
+char	vdv_verified;	/\(** Is the volume verified?	\(**/
+.PP
+.ti 2
+.BR UNIONS
+.Ty
+AD_LOCATION
+This is a union which allows the various media to share the same
+space for storing medium specific file location information.
+The members of the union are:
+.Ss
+CD_LOCATION	cd;	/\(** CD\-ROM information.	\(**/
+DB_LOCATION	db;	/\(** Database information.	\(**/
+MD_LOCATION	md;	/\(** Magnetic disk information.\(**/
+OD_LOCATION	od;	/\(** Optical disk information.	\(**/
+RS_LOCATION	rs;	/\(** Remote Server information.\(**/
+TP_LOCATION	tp;	/\(** Tape information.		\(**/
+VD_LOCATION	vd;	/\(** DVD information.		\(**/
+.Es
+.Ty
+AD_VOL_INFO
+This union allows the same storage space to be shared by the
+medium specific volume information for every medium.  The members
+of this union are:
+.Ss
+CD_VOL_INFO	cd;	/\(** Information for cd volumes.	\(**/
+DB_VOL_INFO	db;	/\(** Information for db volumes.	\(**/
+MD_VOL_INFO	md;	/\(** Information for md volumes.	\(**/
+OD_VOL_INFO	od;	/\(** Information for od volumes.	\(**/
+TP_VOL_INFO	tp;	/\(** Information for tp volumes.	\(**/
+VD_VOL_INFO	vd;	/\(** Information for vd volumes.	\(**/
+.Es
+
+.SH DESCRIPTION
+The 
+.B ad
+library provides an interface to the archive tables 
+containing the list of files available on CD\-ROM, DVD, in the
+database preview tables, on magnetic disk, and on optical 
+disk.  The library has it's own configuration file which
+contains all required configuration information.  
+
+The library may be operated in two modes. In `Local' mode, only 
+file information from the local 
+.B ad
+database tables is available for
+retrieval, insertion and modification. In `Remote' mode, the
+replicated tables are available. See the TABLES section (below) for
+a list of the replicated tables. These provide information 
+about files stored at remote locations. `Remote' mode is indicated
+by the existence of the 
+.B remote
+keyword in the 
+.B ad
+library configuration file. If the 
+.B remote
+keyword is not present in the 
+.B ad
+library configuration file, 
+the 
+.B ad
+library will operate only in `Local' mode. 
+
+Following is a list of the library's functions:
+.Ty
+ad_archive_info()
+Returns the archive structure corresponding to the archive name given
+to the function.  If the given archive name is NULL then the default
+archive will be returned.
+.Ty
+ad_close()
+Frees any memory that the Archive Directory has allocated.  Applications
+should call this routine when they have finished using the
+.BR ad
+library.
+.Ty
+ad_dbinfo_get()
+This function returns pointers to the SYBASE sever name, 
+database and table names associated
+with the specified archive.  The data returned by this function
+is useful when opening database connections (database name) or
+when formulating queries on the tables to perform functions not
+supported by the library.  
+.Ty
+ad_file_del()
+This function deletes a specified file from the archive.  This
+function currently only works with the magnetic disk archive.
+.Ty
+ad_file_get()
+This function copies information about an archive file into an 
+.B AD_FILE 
+structure.
+The first parameter specifies the search type of the query.
+The second parameter is the address of the 
+.B AD_FILE
+structure that will contain the data.
+The third parameter is a sybase dbprocess to use in the query.
+The fourth parameter is the medium the file should be on ( including
+.B AD_MED_BEST 
+to get the most accessible copy of the file ).
+The remaining parameters depend on the search type and  qualify 
+which files will be retrieved.
+If more than one file matches the specified query, the remaining
+files can be retrieved by calling ad_file_get with a search type of 
+.BR AD_FG_NEXT .
+In all cases, when no files match the qualifications, the status code
+.B AD_NO_FILE
+will be returned.
+.Ty
+ad_file_info()
+This function parses a file_id to recognize file extensions 
+to be indications of compression type or of format type.   
+It returns the 'root' of the filename, the compression type, 
+and the format type. If one or more of these is not desired, 
+NULL may be passed instead of the address of the return 
+parameters. 
+.Ty
+ad_file_init()
+This function initializes an
+.B AD_FILE
+structure to it's default values.  This function is normally used
+before the file is written to the archive with the function
+.BR ad_file_put .
+.Ty
+ad_file_put()
+This function inserts a file into the archive, or if the file already
+exists, replaces the file with the new information.  
+.Ty
+ad_init()
+This function initializes the 
+.B ad
+library.  
+.B ad_init
+must be called before any of the other 
+.B ad
+library functions are called.
+After this function is called, the ad_msg global variable will contain
+a message indicating which configuration file was opened.
+.Ty
+ad_med_name()
+This function returns a pointer to a character string which is an
+appropriate name for the specified medium.
+.Ty
+ad_med_type()
+This function returns the medium type which is associated with a
+given media name.  Valid media names are: AD_MEDNAME_CD, AD_MEDNAME_DB, 
+AD_MEDNAME_MD, AD_MEDNAME_OD, AD_MEDNAME_TP, and AD_MEDNAME_VD.
+.Ty
+ad_remote_get()
+This function returns information about where to request a file from - if
+the file resides on a remote system.  The information is
+returned in an
+.B AD_FILE
+structure, similar to 
+.BR ad_file_get .
+.Ty
+ad_server_id_get()
+This function returns a pointer to the string which contains the 
+name of the local site's Data Server. 
+.Ty
+ad_volume_get()
+This function copies information about a archive volume into an 
+.B AD_VOLUME
+structure.  The first parameter specifies the type of query.
+The second parameter is the address of the
+.B AD_VOLUME 
+structure to contain the data.
+The third parameter is the dbprocess to use in the query.
+The forth parameter is the medium the volume is on ( 
+.B AD_MED_BEST 
+is not allowed in this context ).
+The remaining parameters qualify the volume query and depend on the
+query type.
+If more than one volume matches the qualifications, the remaining 
+volumes can be retrieved with a query type of 
+.BR AD_VG_NEXT .  
+For all mediums, when no volumes match the query, the status code 
+.B AD_NO_VOLUME 
+will be returned.
+.Ty
+ad_volume_init()
+This function initializes a volume to it's default values.  Function
+.B ad_volume_init
+is normally used before the volume is written to the archive with
+function 
+.BR ad_volume_put.
+.Ty
+ad_volume_put()
+This function inserts a volume into the archive, or if the volume
+already exists, replaces the volume.  If the medium is AD_MED_CD, the 
+volume will be written to the table with the highest priority.
+
+.SH ERROR HANDLING
+.B ad_med_name 
+returns the string "Unknown medium" if the specified medium is not valid.  
+.B ad_med_type 
+returns AD_MED_UNKNOWN of the enumerated type AD_MEDIUM  if the specified
+medium string is not valid.  
+.B ad_file_name
+returns "NULL" if the AD File has an unknown medium type.
+All other functions, except
+.B ad_close,
+return a negative error
+code when an error occurs, and the global character string
+.B ad_msg
+will contain a description of the error.
+
+
+.SH FILES
+The 
+.B ad
+library has a configuration file, \fIlibad.config\fR,
+ which contains information 
+about the Archive Directory database tables used by the library, 
+and the currently 
+supported compression extensions. The compression types must be 
+defined in the 
+.B ad.h 
+header file.  The configuration file is found
+as described in the 
+.B ENVIRONMENT VARIABLES
+section.  
+
+.B NOTE:
+The 
+.B remote 
+and 
+.B site_id 
+keywords are optional. If the 
+.B remote 
+keyword 
+is not present, the 
+.B ad
+library will operate without the existence
+of the remote tables, and without using the 
+.BR site_id. 
+
+.B ALSO:
+Locally, if certain types of media are not being used, these lines
+may be removed from the `Medium information' section of the configuration
+file. This will speed up the 
+.B ad
+library's processing. 
+
+The configuration file format is as follows:
+
+.nf
+.ft 1
+.ni
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 80n 88n 96n 104n 112n 120n
+
+#
+# Database information - _MUST_ be parsed first by config init routine.
+#
+# database      db server       database
+# Keyword       name            name
+# --------      ---------       --------
+#
+ 
+database        SYBASE          archive
+ 
+ 
+#
+# Medium information. (local files)
+#
+# medium        prior-  medium  file table      volume table
+# Keyword       ity     name    name            name
+# -------       ------  ------  ----------      ------------
+#
+ 
+medium          1       CD      cdfiles         cds
+medium          2       DB      dbfiles         dbs
+medium          3       MD      mdfiles         mds
+medium          4       OD      odfiles         ods
+medium          5       TP      tpfiles         tps
+medium          6       VD      cdfiles         vds
+ 
+#
+# Remote files information.
+#
+# remote	Local	remote files    remote media    remote servers
+# Keyword       Site ID	table name      table name      table name
+# -------       -------	------------    ------------    --------------
+#
+ 
+remote          GNS	ad_files        ad_media        ad_servers
+ 
+ 
+#
+# Archive information.
+#
+# Archive       Archive         (L)owercase or
+# Keyword       Name            (U)ppercase file ids
+# -------       ------          -----------------
+#
+ 
+archive         GEMINI          U
+archive         JCMT            L
+archive         CFHT            L
+archive         ESO             L
+ 
+ 
+#
+# Compression extension information.
+#
+# Compression   Compression     Compression
+# Keyword       Type            Extension
+# -----------   -----------     -----------
+#
+ 
+compression     G               gz
+compression     U               Z
+compression     C               CF
+ 
+ 
+#
+# Format extension information.
+#
+# Format        Format          Format
+# Keyword       Type            Extension
+# -----------   -----------     -----------
+#
+ 
+format          F               fits
+format          F               fit
+format          G               gsd
+format          S               sds
+format          R               raw
+
+.ad
+.fi
+
+.RE
+.PP
+.SH TABLES
+The following is a list of SYBASE tables that should be present:
+
+.B archiveDirectory..cdfiles
+
+.B archiveDirectory..cds
+
+.B archiveDirectory..dbfiles
+
+.B archiveDirectory..dbs
+
+.B archiveDirectory..mdfiles
+
+.B archiveDirectory..mds
+
+.B archiveDirectory..odfiles
+
+.B archiveDirectory..ods
+
+.B archiveDirectory..remote_files
+
+.B archiveDirectory..remote_media
+
+.B archiveDirectory..remote_servers
+
+.B archiveDirectory..tpfiles
+
+.B archiveDirectory..tps
+
+.B archiveDirectory..vdfiles
+
+.B archiveDirectory..vds
+
+
+.B NOTE: 
+If any of the medium configuration lines are left out of the 
+.B ad
+library
+configuration file, there is no need to have the corresponding tables.
+For instance, if the local site is not using the database to store files,
+there is no need for the medium configuration line with type `DB', and
+no need for the \fBdbs\fR and \fBdbfiles\fR tables. 
+
+Similarly, if the remote keyword is left out of the configuration file
+(indicating `Local' operation only) the \fBad_files\fR, \fBad_media\fR
+and \fBad_servers\fR tables may be omitted. 
+
+.SH ENVIRONMENT VARIABLES
+Environment variable 
+.B LIBAD_CONFIG_DIR
+can be set the path of a directory containing the configuration file.  If 
+.B LIBAD_CONFIG_DIR
+is not set, the environment variable 
+.B DEFAULT_CONFIG_DIR
+should be set to a path where the configuration file can be found.
+.SH BUGS
+None known.
+.SH AUTHORS
+Steve Cockayne
+.br 
+Shannon Jaeger
+.br
+Marc LeBlanc
+.br
+
+
+Canadian Astronomy Data Center
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+

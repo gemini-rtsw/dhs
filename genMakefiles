@@ -1,0 +1,41 @@
+cc_bin_dirs="cdIngest cdOnline dhsClient dhsGet dhsInstSim dhsServer fits2sds mediaCleanup mediaPrep mediaQueue mediaWrite mfsIngest mfsOnline tpIngest"
+
+cxx_bin_dirs="dhs++Client dhsCmdSender dhsCommand dhsData dhsGet dhsHistory dhsPut dhsQlServer dhs++Server dhsSim4Data dhsStatus dhsStoPut dhsStorage"
+
+cc_lib_dirs="ad am cd db dd dhs dvd gen mfs press sf tp"
+
+cxx_lib_dirs="arrayMath crc dhsGen dhs++ dhsSta fh gen++ mfs qldp"
+
+
+tcl_dirs="dhsConsole dhsQlTool dhsTestCmdr testCmdr"
+
+
+for i in $cc_bin_dirs
+do
+	echo $i/Makefile
+	sources=`cd $i; echo *.c`
+	sed -e "s/@NAME@/$i/" -e "s/@SOURCES@/$sources/" < Makefile.cc_bin > $i/Makefile
+done
+
+
+for i in $cc_lib_dirs
+do
+	echo $i/Makefile
+	sources=`cd $i; echo *.c`
+	sed -e "s/@NAME@/$i/" -e "s/@SOURCES@/$sources/" < Makefile.cc_lib > $i/Makefile
+done
+
+for i in $cxx_bin_dirs
+do
+	echo $i/Makefile
+	sources=`cd $i; echo *.C`
+	sed -e "s/@NAME@/$i/" -e "s/@SOURCES@/$sources/" < Makefile.cxx_bin > $i/Makefile
+done
+
+
+for i in $cxx_lib_dirs
+do
+	echo $i/Makefile
+	sources=`cd $i; echo *.C`
+	sed -e "s/@NAME@/$i/" -e "s/@SOURCES@/$sources/" < Makefile.cxx_lib > $i/Makefile
+done

@@ -1,0 +1,249 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: gen/doc/gen_stack.3 
+.\"*
+.\"*	Date			: Nov 09 1993
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: gen_stack.3
+.\"*	    Version Number	: 1.2
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/21/95
+.\"*
+.\"*	Written by		: Severin Gaudet
+.\"*
+.\"*	Modification History    : None
+.\"*
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH gen_stack 3 "03/21/95" "CADC"
+.SH NAME
+gen_stack, stack_bottom, stack_down, stack_free, stack_init, stack_item, stack_pop, stack_position, stack_push, stack_top, stack_up \- operations on dynamic stacks.
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "gen_types.h"
+#include "gen_stack.h"
+.ft
+.fi
+.LP
+.nf
+.ta 0.8i
+.ft B
+pointer	stack_bottom( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_down( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	stack_free( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+STACK	\(**stack_init( n, func )
+int	n;
+pfi	func;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_item( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_pop( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int	stack_position( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_push( stack, item )
+STACK	\(**stack;
+pointer	item;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_top( stack )
+STACK	\(**stack;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	stack_up( stack )
+STACK	\(**stack;
+
+.SH DESCRIPTION
+.LP
+This library is a set of routines to manage a stack of pointers.
+To use this as a "normal" stack, use stack_init, stack_push,
+stack_pop and stack_free.  Stack_item will return the item on the
+top of the stack.  To navigate the stack, the concept of current
+item is used.  The routines stack_bottom, stack_down, stack_up,
+stack_top are used to change the current item.  If a pop or a push
+is executed while the current item is not the top of the stack,
+then
+.B all
+items above the current item in the stack are deleted.
+
+.LP
+.B stack_bottom
+sets the current item to the bottom item on the the given stack 
+.I stack
+and returns a pointer to that item.
+If the stack is empty, a
+.SM NULL
+pointer is returned.
+
+
+.LP
+.B stack_down
+sets the current item one down from its current position in the stack
+.I stack
+and returns a pointer to that item.
+If the stack is empty or the current item is already at the bottom, 
+the current item remains unchanged and a
+.SM NULL
+pointer is returned.
+
+.LP
+.B stack_free
+frees all of the allocated memory referenced by 
+.IR stack,
+including the stack items. It calls the function supplied to 
+.B stack_init
+to delete the items in the stack.
+
+.LP
+.B stack_init(\|)
+allocates and initializes a
+.SM STACK 
+structure with 
+an initial value of 
+.I n 
+elements in its
+.I array and
+returns a pointer to the newly created STACK structure.  
+If a memory allocation error occurs, a
+.SM NULL
+pointer is returned.
+The function
+.I func
+will be used whenever items are deleted from the stack by a pop.
+This function should have only one parameter - the pointer to the item
+being deleted.
+
+.LP
+.B stack_item
+returns a pointer to the current item in the stack
+.I stack.
+If the stack is empty, a
+.SM NULL
+pointer is returned.
+
+.LP
+.B stack_pop
+deletes the current item from the stack 
+.I stack
+using the function supplied with the
+.B stack_init
+call.
+The current item is set one down from its current position in the stack
+and a pointer to it is returned.
+If the stack is was empty or is empty after the deletion, a
+.SM NULL
+pointer is returned.
+Note that if the current item is not the top item in the stack, then all
+items above it in the stack are deleted as well.
+
+.LP
+.B stack_position
+returns an interger flag indicating where the current item position
+is located in the stack.
+.SM STACK_POS_BOTTOM
+indicates that the current item is the bottom item on the stack and
+that there are items above it.
+.SM STACK_POS_EMPTY 
+indicates that there are no items on the stack.
+.SM STACK_POS_MIDDLE 
+indicates that the current item has items above it and below it in the stack.
+.SM STACK_POS_SINGLE 
+indicates that the current item is the only item in the stack.
+.SM STACK_POS_TOP 
+indicates that the current item is the top item on the stack and that there
+are items below it.
+
+.LP
+.B stack_push
+adds the pointer to a new item
+.I item
+to the stack
+.I stack 
+above the current item.  If the current item is not the top
+item on the stack, then all items above the current item are deleted before
+the new item is added.  The current item is then set to the new item and
+a pointer is returned.
+If a memory allocation error occurs, a
+.SM NULL
+pointer is returned.
+
+.LP
+.B stack_top
+sets the current item to the top item in the stack
+.I stack
+and returns a pointer to that item.
+If the stack is empty, a
+.SM NULL
+pointer is returned.
+
+.LP
+.B stack_up
+sets the current item up one from its current position in the stack
+.I stack
+and returns a pointer to that item.
+If the stack is empty or the current item is already at the top,
+the current item remains unchanged and a
+.SM NULL
+pointer is returned.
+
+.SH SEE ALSO
+.LP
+gen_eptr(3), gen_types(3).
+
+.SH BUGS
+.LP
+None known.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre

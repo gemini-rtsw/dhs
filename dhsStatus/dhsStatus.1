@@ -1,0 +1,387 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <year>				(c) <year>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-		ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsStatus.1
+.\"
+.\" PURPOSE:
+.\" Describe the DHS Status Server.
+.\"
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:29  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.2  1998/07/02 22:11:05  nhill
+.\" Fixed typo.
+.\"
+.\" Revision 1.1  1998/07/02 21:50:48  nhill
+.\" Initial revision
+.\"
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.                       \" Ty macro to start an indent for each type def.
+.de Ty
+.ie n .TP 14n
+.el .TP 16n
+..
+./"
+.TH dhsStatus  1 2/7/98 "CADC"
+
+.SH NAME
+
+dhsStatus
+\- Server for distributing status and history for the DHS system
+
+
+.SH SYNOPSIS
+
+.B dhsStatus 
+[
+.B -debug NONE | MIN | FULL 
+] [
+.B -simulate NONE | VSM | FAST | FULL
+] [
+.B -V
+] 
+
+.SH DESCRIPTION
+The Status Server is the interface used by the DHS system to send
+status and history information to the outside world. The status server
+also periodically monitors the usage of the disks and databases used by
+the DHS system, and reports the free space as status items. The history
+interface used by the DHS is documented in ICD 4 - Logging information,
+and the status interface is described in ICD2 - Systems Status and Alarm
+Interfaces.
+
+The Status Server can update status records in an EPICS Status Alarm
+Database, or directly report status values to an OCSWish status acceptor.
+
+.SH OPERATION
+
+Before the Status Server is run, the EPICS database must contain records
+for any status items being logged to EPICS, and the EPICS database must
+be available (unless no status at all is being logged to EPICS). The
+EPICS Channel Access repeater program should be run before the Status
+Server is executed by using the command "startCArepeater". (The 
+Channel Access repeater
+would be run automatically when the Status Server starts, but the fork
+and exec to do this 
+introduces a very small possibility of a deadlock occurring as the Status
+Server starts.) The status server must be running before any DHS systems
+that log to it start, and before any OCSWish status acceptors subscribe.
+
+A complete description of the Status Server operation can be found in 
+"The Gemini Data Handling System User Manual".
+
+A complete description of the history and status interfaces can be found in
+"ICD 2 - System Status and Alarm Interfaces", and 
+"ICD 4 - Logging information". The complete list of status values logged
+by the DHS can be found in "ICD 3.2 - The DHS Interface"
+
+.SH COMMANDS
+
+The commands accepted by the Status Server, 
+are documented in "ICD 3.2 - The DHS Interface".
+
+.SH OPTIONS
+
+.TP
+.B -debug NONE | MIN | FULL 
+Debug mode.  Depending on the mode set, it will print various degrees of 
+error messages to standard output.  
+.TP
+.B -simulate NONE | VSM | FAST | FULL
+Simulate mode.  The simulate levels are based on those defined for the
+Gemini CICS system. If the simulate mode is NONE, then the Status Server
+behaves normally. Simulate mode of VSM is identical to simulate mode NONE.
+If the simulation mode is FAST, then no attempt is made to connect to the
+EPICS database, and all status and history updates are ignored. Simulate
+mode FULL is identical to simulate mode FAST.
+.TP
+.B -V
+Version.  Print version numbers and quit.
+
+.SH FILES
+
+.SS
+
+.B dhsStatus.config
+The Status Server requires a configuration file
+to set some parameters necessary for its operation. 
+The following is an abbreviated, annotated sample configuration file.
+(Text followed by a '#' is treated as a comment and ignored by
+the Status Server. Blank lines are also ignored.):
+
+.sp
+.nf
+
+#
+#  Application identification. This keyword specifies the IMP
+#  name to use when running this program.
+#
+# Keyword       application 
+# -------       -----------
+#
+
+identity        statusServer
+
+
+#
+#  Imp information. This keyword specifies the maximum number
+#  of IMP connections to allow. There must be enought 
+#  connections for all DHS subsystems, plus any OCSWish status
+#  acceptors. The keyword also specifies a timeout in seconds,
+#  which is used by client systems to determine how long to
+#  wait for the status server to re-start.  Since the status
+#  server can be relatively slow to re-start, the timeout has
+#  been set to 30 seconds.
+#
+# keyword       Max connects       Timeout
+# -------       ------------       -------
+#
+
+imp             10                  30
+
+
+#
+#  EPICS channel access information.  This keyword indicates
+#  where the EPICS host can be found, and the timeout to use
+#  when communicating with the EPICS host. This keyword is 
+#  ignored if none of the status items are being logged to
+#  EPICS.
+#
+# keyword       SAD host              timeout
+# -------       --------              -------
+#
+
+epics           204.174.103.184       10
+
+
+#
+#  Location/Site information. This keyword indicates which
+#  Gemini site is being used, and whether the status server
+#  is running at the base or summit. These values are used
+#  when determining what the names of the status records
+#  should be.
+#
+# keyword       Gemini Location            Gemini Site
+#               ("N"orth or "S"outh)       ("S"ummit, "B"ase)
+# -------       --------------------       -------------------
+#
+ 
+locationSite       S                       B
+
+
+#
+#  DHS subsystem information. These are the subsystem identifies
+#  used by each of the DHS subsystems. These are used to turn "*"
+#  wildcards in the system field of the channel configuration keywords
+#  into a specific list of subsystems. The subsystem id must agree with
+#  the value used by the subsystem when reporting its status.
+#
+# keyword       subsystem
+# -------       ---------
+#
+
+subsystem       STA
+subsystem       CMD
+subsystem       HIS
+subsystem       OLP
+subsystem       QLS
+subsystem       DTS
+
+
+#
+#  EPICS channel information. These keywords are used to identify
+#  which status items the Status Server will be required to log,
+#  and how they should be logged. 
+#
+#  The system value indicates which system is associated with the 
+#  status item. If the system is "-" then the status item isn't
+#  associated with a specific system. If the system is "*", then 
+#  a separate status record is created for every subsystem.
+#
+#  The "channel name" indicates the status channel name for the 
+#  status item. If the channel name contains the "%d" string, 
+#  then the %d will be assumed to be replaced with an integer 
+#  when received from the DHS subsystems. The actual channel 
+#  name will be created by combining the site and location 
+#  information, the subsystem name, and the channel name into
+#  something like "DH<location><site>:<subsystem>:<channel name>".
+#  If a status item isn't associated with a specific subsystem,
+#  the channel will be named: "DH<location><site>:<channel name>" 
+#
+# keyword   system   channel name          alias               epics
+# -------   ------   ------------          -----               -----
+#
+
+channel     -        logMessage            logMessage          yes
+
+channel     -        resourceArraySize     resourceArraySize   no
+channel     -        resource%d:inUse      resource%d:inUse    no
+
+
+channel     *        health                health              yes
+channel     *        simulate              simulate            yes
+
+channel     DTS      numIncomplete         numIncomplete       no
+
+
+#
+# Control information for merging subsystem channels. These 
+# keywords indicate that subsystem specific status records should
+# be merged to create an overall status item. For example, all
+# of the subsystem health records should be merged to form a single
+# overall health record. The first value after the keyword is
+# the name of the status item. The list of values indicates which
+# value has highest priority for assignment to the overall
+# value (e.g. if one subsystem health is "BAD", and another is 
+# "WARNING", then the overall health will be "BAD" because "BAD"
+# has a higher priority than "WARNING".
+#
+# The subsystem specific status items are assumed to be named:
+# "DH<location><site>:<subsystem>:<channel>", and the merged 
+# status record name is: "DH<location><site>:<channel>".
+#
+# Keyword   channel   values
+# -------   -------   ------
+#
+
+merge       health    BAD WARNING GOOD
+merge       state     TESTING INITIALIZING STARTING SHUTTINGDOWN RUNNING
+merge       debug     FULL MIN NONE
+merge       simulate  FULL FAST VSM NONE
+
+
+#
+# Monitoring information. The Timer keyword sets the amount
+# of time, in seconds between checks of the DHS resource
+# usage.
+#
+
+timer		90
+
+
+#
+# Magnetic disk resource. The md keywords specify magnetic 
+# disk resources which should be monitored, along with a
+# descriptive name and path of the directory.
+#
+# keyword 	descriptive 		path
+#		name
+#--------	-------------		-----------------
+#
+
+md		"Temp Store"		/data/salish/1/jaeger
+md		"Perm Store"		/data/salish/1/jaeger
+md		"siska /tmp"		/tmp
+
+
+#
+# Database monitoring information. The dbServer keyword specifies
+# the name of the Sybase server which contains the DHS tables.
+#
+# keyword	server name
+#--------	-----------
+#
+
+dbServer	SUMMIT
+
+
+#
+# The db keywords specify the names of Sybase databases which 
+# should be monitored as DHS resources. The information includes 
+# a descriptive string for the database and the name of the 
+# database.
+#
+# keyword 	descriptive 		database
+#		name			name
+#--------	-------------		-----------------
+#
+
+db		"DHS DB"		dhs_test
+.fi
+
+.SH ENVIRONMENT VARIABLES
+
+Upon startup, the Status Server
+looks for its configuration file in the directory specified by the 
+environment variable
+.B DHSSTATUS_CONFIG_DIR.
+If the configuration file is not found, it looks in the directory in the 
+.B DEFAULT_CONFIG_DIR 
+environment variable, and finally will look in the current directory.
+
+The IMP scratch directories used to communicate with other processes are
+located in the directory specified with the IMP_SCRATCH environment variable.
+The IMP_SCRATCH directory must be the same for all programs that the Status
+Server will communicate with.
+
+.SH DIAGNOSTICS
+
+Returns 0 upon successful completion, otherwise -1.
+
+
+.SH SEE ALSO
+
+.SH DOCUMENTS
+
+.TP
+.B The Gemini Data Handling System User Manual
+
+.TP
+.B ICD 2 - Systems Status and Alarm Interfaces
+
+.TP
+.B ICD 3.2 - The DHS interface
+
+.TP
+.B ICD 4 - Logging Information
+
+.SH BUGS
+
+After a reset, the status server forgets what OCSWish status acceptors
+have subscribed to, and the OCSWish doesn't re-send the subscription list.
+
+.SH AUTHORS
+Norman Hill
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

@@ -1,0 +1,249 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	tpRetrieveTar	
+#*
+#*   Purpose:
+#*	Retrieve <files> from <device> at the <tape_offset> th EOF.
+#*	log the status on status_file file if an error occur.
+#*
+#*   Date		: Feb 2, 1998 
+#*
+#*   SCCS data		: @(#)
+#*	Module Name	: tpRetrieveTar
+#*	Version Number	: 1.5
+#*	Release Number	: 1
+#*	Last Updated	: 04/12/99
+#*
+#*   Programmer		: George Zhang 
+#*
+#*   Modification History:
+#*	99/03/05 SDJ	: Changed cmd-line args to use a filename filled with
+#*			  a list of files rather than a list of files on
+#*			  on the command-line.
+#*	99/03/22 SDJ	: No longer delete log file.
+#*	99/04/12 SDJ	: Handled the last filename correctly.
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+#
+#   Check the arguments
+#
+
+if ($#argv != 4 ) then
+    echo "USAGE: tpRetrieveTar <device> <dest_path> <input_file> <log_file>"
+    echo ""
+    echo "       device:       Name of the tape device. (eg. /dev/rmt/0)     "
+    echo "       dest_path:    Fully specified path to the destination dir.  "
+    echo "       input_file:   Fully specified path to the input file. This  "
+    echo "                     file contains two columns, the first is the   "
+    echo "                     file offset on the tape and the second is the "
+    echo "                     file name.                                    "
+    echo "       log_file:     Fully specified path where status/log messages"
+    echo "                     are to be stored.                             "
+    echo ""
+    exit 1
+endif
+
+
+#
+#   Variable sets
+#
+
+set device = $1
+set dest_dir = $2
+set file_list = $3
+set log_file = $4
+set event_status = 0
+set input_file = "/tmp/tpRetrieveTar.input.$$"
+
+
+#
+# Move to the destination directory
+#
+
+cd $dest_dir
+if ( $status ) then
+    echo 'Error: unable to cd to destination directory "$dest_dir"'
+    exit 1
+endif
+
+
+#
+# Create a new log file
+#
+
+rm -f $log_file
+if ( $status ) then
+    echo 'Error: Unable to remove log file "$log_file"'
+    exit 1
+endif
+
+touch $log_file
+if ( $status ) then
+    echo 'Error: unable to create log file "$log_file"'
+    exit 1
+endif
+
+echo $0 $* >>& $log_file
+
+
+#
+# Test the device
+#
+
+mt -f $device status >>& $log_file
+if ( $status ) then
+    echo 'Error: Device "$device" is not available.' >> $log_file
+    exit 1
+endif
+
+
+
+#
+# Sort the input_file, want to start with lowest offset and work
+# our way up to the biggest one.
+#
+
+cat $file_list | sort -k 0 -n >! $input_file
+if ( $status ) then
+    echo 'Error: Unable to create temporary file "$log_file"'
+    exit 1
+endif
+
+
+
+#
+# Rewind the tape
+#
+
+echo "mt -f $device rewind " >>& $log_file
+mt -f $device rewind  >>& $log_file
+if ( $status ) then
+    exit 1 
+endif
+
+
+#
+# Read the tape
+#
+
+set num_lines = `cat $input_file | wc -l`
+set idx = 1
+set offset = 0
+set prev_offset = 0
+set filename = ""
+set filenames = ""
+while ( $idx <= $num_lines  )
+    while ( $offset == $prev_offset && $idx <= $num_lines )
+	set filenames = "$filenames $filename"
+	set prev_offset = $offset 
+	set line = `cat $input_file | head -n $idx | tail -1`
+	set offset = `echo "$line" | awk 'NF == 2 && $1 ~ /^[0-9]+$/ { print $1;}'`
+	set filename = `echo "$line" | awk 'NF == 2 { print $2;}'`
+
+	if ( $idx == 1 ) then
+	    set prev_offset = $offset
+	    set move_tape = $offset
+        endif
+
+	if ( "$offset" == "" || "$filename" == "" ) then
+	    echo  Error: Improper format in input file "$file_list" >> $log_file
+	    exit 1
+	endif
+	
+	@ idx += 1
+    end
+
+
+    #
+    # Check to see if the last filename gets added to the file list.
+    #
+
+    if ( $idx > $num_lines && $offset == $prev_offset ) then
+	set filenames = "$filenames $filename"
+    endif
+
+    
+    #
+    # Move the tape to the required position.
+    #
+
+    if ( $move_tape > 0 ) then
+	echo "mt -f $device fsf $move_tape" >>& $log_file
+	mt -f $device fsf $move_tape >>& $log_file
+	if ( $status ) then
+	    exit 1 
+	endif
+    endif
+
+
+    #  
+    #  Read the tape.
+    #
+
+    echo pax -r -s ',.*/\([^/]*\)\$,\1,' -f $device $filenames >>& $log_file
+
+    pax -r -s ',.*/\([^/]*\)$,\1,' -f $device $filenames >>& $log_file 
+    if ( $status ) then
+	exit 1
+    endif
+
+    set move_tape = `expr $offset - $prev_offset - 1`
+    set prev_offset = $offset
+    set filenames = ""
+end
+
+if ( $move_tape >= 0 ) then
+    #
+    # Move the tape to the required position.
+    #
+
+    if ( $move_tape > 0 ) then
+	echo "mt -f $device fsf $move_tape" >>& $log_file
+	mt -f $device fsf $move_tape >>& $log_file
+	if ( $status ) then
+	    exit 1 
+	endif
+    endif
+
+
+    #  
+    #  Read the tape.
+    #
+
+    echo pax -r -s ',.*/\([^/]*\)\$,\1,' -f $device $filename >>& $log_file
+    pax -r -s ',.*/\([^/]*\)$,\1,' -f $device $filename >>& $log_file 
+    if ( $status ) then
+	exit 1
+    endif
+endif
+
+rm -f $input_file
+exit 0 

@@ -1,0 +1,206 @@
+#!/bin/sh
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+#                                       
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/scripts/dhsConsole
+#
+# PURPOSE:
+# This is a script that will start the DHS Console.
+#
+# METHOD NAME(S)
+# None.
+#
+#INDENT-OFF*
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:13  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+#INDENT-ON*
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+#
+
+# /usr/cadcdev/gemini/current/develop/dhsConsole/ocswish-debug "$@"
+# /gemini/ocs/bin/solaris/ocswish "$@"
+set X { "$0" "$@"; shift 2; export GEMINI_BASE; exec ${GEMINI_BASE:=/gemini}/ocs/bin/solaris/ocswish "$@"
+}; unset X
+
+
+
+#
+# Make sure the OCS package is loaded.  Note, that the Ocspkg renames,
+# creates its own exit command, which doesn't behave like the Tcl/Tk
+# exit command.  So there are some fixed here for that.
+#
+
+#if { [ info commands exit ] != "" } {
+#   rename exit dhsExit
+#}
+
+#if { [ catch {set ocsVer [ package require Ocspkg ]} msg ] } {
+#        error "error loading Ocspkg package $msg"
+#}
+
+if { [ info commands dhsExit ] != "" } {
+    rename exit ocsExit
+    proc exit {{value {}} } {
+	ocsExit
+	dhsExit "$value"
+    }
+}
+
+
+#
+# Make sure we never see the "." window
+#
+
+wm withdraw .
+tk appname dhsConsole
+
+
+#
+# __source_path is the directory from which this file was loaded. Other
+# DHS Console source files will be loaded from a path relative to
+# this directory.
+#
+
+set __source $argv0
+set __source_path [ file dirname $argv0 ]
+if { $__source_path == "." } {
+    set __source_path "[ pwd ]"
+    set __source "[ pwd ]/$__source"
+} elseif { [ string index $__source_path 0 ] != "/" } {
+    set __source_path "[ pwd ]/$__source_path"
+    set __source "[ pwd ]/$__source"
+}
+#set __source_path /usr/cadcdev/gemini/current/develop/dhsConsole/scripts
+
+
+#
+# Make sure all of the required packages are present and accounted for.
+#
+package require Itcl
+namespace import itcl::*
+package require Iwidgets
+#package require Itk
+#package require Tclutil
+
+if { [ info commands exit ] != "" } {
+   rename exit dhsExit
+}
+
+if { [ catch {set ocsVer [ package require Ocspkg ]} msg ] } {
+        error "error loading Ocspkg package $msg"
+}
+ 
+if { [ info commands dhsExit ] != "" } {
+    rename exit ocsExit
+    proc exit {{value {}} } {
+	ocsExit
+	dhsExit "$value"
+    }
+}
+
+if { [ catch {set itkVer [ package require Itk ]} msg ] } {
+       error "error loading Itk package $msg"
+        exit 1
+}
+namespace import iwidgets::*
+
+if { [ catch {set iWidgetVer [ package require Iwidgets ]} msg ] } {
+        error "error loading Iwidgets package $msg"
+        exit 1
+}
+
+if { [ catch {set tclUtilVer [ package require Tclutil ]} msg ] } {
+        error "error loading Tclutil package $msg"
+	exit 1
+}
+
+#if { [ info commands exit ] != "" } {
+#   rename exit dhsExit
+#}
+
+#
+# Create the long version information.
+#
+
+set _dhgLongVersion ""
+set _dhgLongVersion [ format "%21s      %s\n" "dhsConsole"		\
+    "0.17 (c) 1998 NRC/CNRC" ]
+append _dhgLongVersion [ format "%26s      %s\n" "" 			\
+    "tcl [ clock format [ file mtime $__source ] -format %D(%R) ]" ]
+append _dhgLongVersion [ format "%21s      %s\n" "Tcl/Tk" "[ info patchlevel ]" ]
+append _dhgLongVersion [ format "%21s      %s\n" "Ocs Package" $ocsVer ]
+append _dhgLongVersion [ format "%21s      %s\n" "\[incr Tk\]" $itkVer ]
+append _dhgLongVersion [ format "%21s      %s\n" "\[incr Widgets\]" $iWidgetVer ]
+append _dhgLongVersion [ format "%21s      %s\n" "ESO tcl Util" $tclUtilVer ]
+unset ocsVer itkVer iWidgetVer tclUtilVer
+
+
+#
+# Make sure we can find the widgets for dhg and set the dhgDirectory
+#
+
+set dhgDir $__source_path/..
+
+
+#
+# Source the tcl/tk code specific to the dhsConsole, find the location
+# of the help files and parse the command line arguments.
+#
+
+source $__source_path/../tcl/dhsConsole.tcll
+set _helpDir "$__source_path/../html"
+
+#
+# Determine the command line arguments. Need to clear argc and argv since
+# TopLevelWidget attempts to interpret them wehn TopLevelWidget::start
+# is called - this is not desirable.
+#
+
+parseCommandLine $argv $argc
+set argc 0
+set argv ""
+
+
+#
+# set-up bitmaps
+# 
+
+set bitmaps [ list dhsGemini gemini forward reverse stop ]
+getImages $bitmaps "$dhgDir/images"
+
+#
+# fire up the main window for the DHS console.
+#
+
+util::TopLevelWidget::start CDhgMain
+

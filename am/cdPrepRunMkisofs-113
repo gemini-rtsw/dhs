@@ -1,0 +1,302 @@
+#!/usr/bin/tcsh -f
+set echo
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	cdPrep/scripts/prepRunMkisofs
+#*
+#*   Purpose:
+#*	To prepare a physical volume of a CD on magnetic disk using
+#*      "mkisofs".
+#*
+#*   Date		: Aug 31, 1998
+#*
+#*   SCCS data          : @(#)
+#*      Module Name     : cdPrepRunMkisofs-113
+#*      Version Number  : 1.1
+#*      Release Number  : 1
+#*      Last Updated    : 12/15/98
+#*
+#*   Programmer		: Shannon Jaeger
+#*
+#*   Modification History:
+#*      98/12/15 SDJ	: Modified from cdPrepRunGear-33
+#*	99/02/24 SDJ	: Data directory now expected to be prepared
+#*			  instead of preparing it.  Consequently logic
+#*			  and command line args changed.
+#*	99/03/04 SDJ	: Count number of files with find instead of ls.
+#*	99/03/14 SDJ	: Improved error reporting.
+#*	99/03/26 SDJ	: Added displaying of results to xterm.
+#*	99/04/07 SDJ	: Added support for relative paths.
+#*			  Added more useful error reporting.
+#*	99/04/15 SDJ  	: Added -x flag to csh
+#*	99/04/29 SDJ	: Fixed relative path code.
+#*	99/09/28 SDJ	: Added disk space check.
+#*    2000/02/03 SDJ	: Added check Num extents vs. extents written.
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+umask 002
+
+set exec_name = $0
+set exec_name = $exec_name:t
+
+
+#
+# Parse command line.
+#
+
+if ( $#argv != 5 ) then
+    goto usage
+endif
+
+
+set volume_name = $1
+set mkisofs_dot_file_path = $2
+set log_file_path = $3
+set work_path = $4
+set data_path = $5
+
+set mkisofsrc_file = .mkisofsrc
+
+set noglob
+
+
+#
+# Check for relative paths
+#
+
+set current_dir = `pwd`
+set result = `echo $mkisofs_dot_file_path | grep "^/.*"`
+if ( "$result" == "" ) then
+    set mkisofs_dot_file_path = "$current_dir/$mkisofs_dot_file_path"
+endif
+
+set result = `echo $log_file_path | grep "^/.*"` 
+if ( "$result" == "" ) then
+    set log_file_path = "$current_dir/$log_file_path"
+endif
+
+set result = `echo $data_path | grep "^/.*"`
+if ( "$result"  == "" ) then
+    set data_path = "$current_dir/$data_path"
+endif
+
+
+#
+#  Go to the work path.
+#
+ 
+cd $work_path
+if ( $status ) then
+    echo Error: Unable to change to directory \`$work_path\'
+    sleep 10
+    exit 1
+endif
+
+
+#
+#  Remove any mkisofsrc, log files, and physical volume files if present.
+#
+
+if ( -e $log_file_path ) then
+    rm -f $log_file_path
+    if ( $status ) then
+	echo Error: Unable to remove \`$log_file_path\`
+	sleep 10
+        exit 1
+    endif
+    touch $log_file_path
+    if ( $status ) then
+	echo Error: Unable to create \`$log_file_path\`
+	sleep 10
+        exit 1
+    endif
+endif
+
+if ( -e $mkisofsrc_file ) then
+    rm -f $mkisofsrc_file
+    if ( $status ) then
+	echo Error: Unable to remove \`$mkiosfsrc_file\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+ 
+
+if ( -e $volume_name.vol ) then
+    rm -f $volume_name.vol
+    if ( $status ) then
+	echo Error: Unable to remove \`$volume_name.vol\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+if( $mkisofs_dot_file_path != "none" ) then
+    cp $mkisofs_dot_file_path $mkisofsrc_file
+    if ( $status ) then
+	echo Error: Unable to create \`$mkisofs_dot_file_path\` >> $log_file_path
+        exit 1
+    endif
+endif
+
+
+#
+# Determine how much space is needed and if there is enough space
+#
+
+set space_need = `du -s $data_path | awk '{ print $1; }'`
+set space_avail = `df $work_path | awk '$4 ~ /^[0-9]+$/ { print $4; }'`
+
+if ( $space_avail < $space_need ) then
+    echo "$exec_name Error: Not enough space in staging area for the volume." >> $log_file_path
+    echo "$exec_name        $space_need Kb are needed and only $space_avail Kb are available."  >> $log_file_path
+    exit 1
+endif
+
+
+ 
+#
+#  Disable interrupts.
+#
+ 
+#onintr -
+
+
+#
+# Make sure mkiosfs is in the path.
+#
+
+which mkisofs >> $log_file_path 
+if ( $status ) then
+    echo "$exec_name Error: Unable to find mkiosfs" >> $log_file_path
+    exit 1
+endif
+
+
+#
+#  Run mkisofs
+#
+
+echo "***   Creating physical volume with mksiofs    ***"
+mkisofs -L -l -r -R -pad -v -V $volume_name -o $volume_name.vol $data_path |& tee $log_file_path | grep "estimate finish"
+set create_status = $status
+if ( $create_status ) then
+    echo "mkisofs -L -l -r -R -pad -v -V $volume_name -o $volume_name.vol $data_path" >> $log_file_path
+    echo "$exec_name Error: mkisofs failed to created volume.  Return value is $create_status" >> $log_file_path
+
+#    exit 1
+endif
+
+
+#
+#  Parse the log file and add to it the number of copies, number of 
+#  of errors, number of files copied..
+#
+ 
+if ( -e $log_file_path ) then
+    set image_size = `grep 'extents written' $log_file_path | sed -e 's/(//' | sed -e 's/)//' | awk 'BEGIN {FS=" " ; } { print $4 ;}'`
+    set num_errors = 0
+else
+    set file_size = 0
+    set num_errors = 0
+    set num_files_copied = 0
+endif
+
+
+#
+# Determined the number of files that were suppose to be copied.
+#
+
+set num_files = `find $data_path -type f | wc -l`
+set num_files_copied = $num_files
+
+
+#
+# Check for any errors.
+#
+
+if ( $image_size > 0 ) then
+    set num_images = 1
+    set image_size = `grep 'extents written' $log_file_path | awk 'BEGIN {FS="(" ; } { print $2 ; }'`
+else
+    set num_images = 0
+    set image_size = "0 Mb)"
+endif
+
+
+echo " " >> $log_file_path
+echo "$exec_name - Number of images:            $num_images" >> $log_file_path
+echo "$exec_name - Size of image:               ($image_size" >> $log_file_path
+echo "$exec_name - Number of errors:            $num_errors" >> $log_file_path
+echo "$exec_name - Number of files found:       $num_files" >> $log_file_path
+echo "$exec_name - Number of files prepared:    $num_files_copied" >> $log_file_path
+
+echo " "
+echo "$exec_name - Number of images:            $num_images"
+echo "$exec_name - Size of image:               ($image_size"
+echo "$exec_name - Number of errors:            $num_errors"
+echo "$exec_name - Number of files found:       $num_files"
+echo "$exec_name - Number of files prepared:    $num_files_copied"
+
+
+#
+#  If no problems thus far, remove link directory structure. 
+#
+
+if ( $create_status == 0 && $num_images > 0 && $num_errors == 0 && $num_files == $num_files_copied  then 
+    echo "***    Completed preparing physical volume     ***"
+    echo "prepRunMkisofs-113 done"
+    echo ""
+    sleep 5
+    exit 0
+else
+    echo "***        Did NOT create physical volume      ***"
+    echo "prepRunMkisofs-113 done"
+    echo ""
+    sleep 5
+    exit 1
+endif
+ 
+
+
+#
+# Display usage Information.
+#
+
+usage:
+    echo "USAGE: cdPrepRunMkisofs-113 <volume_name> <mkiosfs_dot_file> <log_file_path> <work_path> <input_file_path> <data_stage_path> <data_path>"
+    echo ""	
+    echo "              volume name:      Name of disk in upper-case."
+    echo "              mkiosfs_dot_file: Fully specified path and name of the"
+    echo "                                .mkiosfsrc file."
+    echo "              log_file_path:    Fully specified path and name of log file."
+    echo "              work_path:        Fully specified path to the work directory."
+    echo "              data_path:        Fully specified path to the directory which"
+    echo "                                contains the data to be prepared."
+ exit 1

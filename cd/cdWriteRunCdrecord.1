@@ -1,0 +1,196 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: cd/doc/cdWriteRunCdrecord.1
+.\"*
+.\"*	Date			: Dec 15, 1998
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: cdWriteRunCdrecord.1
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 02/24/99
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*        98/12/15 ADJ	: Copied from cdWriteRunGear.1
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH CDWRITERUNCDRECORD\-16 1 15/12/98 "CADC"
+ 
+.SH NAME
+.B cdWriteRunCdrecord\-16
+\- Runs \fBcdrecord\fR to write CD\-ROM(s) from an image of a CD\-ROM on magnetic
+disk.
+ 
+.SH SYNOPSIS
+.B cdWriteRunCdRecord\-16
+.I volume\-name cdrecord\-config\-file log\-file\-path
+.I work\-path device\-information num\-copies data\-path
+
+
+.SH DESCRIPTION
+.B cdWriteRunCdrecord\-16
+is a C\-shell script that uses \fBcdrecord\fR  to write one or more
+copies of a CD\-ROM from a physical image on magnetic disk. 
+.B cdrecord
+is a free software package which is used to record data Compact
+Discs.
+This script assumes that a single CD\-writer is to be
+used and that no stacker is used, so the operator must manually place
+CD\-ROMs into the CD\-writer.
+
+Depending on system configuration
+.B cdrecord
+may need to run as root.  An application such as
+.B sudo
+can be used to allow specific users to run 
+.B cdrecord
+as root.  This script assumes that 
+.B sudo
+is to be used on SunOS systems only.
+
+This script parses the device specific information provided
+by the
+.I device\-information
+command\-line parameter.  The information that is used includes:
+.RS 4
+.nf
+SCSI bus,
+target,
+logical unit number,
+driver, and
+write speed.
+.fi
+.RE
+
+This script was written to work with an applications such as
+.B cdWrite
+or 
+.B mediaWrite
+which interface with SYBASE.
+
+.SH OPERATION
+.B cdWriteRunCdrecord\-16 
+requires seven command\-line parameters:
+.TP
+.I volume\-name:      
+Name of disk in upper\-case.
+.TP
+.I cdrecord\-config\-file:
+Fully specified path and name of the cdrecord configuration file.  This
+command\-line parameter was kept even though 
+.I cdrecord
+does not have a configuration file in order to maintain compatibility
+with other scripts which write media.
+.TP
+.I log\-file\-path:    
+Fully specified path and name of log file.
+.TP
+.I work\-path:   
+Fully specified path to the work directory.  This directory contains
+the physical image of the CD\-ROM to be written.
+.TP
+.I device\-information:
+The device information includes the following: 
+.TP
+.RS 6
+.nf
+1. \fBSCSI bus\fR the CD\-writer is located on,
+2. \fBtarget\fR number of the device,
+3. \fBlogical unit number\fR of the device,
+4. the \fBread speed\fR of the device,
+5. the \fBwrite speed\fR of the device, and
+6. the \fBdriver\fR to be used with the device.  
+.fi
+.RE
+.RS 5
+.sp 1
+All of these values
+are expected to be separated with commas in the order they have been 
+listed.
+.RE
+.TP
+.I num\-copies:       
+Number of copies to make.
+.TP
+.I data\-path:
+Fully specified path to the directory of data.  This directory contains
+the data which will burned onto the CD\-ROM.  This argument is not used
+by the script but exists to maintain compatibility with other media 
+writing scripts.
+
+.SH OPTIONS
+There are no optional command\-line arguments for
+.B cdWriteRunCdrecord\-16
+ 
+.SH USAGE
+.B cdWriteRunCdrecord\-16
+will require some operator input.  The operator will be prompted
+whenever a blank CD\-ROM needs to be placed into the CD\-writer.
+
+.SH EXAMPLES
+.TP 3
+The following example demonstrates how to use
+.B cdWriteRunCdrecord\-16.
+.RS 5
+.sp 1n
+.nf
+.BI "example% cdWriteRunCdrecord\-16 " USER1_002 " " none " " /logs/cdWrite 
+.BR "        " /staging/media/staging3 " " 2,3,0,4,6,none " " 2
+.BR "        " /staging/user/staging3
+.sp 1n
+.fi
+.RE
+.RS 3
+In this example copies of volume (unit) 
+.B USER1_002,
+which is located in
+.I /staging/media/staging3
+will be written. There is no configuration file, the log file is located
+at
+.I /logs/cdWrite.
+Finally, the device information tells us that there is no driver to
+be used.  The device is located on SCSI Bus 2, target 3, and logical
+unit number 0.  The device reads at 6x speed and writes at 4x speed.
+.RE
+
+.SH ENVIRONMENT VARIABLES
+The shell's path variable
+should include the locations of the
+.B cdrecord
+executable, the third party CD\-ROM authoring software
+and 
+.B sudo
+if running on SunOS.
+ 
+.SH DIAGNOSTICS
+.B cdWriteRunCdrecord\-16
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non\-zero number is returned. 
+ 
+.SH SEE ALSO
+.BR cdWrite (1),
+.BR mediaWrite (1),
+.BR cdrecord (1),
+.BR sudo (8)
+ 
+.SH BUGS
+None known.
+ 
+.SH AUTHOR
+Steve Cockayne
+.br
+Shannon Jaeger
+.br
+
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

@@ -1,0 +1,392 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <year>				(c) <year>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-		ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsStorage.1
+.\"
+.\" PURPOSE:
+.\" This file servers as the man-page for the DHS Storage Server. 
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:32  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.2  1999/02/25 00:27:28  jaeger
+.\" Updated to reflect changes to new AM library and new applications.
+.\"
+.\" Revision 1.1  1998/07/31 21:08:48  cockayne
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.\" Ty macro to start an indent for each type def.
+.de Ty
+.ie n .TP 14n
+.el .TP 16n
+..
+./"
+.TH dhsStorage 1 29/09/97 "CADC"
+
+
+.SH NAME
+.B dhsStorage
+- Gemini DHS Server for creating transportable media for the Gemini
+archive or for Gemini users.
+
+.SH SYNOPSIS
+.B dhsStorage
+[
+.B -debug NONE | MIN | FULL 
+] [
+.B -simulate
+] [
+.B -V
+]
+
+.SH DESCRIPTION
+The Storage Server's task is to create CD-ROMs in response to `media requests' from clients. A media request is simply a request for the DHS to create a set of media, either for a Gemini user, or for the Gemini data archive. For the Storage Server to undertake the actions involved in processing a media request, first the media request must be submitted through a command to the Storage Server, then subsequent commands must be issued to the Storage Server to guide it through the steps of creating CD-ROMs. 
+
+In order to satisfy both the requirement to save archive data to physical medium and the requirement to produce transportable media for Gemini users, there are two types of media requests, archive and user. Under Gemini operations, there may be multiple archive media requests, corresponding to different segregations of data. There may also be multiple user media requests, as multiple users will require sets of transportable media to take their data away from the telescope sites. Each media request, archive or user, is uniquely identifiable by its integer Media Identifier (media ID). 
+
+As the Storage Server's task is non-trivial, it has been split up into six steps which are called Storage Server actions. The actions, in order, are Retrieval, Queuing, Preparing, Writing, Cleanup, and Notifying. The Storage Server actions are either performed internally, in the case of Retrieval, Cleanup and Notifying, or by a separate executable, as in the case of Queuing, Preparing, and Writing. The executables used to process Queuing, Preparing and Writing actions are mediaQueue, mediaPrep and mediaWrite respectively, and are described in their respective man-pages. The actions themselves are described in the
+.B OPERATION
+section, below.
+
+The Storage Subsystem console is used to control the Storage Server. It is like the other subsystem consoles with some extra controls for initiating, halting and rolling-back the Storage Server actions. 
+
+.SH OPERATION
+The Storage Server actions are described below. 
+
+.SS Retrieve
+Retrieval is defined to be the action of fetching files from the DHS which are required to satisfy media requests. Retrieval is initiated by pressing the `forward' button for retrieval on the DHS Console's Storage Subsystem window. This will cause a dialogue box to appear, which will ask for a number of megabytes to retrieve.  The retrieval process attempts to retrieve files which have an "Error" status in the database first.   Next, it attempts to retrieve files which have status "Unavailable". Then, files with a "Blank" status are retrieved. For archive media requests, the "Blank" status files are retrieved in order of the date or notification. For user media requests, these files are retrieved in alphabetical order of the file path. 
+
+Rollback cannot be applied to the Retrieve action - that is, there is no way to rollback a retrieve action. 
+
+The retrieval action is provided by functionality internal to the Storage Server.
+.SS Queue
+Queuing is defined to be the action of grouping together files which are to be written onto the same physical unit of media, whether the media be CDROM, EXABYTE, DVD, Mammoth-tape or another yet-to-be-determined medium. The only medium supported by the DHS Storage Server at DHS delivery is CDROM. Queuing is started by pressing the `forward' button for queuing on the DHS Console's Storage Subsystem window. When pressed, a dialogue box will appear, giving the operator the option to force-queue the last CDROM, if it is smaller than the threshold-full level. When queuing is complete, a new unit of media should have been queued, ready for preparing the physical CDROM volume.
+
+Rollback of queuing can be requested by pressing the `backward' button for queuing on the DHS Console's Storage Server window. Rollback takes place immediately and some other tasks are locked-out while it takes place. 
+
+.SS Prepare
+Preparing is defined to be the action of performing all steps necessary to take a list of files which belong to the unit taking all steps up until writing onto the physical medium. At the time of preparing, the unit must use a directory in the media staging area. The Storage Server chooses which media staging directory the unit will use. Preparing is started by pressing the `forward' button for preparing on the DHS Console's Storage Subsystem window. When pressed, a dialogue box appears, giving the operator the option to enter the number of units to prepare. While preparing takes place, an xterm window appears, and automatically runs CDROM authoring software (\fIgear\fR or \fImkisofs\fR) to prepare the CDROM. 
+
+There should be no operator interaction with CDROM authoring software during preparation. When preparation is complete, there should be a physical CDROM volume in one of the media staging directories, ready to be written to CDROM. 
+
+The only medium to be supported by the DHS Storage Server at DHS delivery is CDROM. The chosen CD authoring software is Elektroson GEAR. In the context of the CDROM, the physical image which is created by the preparation process is the physical volume.
+
+Rollback of preparation can be requested by pressing the `backward' button on the Storage Subsystem window. Rollback takes place immediately and some other tasks are locked-out while rollback takes place. 
+
+.SS Write
+Writing is defined to be the action of writing a prepared physical image from the media staging directory it inhabits to physical medium. Writing is initiated by pressing the `forward' button for writing on the Storage Subsystem window. This causes an xterm to pop-up and execute CDROM authoring software to write the CDROM. Some operator interaction with the CDROM authoring software may be required. When writing is complete, there will be a written CDROM in the CD-writer. 
+
+The only medium to be supported by the DHS Storage Server at DHS delivery is CDROM. As above, the chosen CD authoring software is Elektroson GEAR. In the context of the CDROM, writing is defined as writing the physical volume to a CD-Recordable disk.
+
+Rollback of writing can be started by pressing the `backward' button for writing on the Storage Subsystem window. Some tasks are locked-out from the console while rollback takes place. As CDROM technology is a write-once, read-many technology, it doesn't make much sense to scrub data from the CDROM; thus, un-writing is defined to be allowing an extra copy of the unit of media to be written. 
+
+.SS Cleanup
+Cleanup is defined to be the action of freeing up a unit's media staging directory by deleting the physical image which inhabits it. This allows another unit to be prepared into that media staging directory. Cleanup is initiated by pressing the `forward' button for cleanup on the Storage Subsystem window. This will cause a dialogue box to appear, allowing the operator to enter the number of units to cleanup. When cleanup is completed, the staging areas used for the media unit will be free for re-use. 
+
+Rollback of cleanup is not possible. 
+
+.SS Notify
+Notifying is defined to be the action of informing the remote server which made the media request that the media storage request has been completed. In the case of an archive media request, the DHS Data Server which requested that the media be archived is notified that it is now safely in the archive, and may be deleted from the Data Server's storage area. In the case of a user media request, the OCS will be notified that the user files have been stored on transportable medium. Notification is started by pressing on the `forward' button for notifying on the DHS Console's Storage Subsystem window. 
+
+Rollback of notification is not possible. 
+
+The next few sections will describe the Storage Server executables
+
+.SS mediaQueue
+mediaQueue is, as its name suggests, the executable used to perform the Queue action. When invoked, mediaQueue queries the database, requesting the list of file IDs of all files currently inhabiting the Retrieval Staging Area for the media ID. From this list, mediaQueue chooses a group of files which will populate the next queued unit of media. For archive media requests, files are chosen purely on age - the amount of time which has passed since notification was received by the Storage Server that the file was available to archive. For user media requests, this date is the same, so the files are grouped in alphabetical order of the file path - a strategy which tends to keep the directory tree similar to the one requested across multiple units of media. 
+
+Upon completion of its task, mediaQueue updates the database to indicate that the queuing action has been completed. mediaQueue is invoked automatically by the DHS Storage Server; thus, it does not require manual execution. mediaQueue does not require a runtime-configuration file. In case mediaQueue is to be executed manually, the command-line syntax is listed in mediaQueue's man-page.
+
+.SS mediaPrep
+mediaPrep is the executable used to perform the Prepare action. mediaPrep queries the database for the list of files which have been queued onto the unit of media by mediaQueue. When this list has been created, mediaPrep invokes CDROM authoring software and causes a physical volume to be written into the Media Staging Directory which has been passed as a command-line parameter. Please see the man pages for the command-line syntax of mediaPrep.  Upon completion of its task, mediaPrep updates the database to indicate that the queuing action has been completed. mediaPrep requires a runtime-configuration file, the syntax of which is described in the man pages.
+
+.SS mediaWrite
+mediaWrite is the executable which is used to perform the Write action. mediaWrite invokes CDROM authoring software to write the previously prepared physical volume to a recordable CDROM. Upon completion of its task, mediaWrite updates the Archive Media database. 
+
+.SS Miscellaneous
+The Storage Server manages three partitions on magnetic disk, the User and Archive Retrieval Staging Areas, and the Media Staging Area. 
+
+The Storage Server manages a set of database tables in order to track the tasks involved in writing transportable media. In order to do this it uses the CADC Archive Media (am) library. Please refer to the am library man-page for further information on how to set up and configure the am library. The Storage Server also requires a runtime configuration file, 
+.IR dhsStorage.config . 
+The contents of this file are described in the
+.B FILES
+section, below. The Storage Server also uses the CADC press library to perform file compression/decompression. The press library does not require a configuration file or any specific set-up prior to use. Please refer to the press library man-page for more information about the press library.
+
+.SH OPTIONS
+.TP
+.B -debug NONE | MIN | FULL 
+Debug mode.  Set the start-up debug mode of the Storage Server. NONE is the
+default. MIN and FULL print debug messages to standard-out.
+.TP
+.B -simulate
+Simulate mode.  Set the start-up simulate mode of the Storage Server. When 
+this flag is set, this Storage Server operates in simulate mode, responsing 
+to commands without acting on them. 
+.TP
+.B -V
+Version.  Print version numbers and quit.
+
+.SH FILES
+.SS ~/.dbrc
+The
+.I ~/.dbrc
+file contains information about each database that a user may wish to
+reference with programs such as
+.B dhsStorage.
+An entry in this file contains a server/database pair followed by a
+database username and an account password, as such:
+
+.I server database username password
+
+Each item should be separated by whitespace (spaces or tabs.)
+If a required database is not included in the
+.I ~/.dbrc
+file,
+.B dhsStorage 
+will terminate with an error.
+
+.SS libAm.config
+.B dhsStorage
+uses a configuration file to set runtime-configurable parameters for the CADC Archive Media (am) library. Please refer to the am library man-page for the specification of the am library configuration file.
+
+.SS dhsStorage.config
+.B dhsStorage
+uses a configuration file to set runtime-configurable parameters necessary
+to its operation. The following is an example configuration file. (Text 
+following a '#' character is treated as a comment and ignored by 
+.BR dhsStorage .)
+
+.sp
+.nf
+
+#
+#  Application Identification. This keyword specifies the IMP 
+#  name to use when running this program.
+#
+# Keyword       Identity
+# -------       --------
+#
+ 
+identity        storageServerNB
+ 
+ 
+#
+#  Imp Information. This keyword specifies the maximum number
+#  of IMP connections to allow. This must be enough for the
+#  connection to the DHS Status Server, the Connection to any 
+#  DHS Data Servers, and any connections from DHS Command Server.
+#
+# Keyword       Max connects
+# --------      ------------
+#
+ 
+imp             10
+ 
+ 
+#
+#  Local Status Server and IP Address. This is the IMP name
+#  And address of the DHS Status Server to use for logging status 
+#  and history.
+#
+# Keyword       Identity         Host Address
+# -------       -------         ------------
+#
+ 
+statusServer    statusServerNB  siska
+ 
+ 
+#
+#  Authorized connectors list. This list contains the IMP names
+#  and host addresses of expected connectors. 
+#
+# Keyword       Identity        Host Address
+# -------       --------        ------------
+#
+ 
+authorized      dataServerNB    siska
+authorized      bob             siska
+ 
+ 
+#
+#  Identity of Local Data Server. This Data Server will be used for
+#  all data retrievals. Must also be in `authorized' list, above.
+#
+#                       Data Server
+# Keyword               Identity
+# -------               -----------
+#
+ 
+localDataServer         dataServerNB
+ 
+ 
+#
+#  List of identities of Data Servers which will be notified when the
+#  Storage Server starts up. Must also be in `authorized' list, above.
+#
+#                       Data Server
+# Keyword               Identity
+# -------               -----------
+#
+ 
+notifyDataServer        dataServerNB
+ 
+ 
+#
+#  Number of processing nodes the Status Server will manage. In order to
+#  manage CPU usage, the number of simultaneously-running Storage Server
+#  actions is limited to this number. 
+#
+# Keyword       Number of
+#               Nodes
+# -------       ---------
+#
+ 
+numNodes        1
+ 
+# 
+# Define which AM application to use to queue, prepare and write 
+# data. 
+# 
+# 
+# Keyword       Queue App.      Prepare App.    Write App. 
+# -------       ----------      ------------    ---------- 
+# 
+ 
+amApps          mediaQueue      mediaPrep       mediaWrite 
+ 
+.fi
+
+.SH TABLES
+.B dhsStorage
+uses the CADC Archive Media (am) library to manage the database tables it
+uses to track the tasks involved in satisfying media requests. Please
+refer to the am library man-page for details. 
+
+.SH SECURITY
+In order to ensure a secure
+.I ~/.dbrc
+file,
+.B dhsStorage
+requires that the
+file resides in the directory specified by the 
+.B HOME 
+environment variable, and the file protection must restrict read and write 
+access to the file owner.
+
+.SH ENVIRONMENT VARIABLES
+.B dhsStorage 
+uses environment variables to find the configuration files it will 
+use to initialize its runtime-configurable parameters. 
+
+With respect to the file, 
+.IR dhsStorage.config ,
+It will first look in the directory specified by the 
+.B DHSSTORAGE_CONFIG_DIR 
+environment variable. If that variable is not defined, or the configuration
+file is not found in that directory, 
+.B dhsStorage
+will look in the directory specified by the 
+.B DEFAULT_CONFIG_DIR
+environment variable. If that variable is not defined, or the configuration
+file is not found there, then 
+.B dhsStorage 
+will attempt to find the file in the current directory. If that fails, 
+.B dhsStorage
+will exit with an error. 
+
+With respect to the CADC Archive Media (am) library configuration file, 
+.IR libAm.config ,
+.B dhsStorage
+will first look in the directory specified by the 
+.B LIBAM_CONFIG_DIR 
+environment variable. If that variable is not defined, or the configuration
+file is not found in that directory, 
+.B dhsStorage
+will look in the directory specified by the 
+.B DEFAULT_CONFIG_DIR
+environment variable. If that variable is not defined, or the configuration
+file is not found there, then 
+.B dhsStorage 
+will attempt to find the file in the current directory. If that fails, 
+.B dhsStorage
+will exit with an error. 
+
+.SH DIAGNOSTICS
+.B dhsStorage 
+returns 0 upon successful completion, otherwise -1.
+
+
+.SH SEE ALSO
+
+.BR dhsData (1),
+.BR dhsCmdSender (1).
+.BR mediaQueue (1)
+.BR mediaPrep (1)
+.BR mediaWrite (1)
+.BR am (3)
+
+
+.SH DOCUMENTS
+
+.TP
+.B DHS User Manual
+.TP
+.B ICD 1c - Baseline DHS Interface
+.TP
+.B ICD 3 - Bulk Data Transfer
+.TP
+.B ICD 3.2 - The DHS Command Interface
+.TP
+.B Interprocess Message Passing (IMP) System
+
+
+
+.SH BUGS
+None known
+
+.SH AUTHORS
+Steve Cockayne
+Shannon Jaeger
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+

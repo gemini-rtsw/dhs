@@ -1,0 +1,148 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(conf/include.mk.in)
+
+dnl Top level source dir.
+TOP=`pwd`
+AC_SUBST(TOP)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_ISC_POSIX
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h unistd.h sys/mnttab.h mntent.h sys/statvfs.h synch.h bool.h)
+
+# -----------------------------------------------------------------------
+# 	Check if we need (or can use) shared memory (sysv/shm) prototypes
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([sysv shared memory prototypes])
+AC_EGREP_HEADER([int.*shmdt.*\(], [sys/shm.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_SHM_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check if we need a prototype for gethostname()
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([gethostname prototype])
+AC_EGREP_HEADER([int.*gethostname.*\(], [unistd.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_GETHOSTNAME_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check size of long
+# -----------------------------------------------------------------------
+AC_CHECK_SIZEOF(long, 4)
+
+# -----------------------------------------------------------------------
+# 	Check if semctl(2) takes an argument of type union semun
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([union semun])
+AC_EGREP_HEADER([union.*semun], [sys/sem.h], 
+	[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_UNION_SEMUN)], 
+	[AC_MSG_RESULT(no)])
+
+# -----------------------------------------------------------------------
+# 	Check if we need (or can use) mmap prototypes
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([mmap prototypes])
+AC_EGREP_HEADER([int.*munmap.*\(], [sys/mman.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_MMAP_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check if mtdrivetype is defined
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([mtdrivetype])
+AC_EGREP_HEADER([mtdrivetype], [sys/mtio.h], 
+	[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_MTDRIVETYPE)], 
+	[AC_MSG_RESULT(no)])
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_MODE_T
+AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(mkdir rmdir strerror strstr strtod)
+
+AC_PROG_RANLIB
+AC_CANONICAL_SYSTEM
+AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
+AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
+
+dnl Sybase settings
+if test "$SYBASE" = "" ; then
+    SYBASE=/opt/sybase-12.5/OCS-12_5
+fi
+AC_SUBST(SYBASE)
+
+dnl Drama settings
+
+case "$host_os" in
+    linux-gnu)     DRAMA_OS=linux_x86;;
+    solaris*)      DRAMA_OS=sun4_solaris;;
+    *)             echo "*** Unsupported host: $host_os **"; exit 1;;
+esac
+echo "drama OS = $DRAMA_OS"
+AC_SUBST(DRAMA_OS)
+
+tmp=../drama*/release
+DRAMA=`echo $tmp`
+if test "$DRAMA" = "$tmp" ; then
+    echo " *** Can't find DRAMA release dir (expected $DRAMA) ***"
+    exit 1
+fi
+DRAMA=`cd $DRAMA; pwd`
+AC_SUBST(DRAMA)
+
+tmp=$DRAMA/config/r*
+DRAMA_CONFIG=`echo $tmp`
+if test "$DRAMA_CONFIG" = "$tmp" ; then
+    echo " *** Can't find DRAMA config dir (expected $DRAMA_CONFIG) ***"
+    exit 1
+fi
+AC_SUBST(DRAMA_CONFIG)
+
+tmp=$DRAMA/status/r*
+DRAMA_STATUS=`echo $tmp`
+if test "$DRAMA_STATUS" = "$tmp" ; then
+    echo " *** Can't find DRAMA status dir (expected $DRAMA_STATUS) ***"
+    exit 1
+fi
+AC_SUBST(DRAMA_STATUS)
+
+tmp=$DRAMA/imp/r*
+IMP_DIR=`echo $tmp`
+if test "$IMP_DIR" = "$tmp" ; then
+    echo " *** Can't find IMP release dir (expected $IMP_DIR) ***"
+    exit 1
+fi
+AC_SUBST(IMP_DIR)
+
+tmp=$DRAMA/sds/r*
+SDS_DIR=`echo $tmp`
+if test "$SDS_DIR" = "$tmp" ; then
+    echo " *** Can't find SDS release dir (expected $SDS_DIR) ***"
+    exit 1
+fi
+AC_SUBST(SDS_DIR)
+
+tmp=$DRAMA/ers/r*
+ERS_DIR=`echo $tmp`
+if test "$ERS_DIR" = "$tmp" ; then
+    echo " *** Can't find ERS release dir (expected $ERS_DIR) ***"
+    exit 1
+fi
+AC_SUBST(ERS_DIR)
+
+
+AC_OUTPUT(conf/include.mk)
+

@@ -1,0 +1,127 @@
+#
+# This file is used to as input to the simulator for testing the dataServer.
+#
+# File format is as follows. 
+#
+#   file name		: (string)	pathname to file.
+#   dataset name	: (string)	dataset name the file belongs to.
+#   IMP idenity		: (string)	Identity to send the file as. 
+#   Relative time	: (int)		Number of milliseconds after the 
+#					    synch time to send the commands 
+#					    and file. 
+#   File type		: (char) 	One of 'F', R', 'D' or 'Q' 
+#					    ( FITS, RAW, DATASET, i
+#					      DATASET for QUICKLOOK ONLY ).
+#   Last flag		: (char)	One of 'T' or 'F' ( TRUE or FALSE ).
+#   Are we Master?	: (char)	One of 'T' or 'F' ( TRUE or FALSE ).
+#   Life time		: (char)	One of 'T', 'P', or 'Q' 
+#					    ( TEMPORARY, PERMANENT, or 
+#					      QUICKLOOK-TRANSIENT ).
+#   List of Contribs	: (string)	Must be a quoted, space-delimited 
+#					    list of the contributors
+#   Quicklook Streams	: (string)	Must be a quoted, space-delimited 
+#					    list of the quicklook streams
+#
+#
+# File					Dataset		IMP		Relative	File	Last	Are we 	Life	List of 	QuickLook
+# Name					Name   		identity 	Time    	Type	Flag	Master?	Time	Contribs	Streams
+# ---- 				 	-------		--------	--------	----	----	-------	----	--------	---------
+#
+
+/scr/daxka1/gaudet/galfield.1.sds	galfield6	dhsInstSim	1000  		D 	F  	T  	Q 	"dhsInstSim"	"s"
+/scr/daxka1/gaudet/galfield.2.sds	galfield6	dhsInstSim	2000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.3.sds	galfield6	dhsInstSim	3000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.4.sds	galfield6	dhsInstSim	4000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.5.sds	galfield6	dhsInstSim	5000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.6.sds	galfield6	dhsInstSim	6000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.7.sds	galfield6	dhsInstSim	7000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.8.sds	galfield6	dhsInstSim	8000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.9.sds	galfield6	dhsInstSim	9000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.10.sds	galfield6	dhsInstSim	10000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.11.sds	galfield6	dhsInstSim	11000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.12.sds	galfield6	dhsInstSim	12000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.13.sds	galfield6	dhsInstSim	13000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.14.sds	galfield6	dhsInstSim	14000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.15.sds	galfield6	dhsInstSim	15000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.16.sds	galfield6	dhsInstSim	16000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.17.sds	galfield6	dhsInstSim	17000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.18.sds	galfield6	dhsInstSim	18000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.19.sds	galfield6	dhsInstSim	19000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.20.sds	galfield6	dhsInstSim	20000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.21.sds	galfield6	dhsInstSim	21000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.22.sds	galfield6	dhsInstSim	22000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.23.sds	galfield6	dhsInstSim	23000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.24.sds	galfield6	dhsInstSim	24000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.25.sds	galfield6	dhsInstSim	25000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.26.sds	galfield6	dhsInstSim	26000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.27.sds	galfield6	dhsInstSim	27000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.28.sds	galfield6	dhsInstSim	28000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.29.sds	galfield6	dhsInstSim	29000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.30.sds	galfield6	dhsInstSim	30000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.31.sds	galfield6	dhsInstSim	31000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.32.sds	galfield6	dhsInstSim	32000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.33.sds	galfield6	dhsInstSim	33000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.34.sds	galfield6	dhsInstSim	34000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.35.sds	galfield6	dhsInstSim	35000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.36.sds	galfield6	dhsInstSim	36000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.37.sds	galfield6	dhsInstSim	37000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.38.sds	galfield6	dhsInstSim	38000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.39.sds	galfield6	dhsInstSim	39000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.40.sds	galfield6	dhsInstSim	40000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.41.sds	galfield6	dhsInstSim	41000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.42.sds	galfield6	dhsInstSim	42000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.43.sds	galfield6	dhsInstSim	43000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.44.sds	galfield6	dhsInstSim	44000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.45.sds	galfield6	dhsInstSim	45000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.46.sds	galfield6	dhsInstSim	46000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.47.sds	galfield6	dhsInstSim	47000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.48.sds	galfield6	dhsInstSim	48000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.49.sds	galfield6	dhsInstSim	49000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.50.sds	galfield6	dhsInstSim	50000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.51.sds	galfield6	dhsInstSim	51000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.52.sds	galfield6	dhsInstSim	52000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.53.sds	galfield6	dhsInstSim	53000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.54.sds	galfield6	dhsInstSim	54000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.55.sds	galfield6	dhsInstSim	55000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.56.sds	galfield6	dhsInstSim	56000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.57.sds	galfield6	dhsInstSim	57000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.58.sds	galfield6	dhsInstSim	58000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.59.sds	galfield6	dhsInstSim	59000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.60.sds	galfield6	dhsInstSim	60000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.61.sds	galfield6	dhsInstSim	61000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.62.sds	galfield6	dhsInstSim	62000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.63.sds	galfield6	dhsInstSim	63000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.64.sds	galfield6	dhsInstSim	64000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.65.sds	galfield6	dhsInstSim	65000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.66.sds	galfield6	dhsInstSim	66000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.67.sds	galfield6	dhsInstSim	67000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.68.sds	galfield6	dhsInstSim	68000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.69.sds	galfield6	dhsInstSim	69000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.70.sds	galfield6	dhsInstSim	70000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.71.sds	galfield6	dhsInstSim	71000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.72.sds	galfield6	dhsInstSim	72000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.73.sds	galfield6	dhsInstSim	73000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.74.sds	galfield6	dhsInstSim	74000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.75.sds	galfield6	dhsInstSim	75000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.76.sds	galfield6	dhsInstSim	76000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.77.sds	galfield6	dhsInstSim	77000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.78.sds	galfield6	dhsInstSim	78000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.79.sds	galfield6	dhsInstSim	79000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.80.sds	galfield6	dhsInstSim	80000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.81.sds	galfield6	dhsInstSim	81000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.82.sds	galfield6	dhsInstSim	82000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.83.sds	galfield6	dhsInstSim	83000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.84.sds	galfield6	dhsInstSim	84000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.85.sds	galfield6	dhsInstSim	85000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.86.sds	galfield6	dhsInstSim	86000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.87.sds	galfield6	dhsInstSim	87000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.88.sds	galfield6	dhsInstSim	88000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.89.sds	galfield6	dhsInstSim	89000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.90.sds	galfield6	dhsInstSim	90000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.91.sds	galfield6	dhsInstSim	91000  		D 	F  	F
+/scr/daxka1/gaudet/galfield.92.sds	galfield6	dhsInstSim	92000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.93.sds	galfield6	dhsInstSim	93000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.94.sds	galfield6	dhsInstSim	94000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.95.sds	galfield6	dhsInstSim	95000  		D 	F  	F 
+/scr/daxka1/gaudet/galfield.96.sds	galfield6	dhsInstSim	96000  		D 	T  	F 
+
