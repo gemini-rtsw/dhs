@@ -5,6 +5,8 @@ SUBDIRS = \
 	gen \
 	db \
 	ad \
+	mfs \
+	crc \
 	cd \
 	dvd \
 	tp \
@@ -20,6 +22,7 @@ SUBDIRS = \
 	fh \
 	arrayMath \
 	qldp \
+	fitsio \
 	dhsCommand \
 	dhsConsole \
 	dhsData \
