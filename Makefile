@@ -98,9 +98,9 @@ install_dirs: FORCE
 install: install_dirs
 	-cp -f */*.h release/include
 	-cp -uf ${SCRIPTS} release/scripts
-	#-cp -uf */*.config release/config
+	-cp -uf */*.config release/config
 	-cp -f */html/*.html release/html
-	#-cp -uf */*.sql release/sql
+	-cp -uf */*.sql release/sql
 	-cp -f */*.tcl release/tcl; (cd release/tcl; tclsh$(TCL_VERSION) ./mkIndex.tcl)
 	-cp -f */*.1 release/man/man1
 	-cp -f */*.3 release/man/man3
