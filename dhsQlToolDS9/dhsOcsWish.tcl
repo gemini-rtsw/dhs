@@ -1,4 +1,4 @@
-# $Id: dhsOcsWish.tcl,v 1.4 2004-10-12 08:55:12 brighton Exp $
+# $Id: dhsOcsWish.tcl,v 1.5 2004-10-30 19:40:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cQlServer::testCmd - Callback function for when a ping command is received.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/10/12 08:55:12  brighton
+# bug fixes in Tcl/Tk code, switched to xpatcl package (from command line xpaset)
+#
 # Revision 1.3  2004/09/14 09:07:12  brighton
 # *** empty log message ***
 #
@@ -182,10 +185,10 @@ itcl::class cQlServer {
     # Public methods and data
     #
 
-    proc		autoCut { value } { set autoCut $value }
-    proc		doAutoCut { 
-				   # XXX TODO FIXME
-			       }
+#    proc		autoCut { value } { set autoCut $value }
+#    proc		doAutoCut { 
+#				   # XXX TODO FIXME
+#			       }
     proc		autoSkip { value } { set autoSkip $value }
     proc		checkDisplay {}
     proc		datasetGet { datasetName 		\
@@ -194,7 +197,7 @@ itcl::class cQlServer {
     proc		displayLast { value } { set displayLast $value }
     proc		dsGetCallback { monitorName cmdStatus info }
     proc		frameDisplay { frame }
-    proc		getAutoCut {} { return $autoCut }
+#    proc		getAutoCut {} { return $autoCut }
     proc		getAutoSkip {} { return $autoSkip }
     proc		getDisplayLast {} { return $displayLast }
 #    proc		getImageName {} { return $imageName }
@@ -209,7 +212,7 @@ itcl::class cQlServer {
     proc		testCmd { cmdRunner directive }
 
     public common	displayLast 1
-    public common	autoCut 1
+#    public common	autoCut 1
     public common	autoSkip 1
 #    public common	imageName ".cdhsqltool1.image"
     public common	cQlServerName ".cdhsqltool1"
@@ -335,7 +338,10 @@ body	cQlServer::checkDisplay {
 	#  If the cut or pixel table windows are visible, update them.
 	#
 
-	# XXX TODO FIXME XXX
+	# XXX TODO FIXME XXX 
+	# XXX allan: Bill Joye said there was no code to update the pixel table now,
+	# XXX but he could implement it if needed.
+	#
 	#if { [ winfo exists $imageName.spectrum ] } {
 	#	$imageName.spectrum notify_cmd
 	#}
@@ -400,6 +406,9 @@ body	cQlServer::checkDisplay {
 	#
 	
 	# XXX TODO FIXME XXX
+	# XXX allan: Bill Joye said there was no code to update the pixel table now,
+	# XXX but he could implement it if needed.
+
 	#if { [ winfo exists $imageName.spectrum ] } {
 	#	$imageName.spectrum notify_cmd
 	#} 

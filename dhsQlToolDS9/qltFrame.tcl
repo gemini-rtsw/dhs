@@ -1,4 +1,4 @@
-# $Id: qltFrame.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
+# $Id: qltFrame.tcl,v 1.2 2004-10-30 19:40:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -55,6 +55,9 @@
 #			  since the last time the data processing was done.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.3  2004/08/24 13:57:13  brighton
 # Linux port (see PORTING_NOTES, especially the part at the end labeled "Other Changes")
 #
@@ -280,10 +283,10 @@ body		cQltFrame::destructor {
 # PURPOSE:
 # Return a list of strings describing all known frames
 #
-# The frames are in the order returned by the cQltFrame::frameList proceedure.
+# The frames are in the order returned by the cQltFrame::frameList procedure.
 #
 # DESCRIPTION:
-# - Use the cQltFrame::frameList proceedure to get a list of frame objects.
+# - Use the cQltFrame::frameList procedure to get a list of frame objects.
 # - For each from object, create a string describing the frame.
 #
 # EXTERNAL VARIABLES:
@@ -303,7 +306,7 @@ body		cQltFrame::allFrames {
     set returnList {}
 
     #
-    # Use the frameList proceedure to get a list of frame objects.
+    # Use the frameList procedure to get a list of frame objects.
     #
 
     foreach frame [ frameList ] {
@@ -600,6 +603,7 @@ body		cQltFrame::frameInfo {
 
 body		cQltFrame::frameList {
 } {
+
     return [ lsort [ itcl_info objects -class cQltFrame ] ]
 }
 

@@ -1,4 +1,4 @@
-# $Id: config.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
+# $Id: config.tcl,v 1.2 2004-10-30 19:40:12 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -49,6 +49,9 @@
 #		configuration to the file.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.2  2004/08/13 20:18:54  brighton
 # Linux test/port
 #
@@ -130,7 +133,7 @@ itcl::class CDhsConfigure {
     #
 
     private method	configSet {}
-    private method	setAutoCut { numTokens tokens }
+#    private method	setAutoCut { numTokens tokens }
     private method	setAutoSkip { numTokens tokens }
     private method	setCustomStream { numTokens tokens }
     private method	setDataServer { numTokens tokens }
@@ -554,7 +557,7 @@ body		CDhsConfigure::loadFile {
     }
 
     $config configGet customStream [ code $this setCustomStream ]
-    $config configGet autoCut [ code $this setAutoCut ]
+#    $config configGet autoCut [ code $this setAutoCut ]
     $config configGet displayNewest [ code $this setDisplayNewest ]
     $config configGet autoSkip [ code $this setAutoSkip ]
     $config configGet imageArithmetic [ code $this setImageArith ]
@@ -643,11 +646,11 @@ body		CDhsConfigure::save {
 	}
 
 	puts $fileId ""
-	if { [ cQlServer::getAutoCut ] } {
-	    puts $fileId "autoCut on"
-	} else {
-	    puts $fileId "autoCut off"
-	}
+#	if { [ cQlServer::getAutoCut ] } {
+#	    puts $fileId "autoCut on"
+#	} else {
+#	    puts $fileId "autoCut off"
+#	}
 
 	if { [ cQlServer::getAutoSkip ] } {
 	    puts $fileId "autoSkip on"
@@ -705,26 +708,26 @@ body		CDhsConfigure::save {
 #***********************************************************************
 #
 
-body		CDhsConfigure::setAutoCut	{
-    numTokens
-    tokens
-} {
-    if { [ lindex $tokens 0 ] == "autoCut" } {
-	if { $numTokens != 2 } {
-	    error "Configuration file error, expected 2 tokens for autoCut configuration but got $numTokens"
-	}
-
-	if { [ isTrue [ lindex $tokens 1 ] ] } {
-	    cQlServer::autoCut 1
-	} elseif { [ isFalse [ lindex $tokens 1 ] ] } {
-	    cQlServer::autoCut 0
-	} else {
-	    error "Expected boolean value for autoCut, not [ lindex $tokens 1 ]"
-	}
-    } else {
-	error "Expected configuration information for autoCut, not [ lindex $tokens 0 ]"
-    }
-}
+#body		CDhsConfigure::setAutoCut	{
+#    numTokens
+#    tokens
+#} {
+#    if { [ lindex $tokens 0 ] == "autoCut" } {
+#	if { $numTokens != 2 } {
+#	    error "Configuration file error, expected 2 tokens for autoCut configuration but got $numTokens"
+#	}
+#
+#	if { [ isTrue [ lindex $tokens 1 ] ] } {
+#	    cQlServer::autoCut 1
+#	} elseif { [ isFalse [ lindex $tokens 1 ] ] } {
+#	    cQlServer::autoCut 0
+#	} else {
+#	    error "Expected boolean value for autoCut, not [ lindex $tokens 1 ]"
+#	}
+#    } else {
+#	error "Expected configuration information for autoCut, not [ lindex $tokens 0 ]"
+#    }
+#}
 
 #
 #***********************************************************************

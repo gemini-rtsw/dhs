@@ -1,4 +1,4 @@
-# $Id: dhsQltCtl.tcl,v 1.2 2004-10-12 08:55:12 brighton Exp $
+# $Id: dhsQltCtl.tcl,v 1.3 2004-10-30 19:40:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -120,6 +120,9 @@
 #			- Return the current list of selected streams.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/10/12 08:55:12  brighton
+# bug fixes in Tcl/Tk code, switched to xpatcl package (from command line xpaset)
+#
 # Revision 1.1  2004/08/30 09:15:32  brighton
 # Started testing DS9 support
 #
@@ -1763,14 +1766,13 @@ body	CDhsQltCtl::constructor {
     $this component dataset configure -underline 0
 
     add_short_help $itk_interior.menubar.dataset 			\
-	    {Dataset menu: AutoCut, Display Newest, AutoSkip, Save Display, Display Dataset}
+	    {Dataset menu: Display Newest, AutoSkip, Save Display, Display Dataset}
 
-    # XXX allan FIXME use XPA/ds9 XXX
-    add_menuitem $datasetMenu checkbutton "AutoCut" 			\
-	    {Automatically execute autocut on display update}		\
-	    -command { cQlServer::doAutoCut }				\
-	    -underline 4						\
-	    -variable ::cQlServer::autoCut 
+#    add_menuitem $datasetMenu checkbutton "AutoCut" 			\
+#	    {Automatically execute autocut on display update}		\
+#	    -command { cQlServer::doAutoCut }				\
+#	    -underline 4						\
+#	    -variable ::cQlServer::autoCut 
 
     add_menuitem $datasetMenu checkbutton "Display Newest"		\
 	    {Automatically replace displayed frame with newest frame}	\

@@ -2,7 +2,7 @@
 
 NAME = qldp
 SOURCES = image.C qldp.C
-#SHARED_LIBS = -ldhsGen
+#SHARED_LIBS = -ldhsGen  $(SKYCAT_LDLIBS)
 SHARED_LIBS = $(LOCAL_LIBS)
 INSTALL_TARGET = local_install
 
