@@ -32,6 +32,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.1  2004/08/24 13:57:13  brighton
 # Linux port (see PORTING_NOTES, especially the part at the end labeled "Other Changes")
 #
@@ -79,6 +82,12 @@ package require BLT
 namespace import -force itcl::*
 namespace import -force itk::*
 namespace import -force iwidgets::*
+
+#if {[catch {package require tclxpa 2.1} msg]} {
+#    puts "Error: Could not load XPA Tcl package"
+#} else {
+#    puts "Loaded XPA Tcl package"
+#}
 
 #
 # the environment variable $SKYCAT_LIBRARY should point to the directory

@@ -1,4 +1,4 @@
-# $Id: dhsOcsWish.tcl,v 1.1 2004-08-30 09:15:32 brighton Exp $
+# $Id: dhsOcsWish.tcl,v 1.2 2004-09-13 10:18:01 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cQlServer::testCmd - Callback function for when a ping command is received.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/08/30 09:15:32  brighton
+# Started testing DS9 support
+#
 # Revision 1.3  2004/08/24 13:57:13  brighton
 # Linux port (see PORTING_NOTES, especially the part at the end labeled "Other Changes")
 #
@@ -303,12 +306,9 @@ body	cQlServer::checkDisplay {
 	# Update the image.
 	#
 
-	#$image mmap update
-	puts "XXX xpaset mmap update.... XXX"
-	# XXX temp XXXX
-	exec cat $newHeaderFile $newDataFile | xpaset ds9 fits
-	# XXX temp XXXX
-
+	# XXX replace with tcl call to xpaset XXX
+	exec xpaset -p ds9 update
+	
 	#
 	#  If the cut or pixel table windows are visible, update them.
 	#
@@ -358,12 +358,8 @@ body	cQlServer::checkDisplay {
 	#  Display the file containing the frame data.
 	#
 
-	#$image mmap set $newDataFile 0 0 $newHeaderFile 0 0
-	puts "XXX xpaset mmap set.... XXX"
-	# XXX temp XXXX
-	exec cat $newHeaderFile $newDataFile | xpaset ds9 fits
-	# XXX temp XXXX
-
+	# XXX replace with tcl call to xpaset XXX
+	exec xpaset -p ds9 file sfits $newHeaderFile $newDataFile
 
 	#
 	#  If the cut or pixel table windows are visible, update them.
