@@ -11,16 +11,17 @@ This package requires the following external packages:
 
  dhsClient (same version as this package)
 
- DRAMA (1.4.2)
+ DRAMA (1.5.0)
 	[ftp://ftp.aao.gov.au/pub/drama/]
+ (*Note: I modified the makefiles to produce shared libs.)
 
- CFITSIO (2.430)
+ CFITSIO (2.470)
    	[http://heasarc.gsfc.nasa.gov/docs/software/fitsio/fitsio.html]
 
- SYBASE
+ SYBASE (optional?)
  	[http://www.sybase.com/]
   
- EPICS (3.14.4)
+ EPICS (3.14.5)
  	[http://www.epics.org/] 
 
  Skycat (2.7.3)
@@ -45,20 +46,4 @@ This will create a subdirectory of this directory called "release"
 that contains the installed libraries, include files and test
 programs.
 
-
-
-Temporary Note on IMP bug fix (Oct 14, 2002)
-=============================================
-
-If using drama-1.4.2/imp-1.6.1, you need to apply this fix
-to drama-v1.4.2/drama_source/imp/accconnect.c:
-
-Replace line (124):
-    AccMessage.Task = *TaskID;
-
-with:
-   AccMessage.Task.Machine = TaskID->Machine;
-   AccMessage.Task.Pid = htonl(TaskID->Pid);
-
-Newer versions of IMP should already contain this fix.
 

@@ -101,3 +101,6 @@ The following changes were not required for compiling, but for running:
 * Replaced the mixed sh/tcl script dhsQlTool-backend with two scripts:
   dhsQlTool (sh) and dhsQlTool-backend.tcl (tcl), since the original
   produced some errors on exit under Linux.
+
+* In the dhsClient package: added htonl() wrapper on IP address in 
+  dhs/connect.c, since the bytes were reversed.
