@@ -1,4 +1,4 @@
-# $Id: qltFrame.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
+# $Id: qltFrame.tcl,v 1.3 2004-08-24 13:57:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -55,6 +55,9 @@
 #			  since the last time the data processing was done.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/13 20:18:54  brighton
+# Linux test/port
+#
 # Revision 1.1.1.1  2002/11/24 20:29:53  brighton
 # Imported sources
 #
@@ -426,7 +429,7 @@ body	cQltFrame::checkFrame {
     # Look for an existing object for this frame.
     #
 
-    set frame [ info objects $objectName -class cQltFrame ] 
+    set frame [ itcl_info objects $objectName -class cQltFrame ] 
 
 
     #
@@ -500,7 +503,7 @@ body		cQltFrame::deleteDs {
     # Loop through all known frames.
     #
 
-    foreach frame [ info objects -class cQltFrame ] {
+    foreach frame [ itcl_info objects -class cQltFrame ] {
 	#
 	# If the dataset name of the frame matches the dataset being
 	# deleted, delete the frame.
@@ -594,7 +597,7 @@ body		cQltFrame::frameInfo {
 
 body		cQltFrame::frameList {
 } {
-    return [ lsort [ info objects -class cQltFrame ] ]
+    return [ lsort [ itcl_info objects -class cQltFrame ] ]
 }
 
 #

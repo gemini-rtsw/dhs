@@ -32,6 +32,9 @@
 #
 #INDENT-OFF*
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/13 20:18:54  brighton
+# Linux test/port
+#
 # Revision 1.1.1.1  2002/11/24 20:29:56  brighton
 # Imported sources
 #
@@ -44,69 +47,14 @@
 #***********************************************************************
 #
 
-
-#
-# This file is both a shell script and a tcl script. When executed as
-# a shell script, only the code in the "set X ..." list is executed, 
-# and the shell is terminated when the "exit" is seen. When executed
-# as a tcl script, the "set X ..." is seen as a list assignment, and
-# combined with the unset X is effectivly a no-op.
-#
-# The effect of shell code is to set up the QLT_TMP_DIR variable to
-# point to the temporary directory for the QLT, to execute this same
-# file as a tcl script, and to remove the temporary directory and its
-# contents after the script exits.
-#
-
-set X { 								\
-    "$0" "$@"; 								\
-    QLT_TMP_DIR=/tmp/dhsQlTool.$$;					\
-    export QLT_TMP_DIR;							\
-    mkdir -p $QLT_TMP_DIR;						\
-    trap "rm -rf $QLT_TMP_DIR; exit"  0 INT;				\
-    shift 2; 								\
-    export GEMINI_BASE;							\
-    export OCS_BASE;							\
-    export DHS_BASE;							\
-    GEMINI_BASE=${GEMINI_BASE:=/gemini};				\
-    OCS_BASE=${OCS_BASE:=$GEMINI_BASE/ocs};				\
-    DHS_BASE=${DHS_BASE:=$GEMINI_BASE/dhs};				\
-    echo $# ;	                                                        \
-    if [ $# -ge 2 ] ; then 						\
-	DISPLAY=$2 ;							\
-	export DISPLAY ; 						\
-    fi;									\
-    if [ $# -ge 3 ] ; then						\
-	CDHSQLTOOL_PLUGIN=$3 ; 						\
-	export CDHSQLTOOL_PLUGIN ; 					\
-    fi;									\
-    echo "display is now $DISPLAY"; 					\
-    echo "QlPlugin is now $CDHSQLTOOL_PLUGIN"; 				\
-    echo ocswish "$1"; 			                            	\
-    ocswish "$1"; 			                        	\
-exit 0					               			\
-}; unset X
-
-
-#
-# __source_path is the directory from which this file was loaded. Other
-# Quick Look Tool source files will be loaded from a path relative to
-# this directory.
-#
-
-set __source $argv0
-set __source_path [ file dirname $argv0 ]
-if { $__source_path == "." } {
-    set __source_path "[ pwd ]"
-    set __source "[ pwd ]/$__source"
-} elseif { [ string index $__source_path 0 ] != "/" } {
-    set __source_path "[ pwd ]/$__source_path"
-    set __source "[ pwd ]/$__source"
-}
-set _qltHelpDir "$__source_path/../html"
-
-set dhs_library [file dirname $__source_path]/tcl
+set dhs_base $env(DHS_BASE)
+set _qltHelpDir $dhs_base/html
+set dhs_library $dhs_base/tcl
 lappend auto_path $dhs_library
+set debug 0
+
+# XXX allan: was in TCLLIBPATH, for gdb debugging XXX
+#lappend auto_path $env(HLPG_LIB_DIR) $env(SKYCAT_INSTALL)/lib/skycat
 
 #
 # Set the application name and a name unique to this application. Note
@@ -121,6 +69,7 @@ package require Tclx
 package require Itcl
 package require Itk
 package require Iwidgets
+package require BLT
 
 namespace import -force itcl::*
 namespace import -force itk::*
@@ -137,9 +86,10 @@ if {[info exists env(SKYCAT_LIBRARY)]} {
     set skycat_library ../library
 }
 
-
-set ocsBase $env(OCS_BASE)
-set dhsBase $env(DHS_BASE)
+if {[catch {package require Skycat} msg]} {
+	puts "error loading Skycat package $msg"
+	dhsExit 1
+}
 
 
 #
@@ -165,12 +115,6 @@ if { [ info commands dhsExit ] != "" } {
     }
 }
 
-
-if {[catch {package require Skycat} msg]} {
-	puts "error loading Skycat package $msg"
-	dhsExit 1
-}
-
 #
 # print errors also on stderr
 #
@@ -182,9 +126,7 @@ utilPrintErrors
 #  Source the skycat code.
 #
 
-#source $ocsBase/scripts/eso/skycat/SkyCat.tcl
 source $env(SKYCAT_LIBRARY)/SkyCat.tcl
-
 
 #
 # Get the data processing package.
@@ -200,7 +142,7 @@ if {[catch {package require qldp} msg]} {
 # Source the DHS Quick Look Tool code.
 #
 
-source $__source_path/../tcl/dhsQlTool.tcl
+source $dhs_library/dhsQlTool.tcl
 
 
 #
@@ -225,5 +167,4 @@ if {[info exists env(QLT_TMP_DIR)]} {
 # Start the dhsQlTool widget.
 #
 
-puts "XXX auto_path = $auto_path"
 util::TopLevelWidget::start CDhsQlTool 

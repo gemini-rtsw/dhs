@@ -1,4 +1,4 @@
-static char rcsid[] = "$Id: qlsDataset.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
+static char rcsid[] = "$Id: qlsDataset.C,v 1.3 2004-08-24 13:57:13 brighton Exp $";
 //
 //***********************************************************************
 //***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -47,6 +47,9 @@ static char rcsid[] = "$Id: qlsDataset.C,v 1.2 2002-11-27 17:15:08 brighton Exp 
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/27 17:15:08  brighton
+// ported to gcc-3.2.1/linux
+//
 // Revision 1.1.1.1  2002/11/24 20:29:06  brighton
 // Imported sources
 //
@@ -540,7 +543,7 @@ void		cQlsDataset::chunkMerge
 {
     int		cfStatus( 0 );	// cfitsio status value.
     fitsfile	*fptr;		// cfitsio file pointer.
-    bool	hasExtend;	// True if the extend keyword is true.
+    int	        hasExtend;	// True if the extend keyword is true. (XXX allan: changed from bool, see cfitsio call)
     int		hduType;	// Type of the HDU read.
     int		i;
     int		isAChunk;	// True if the dataset is a chunk.

@@ -1,4 +1,4 @@
-# $Id: help.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
+# $Id: help.tcl,v 1.3 2004-08-24 13:57:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cHelp		: Lowercased access method to the CHelp class.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/13 20:18:54  brighton
+# Linux test/port
+#
 # Revision 1.1.1.1  2002/11/24 20:29:50  brighton
 # Imported sources
 #
@@ -163,6 +166,9 @@ itcl::class CHelp {
     private common psId ""
     private common htmlDir ""
     private common objectList {}
+
+    # XXX allan: added webBrowser variable, instead of hard coded "netscape"
+    private common webBrowser "mozilla"
 };
 
 #
@@ -264,10 +270,10 @@ body CHelp::constructor {
 
     switch -exact -- "$start" {
 	case "iconic" {
-	    set psId [ exec netscape $url -iconic & ]
+	    set psId [ exec $webBrowser $url -iconic & ]
 	}
 	case "viewable" {
-	    set psId [ exec netscape $url & ]
+	    set psId [ exec $webBrowser $url & ]
 	}
 	default {
 	    #
@@ -375,7 +381,7 @@ body	CHelp::close {
 	if { [ catch {exec kill -15 $psId} msg ] } {
 	}
     } else {
-	error "Netscape is not running."
+	error "$webBrowser is not running."
     }
 }
 
@@ -427,9 +433,9 @@ body	CHelp::openUrl {
     }
 
     if { [ catch checkPs msg ] } {
-	set psId [ exec netscape $page & ]
+	set psId [ exec $webBrowser $page & ]
     } else {
-	after idle "exec netscape -remote openUrl($page)"
+	after idle "exec $webBrowser -remote openUrl($page)"
     }
 }
 
@@ -489,7 +495,7 @@ body 	CHelp::checkPs {
     } else {
 	set processInfo  [ exec ps auxcwwg $psId ]
 	if { [ string first $psId $processInfo ] == -1 } {
-	    error "Netscape process not found"
+	    error "$webBrowser process not found"
 	}
     }
     return $psId

@@ -1,4 +1,4 @@
-# $Id: dhsQltCtl.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
+# $Id: dhsQltCtl.tcl,v 1.3 2004-08-24 13:57:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -120,6 +120,9 @@
 #			- Return the current list of selected streams.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/13 20:18:54  brighton
+# Linux test/port
+#
 # Revision 1.1.1.1  2002/11/24 20:29:48  brighton
 # Imported sources
 #
@@ -358,7 +361,7 @@ itcl::class CDhsQltCtl {
 
     			constructor { args } {}
     			destructor { 
-			   if { [ info objects ::_qltHelp ] != "" } {
+			   if { [ itcl_info objects ::_qltHelp ] != "" } {
 			       delete object _qltHelp
 			   }
 			    exit 
@@ -1176,7 +1179,7 @@ body	CDhsImageArithmetic::constructor {
 
     eval itk_initialize $args
 
-    bind $itk_component(hull) <Button-3> "_qltHelp openUrl qltImageArithmetic.html"
+    bind $itk_component(hull) <Button-3> "_qltHelp openUrl qltImageArith.html"
 
     #
     # Add the dataset name entry box.
@@ -1217,7 +1220,7 @@ body	CDhsImageArithmetic::constructor {
     $itk_interior.bbox add cancel -text "Cancel" 			\
 	    -command [ code wm withdraw $itk_interior ]
     $itk_interior.bbox add help -text "Help" 				\
-	    -command "_qltHelp openUrl qltImageArithmetic.html"
+	    -command "_qltHelp openUrl qltImageArith.html"
     pack $itk_interior.bbox -side bottom -expand yes -fill both
 
     $parent add_short_help [ $itk_interior.bbox component ok ]	\
@@ -1767,7 +1770,7 @@ body	CDhsQltCtl::constructor {
 
     add_menuitem $datasetMenu checkbutton "AutoCut" 			\
 	    {Automatically execute autocut on display update}		\
-	    -command { [ [ winfo command [ cQlServer::getImageName ] ] 	\
+	    -command { [ [ cQlServer::getImageName ] 	\
 			 get_image ] autocut }				\
 	    -underline 4						\
 	    -variable ::cQlServer::autoCut 
@@ -2037,7 +2040,7 @@ body		CDhsQltCtl::displaySave {
 	# Find the rtdimage object and execute the dump method.
 	#
 
-	[ [ winfo command [ cQlServer::getImageName ] ] get_image ]	\
+	[ [ cQlServer::getImageName ] get_image ]	\
 		dump $tmpDir/$dsName-QL.fits
 	
 

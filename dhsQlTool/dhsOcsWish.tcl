@@ -1,4 +1,4 @@
-# $Id: dhsOcsWish.tcl,v 1.2 2004-08-13 20:18:54 brighton Exp $
+# $Id: dhsOcsWish.tcl,v 1.3 2004-08-24 13:57:13 brighton Exp $
 #
 #***********************************************************************
 #***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
@@ -53,6 +53,9 @@
 # cQlServer::testCmd - Callback function for when a ping command is received.
 #
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/13 20:18:54  brighton
+# Linux test/port
+#
 # Revision 1.1.1.1  2002/11/24 20:29:40  brighton
 # Imported sources
 #
@@ -277,7 +280,7 @@ body	cQlServer::checkDisplay {
     set newDataFile [ $frame cget -qfDataFName ]
     set frameId [ $frame cget -qfFrameId ]
     set datasetName [ $frame cget -qfDatasetName ]
-    set image [ [ winfo command $imageName ] get_image ]
+    set image [ $imageName get_image ]
 
     if { $frame == $qlsDisplayFrame } {
 	#
@@ -754,7 +757,10 @@ body	cQlServer::initialize {
     # master QLS.
     #
 
-    set qlsDestName [exec hostname]:$qlsServerName.[ exec hostid ]
+    # XXX allan: On linux, hostid has a "0x" prefix, which needs to be removed!
+    regsub 0x [ exec hostid ] {} hostid
+
+    set qlsDestName [exec hostname]:$qlsServerName.$hostid
     cs qlsClientStream set destName value $qlsDestName
 
     if { [ catch { cs qlsClientStream post} ] != 0 } {
@@ -871,7 +877,7 @@ body	cQlServer::qltNotifyCmd {
     global errorInfo errorCode
 
 
-    set image [ [ winfo command $imageName ] get_image ]
+    set image [ $imageName get_image ]
 
     #
     # This is done in a catch because OCS wish doesn't display errors
