@@ -103,21 +103,29 @@ AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
 dnl Sybase settings
 if test "$SYBASE" = "" ; then
     SYBASE=/opt/sybase-12.5/OCS-12_5
-    test ! -d $SYBASE && SYBASE=/ocs/software/dev/packages/sybase/M1000
+    test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
 fi
 AC_SUBST(SYBASE)
+
+dnl Tcl settings
+if test "$TCLTK_ROOT" = "" ; then
+    TCLTK_ROOT=/usr
+    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/usr/local
+    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.3
+fi
+AC_SUBST(TCLTK_ROOT)
 
 dnl CFITSIO settings
 if test "$CFITSIO" = "" ; then
     CFITSIO=`dirname $PWD`/cfitsio
-    test ! -d $CFITSIO && CFITSIO=/ocs/software/dev/packages/cfitsio
+    test -d $CFITSIO || CFITSIO=/ocs/software/dev/packages/cfitsio
 fi
 AC_SUBST(CFITSIO)
 
 dnl EPICS settings
 if test "$EPICS" = "" ; then
     EPICS=`dirname $PWD`/epics/base
-    test ! -d $EPICS && EPICS=/ocs/software/dev/packages/epics/epics/base
+    test -d $EPICS || EPICS=/ocs/software/dev/packages/epics/epics/base
 fi
 AC_SUBST(EPICS)
 

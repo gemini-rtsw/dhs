@@ -32,6 +32,11 @@ DRAMA_INCLUDES = \
 DRAMA_LDLIBS = -L${IMP_DIR}/${DRAMA_OS} -limp -L${SDS_DIR}/${DRAMA_OS} -lsds -L${ERS_DIR}/${DRAMA_OS} -lers
 
 
+# Root dir for Tcl include files and libs
+TCLTK_ROOT = @TCLTK_ROOT@
+TCLTK_INCLUDES = -I$(TCLTK_ROOT)/include
+#TCLTK_LDLIBS = 
+
 # Root dir for Sybase include files and libs
 SYBASE = @SYBASE@
 SYBASE_INCLUDES = -I$(SYBASE)/include
@@ -63,6 +68,7 @@ INCLUDES = -I. \
 	-I$(TOP)/sf \
 	-I$(TOP)/tp \
 	${DRAMA_INCLUDES} \
+	${TCLTK_INCLUDES} \
 	${SYBASE_INCLUDES} \
 	${EPICS_INCLUDES} \
 	${CFITSIO_INCLUDES}
