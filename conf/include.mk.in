@@ -4,6 +4,9 @@
 # Root DHS source dir
 TOP = ..
 
+# Root dhsClient source dir
+DHS_CLIENT_TOP = $(TOP)/../dhsClient
+
 # Release install directory
 RELEASE_DIR = $(TOP)/release
 
@@ -78,13 +81,13 @@ INCLUDES = -I. \
 	-I$(TOP)/cd \
 	-I$(TOP)/db \
 	-I$(TOP)/dd \
-	-I$(TOP)/dhs \
 	-I$(TOP)/dvd \
-	-I$(TOP)/gen \
 	-I$(TOP)/mfs \
 	-I$(TOP)/press \
 	-I$(TOP)/sf \
 	-I$(TOP)/tp \
+	-I$(DHS_CLIENT_TOP)/dhs \
+	-I$(DHS_CLIENT_TOP)/gen \
 	${DRAMA_INCLUDES} \
 	${SKYCAT_INCLUDES} \
 	${TCLTK_INCLUDES} \
@@ -123,14 +126,14 @@ LOCAL_LIBS = \
 	$(TOP)/cd/libcd.a \
 	$(TOP)/db/libdb.a \
 	$(TOP)/dd/libdd.a \
-	$(TOP)/dhs/libdhs.a \
 	$(TOP)/dvd/libdvd.a \
-	$(TOP)/gen/libgen.a \
 	$(TOP)/mfs/libmfs.a \
 	$(TOP)/press/libpress.a \
 	$(TOP)/sf/libsf.a \
 	$(TOP)/tp/libtp.a \
 	$(TOP)/crc/libcrc.a \
+	$(DHS_CLIENT_TOP)/dhs/libdhs.a \
+	$(DHS_CLIENT_TOP)/gen/libgen.a
 
 # LD flags for local libs
 LOCAL_LDFLAGS = \
@@ -148,14 +151,14 @@ LOCAL_LDFLAGS = \
 	-L$(TOP)/cd \
 	-L$(TOP)/db \
 	-L$(TOP)/dd \
-	-L$(TOP)/dhs \
 	-L$(TOP)/dvd \
-	-L$(TOP)/gen \
 	-L$(TOP)/mfs \
 	-L$(TOP)/press \
 	-L$(TOP)/sf \
 	-L$(TOP)/tp \
 	-L$(TOP)/crc \
+	-L$(DHS_CLIENT_TOP)/dhs \
+	-L$(DHS_CLIENT_TOP)/gen
 
 
 # Linker options

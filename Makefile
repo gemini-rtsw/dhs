@@ -5,7 +5,6 @@ include conf/include.mk
 
 # make subdirectories
 SUBDIRS = \
-	gen \
 	db \
 	ad \
 	mfs \
@@ -21,7 +20,6 @@ SUBDIRS = \
 	dhsSta \
 	dd \
 	sf \
-	dhs \
 	fh \
 	arrayMath \
 	qldp \
@@ -37,10 +35,8 @@ SUBDIRS = \
 	dhsStorage \
 	dhs++Client \
 	dhs++Server \
-	dhsClient \
 	dhsCmdSender \
 	dhsInstSim \
-	dhsServer \
 	dhsSim4Data \
 	dhsTestCmdr \
 	fits2sds \

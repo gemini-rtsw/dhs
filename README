@@ -9,6 +9,8 @@ Building
 
 This package requires the following external packages:
 
+ dhsClient (same version as this package)
+
  DRAMA (1.4.2)
 	[ftp://ftp.aao.gov.au/pub/drama/]
 
