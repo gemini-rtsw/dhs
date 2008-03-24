@@ -265,6 +265,8 @@ bool		cCmdDhs::simulate
 //***********************************************************************
 //
 
+class cCmdCommandInfo; //friend
+
 class 	cCmdServerCmd: public cDhsServerCommand
 {
     friend class cCmdCommandInfo;
