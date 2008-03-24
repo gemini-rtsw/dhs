@@ -194,8 +194,8 @@ class 	cListOf
 			}
     protected:
     private:
-			cListOf( cListOf & ) { return *this; };
-	cListOf		&operator=( cListOf & ) { return *this; };
+	cListOf( cListOf & ) {}; // disable copy constructor
+   cListOf		&operator=( cListOf & ) { return *this; };
 	static void	*deleteThread( void * );
 	static cUserClass	
 			*find( cIndex, tLockFn, bool );
