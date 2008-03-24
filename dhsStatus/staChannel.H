@@ -158,6 +158,7 @@ class	cStaMerger;
 
 class 	cStaChannel
 {
+    public:
     class	cKey;
 
     friend class cStaSubscribe;
