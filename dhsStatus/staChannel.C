@@ -1288,10 +1288,10 @@ void		cStaChannel::init
     cStaStat::resetHealth( status );
     switch ( status.debugLevel() )
     {
-	case	status.DEBUG_MIN:
+	case	cStaStat::DEBUG_MIN:
 	    cStaStat::update( "debug", "MIN", status );
 	    break;
-	case	status.DEBUG_FULL:
+	case	cStaStat::DEBUG_FULL:
 	    cStaStat::update( "debug", "FULL", status );
 	    break;
 	default:
