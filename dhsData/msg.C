@@ -113,7 +113,7 @@ static char rcsid[] = "$Id: msg.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 	msgText( cDtsStatus,  S_ARC_REQUEST, P_LOG,
 	    "Received archive notify command from `%s` on `%s', segDir: %s, completed with status `%s'." );
 	msgText( cDtsStatus,  S_BAD_CONNECTION, P_LOG,
-	    "Unathorized connection request, disconnecting `%s' on `%s'." );
+	    "Unauthorized connection request, disconnecting `%s' on `%s'." );
 	msgText( cDtsStatus,  S_BAD_TYPE, P_LOG,
 	    "Some/all data received for dataset:%s with diff types: old %c:%c." );
 	msgText( cDtsStatus,  S_CMD_RECEIVED, P_DEBUG_MIN | P_LOG, 
