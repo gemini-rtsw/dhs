@@ -21,7 +21,7 @@ install: $(INSTALL_TARGET)
 	cp $(PROGRAM) $(RELEASE_DIR)/bin
 
 clean:
-	rm -f $(OBJECTS) $(PROGRAM)
+	rm -f $(OBJECTS) $(PROGRAM) $(SOURCES:.C=.d)
 
 etags:
 	etags ${ETAGS_SOURCES}
@@ -30,4 +30,6 @@ etags:
 %.d: %.C
 	set -e; $(CXX) -MM $(CXXFLAGS) $< | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; [ -s $@ ] || rm -f $@
 
+ifeq (, $(findstring "clean", "$(MAKECMDGOALS)"))
 -include $(SOURCES:.C=.d)
+endif

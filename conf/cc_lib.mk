@@ -24,7 +24,7 @@ install: $(INSTALL_TARGET)
 	cp $(LIBRARY) $(SHARED_LIBRARY) $(RELEASE_DIR)/lib
 
 clean:
-	rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY)
+	rm -f $(OBJECTS) $(LIBRARY) $(SHARED_LIBRARY) $(SOURCES:.c=.d)
 
 etags:
 	etags ${ETAGS_SOURCES}
@@ -33,4 +33,6 @@ etags:
 %.d: %.c
 	set -e; $(CC) -MM $(CFLAGS) $< | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; [ -s $@ ] || rm -f $@
 
+ifeq (, $(findstring "clean", "$(MAKECMDGOALS)"))
 -include $(SOURCES:.c=.d)
+endif

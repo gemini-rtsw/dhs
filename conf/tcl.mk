@@ -7,7 +7,7 @@
 
 include ../conf/include.mk
 
-all clean:
+all:
 
 install: index $(INSTALL_TARGET)
 	d=${RELEASE_DIR}/lib/${NAME}; \
@@ -20,5 +20,7 @@ install: index $(INSTALL_TARGET)
 index tclIndex: FORCE
 	tclsh$(TCL_VERSION) ./mkIndex.tcl
 
+clean: FORCE
+	rm -f tclIndex
 
 FORCE:
