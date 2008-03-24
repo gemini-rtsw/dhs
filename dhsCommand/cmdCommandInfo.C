@@ -223,8 +223,6 @@ boolean		cCmdCommandInfo::appliesToCmd
     boolean	ret;
     char	**subsystemList;
     bool	noList;
-    cDhsSubsystem::iterator
-    		j;
     cCmdSubsystem
     		*pSubsystem;
 
@@ -288,7 +286,9 @@ boolean		cCmdCommandInfo::appliesToCmd
 	//
 
 	ret = FALSE;
-	for ( j = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); j != cciSubsystemList.end(); j++ )
+	for ( std::vector<cDhsSubsystem *>::const_iterator j = cciSubsystemList.begin(); 
+      j != cciSubsystemList.end(); 
+         j++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *j;
 
@@ -1275,8 +1275,6 @@ void		cCmdCommandInfo::reSend
 {
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
     bool	error = false;
-    cDhsSubsystem::iterator
-    		i;
     cCmdSubsystem
     		*pSubsystem;
     cDhsAttrib	subsystemList;
@@ -1318,7 +1316,7 @@ void		cCmdCommandInfo::reSend
 	// sending the command to each subsystem.
 	//
 
-	for ( i = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
+	for ( std::vector<cDhsSubsystem *>::const_iterator i = cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *i;
 
@@ -1470,8 +1468,6 @@ void	cCmdCommandInfo::riReSend
 {
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
     bool	error = false;
-    cDhsSubsystem::iterator
-    		i;
     cCmdSubsystem
     		*pSubsystem;
     cDhsAttrib	subsystemList;
@@ -1516,7 +1512,7 @@ void	cCmdCommandInfo::riReSend
 	//
 
 	cciMutex.lock();
-	for ( i = (cDhsSubsystem::iterator&)cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
+	for ( std::vector<cDhsSubsystem *>::const_iterator i = cciSubsystemList.begin(); i != cciSubsystemList.end(); i++ )
 	{
 	    pSubsystem = (cCmdSubsystem *) *i;
 	    if ( ! ( *pSubsystem == PREFIX ) )
