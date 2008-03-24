@@ -214,7 +214,7 @@ int		cDhsTmpDir::rmPath
 	pDirEnt = (struct dirent *) malloc( sizeof( struct dirent ) + 
 		pathconf( path, _PC_NAME_MAX ) + 1 );
 	struct dirent* pResult;
-	while ( readdir_r( pDir, pDirEnt, &pResult) != 0 )
+	while ( readdir_r( pDir, pDirEnt, &pResult) == 0 && pResult)
 	{
 	    if ( strcmp( pDirEnt->d_name, "." ) != 0 && 
 		    strcmp( pDirEnt->d_name, ".." ) != 0 )
