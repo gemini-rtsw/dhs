@@ -45,6 +45,7 @@
 #include <memory.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 #include "gen_types.h"
 #include "gen_msg.h"
