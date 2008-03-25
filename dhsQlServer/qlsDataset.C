@@ -562,16 +562,15 @@ void		cQlsDataset::chunkMerge
 
     fitsMutex.lock();
 
-    /* XXX allan: 11/19/02: outdated code for cfitsio2430
+#if defined(CFITSIO_OUTDATED)
     checkFitsio( fits_set_mem_buff( &fptr, &pBuffer, &bufLen, 0, NULL, 
 	    &cfStatus ), cfStatus, status, fitsMutex.unlock(); return );
     checkFitsio( fits_open_file( &fptr, "", READONLY, &cfStatus ), 
 	    cfStatus, status, fitsMutex.unlock(); return );
-    XXX */
-
-    // XXX allan: updated version for for cfitsio2430
-    checkFitsio( ffomem( &fptr, "", READONLY, &pBuffer, (size_t*)&bufLen, 2880, realloc, &cfStatus ), 
-	    cfStatus, status, fitsMutex.unlock(); return );
+#else
+   checkFitsio( ffomem( &fptr, "", READONLY, &pBuffer, (size_t*)&bufLen, 2880, realloc, &cfStatus ), 
+      cfStatus, status, fitsMutex.unlock(); return );
+#endif   
 
     fits_read_key( fptr, TLOGICAL, "EXTEND", &hasExtend, NULL, &cfStatus );
     if ( cfStatus == KEY_NO_EXIST )

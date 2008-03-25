@@ -946,8 +946,9 @@ void		cHdrParser::parseHeader
     //  Do the memory buffer thing, so that now we can pretend its a file.  
     //
 
-    /* XXX allan: 11/19/02: outdated code for cfitsio2430
-    fits_set_mem_buff( &fp, &buffPtr,(unsigned int*) &buffSize, 
+
+#if defined(CFITSIO_OUTDATED)
+     fits_set_mem_buff( &fp, &buffPtr,(unsigned int*) &buffSize, 
 	    2880, realloc, &fitsStatus );
     if ( fitsStatus != USE_MEM_BUFF )
     {
@@ -955,7 +956,6 @@ void		cHdrParser::parseHeader
 	cdmMutexHdr.unlock();
 	return;
     }
-
 
     // The file name must be an empty string, if it isn't cfitsio 
     // assumes that file exists on disk and tries to read but this 
@@ -968,10 +968,7 @@ void		cHdrParser::parseHeader
 	cdmMutexHdr.unlock();
 	return;
     }
-
-    XXX */
-
-    // XXX allan: updated version for for cfitsio2430
+#else
     ffomem( &fp, "", READONLY, &buffPtr,(size_t*) &buffSize,
 	    2880, realloc, &fitsStatus);
     if ( fitsStatus != 0 )
@@ -980,6 +977,7 @@ void		cHdrParser::parseHeader
 	cdmMutexHdr.unlock();
 	return;
     }
+#endif   
 
 
     //

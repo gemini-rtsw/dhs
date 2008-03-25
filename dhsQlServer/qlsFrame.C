@@ -732,7 +732,12 @@ void		cQlsFrame::dataCopy
     // supplied by the cfitsio library.
     //
 
-    fits_get_hduaddr( fptr, &hduAdr, &nextHduAdr, &dataEnd, &cfStatus ); // XXX allan: added last 2 args
+#if defined(CFITSIO_OUTDATED)
+    fits_get_hduaddr( fptr, &hduAdr, &nextHduAdr );
+#else
+    fits_get_hduaddr( fptr, &hduAdr, &nextHduAdr, &dataEnd, &cfStatus );
+#endif   
+    
     fits_get_hdrspace( fptr, &keysExist, &moreKeys, &cfStatus );
     dataStart = hduAdr + 2880 * ( ( moreKeys + keysExist + 35 ) / 36 );
 
