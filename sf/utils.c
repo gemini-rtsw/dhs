@@ -497,13 +497,14 @@ long sfFitsFileSize
     SF_STATUS	*sfStatus	/* (mod) SF library status.		*/
 )
 {
-    long	curHdu;		/* Address of the current header unit.	*/
     int		curPos;		/* Current position of the FITS file.	*/
     FITS_STATUS	fitsStatus;	/* Cfitsio library status.		*/
     int		hdutype;	/* Type of the current header unit.	*/
     int		i;
-    long	nextHdu;	/* Address of the next header unit.	*/
     long	size;		/* Size of the FITS file.		*/
+    long	startHdu;	/* Address of the current header unit.	*/
+    long	startData;	/* Address of the start of data.	*/
+	 long endData;	/* Address of the start of data.	*/
 
     fnEntry( "sfFitsFileSize", *sfStatus );
     statCheck( *sfStatus, SF_NULL_SIZE );
@@ -527,16 +528,22 @@ long sfFitsFileSize
     ffmahd( fptr, 1, &hdutype, &fitsStatus );
     for( i = 1; fitsStatus == FITS_S_SUCCESS; i++ )
     {
-	long endHdu; // XXX allan: added
-	if ( ffghad( fptr, &curHdu, &nextHdu, &endHdu, &fitsStatus ) != FITS_S_SUCCESS )
+#if defined(CFITSIO_OUTDATED)
+	if ( ffghad( fptr, &startHdu, &endData ) != FITS_S_SUCCESS )
+#else
+   if ( ffghad( fptr, &startHdu, &startData, &endData, &fitsStatus ) != FITS_S_SUCCESS )
+#endif   
 	{
 	    *sfStatus = SF_E_FITS;
-	    sfFormatMessage( *sfStatus, "ffghad( fptr, &curHdu, &nextHdu )",
-		    fitsStatus );
+#if defined(CFITSIO_OUTDATED)
+	    sfFormatMessage( *sfStatus, "fits_get_hduaddr( fptr, &startHdu, &endData )", fitsStatus );
+#else
+	    sfFormatMessage( *sfStatus, "fits_get_hduaddr( fptr, &startHdu, &startData, &endData )", fitsStatus );
+#endif   
 	    return SF_NULL_SIZE;
 	}
 	
-	size += nextHdu - curHdu;
+	size += endData - startHdu;
 	ffmahd( fptr, i+1, &hdutype, &fitsStatus );
     }
 
@@ -1113,16 +1120,16 @@ fitsfile    *sfSetFitsMem
 
     fitsStatus = FITS_S_SUCCESS;
 
-    /* XXX allan: 11/24/02: outdated code for cfitsio2430
+#if defined(CFITSIO_OUTDATED)
     (void) ffsbuf( &fptr, buffer, (unsigned int*)size, 2880, realloc,
 	    &fitsStatus );
+    
     fitsCheck( ffinit( &fptr, dsInfo->name, &fitsStatus ), fitsStatus,
 	    *sfStatus, NULL );
-    */
-    /* XXX allan: here is the replacement code for the above */
-    fitsCheck( ffimem( &fptr, buffer, (unsigned int*)size, 2880, realloc, &fitsStatus ), 
-	       fitsStatus, *sfStatus, NULL );
-    
+#else
+  fitsCheck( ffimem( &fptr, buffer, (unsigned int*)size, 2880, realloc, &fitsStatus ), 
+     fitsStatus, *sfStatus, NULL );
+#endif   
 
     fnReturn( fptr );
 }
