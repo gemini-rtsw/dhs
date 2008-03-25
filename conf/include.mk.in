@@ -34,6 +34,8 @@ TCLTK_ROOT = @TCLTK_ROOT@
 TCLTK_INCLUDES = -I$(TCLTK_ROOT)/include
 TCLTK_LDLIBS = -L$(TCLTK_ROOT)/lib -ltcl$(TCL_VERSION) -ltk$(TCL_VERSION)
 
+DHS_LITE = @DHS_LITE@
+
 SKYCAT = @SKYCAT@
 SKYCAT_INCLUDES = -I$(SKYCAT)/include/astrotcl -I$(SKYCAT)/include/tclutil 
 SKYCAT_LDLIBS = -L$(SKYCAT)/lib -lastrotcl -ltclutil -Wl,-rpath=$(SKYCAT)/lib

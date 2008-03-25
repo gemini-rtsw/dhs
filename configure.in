@@ -109,7 +109,7 @@ fi
 AC_SUBST(DHS_CLIENT_INSTALL_BASE)
 AC_MSG_RESULT([$DHS_CLIENT_INSTALL_BASE])
 
-dnl Sybase settings (XXX needs work)
+dnl Sybase settings
 AC_MSG_CHECKING([SYBASE])
 # enforce no sybase
 SYBASE=
@@ -190,6 +190,13 @@ else
 fi
 AC_SUBST(INSTALL_DIR)
 AC_MSG_RESULT([$INSTALL_DIR])
+
+dnl DHS-lite
+AC_MSG_CHECKING([DHSlite])
+# enforce DHS lite built
+DHS_LITE=YES
+AC_SUBST(DHS_LITE)
+AC_MSG_RESULT([$DHS_LITE])
 
 AC_OUTPUT(conf/include.mk)
 

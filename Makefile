@@ -4,53 +4,83 @@
 include conf/include.mk
 
 # make subdirectories
-SUBDIRS = \
-	db \
-	ad \
-	mfs \
-	crc \
-	cd \
-	dvd \
-	tp \
-	press \
-	am \
-	gen++ \
-	dhsGen \
-	dhs++ \
-	dhsSta \
-	dd \
-	sf \
-	fh \
-	arrayMath \
-	qldp \
-	dhsCommand \
-	dhsConsole \
-	dhsData \
-	dhsGet \
-	dhsHistory \
-	dhsPut \
-	dhsQlServer \
-	dhsQlTool \
-	dhsQlToolDS9 \
-	dhsStatus \
-	dhsStorage \
-	dhs++Client \
-	dhs++Server \
-	dhsCmdSender \
-	dhsInstSim \
-	dhsSim4Data \
-	dhsTestCmdr \
-	fits2sds \
-	cdIngest \
-	cdOnline \
-	mediaCleanup \
-	mediaPrep \
-	mediaQueue \
-	mediaWrite \
-	testCmdr \
-	tpIngest \
+ifneq ($(SYBASE),)
+        SUBDIRS += db           # db backend
+        SUBDIRS += ad           # archive directory
+        SUBDIRS += mfs          # mountable fs
+        SUBDIRS += crc          # cyclic redundancy check
+        SUBDIRS += cd           # CD-ROM devices
+        SUBDIRS += dvd          # DVD devices
+        SUBDIRS += tp           # tape library routines
+endif
 
+SUBDIRS += press                # compressing library
 
+ifneq ($(SYBASE),)
+        SUBDIRS += am           # Archive media access routines
+endif
+
+SUBDIRS += gen++                
+SUBDIRS += dhsGen
+SUBDIRS += dhs++
+SUBDIRS += dhsSta
+SUBDIRS += dd
+SUBDIRS += sf                   # sds <-> fits
+
+ifneq ($(SYBASE),)
+        SUBDIRS += fh           # FITS  header storage routines
+endif
+
+SUBDIRS += arrayMath            # only for qldp
+SUBDIRS += qldp                 # tcl plugin for QlTool
+SUBDIRS += dhsCommand
+SUBDIRS += dhsConsole
+SUBDIRS += dhsData
+
+ifneq ($(DHS_LITE),YES)
+        SUBDIRS += dhsGet       # builds, but we don't need it
+endif
+
+ifneq ($(SYBASE),)
+        SUBDIRS += dhsHistory   # sybase deps to be fixed, we don't need it
+endif
+
+SUBDIRS += dhsPut
+SUBDIRS += dhsQlServer
+SUBDIRS += dhsQlTool            # check, all tcl stuff
+SUBDIRS += dhsQlToolDS9         # check, all tcl stuff
+SUBDIRS += dhsStatus
+
+ifneq ($(SYBASE),)
+        SUBDIRS += dhsStorage          # sybase deps to be fixed, we don't need it
+endif
+
+ifneq ($(DHS_LITE),YES)
+        SUBDIRS += dhs++Client          # builds, but we don't need it
+        SUBDIRS += dhs++Server          # builds, but we don't need it
+        SUBDIRS += dhsCmdSender         # builds, but we don't need it
+        SUBDIRS += dhsInstSim           # builds, but we don't need it
+endif
+
+SUBDIRS += dhsSim4Data
+
+ifneq ($(DHS_LITE),YES)
+        SUBDIRS += dhsTestCmdr          # xxx all tcl stuff
+        SUBDIRS += fits2sds             # builds, but we don't need it
+        SUBDIRS += cdIngest             # unchecked, but we don't need it
+        SUBDIRS += cdOnline             # unchecked, but we don't need it
+        SUBDIRS += mediaCleanup         # unchecked, but we don't need it
+        SUBDIRS += mediaPrep            # unchecked, but we don't need it
+        SUBDIRS += mediaQueue           # unchecked, but we don't need it
+        SUBDIRS += mediaWrite           # unchecked, but we don't need it
+        SUBDIRS += testCmdr             # check, all tcl stuff
+endif
+
+ifneq ($(SYBASE),)
+        SUBDIRS += tpIngest
+endif
+
+# fixme - move that in sub-directories
 
 SCRIPTS = \
 	scripts/dhsCleanup \
@@ -123,25 +153,14 @@ install_man: FORCE
 	-cp -f */*.3 release/man/man3
 	-cp -f */*.n release/man/mann
 
-install_imp: FORCE
-	-cp ${IMP_DIR}/${DRAMA_OS}/master release/bin
-	-cp ${IMP_DIR}/${DRAMA_OS}/receiver release/bin
-	-cp ${IMP_DIR}/${DRAMA_OS}/transmitter release/bin
-	d=`pwd`/release/lib/; \
-	  (cd ${IMP_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -)) ; \
-	  (cd ${ERS_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -)) ; \
-	  (cd ${SDS_DIR}/${DRAMA_OS}; tar cf - *.so* | (cd $$d; tar xvf -))
-
 
 # install generated files in release dir
 install: install_dirs install_subdirs install_man install_scripts \
-	install_config install_sql install_xbm install_includes \
-	install_imp
+	install_config install_sql install_xbm install_includes
 
 FORCE:
 
 etags tags:
 	etags \
 	  `find . -name '*.[CchH]' -print` \
-	  `find ../dhsClient -name '*.[CchH]' -print` \
-	  `find ../cfitsio -name '*.[CchH]' -print` \
+	  `find $(DHS_CLIENT_TOP) -name '*.[CchH]' -print`
