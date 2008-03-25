@@ -728,7 +728,7 @@ void cDtsDhsPut::qlSend
 	    {
 		//
 		//  This is DS, so use the dsInfo from the datasetlist, 
-		//  if it exits.
+		//  if it exists.
 		//
 
 		if ( pDsList->cdlDsInfo == NULL )
@@ -778,7 +778,7 @@ void cDtsDhsPut::qlSend
 
 	    checkSfLib( ( ffPtr = sfSetFitsMem( &fitsBuffer, &bufSize, dsInfo, 
 		    &sfStatus )), sfStatus, datasetName, dsInfo, status, VOID );
-	    if ( status.ok() )
+       if ( status.ok() )
 	    {
 		sfSds2Fits( objectId(), ffPtr , dsInfo, TRUE, &sfStatus );
 		if ( sfStatus <  SF_S_SUCCESS )
@@ -814,7 +814,7 @@ void cDtsDhsPut::qlSend
 	    //
 	    //  Close the fits file.
 	    //
-	    
+
 	    if ( sfStatus < SF_S_SUCCESS )
 	    {
 		SF_STATUS		sf2Status = SF_S_SUCCESS;
@@ -893,7 +893,6 @@ void cDtsDhsPut::qlSend
 	}
     }
 
-
     //
     //  Free the buffer, if necessary.
     //
@@ -903,7 +902,6 @@ void cDtsDhsPut::qlSend
     {
 	free( fitsBuffer );
     }
-
 }
 
 //
