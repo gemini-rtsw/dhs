@@ -66,7 +66,7 @@
 #ifndef IMAGE_H
 #define	IMAGE_H
 #include "Mem.h"
-#include "FitsIO.h"
+#include "Fits_IO.h"
 
 //
 //***********************************************************************

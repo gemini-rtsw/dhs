@@ -84,7 +84,7 @@ extern "C"
 
 #include "arrayMath.H"
 
-#include "FitsIO.h"
+#include "Fits_IO.h"
 #include "localQldp.H"
 #include "image.H"
 
