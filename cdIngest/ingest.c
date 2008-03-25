@@ -586,12 +586,8 @@ static int	ingestFile
 ************************************************************************
 -*/
 
-static void	onControlC( sig )
-int	sig;
+static void	onControlC( int sig )
 {
-    static void	onControlC();
-
-
     (void) signal( SIGINT, SIG_IGN );
     (void) signal( SIGINT, onControlC );
 }
