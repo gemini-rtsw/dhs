@@ -98,111 +98,100 @@ AC_CHECK_FUNCS(mkdir rmdir strerror strstr strtod)
 AC_PROG_RANLIB
 AC_CANONICAL_SYSTEM
 AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
-AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
+#AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
 
 dnl dhsClient settings
-if test "$DHS_CLIENT_INSTALL_BASE" = "" ; then
-    DHS_CLIENT_INSTALL_BASE=`dirname $PWD`/dhsClient
+AC_MSG_CHECKING([DHS_CLIENT_INSTALL_BASE])
+if test "x${DHS_CLIENT_INSTALL_BASE}" = "x" ; then
+   DHS_CLIENT_INSTALL_BASE=${GEMINI_TOP}/opt/dhs
 fi
-AC_SUBST(DHS_CLIENT_INSTALL_BASE)
 
-dnl CFITSIO settings
+AC_SUBST(DHS_CLIENT_INSTALL_BASE)
+AC_MSG_RESULT([$DHS_CLIENT_INSTALL_BASE])
+
 dnl Sybase settings (XXX needs work)
-SYBASE=/opt/sybase-12.5/OCS-12_5
-test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
-test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
+AC_MSG_CHECKING([SYBASE])
+#if test "$SYBASE" = "" ; then
+#   SYBASE=`dirname $PWD`/sybase
+#   test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
+#   test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
+#fi
+AC_MSG_RESULT([$SYBASE])
 AC_SUBST(SYBASE)
 
 dnl Tcl settings
+AC_MSG_CHECKING([TCLTK_ROOT])
 if test "$TCLTK_ROOT" = "" ; then
     TCLTK_ROOT=/usr
     test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/usr/local
-    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/ocs/software/dev/packages/tcl8.4
 fi
+AC_MSG_RESULT([$TCLTK_ROOT])
 AC_SUBST(TCLTK_ROOT)
 test -f $TCLTK_ROOT/lib/tclConfig.sh && . $TCLTK_ROOT/lib/tclConfig.sh
 AC_SUBST(TCL_VERSION)
 
 dnl SKYCAT settings
-if test "$SKYCAT_INSTALL" = "" ; then
-    SKYCAT_INSTALL=`dirname $PWD`/skycat
-    test -d $SKYCAT_INSTALL || SKYCAT_INSTALL=/ocs/software/dev/packages/skycat
-    test -d $SKYCAT_INSTALL || SKYCAT_INSTALL=/usr/local
+AC_MSG_CHECKING([SKYCAT])
+if test "x${SKYCAT}" = "x" ; then
+    SKYCAT=${GEMINI_TOP}/opt/skycat
 fi
-AC_SUBST(SKYCAT_INSTALL)
+AC_MSG_RESULT([$SKYCAT])
+AC_SUBST(SKYCAT)
 
 dnl CFITSIO settings
-if test "$CFITSIO" = "" ; then
-    CFITSIO=`dirname $PWD`/cfitsio
-    test -d $CFITSIO || CFITSIO=/ocs/software/dev/packages/cfitsio
-fi
-AC_SUBST(CFITSIO)
+AC_MSG_CHECKING([CFITSIO])
+CFITSIO_INCLUDES=-I/usr/include/cfitsio
+CFITSIO_LDLIBS=-lcfitsio
+CFITSIO_FLAGS=-UCFITSIO_OUTDATED
+# for cfitsio version < 2.430
+#CFITSIO_FLAGS=-DCFITSIO_OUTDATED
+#CFITSIO_INCLUDES=-I../cfitsio142
+#CFITSIO_LDLIBS=../cfitsio142/libcfitsio.a
+AC_SUBST(CFITSIO_FLAGS)
+AC_SUBST(CFITSIO_INCLUDES)
+AC_SUBST(CFITSIO_LDLIBS)
 
 dnl EPICS settings
-if test "$EPICS" = "" ; then
-    EPICS=`dirname $PWD`/epics
-    test -d $EPICS || EPICS=/usr/local/epics
-    test -d $EPICS || EPICS=/ocs/software/dev/packages/epics/epics
+AC_MSG_CHECKING([EPICS])
+if test "x${EPICS}" = "x" ; then
+    EPICS=${GEMINI_TOP}/opt/epics
 fi
-EPICS=$EPICS/base
-AC_SUBST(EPICS)
+AC_MSG_RESULT([$EPICS])
+EPICS_BASE=$EPICS/base
+AC_SUBST(EPICS_BASE)
 
 dnl Drama settings
-case "$host_os" in
-    linux-gnu)     DRAMA_OS=linux_x86;;
-    solaris*)      DRAMA_OS=sun4_solaris;;
-    *)             echo "*** Unsupported host: $host_os **"; exit 1;;
-esac
-echo "drama OS = $DRAMA_OS"
-AC_SUBST(DRAMA_OS)
-
-DRAMA=../drama-v1.5.0/release
-if test ! -d $DRAMA ; then
-    echo " *** Can't find DRAMA release dir (expected $DRAMA) ***"
-    exit 1
+AC_MSG_CHECKING([DRAMA])
+if test "x${DRAMA}" = "x" ; then
+    DRAMA=${GEMINI_TOP}/opt/drama
 fi
-DRAMA=`cd $DRAMA; pwd`
-AC_SUBST(DRAMA)
 
-tmp=$DRAMA/config/r*
-DRAMA_CONFIG=`echo $tmp`
-if test "$DRAMA_CONFIG" = "$tmp" ; then
-    echo " *** Can't find DRAMA config dir (expected $DRAMA_CONFIG) ***"
-    exit 1
-fi
-AC_SUBST(DRAMA_CONFIG)
+AC_MSG_RESULT([$DRAMA])
+###. $DRAMA/dev.path
+IMP_DIR=$IMP_DEV
+SDS_DIR=$SDS_DEV
+ERS_DIR=$ERS_DEV
 
-tmp=$DRAMA/status/r*
-DRAMA_STATUS=`echo $tmp`
-if test "$DRAMA_STATUS" = "$tmp" ; then
-    echo " *** Can't find DRAMA status dir (expected $DRAMA_STATUS) ***"
-    exit 1
-fi
-AC_SUBST(DRAMA_STATUS)
-
-tmp=$DRAMA/imp/r*
-IMP_DIR=`echo $tmp`
-if test "$IMP_DIR" = "$tmp" ; then
-    echo " *** Can't find IMP release dir (expected $IMP_DIR) ***"
-    exit 1
-fi
+#test -d $IMP_DIR  || echo "ERROR: can't find IMP_DIR directory" && exit 1
+#test -d $SDS_DIR  || echo "ERROR: can't find SDS_DIR directory" && exit 1
+#test -d $ERS_DIR  || echo "ERROR: can't find ERS_DIR directory" && exit 1
 AC_SUBST(IMP_DIR)
-
-tmp=$DRAMA/sds/r*
-SDS_DIR=`echo $tmp`
-if test "$SDS_DIR" = "$tmp" ; then
-    echo " *** Can't find SDS release dir (expected $SDS_DIR) ***"
-    exit 1
-fi
 AC_SUBST(SDS_DIR)
-
-tmp=$DRAMA/ers/r*
-ERS_DIR=`echo $tmp`
-if test "$ERS_DIR" = "$tmp" ; then
-    echo " *** Can't find ERS release dir (expected $ERS_DIR) ***"
-    exit 1
-fi
 AC_SUBST(ERS_DIR)
+
+# enforce no sybase
+SYBASE_DHS_FLAGS=-USYBASE_DHS
+AC_SUBST(SYBASE_DHS_FLAGS)
+
+dnl INSTALL PREFFIX
+AC_MSG_CHECKING([INSTALL_DIR])
+if test "x$prefix" = "xNONE" ; then
+    INSTALL_DIR=${GEMINI_TOP}/opt/dhs
+else
+   INSTALL_DIR=$prefix
+fi
+AC_SUBST(INSTALL_DIR)
+AC_MSG_RESULT([$INSTALL_DIR])
 
 AC_OUTPUT(conf/include.mk)
 
