@@ -262,7 +262,11 @@ static	void	sfWriteIndexedArray( fitsfile*, char[], char*, DHS_DATA_TYPE,
 		int, unsigned long[], char[], void*, SF_STATUS* );
 static	int	sfWriteOptKeywords( fitsfile*, SF_FRAME_INFO*, SF_DS_INFO*,
 			char[], boolean, EPTR*, EPTR**, SF_STATUS* );
-static	void	sfWriteScalarVal( fitsfile*, char[], char*, DHS_DATA_TYPE,
+// there is a lot of confusion happening here between these two arguments
+// opt for that order:
+//    char *attribute
+//    char keyword[FLEN_KEYWORD]
+static	void	sfWriteScalarVal( fitsfile*, char*, char[], DHS_DATA_TYPE,
 			char[],	void*, SF_STATUS * );
 
 void		sfFormatMessage();
@@ -1713,9 +1717,12 @@ boolean	sfNewImgHdu
 
     fitsCheck( ffthdu( fptr, &maxHdu, &fitsStatus ), fitsStatus,
 	    *sfStatus, FALSE );
-    fitsCheck( ffmahd( fptr, maxHdu, &hdutype, &fitsStatus ),
-	    fitsStatus, *sfStatus, FALSE );
-
+    
+    /* only move forward if possible */
+    if (maxHdu) {
+      fitsCheck( ffmahd( fptr, maxHdu, &hdutype, &fitsStatus ),
+	      fitsStatus, *sfStatus, FALSE );
+    }
 	
     /*
      * Find the FITS required Keywords and create the header unit.
@@ -2311,6 +2318,10 @@ void	sfWriteBadIndexedArray
 
 	(void) sprintf( indexedKeyword, "%-.*s", FLEN_KEYWORD - 1,
 		indexedAttribute );
+   // fixme -- mdcb 24Mar08
+   // the order of attribute and keyword is swapped
+   // this is an old bug that effectively defeat the sds/fits translation from libdd.config
+   // fixing it now is bound to break more things (GSA etc.) so leave it for now
 	check( sfWriteScalarVal( fptr, indexedKeyword, indexedAttribute,
 		type, comm, indexedData, sfStatus ), *sfStatus, VOID );
     }
@@ -4118,8 +4129,12 @@ int sfWriteOptKeywords
 			break;
 
 		    case DD_NO_ARRAY:
-			sfWriteScalarVal( fptr, keyword, attribName, type,
-				comm, attribData, &localStatus );
+         // fixme -- mdcb 24Mar08
+         // the order of attribute and keyword is swapped
+         // this is an old bug that effectively defeat the sds/fits translation from libdd.config
+         // fixing it now is bound to break more things (GSA etc.) so leave it for now
+         sfWriteScalarVal( fptr, keyword, attribName, type,
+			   comm, attribData, &localStatus );
 			numKeywords++;
 			break;
 
@@ -4148,7 +4163,7 @@ int sfWriteOptKeywords
  * sfWriteScalarVal
  *
  * INVOCATION:
- * sfWriteScalarVal( fitsfilePointer, keyword, type, comment, data, status )
+ * sfWriteScalarVal( fitsfilePointer, attribute, keyword, type, comment, data, status )
  *
  * PARAMETERS: (">" input, "!" modified, "<" output)
  * (>) fptr	(fitsfile*)		FITS file pointer.
@@ -4290,6 +4305,15 @@ void	sfWriteScalarVal
     }
 
     dhs2fits( type, fitsType, *status, VOID );
+
+#if !defined(CFITSIO_OUTDATED)
+    // fixme -- mdcb 24Mar08
+    // preserve the old cfitsio behiviour to avoid the HIERARCH convention.
+    // keyword is truncated to 8 char, cfitsio takes care of upper-casing
+    // .. let's be wild, uncomment if you want (FLEN_KEYWORD used to be 8, as of cfitio3.0.6 it's 72)
+    // assert (FLEN_KEYWORD>8);
+    keyword[8]='\0';
+#endif
 
     fitsCheck( ffpky( fptr, fitsType, keyword, tmpData, comm, &fitsStatus ),
 	    fitsStatus, *sfStatus, VOID );
