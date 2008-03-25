@@ -135,7 +135,9 @@ extern "C"
 #include "sf.h"
 }
 
+#if defined(SYBASE_DHS)
 #include "fh.H"
+#endif
 #include "dtsDhs.H"
 #include "dbm.H"
 #include "list.H"
@@ -507,6 +509,8 @@ void cDtsPutDs::datasetCompose
     *bufSize = *bufSize * 2880 ;
 
     checkNull( ( *fitsBuffer = gen_alloc( *bufSize )), status, return );
+    // critical - image mapped file will otherwise break in all kind of weird ways
+    memset(*fitsBuffer,0,*bufSize);
 
     if ( pDsList->cdlDsInfo ==  NULL )
     {
@@ -1315,6 +1319,7 @@ void cDtsPutDs::exec
 
     if ( status.ok() && allSet && status.parseOn() && !warningMsgs )
     {
+#if defined(SYBASE_DHS)
 	cHdrParser	fitsParse;
 	cHdrParser::hStatus		hstatus;
 
@@ -1348,6 +1353,9 @@ void cDtsPutDs::exec
 	    status.S_HEADER_WARN( status, datasetName, hstatus.message() );
 	    warningMsgs = TRUE;
 	}
+#else
+   status.E_DB(status, "cDtsPutDs::exec - no SYBASE support: try -noParse?" );
+#endif
     }
 
     if ( fitsBuffer != NULL )
