@@ -79,16 +79,20 @@ CFITSIO_FLAGS = @CFITSIO_FLAGS@
 
 # C include options
 INCLUDES += -I.
-#INCLUDES += -I$(TOP)/ad
-#INCLUDES += -I$(TOP)/am
-#INCLUDES += -I$(TOP)/cd
-#INCLUDES += -I$(TOP)/db
+
+ifneq ($(SYBASE),)
+   INCLUDES += -I$(TOP)/ad
+   INCLUDES += -I$(TOP)/am
+   INCLUDES += -I$(TOP)/cd
+   INCLUDES += -I$(TOP)/db
+   INCLUDES += -I$(TOP)/dvd
+   INCLUDES += -I$(TOP)/mfs
+   INCLUDES += -I$(TOP)/tp
+endif
+
 INCLUDES += -I$(TOP)/dd
-#INCLUDES += -I$(TOP)/dvd
-#INCLUDES += -I$(TOP)/mfs
 INCLUDES += -I$(TOP)/press
 INCLUDES += -I$(TOP)/sf
-#INCLUDES += -I$(TOP)/tp
 INCLUDES += -I$(DHS_CLIENT_TOP)/include
 INCLUDES += ${DRAMA_INCLUDES}
 INCLUDES += ${TCLTK_INCLUDES}
@@ -100,14 +104,16 @@ INCLUDES += ${SKYCAT_INCLUDES}
 # C++ include options
 CXX_INCLUDES += $(INCLUDES)
 CXX_INCLUDES += -I$(TOP)/arrayMath
-#CXX_INCLUDES += -I$(TOP)/crc
 CXX_INCLUDES += -I$(TOP)/dhsGen
 CXX_INCLUDES += -I$(TOP)/dhs++
 CXX_INCLUDES += -I$(TOP)/dhsSta
-#CXX_INCLUDES += -I$(TOP)/fh
 CXX_INCLUDES += -I$(TOP)/gen++
-#CXX_INCLUDES += -I$(TOP)/mfs
-#CXX_INCLUDES += -I$(TOP)/qldp
+
+ifneq ($(SYBASE),)
+   CXX_INCLUDES += -I$(TOP)/crc
+   CXX_INCLUDES += -I$(TOP)/fh
+   CXX_INCLUDES += -I$(TOP)/mfs
+endif
 
 # Define options
 DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE $(CFITSIO_FLAGS) $(SYBASE_DHS_FLAGS)
@@ -117,43 +123,47 @@ LOCAL_LIBS += $(TOP)/arrayMath/libarrayMath.a
 LOCAL_LIBS += $(TOP)/dhsGen/libdhsGen.a
 LOCAL_LIBS += $(TOP)/dhs++/libdhs++.a
 LOCAL_LIBS += $(TOP)/dhsSta/libdhsSta.a
-#LOCAL_LIBS += $(TOP)/fh/libfh.a
 LOCAL_LIBS += $(TOP)/gen++/libgen++.a
-#LOCAL_LIBS += $(TOP)/qldp/libqldp.a
-#LOCAL_LIBS += $(TOP)/ad/libad.a
-#LOCAL_LIBS += $(TOP)/am/libam.a
-#LOCAL_LIBS += $(TOP)/cd/libcd.a
-#LOCAL_LIBS += $(TOP)/db/libdb.a
 LOCAL_LIBS += $(TOP)/dd/libdd.a
-#LOCAL_LIBS += $(TOP)/dvd/libdvd.a
-#LOCAL_LIBS += $(TOP)/mfs/libmfs.a
 LOCAL_LIBS += $(TOP)/press/libpress.a
 LOCAL_LIBS += $(TOP)/sf/libsf.a
-#LOCAL_LIBS += $(TOP)/tp/libtp.a
-#LOCAL_LIBS += $(TOP)/crc/libcrc.a
 LOCAL_LIBS += $(DHS_CLIENT_TOP)/lib/libdhs.a
 LOCAL_LIBS += $(DHS_CLIENT_TOP)/lib/libgen.a
+
+ifneq ($(SYBASE),)
+   LOCAL_LIBS += $(TOP)/fh/libfh.a
+   LOCAL_LIBS += $(TOP)/ad/libad.a
+   LOCAL_LIBS += $(TOP)/am/libam.a
+   LOCAL_LIBS += $(TOP)/cd/libcd.a
+   LOCAL_LIBS += $(TOP)/db/libdb.a
+   LOCAL_LIBS += $(TOP)/dvd/libdvd.a
+   LOCAL_LIBS += $(TOP)/mfs/libmfs.a
+   LOCAL_LIBS += $(TOP)/tp/libtp.a
+   LOCAL_LIBS += $(TOP)/crc/libcrc.a
+endif
 
 # LD flags for local libs
 LOCAL_LDFLAGS += -L$(TOP)/arrayMath
 LOCAL_LDFLAGS += -L$(TOP)/dhsGen
 LOCAL_LDFLAGS += -L$(TOP)/dhs++
 LOCAL_LDFLAGS += -L$(TOP)/dhsSta
-#LOCAL_LDFLAGS += -L$(TOP)/fh
 LOCAL_LDFLAGS += -L$(TOP)/gen++
-#LOCAL_LDFLAGS += -L$(TOP)/mfs
-#LOCAL_LDFLAGS += -L$(TOP)/qldp
-#LOCAL_LDFLAGS += -L$(TOP)/ad
-#LOCAL_LDFLAGS += -L$(TOP)/am
-#LOCAL_LDFLAGS += -L$(TOP)/cd
-#LOCAL_LDFLAGS += -L$(TOP)/db
 LOCAL_LDFLAGS += -L$(TOP)/dd
-#LOCAL_LDFLAGS += -L$(TOP)/dvd
-#LOCAL_LDFLAGS += -L$(TOP)/mfs
 LOCAL_LDFLAGS += -L$(TOP)/press
 LOCAL_LDFLAGS += -L$(TOP)/sf
-#LOCAL_LDFLAGS += -L$(TOP)/tp
-#LOCAL_LDFLAGS += -L$(TOP)/crc
+
+ifneq ($(SYBASE),)
+   LOCAL_LDFLAGS += -L$(TOP)/fh
+   LOCAL_LDFLAGS += -L$(TOP)/mfs
+   LOCAL_LDFLAGS += -L$(TOP)/ad
+   LOCAL_LDFLAGS += -L$(TOP)/am
+   LOCAL_LDFLAGS += -L$(TOP)/cd
+   LOCAL_LDFLAGS += -L$(TOP)/db
+   LOCAL_LDFLAGS += -L$(TOP)/dvd
+   LOCAL_LDFLAGS += -L$(TOP)/mfs
+   LOCAL_LDFLAGS += -L$(TOP)/tp
+   LOCAL_LDFLAGS += -L$(TOP)/crc
+endif
 
 INSTALL_DIR = @INSTALL_DIR@
 LOCAL_LDFLAGS += -Wl,-rpath=$(INSTALL_DIR)/lib
