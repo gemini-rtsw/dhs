@@ -40,8 +40,15 @@ SKYCAT_LDLIBS = -L$(SKYCAT)/lib -lastrotcl -ltclutil -Wl,-rpath=$(SKYCAT)/lib
 
 # Root dir for Sybase include files and libs
 SYBASE = @SYBASE@
-SYBASE_INCLUDES = -I$(SYBASE)/include
-SYBASE_LDLIBS = -L$(SYBASE)/lib -lsybdb
+ifeq ($(SYBASE),)
+   SYBASE_INCLUDES =
+   SYBASE_LDLIBS =
+   SYBASE_DHS_FLAGS = -USYBASE_DHS
+else
+   SYBASE_INCLUDES = -I$(SYBASE)/include
+   SYBASE_LDLIBS = -L$(SYBASE)/lib -lsybdb
+   SYBASE_DHS_FLAGS = -DSYBASE_DHS
+endif
 
 # Base dir for Epics
 EPICS_BASE = @EPICS_BASE@
@@ -68,9 +75,6 @@ CFITSIO_INCLUDES = @CFITSIO_INCLUDES@
 CFITSIO_LDLIBS = @CFITSIO_LDLIBS@
 CFITSIO_FLAGS = @CFITSIO_FLAGS@
 
-# SYBASE
-SYBASE_DHS_FLAGS = @SYBASE_DHS_FLAGS@
-
 # C include options
 INCLUDES += -I.
 #INCLUDES += -I$(TOP)/ad
@@ -86,14 +90,14 @@ INCLUDES += -I$(TOP)/sf
 INCLUDES += -I$(DHS_CLIENT_TOP)/include
 INCLUDES += ${DRAMA_INCLUDES}
 INCLUDES += ${TCLTK_INCLUDES}
-#INCLUDES += ${SYBASE_INCLUDES}
+INCLUDES += ${SYBASE_INCLUDES}
 INCLUDES += ${EPICS_BASE_INCLUDES}
 INCLUDES += ${CFITSIO_INCLUDES}
 INCLUDES += ${SKYCAT_INCLUDES}
 
 # C++ include options
 CXX_INCLUDES += $(INCLUDES)
-#CXX_INCLUDES += -I$(TOP)/arrayMath
+CXX_INCLUDES += -I$(TOP)/arrayMath
 #CXX_INCLUDES += -I$(TOP)/crc
 CXX_INCLUDES += -I$(TOP)/dhsGen
 CXX_INCLUDES += -I$(TOP)/dhs++
@@ -102,13 +106,12 @@ CXX_INCLUDES += -I$(TOP)/dhsSta
 CXX_INCLUDES += -I$(TOP)/gen++
 #CXX_INCLUDES += -I$(TOP)/mfs
 #CXX_INCLUDES += -I$(TOP)/qldp
-#CXX_INCLUDES += -I$(TOP)/fitsio
 
 # Define options
 DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE $(CFITSIO_FLAGS) $(SYBASE_DHS_FLAGS)
 
 # local library dependencies
-#LOCAL_LIBS += $(TOP)/arrayMath/libarrayMath.a
+LOCAL_LIBS += $(TOP)/arrayMath/libarrayMath.a
 LOCAL_LIBS += $(TOP)/dhsGen/libdhsGen.a
 LOCAL_LIBS += $(TOP)/dhs++/libdhs++.a
 LOCAL_LIBS += $(TOP)/dhsSta/libdhsSta.a
@@ -130,7 +133,7 @@ LOCAL_LIBS += $(DHS_CLIENT_TOP)/lib/libdhs.a
 LOCAL_LIBS += $(DHS_CLIENT_TOP)/lib/libgen.a
 
 # LD flags for local libs
-#LOCAL_LDFLAGS += -L$(TOP)/arrayMath
+LOCAL_LDFLAGS += -L$(TOP)/arrayMath
 LOCAL_LDFLAGS += -L$(TOP)/dhsGen
 LOCAL_LDFLAGS += -L$(TOP)/dhs++
 LOCAL_LDFLAGS += -L$(TOP)/dhsSta
@@ -138,7 +141,6 @@ LOCAL_LDFLAGS += -L$(TOP)/dhsSta
 LOCAL_LDFLAGS += -L$(TOP)/gen++
 #LOCAL_LDFLAGS += -L$(TOP)/mfs
 #LOCAL_LDFLAGS += -L$(TOP)/qldp
-#LOCAL_LDFLAGS += -L$(TOP)/fitsio
 #LOCAL_LDFLAGS += -L$(TOP)/ad
 #LOCAL_LDFLAGS += -L$(TOP)/am
 #LOCAL_LDFLAGS += -L$(TOP)/cd
@@ -150,8 +152,12 @@ LOCAL_LDFLAGS += -L$(TOP)/press
 LOCAL_LDFLAGS += -L$(TOP)/sf
 #LOCAL_LDFLAGS += -L$(TOP)/tp
 #LOCAL_LDFLAGS += -L$(TOP)/crc
-LOCAL_LDFLAGS += -L$(DHS_CLIENT_TOP)/lib -Wl,-rpath=$(DHS_CLIENT_TOP)/lib
 
+INSTALL_DIR = @INSTALL_DIR@
+LOCAL_LDFLAGS += -Wl,-rpath=$(INSTALL_DIR)/lib
+
+LOCAL_LDFLAGS += -L$(DHS_CLIENT_TOP)/lib
+LOCAL_LDFLAGS += -Wl,-rpath=$(DHS_CLIENT_TOP)/lib
 
 # Linker options
 LDFLAGS = -g
@@ -162,7 +168,7 @@ LDLIBS += ${LIBS}
 LDLIBS += ${CFITSIO_LDLIBS}
 LDLIBS += ${DRAMA_LDLIBS}
 LDLIBS += ${EPICS_BASE_LDLIBS}
-#LDLIBS += ${SYBASE_LDLIBS}
+LDLIBS += ${SYBASE_LDLIBS}
 LDLIBS += ${SKYCAT_LIBS}
 LDLIBS += ${TCLTK_LIBS}
 LDLIBS += $(SYSLIBS) 
@@ -175,12 +181,6 @@ CC = @CC@
 
 # C++ compiler
 CXX = @CXX@
-
-INSTALL_DIR = @INSTALL_DIR@
-$(warning INSTALL_DIR is $(INSTALL_DIR))
-
-LOCAL_LDFLAGS += -Wl,-rpath=$(INSTALL_DIR)/lib
-
 
 # For now, assume gcc, otherwise this needs to go into configure.in
 SHLIB_CFLAGS = -fPIC

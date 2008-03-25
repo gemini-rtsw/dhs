@@ -111,6 +111,8 @@ AC_MSG_RESULT([$DHS_CLIENT_INSTALL_BASE])
 
 dnl Sybase settings (XXX needs work)
 AC_MSG_CHECKING([SYBASE])
+# enforce no sybase
+SYBASE=
 #if test "$SYBASE" = "" ; then
 #   SYBASE=`dirname $PWD`/sybase
 #   test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
@@ -178,10 +180,6 @@ ERS_DIR=$ERS_DEV
 AC_SUBST(IMP_DIR)
 AC_SUBST(SDS_DIR)
 AC_SUBST(ERS_DIR)
-
-# enforce no sybase
-SYBASE_DHS_FLAGS=-USYBASE_DHS
-AC_SUBST(SYBASE_DHS_FLAGS)
 
 dnl INSTALL PREFFIX
 AC_MSG_CHECKING([INSTALL_DIR])
