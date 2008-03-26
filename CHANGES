@@ -1,0 +1,46 @@
+==============================================
+   DHS-lite sybase-less cfitio3.0.6 release
+==============================================
+
+gen++/genListOf.H                disable copy constructor
+dhsStatus/staChannel.C           fix definition
+dhsStatus/staChannel.H           fix missing public statement
+dhsData/msg.C                    fix typo
+dhsGen/dhsGenTmp.C               fix read_dir
+dhsData/putFits.C                implement sybase-less option
+dhsCommand/cmdCommandInfo.C      fix iterator declaration
+dhsCommand/cmdDhs.H              fix friend declaration
+conf/cxx_lib.mk                  fix clean target
+conf/cc_bin.mk                   fix clean target
+conf/cxx_bin.mk                  fix clean target
+conf/cc_lib.mk                   fix clean target
+conf/tcl.mk                      fix clean target
+press/press.c                    add missing header
+fh/fh.C                          precompiler switch for outdated cfitsio
+dhsQlServer/qlsFrame.C           precompiler switch for outdated cfitsio
+dhsQlServer/qlsDataset.C         precompiler switch for outdated cfitsio
+sf/utils.c                       fix chunk size calculation, precompiler switch for outdated cfitsio
+qldp/image.C                     fix Fits_IO.h header name under skycat-3.0.1
+qldp/image.H                     fix Fits_IO.h header name under skycat-3.0.1
+cdIngest/ingest.c                fix weird declaration?
+sf/sds2fits.c                    leave libdd.config translation bug (would break GSA etc.)
+                                 catch any attempt to move to an invalid hdu if maxHdr==0
+                                 enforce max keys length to avoid HIERARCH convention
+                                 precompiler switch for outdated cfitsio
+conf/include.mk.in               several changes to handle sybase-less dhs, outdate-cfitsio,
+                                 standard location for DRAMA, EPICS, etc
+configure.in                     several changes to handle sybase-less dhs, outdate-cfitsio,
+                                 standard location for DRAMA, EPICS, etc
+dhsData/putSds.C                 critical fix for mem mapped fits
+                                 precompiler switch for sybase-less dhs
+dhsStatus/staMonitor.H           precompiler switch for sybase-less
+dhsStatus/staMonitor.C           precompiler switch for sybase-less
+dhsData/dtsDhs.C                 precompiler switch for sybase-less
+dhsData/get.H                    precompiler switch for sybase-less
+dhsData/get.C                    precompiler switch for sybase-less (needs improvement)
+dhsStatus/Makefile               confitional flag for sybase-less
+dhsData/Makefile                 confitional flag for sybase-less
+dhsData/putFits.C                precompiler switch for sybase-less
+dhsData/msg.C                    removing ending .
+dhsData/dbm.C                    precompiler switch for sybase-less
+
