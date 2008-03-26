@@ -136,8 +136,10 @@ extern "C"
 // 
 //***********************************************************************
 
+#if defined(SYBASE_DHS)
 #include	<sybfront.h>
 #include	<sybdb.h>
+#endif
 
 
 //***********************************************************************
@@ -162,7 +164,9 @@ int statvfs(const char *, struct statvfs *);
 #include "gen_config.h"
 #include "gen_str.h"	
 
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 }
  
     
@@ -1711,12 +1715,15 @@ void	cStaMonDb::checkDatabase
     cStaStat	&status		// (mod) Function return value.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;	// The DB process..
-    cStaStat	tStatus;	// Temporary status.
+#endif
+   cStaStat	tStatus;	// Temporary status.
     
 
     checkStat( status, return );
 
+#if defined(SYBASE_DHS)
     //
     //  Get the connection and see if we can use the given database.
     //
@@ -1735,6 +1742,9 @@ void	cStaMonDb::checkDatabase
 	tStatus.E_SDB( status, "dbuse( dbProc, dbName )" );
     }
     dbConnRelease();
+#else
+   tStatus.E_SDB( tStatus, "cStaMonDb::checkDatabase - no SYBASE support: use -simulate FULL" );
+#endif
 }
 
 //
@@ -1867,15 +1877,17 @@ void	cStaMonDb::cleanup
     // Close the connection to the database.
     //
 
+#if defined(SYBASE_DHS)
     if ( dbConnection != NULL )
     {
-	
+
 	dbcanquery( dbConnection );
 	db_close( dbConnGet( status ) );
 	dbConnection = NULL;
 	db_exit();
 	dbConnRelease();
     }
+#endif
     
     
     //
@@ -2073,16 +2085,26 @@ void	cStaMonDb::init
     cStaMon::init( status );
     
 
+#if defined(SYBASE_DHS)
     //
     // Initialize thd DB library and open a connection to the database.
+    // .. unless we are in simulation.
     //
     
-    checkCadcDb( db_init( "Status Server" ), tStatus, dbConnection = NULL );
-    if ( tStatus.ok() )
-    {
-	checkCadcDb( db_open( dbServerName, NULL, NULL, "master", FALSE,
-		&dbConnection ), tStatus, dbConnection = NULL );
+    if (!simulate()) {
+       checkCadcDb( db_init( "Status Server" ), tStatus, dbConnection = NULL );
+       if ( tStatus.ok() )
+       {
+	   checkCadcDb( db_open( dbServerName, NULL, NULL, "master", FALSE,
+		   &dbConnection ), tStatus, dbConnection = NULL );
+       }
     }
+#else
+    if (!simulate()) {
+       status.E_CDB(status, "no SYBASE support: use -simulate FULL", "cStaMonDb::init" );
+    }
+#endif
+
 }
 
 //
@@ -2308,6 +2330,7 @@ void	cStaMonDb::update
     cStaStat	&status		// (mod) Function return value.	
 )
 {
+#if defined(SYBASE_DHS)
     char		*dbInfo;	// Server Name:Database Name
     DBPROCESS		*dbProc;	// The DB process..
     int			dbRet;		// Db library return value.
@@ -2335,8 +2358,10 @@ void	cStaMonDb::update
     
     //
     // Issue the "sp_spaceused" command on the database.
+    // unless we are in simulation
     //
 
+   if (!simulate()) {
     if ( ( dbProc = dbConnGet( status ) ) != NULL )
     {
 	checkSybDb( dbuse( dbProc, db.dbName ), status, max = 0  );
@@ -2454,6 +2479,7 @@ void	cStaMonDb::update
 	}
     }
 
+   }
 
     
     //
@@ -2516,6 +2542,9 @@ void	cStaMonDb::update
 	status.E_NO_ALIASES( status, db.name );
 	status.S_SUCCESS( status );
     }
+#else
+   // noop
+#endif
 }
 
 //

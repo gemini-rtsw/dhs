@@ -143,16 +143,20 @@ static char rcsid[] = "$Id: dbm.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 
 extern "C"
 {
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
- 
+#endif
+
 #include "gen_types.h"
 #include "gen_str.h"
 #include "gen_msg.h"
 #include "gen_config.h"
 
+#if defined(SYBASE_DHS)
 #include "db.h"
 #include "ad.h"
+#endif
 }
 
 #include "globals.H"
@@ -227,6 +231,7 @@ void cDtsDbManager::close
     VOID
 )
 {
+#if defined(SYBASE_DHS)
     bool	somethingOpen = FALSE;		// At least 1 db was open.
 
 
@@ -263,7 +268,9 @@ void cDtsDbManager::close
     {
 	db_exit();
     }
-
+#else
+   // no SYBASE support: irrelevant
+#endif
 }
 
 //
@@ -573,8 +580,10 @@ struct dbprocess * cDtsDbManager::getDbConn
 )
 {
 
-    cDtsStatus	status;
 
+   cDtsStatus	status;
+
+#if defined(SYBASE_DHS)
 
     status.S_DB_CONN( status, type );
 
@@ -614,6 +623,10 @@ struct dbprocess * cDtsDbManager::getDbConn
 	cdmMutexUn.lock();
 	return ( dbprocUn );
     }
+#else
+   status.E_DB(status, "cDtsDbManager::getDbConn - no SYBASE support: try -noDb?" );
+   return ( NULL );
+#endif
 }
 
 //
@@ -657,6 +670,7 @@ void	cDtsDbManager::getFileList
 )
 {
 
+#if defined(SYBASE_DHS)
     char	isqlOutput[512];// Isql sent.
     AD_ARCHIVE	*archive;
 
@@ -688,6 +702,9 @@ void	cDtsDbManager::getFileList
     returnList->add(DTS_AD_USER, DHS_DT_STRING, cdmUserName , dhsStatus );
     returnList->add(DTS_AD_ISQL, DHS_DT_STRING, isqlOutput, dhsStatus );
 
+#else
+   status.E_DB(status, "cDtsDbManager::getFileList - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -729,13 +746,11 @@ void cDtsDbManager::init
     cDtsStatus		&status		// (in) Return status. 
 )
 {
-    char	*adIdentity;	// Ad identity string.
-    char	*appName=NULL;	// Database application register name.
-
-
-
     checkStat( status, return );
 
+#if defined(SYBASE_DHS)
+    char	*adIdentity;	// Ad identity string.
+    char	*appName=NULL;	// Database application register name.
 
     //
     //  Initialize the ad library.  Do this so we have an ad_file_info call 
@@ -751,7 +766,7 @@ void cDtsDbManager::init
     //
     //  If running standalone, check the mount points and return.
     //
-
+   
     if ( status.standAlone() )
     {
 	mountPoints( status, cDtsStoreManager::tempPath(),
@@ -759,7 +774,7 @@ void cDtsDbManager::init
 	return;
     }
 
-   
+
     //
     //  Initialize the db library.
     //
@@ -815,6 +830,15 @@ void cDtsDbManager::init
 
     mountPoints( status );
     free( appName );
+#else
+    if ( status.standAlone() )
+    {
+	mountPoints( status, cDtsStoreManager::tempPath(),
+		cDtsStoreManager::permPath() );
+	} else {
+      status.E_DB(status, "cDtsDbManager::init - no SYBASE support: try -noDb?" );
+   }
+#endif
 }
 
 //
@@ -865,17 +889,18 @@ void	cDtsDbManager::makeRetrievable
 )
 {
 
-    struct ad_file	adFile;		// Ad file structure.
-    cDtsDbManager	adDbInfo;	// Ad and db information.
-    int			estatus;	// Status returned from ad.
-
-
     checkStat( status, return );
     if ( status.standAlone() )
     {
 	return;
     }
 
+
+#if defined(SYBASE_DHS)
+
+    struct ad_file	adFile;		// Ad file structure.
+    cDtsDbManager	adDbInfo;	// Ad and db information.
+    int			estatus;	// Status returned from ad.
 
     //
     //  Initialize the adFile structure that gets put in the MD tables.
@@ -898,6 +923,9 @@ void	cDtsDbManager::makeRetrievable
 	status.E_AD( status, ad_msg );
     }
     adDbInfo.releaseDbConn( adDbInfo.DB_AD_LIB );
+#else
+   status.E_DB(status, "cDtsDbManager::makeRetrievable - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -946,19 +974,19 @@ void	cDtsDbManager::makeUnretrievable
 )
 {
 
+    checkStat( status, return );
+    if ( status.standAlone() )
+    {
+	return;
+    }
+
+#if defined(SYBASE_DHS)
     struct ad_file	adFile;		// Ad file structure.
     cDtsDbManager	adDbInfo;	// Ad and db information.
     DBPROCESS		*dbProc;	// Dbprocess.
     int			estatus;	// Status returned from ... 
     AD_FILEGET		selectType;	// ad select type.
     char		*vol;		// Volume pointer.
-
-
-    checkStat( status, return );
-    if ( status.standAlone() )
-    {
-	return;
-    }
 
 
     //
@@ -1110,6 +1138,9 @@ void	cDtsDbManager::makeUnretrievable
 		    storeFlag, 0 );
 	}
     }
+#else
+   status.E_DB(status, "cDtsDbManager::makeUnretrievable - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -1152,6 +1183,7 @@ void		cDtsDbManager::mountPoints
     cDtsStatus	&status		// (mod) Function return status.
 )
 {
+#if defined(SYBASE_DHS)
     int		estatus;
     AD_VOLUME	volume;
     char	*tmp;
@@ -1242,6 +1274,9 @@ void		cDtsDbManager::mountPoints
 	releaseDbConn( DB_AD_LIB );
 	return;
     }
+#else
+      status.E_DB(status, "cDtsDbManager::mountPoints - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -1355,6 +1390,7 @@ void	cDtsDbManager::nameInfo
 )
 {
 
+#if defined(SYBASE_DHS)
     checkStat( status, return );
 
 
@@ -1374,6 +1410,9 @@ void	cDtsDbManager::nameInfo
     	*format = DTS_FM_RAW;
     }
     status.S_DEBUG_MSG( status, rootName );
+#else
+   status.E_DB(status, "cDtsDbManager::nameInfo - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -1415,7 +1454,7 @@ void	cDtsDbManager::releaseDbConn
 )
 {
     cDtsStatus		status;
-
+#if defined(SYBASE_DHS)
 
     status.S_DB_CONN( status, type );
 
@@ -1433,6 +1472,9 @@ void	cDtsDbManager::releaseDbConn
 	    cdmMutexUn.unlock();
 	    break;
     }
+#else
+   status.E_DB(status, "cDtsDbManager::releaseDbConn - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -1473,6 +1515,7 @@ bool cDtsDbManager::testAll
     cDtsStatus		&status		// (in) Return status. 
 )
 {
+#if defined(SYBASE_DHS)
     struct ad_file	adFile;		// Ad file structure.
     long		dateNotified;
     DBPROCESS		*dbProc;	// Dbprocess.
@@ -1522,6 +1565,10 @@ bool cDtsDbManager::testAll
     adDbInfo.releaseDbConn( adDbInfo.DB_AD_LIB );
 
     return( TRUE );
+#else
+   status.E_DB(status, "cDtsDbManager::testAll - no SYBASE support: try -noDb?" );
+   return( FALSE );
+#endif
 }
 
 //
@@ -1568,6 +1615,7 @@ void	cDtsDbManager::uniqueConnect
     char	*appString		// (in)  The application name string.
 )
 {
+#if defined(SYBASE_DHS)
     int         appCount;       // # of mediaQueues running on this ID. 
 
  
@@ -1595,6 +1643,9 @@ void	cDtsDbManager::uniqueConnect
 
 	status.E_ONLY_ONE( status, appString );
     }
+#else
+   status.E_DB(status, "cDtsDbManager::uniqueConnect - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -1845,6 +1896,7 @@ void	cDtsDatasetTable::datasetNameMax
     int		*num			// (out) Maximum number.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		i;			// Integer counter to return;
     char	tmp[DTS_DATASET_NAME_LEN];
@@ -1918,6 +1970,10 @@ void	cDtsDatasetTable::datasetNameMax
 
     releaseDbConn( DB_DS_LIB );
     *num = ++i;
+#else
+   status.E_DB(status, "cDtsDbManager::datasetNameMax - no SYBASE support: try -noDb?" );
+   *num = -1;
+#endif
 }
 
 //
@@ -1963,6 +2019,7 @@ void	cDtsDatasetTable::dsGet
     		**tableInfo		// (out) Dataset table information.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     DTS_CONTRIBUTORS
     		contrib;		// List of contributors of the ds.
@@ -2040,6 +2097,9 @@ void	cDtsDatasetTable::dsGet
     }
 
     releaseDbConn( DB_DS_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::dsGet - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2085,6 +2145,7 @@ void	cDtsDatasetTable::dsPut
     		*tableInfo		// (in)  Dataset table information.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		dbStatus;
 
@@ -2141,6 +2202,9 @@ void	cDtsDatasetTable::dsPut
     checkDb( dbStatus, DB_DS_LIB, status, return );
 
     releaseDbConn( DB_DS_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::dsPut - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2184,10 +2248,6 @@ void	cDtsDatasetTable::fileDel
     char	*datasetName		// (in)  Dataset name.
 )
 {
-    DBPROCESS	*dbProc;		// Dbprocess.
-    int		dbStatus;
-
-
     checkStat( status, return );
   
 
@@ -2200,6 +2260,9 @@ void	cDtsDatasetTable::fileDel
 	return;
     }
 
+#if defined(SYBASE_DHS)
+    DBPROCESS	*dbProc;		// Dbprocess.
+    int		dbStatus;
 
     if ( strlen( datasetName ) <= 0 )
     {
@@ -2238,6 +2301,9 @@ void	cDtsDatasetTable::fileDel
     checkDb( dbStatus, DB_PR_LIB, status, return );
 
     releaseDbConn( DB_PR_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::fileDel - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2283,6 +2349,7 @@ void	cDtsDatasetTable::fileGet
     		**tableInfo		// (out) Dataset table information.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     DTS_UNIQUE_NAME
     		ukName;			// Unique name of the ds.
@@ -2382,6 +2449,9 @@ void	cDtsDatasetTable::fileGet
     }
 
     releaseDbConn( DB_PR_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::fileGet - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2430,6 +2500,7 @@ void	cDtsDatasetTable::fileListGet
 					//        information.
 )
 {
+#if defined(SYBASE_DHS)
     DTS_DATASET_NAME
     		datasetName;		// Unique name of the ds.
     long	dateNotified;		// Date notified.
@@ -2583,6 +2654,9 @@ void	cDtsDatasetTable::fileListGet
     }
 
     releaseDbConn( DB_PR_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::fileListGet - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2628,6 +2702,7 @@ void	cDtsDatasetTable::filePut
     		*tableInfo		// (out) Dataset table information.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		dbStatus;
 
@@ -2703,6 +2778,9 @@ void	cDtsDatasetTable::filePut
 
     releaseDbConn( DB_PR_LIB );
 
+#else
+   status.E_DB(status, "cDtsDatasetTable::filePut - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2748,6 +2826,7 @@ void	cDtsDatasetTable::fileUpdate
     		*tableInfo		// (in)  Dataset table information.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		dbStatus;
 
@@ -2804,6 +2883,9 @@ void	cDtsDatasetTable::fileUpdate
     checkDb( dbStatus, DB_PR_LIB, status, return );
 
     releaseDbConn( DB_PR_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::fileUpdat - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2845,6 +2927,7 @@ void		cDtsDatasetTable::getAdFileInfo
     cDtsStatus	&status		// (mod) Function return status.
 )
 {
+#if defined(SYBASE_DHS)
     AD_FILE	adFile;
     int		adStatus;	// Ad library return status.
     cDtsDbManager	
@@ -2859,6 +2942,9 @@ void		cDtsDatasetTable::getAdFileInfo
     dstFileSize = adFile.adf_filesize;
 
     checkAd( adStatus, status, VOID );
+#else
+   status.E_DB(status, "cDtsDatasetTable::getAdFileInfo - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -2992,6 +3078,7 @@ void	cDtsUniqueTable::uniqueNameGet
     long	*dateNotified		// (out) dataNotified.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
 
     checkStat( status, return );
@@ -3050,6 +3137,9 @@ void	cDtsUniqueTable::uniqueNameGet
     }
 
     releaseDbConn( DB_UN_LIB );
+#else
+   status.E_DB(status, "cDtsDatasetTable::uniqueNameGet - no SYBASE support: try -noDb?" );
+#endif
 }
 
 //
@@ -3096,6 +3186,7 @@ void	cDtsUniqueTable::uniqueNameMax
     int		*num			// (out) Number.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		i;			// Integer counter to return;
     char	tmp[DTS_UNIQUE_NAME_LEN];
@@ -3154,6 +3245,10 @@ void	cDtsUniqueTable::uniqueNameMax
 
     releaseDbConn( DB_UN_LIB );
     *num = i;
+#else
+   status.E_DB(status, "cDtsUniqueTable::uniqueNameMax - no SYBASE support: try -noDb?" );
+    *num = -1;
+#endif
 }
 
 //
@@ -3198,6 +3293,7 @@ void	cDtsUniqueTable::uniqueNamePut
     long	dateNotified		// (in)  Date notified.
 )
 {
+#if defined(SYBASE_DHS)
     DBPROCESS	*dbProc;		// Dbprocess.
     int		dbStatus;
 
@@ -3251,4 +3347,7 @@ void	cDtsUniqueTable::uniqueNamePut
     checkDb( dbStatus, DB_UN_LIB, status, return );
 
     releaseDbConn( DB_UN_LIB );
+#else
+   status.E_DB(status, "cDtsUniqueTable::uniqueNamePut - no SYBASE support: try -noDb?" );
+#endif
 }

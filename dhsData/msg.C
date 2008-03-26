@@ -227,7 +227,7 @@ static char rcsid[] = "$Id: msg.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 	msgText( cDtsStatus,  S_WARN_INV_STATE, P_LOG,
 	    "Warning, invalid %s state for dataset %s, ignoring archive command.\n" );
 	msgText( cDtsStatus,  S_WROTE_FILE, P_DEBUG_FULL, 
-	    "Debug: Just wrote file %s.\n" );
+	    "Debug: Just wrote file %s\n" );
 	msgText( cDtsStatus,  E_ABORTABLE, P_LOG,
 	    "Error, command %s is not abortable, sent by `%s' on `%s'." );
 	msgText( cDtsStatus,  E_ACCESS, P_DEBUG_MIN | P_LOG,

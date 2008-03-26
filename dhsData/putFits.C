@@ -104,7 +104,9 @@ extern "C"
 #include "sf.h"
 }
 
+#if defined(SYBASE_DHS)
 #include "fh.H"
+#endif
 
 
 #include "dtsDhs.H"
@@ -336,6 +338,7 @@ void cDtsPutFits::exec
 
     if ( status.ok() && status.parseOn() )
     {
+#if defined(SYBASE_DHS)
 	cHdrParser	fitsParse;
 	cHdrParser::hStatus		hstatus;
 
@@ -368,6 +371,11 @@ void cDtsPutFits::exec
 	    putStatus.S_HEADER_WARN( putStatus, hstatus.message() );
 	    status.S_HEADER_WARN( status, datasetName, hstatus.message() );
 	}
+#else
+   dsPtr->dstHealth = DTS_HL_SICK;
+   putStatus.S_HEADER_ERROR( putStatus, "cDtsPutFits::exec - no SYBASE support: try -noParse?" );
+   status.S_HEADER_ERROR( status, datasetName, "cDtsPutFits::exec - no SYBASE support: try -noParse?" );
+#endif
    }
 
 

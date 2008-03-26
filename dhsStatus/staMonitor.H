@@ -91,8 +91,10 @@
 
 extern "C"
 {
+#if defined(SYBASE_DHS)
 #include	<sybfront.h>
 #include 	<sybdb.h>
+#endif
 }
     
 #include 	"genCond.H"
@@ -705,6 +707,7 @@ inline struct dbprocess *	cStaMonDb::dbConnGet
     cStaStat	&status		// (mod) Function return status.
 )
 {
+#if defined(SYBASE_DHS)
     dbProcMutex.lock();
     if ( dbConnection != NULL )
     {
@@ -721,6 +724,11 @@ inline struct dbprocess *	cStaMonDb::dbConnGet
 		"dbcanquery(dbConnection)"  );
     }
     return( dbConnection );
+#else
+	status.E_SDB( status, "SYBASE not supported",
+		"cStaMonDb::dbConnGet"  );
+   return( NULL );
+#endif
 };
 
 //

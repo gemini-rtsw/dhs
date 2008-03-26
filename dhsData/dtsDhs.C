@@ -157,7 +157,9 @@ extern "C"
 
 #include "globals.H"
 
+#if defined(SYBASE_DHS)
 #include "fh.H"
+#endif
 
 #include "dtsDhs.H"
 #include "dbm.H"
@@ -491,7 +493,9 @@ void		cDtsDhs::closeLibs
 )
 {
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
+#if defined(SYBASE_DHS)
     cHdrParser::hStatus	hstatus;		// Status for the fits header lib.
+#endif
 
 
 
@@ -501,11 +505,16 @@ void		cDtsDhs::closeLibs
 
     if ( status.parseOn() )
     {
+#if defined(SYBASE_DHS)
 	cHdrParser::close( hstatus );
 	if ( !hstatus.ok() )
 	{
 	    status.E_HEADER_INIT( status, hstatus.message() );
 	}
+#else
+   status.E_DB( status, "cDtsDhs::closeLibs - no SYBASE support: try -noParse?" );
+   return;
+#endif
     }
 
 
@@ -651,7 +660,9 @@ void		cDtsDhs::config
     cDtsStatus	&status		// (mod) Function return status.
 )
 {
+#if defined(SYBASE_DHS)
     cHdrParser::hStatus	hstatus;
+#endif
 
 
     checkStat( status, return );
@@ -668,11 +679,15 @@ void		cDtsDhs::config
 
     if ( status.parseOn() )
     {
+#if defined(SYBASE_DHS)
 	cHdrParser::config( hstatus );
 	if ( !hstatus.ok() )
 	{
 	    status.E_HEADER_CONFIG( status, hstatus.message() );
 	}
+#else
+   status.E_DB( status, "cDtsDhs::config - no SYBASE support: try -noParse?" );
+#endif
     }
 }
 
@@ -890,7 +905,7 @@ void		cDtsDhs::init
     // Set up the get handlers.
     //
 
-    checkNull( new cDtsDhsGetHandler( true ), status, return ); 
+   checkNull( new cDtsDhsGetHandler( true ), status, return ); 
 
 }
 
@@ -936,7 +951,9 @@ void		cDtsDhs::initLibs
     char	*statIpAddr;		// Status server ip address.
     cDtsConManager::clStatus
     		cStatus;		// Connection class status.
+#if defined(SYBASE_DHS)
     cHdrParser::hStatus	hstatus;		// Status for the fits header lib.
+#endif
     SF_STATUS	sfStatus;		// Status for sf library.
 
 
@@ -1039,6 +1056,7 @@ void		cDtsDhs::initLibs
 
     if ( status.parseOn() )
     {
+#if defined(SYBASE_DHS)
 	cHdrParser::init( hstatus, cDtsDbManager::storeDb(),
 		cDtsDbManager::serverName() );
 	if ( !hstatus.ok() )
@@ -1046,6 +1064,10 @@ void		cDtsDhs::initLibs
 	    status.E_HEADER_INIT( status, hstatus.message() );
 	    return;
 	}
+#else
+   status.E_DB( status, "cDtsDhs::initLibs - no SYBASE support: try -noParse?" );
+   return;
+#endif
     }
 
 

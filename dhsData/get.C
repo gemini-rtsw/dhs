@@ -97,8 +97,10 @@ extern "C"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 #include <cstring>
  
 #include "gen_types.h"
@@ -107,8 +109,10 @@ extern "C"
 #include "gen_config.h"
 #include "gen_eptr.h"
 
+#if defined(SYBASE_DHS)
 #include "db.h"
 #include "ad.h"
+#endif
 #include "press.h"
 }
 
@@ -425,6 +429,7 @@ void cDtsDhsGet::exec
     void
 )
 {
+#if defined(SYBASE_DHS)
     char		*address = NULL;
     					// Ip address of the client.
     void		*buffer = NULL;	// Data buffer to send to the client
@@ -527,6 +532,9 @@ void cDtsDhsGet::exec
     }
 
     gen_free( filename  );
+#else
+printf ("XXX fixme - cDtsDhsGet::exec\n");
+#endif
 }
 
 //
@@ -574,6 +582,7 @@ void cDtsDhsGet::fileReadAlone
     int			&dbSize		// (out) Length of the data buffer.
 )
 {
+#if defined(SYBASE_DHS)
     cDtsDatasetList
     			*pListPtr;	// Pointer to item in list.
     struct stat 	stat_buf;	// Output of the stat call.
@@ -709,6 +718,9 @@ void cDtsDhsGet::fileReadAlone
 	getStatus.E_FILE_UNAVAIL( getStatus, label(), "locally" );
     }
     return;
+#else
+printf ("XXX fixme - cDtsDhsGet::fileReadAlone\n");
+#endif
 }
 
 //
@@ -756,6 +768,7 @@ void cDtsDhsGet::fileRead
     int			&dbSize		// (out) Length of the data buffer.
 )
 {
+#if defined(SYBASE_DHS)
     char		*medFilename;	// Filename on the medium.
     struct stat 	stat_buf;	// Output of the stat call.
     struct ad_file	adFile;		// Ad file structure.
@@ -971,6 +984,9 @@ void cDtsDhsGet::fileRead
 
     fitsCheck( status, buffer, dbSize, adFile.adf_compression );
     return;
+#else
+printf ("XXX fixme - cDtsDhsGet::fileRead\n");
+#endif
 }
 
 //
@@ -1014,6 +1030,7 @@ void cDtsDhsGet::fitsCheck
     char	compFlag		// (in)  Compression flag.
 )
 {
+#if defined(SYBASE_DHS)
     //
     //  Check the status.
     //
@@ -1036,6 +1053,9 @@ void cDtsDhsGet::fitsCheck
 	status.E_NOT_FITS( status, label() );
 	getStatus.E_NOT_FITS( getStatus, label() );
     }
+#else
+printf ("XXX fixme - cDtsDhsGet::fitsCheck\n");
+#endif
 }
 
 //
@@ -1079,6 +1099,7 @@ void cDtsDhsGet::headerRead
     int		&nbytes			// (mod) Number of bytes in the buffer.
 )
 {
+#if defined(SYBASE_DHS)
     boolean	found = FALSE;	// Found end of header.
     int		totalRead;	// Total number of bytes read.
     
@@ -1227,6 +1248,9 @@ void cDtsDhsGet::headerRead
 	    getStatus.E_NO_HEADER( getStatus, label() );
 	}
     }
+#else
+printf ("XXX fixme - cDtsDhsGet::headerRead\n");
+#endif
 } 
 
 //
@@ -1262,6 +1286,7 @@ void cDtsDhsGet::headerRead
 //***********************************************************************
 //
 
+#if defined(SYBASE_DHS)
 void cDtsDhsGet::requestRemotely
 (
     cDtsStatus		&status,	// (mod) Status passed in.
@@ -1469,3 +1494,4 @@ void cDtsDhsGet::requestRemotely
 	}
     }
 }
+#endif

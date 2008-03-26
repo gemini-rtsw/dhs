@@ -107,9 +107,11 @@ class 	cDtsDhsGet : public cDhsGetRequest, public cDtsDhsName
 	void		fileReadAlone( cDtsStatus &, char **, void **, int & );
 	void		fitsCheck(  cDtsStatus &, void **, int, char );
 	void		headerRead(  cDtsStatus &, void **, FILE *, int & );
-	void		requestRemotely( cDtsStatus &, char **, void **, 
-				struct dbprocess *, struct ad_file *, int &,
-				int & );
+#if defined(SYBASE_DHS)
+   void		requestRemotely( cDtsStatus &, char **, void **, 
+   			struct dbprocess *, struct ad_file *, int &,
+   			int & );
+#endif
 
 	class	gStatus: public cDhsStatus	// Get return response
 	{
