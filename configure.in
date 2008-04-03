@@ -169,7 +169,7 @@ if test "x${DRAMA}" = "x" ; then
 fi
 
 AC_MSG_RESULT([$DRAMA])
-###. $DRAMA/dev.path
+. $DRAMA/dev.path
 IMP_DIR=$IMP_DEV
 SDS_DIR=$SDS_DEV
 ERS_DIR=$ERS_DEV
