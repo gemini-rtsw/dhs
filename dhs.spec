@@ -4,7 +4,6 @@
 %define version __auto__
 %define release __auto__
 %define repository gemini
-%define arch i386
 
 Summary: the dhs server
 Name: %{name}
