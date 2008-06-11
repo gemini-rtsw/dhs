@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version _auto_
-%define release _auto_
+%define version __auto__
+%define release __auto__
 %define repository gemini
 %define arch i386
 
