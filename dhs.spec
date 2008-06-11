@@ -1,19 +1,18 @@
 %define _prefix __auto__
-%define _prefix /gemsoft
-%define version 1.0
-%define release 1
 %define gemopt opt
-%define dist el5
+%define name dhs
+%define version _auto_
+%define release _auto_
 %define repository gemini
 %define arch i386
 
 Summary: the dhs server
-Name: dhs
+Name: %{name}
 Version: %{version}
 Release: %{release}.%{dist}.%{repository}
 URL: http://www.gemini.edu
 Packager: Matthieu Bec <mbec@gemini.edu>
-License: Gemini?
+License: Gemini
 Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
