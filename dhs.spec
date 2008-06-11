@@ -1,7 +1,7 @@
 %define _prefix __auto__
 %define _prefix /gemsoft
 %define version 1.0
-%define release 1
+%define release 2
 %define gemopt opt
 %define dist el5
 %define repository gemini
