@@ -1,0 +1,162 @@
+#!/bin/csh -f
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997				(c) 1997
+# National Research Council		Conseil national de recherches
+# Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+# All rights reserved			Tous droits reserves
+# 					
+# NRC disclaims any warranties,		Le CNRC denie toute garantie
+# expressed, implied, or statu-		enoncee, implicite ou legale,
+# tory, of any kind with respect	de quelque nature que se soit,
+# to the software, including		concernant le logiciel, y com-
+# without limitation any war-		pris sans restriction toute
+# ranty of merchantability or		garantie de valeur marchande
+# fitness for a particular pur-		ou de pertinence pour un usage
+# pose.  NRC shall not be liable	particulier.  Le CNRC ne
+# in any event for any damages,		pourra en aucun cas etre tenu
+# whether direct or indirect,		responsable de tout dommage,
+# special or general, consequen-	direct ou indirect, particul-
+# tial or incidental, arising		ier ou general, accessoire ou
+# from the use of the software.		fortuit, resultant de l'utili-
+# 					sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsCmdSender/scripts/dhsClientStart
+#
+# PURPOSE:
+# Ensure master, dhsStatus and dhsCommand are all running.
+#
+#INDENT-OFF*
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:34  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+#INDENT-ON*
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+#
+
+
+umask 002
+
+
+#
+#  Set up configuration
+#
+
+set releaseRoot = /data/salish1/gaudet/dhs-0.5
+set dhsHostName = siska
+
+
+#
+#  End setup.
+#
+
+set demoRoot = $releaseRoot/demo
+set dramaRoot = $releaseRoot/drama-1.2beta3
+set dhsRoot = $releaseRoot/dhs-0.5
+set stlRoot = $releaseRoot/stl
+set tempFile = /tmp/dhsStart.$USER
+set localHostName = `/usr/ucb/hostname`
+set dhsCommandId = commandServer
+
+setenv	LD_LIBRARY_PATH		$dhsRoot/lib.sun4s:$stlRoot/lib:$dramaRoot/lib.sun4s:$LD_LIBRARY_PATH
+setenv	DEFAULT_CONFIG_DIR	$dhsRoot/config
+setenv	IMP_NET_KBYTES		3264
+setenv	IMP_SCRATCH		$demoRoot
+
+set path = ( $dhsRoot/bin.sun4s $dramaRoot/bin.sun4s $path )
+
+
+#
+#  Parse command line.
+#
+
+if ( $#argv != 1 ) then
+    echo "Usage: dhsClientStart <inputFile>"
+    exit 1
+endif
+
+set inputFile = $1
+
+
+#
+#   Start DRAMA master.
+#
+
+if ( $localHostName != $dhsHostName ) then
+    set run_master = 1
+else
+    set run_master = 0
+endif
+
+if ( $run_master ) then
+    echo "Running cleanup..."
+    cleanup >&! /dev/null
+    set saved_status = $status
+    if ( $saved_status != 0 ) then
+	echo "Error running cleanup."
+	goto cleanUp
+    endif
+
+    echo "Starting master..."
+    master &
+    set saved_status = $status
+    if ( $saved_status != 0 ) then
+	echo "Error running master."
+	goto cleanUp
+    endif
+endif
+
+
+#
+#  Start dhsCmdSender
+#
+
+sleep 2
+echo "Starting dhsCmdSender..."
+dhsCmdSender xyz $dhsHostName $dhsCommandId < $inputFile
+set saved_status = $status
+if ( $saved_status != 0 ) then
+    echo "Error running dhsStatus."
+    goto cleanUp
+endif
+
+
+#
+#  Cleanup after error or exit of dhsCmdSender.
+#
+
+cleanUp:
+    foreach proc ( dhsCmdSender )
+	jobs -l >& $tempFile
+	set pid = `grep -w $proc $tempFile | awk '{print $3}'`
+	if ( $pid != "" ) then
+	    echo "Sleeping 5 seconds before shutting down $proc..."
+	    sleep 5
+	    echo "Shutting down $proc..."
+	    kill -9 $pid
+	endif
+    end
+
+    if ( $run_master ) then
+	echo "Sleeping 15 seconds before running cleanup..."
+	sleep 15
+	echo "Running cleanup..."
+	cleanup >&! /dev/null
+	set saved_status = $status
+	if ( $saved_status != 0 ) then
+	    echo "Error running cleanup."
+	endif
+    endif
+    \rm -f $tempFile
+
+exit 0

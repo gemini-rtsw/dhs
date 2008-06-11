@@ -1,0 +1,234 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name:			: cd/doc/cdWriteRunGear.1
+.\"*
+.\"*	Purpose:
+.\"*	    Manpage for cdWriteRunGear.
+.\"*
+.\"*	Date:			: Mar 1, 1998
+.\"*
+.\"*	SCCS data		: %Z%
+.\"*	    Module Name		: %M%
+.\"*	    Version Number	: %I%
+.\"*	    Release Number	: %R%
+.\"*	    Last Updated	: %G%
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*	   98/03/01 SDJ		: Copied from cdMake (vlt project).
+.\"*	   99/02/24 SDJ		: Changed command-line arguments to take
+.\"*				  the data path.
+.\"*	   99/03/14 SDJ		: Device name added to device information.
+.\"*	   99/03/17 SDJ		: Added num-files argument.
+.\"*	   99/04/08 SDJ		: Added optional command-line arg, "-simulate".
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH CDWRITERUNGEAR 1 08/04/99 "CADC"
+ 
+.SH NAME
+cdWriteRunGear\-33
+\- runs Elektroson's GEAR (version 3.3) software to write CD\-ROM(s).
+ 
+.SH SYNOPSIS
+.B cdWriteRunGear\-33
+.I volume\-name gearrc\-file\-path log\-file\-path
+.I gear\-work\-path device\-information num\-copies 
+.I num\-files data\-path
+[
+.I \-simulate
+]
+
+.SH DESCRIPTION
+.B cdWriteRunGear\-33
+is a script that runs Elektroson's GEAR software to write one or more
+CD\-ROM(s). This script assumes that a single CD\-writer is to be
+used and that no stacker is used, so the operator must manually place
+CD\-ROMs into the CD\-writer.
+
+This script parses the device specific information provided 
+by the
+.I device\-information
+command\-line parameter.  The only information that is used includes:
+.RS 4
+.nf
+SCSI bus,
+SCSI target,
+read speed, and
+write speed.
+.fi
+.RE
+Additional information is expected to be passed to the script but it
+is not used.  It is expected in order to maintain compatibility with
+other media writing scripts and in order to match the output from
+.B mediaWrite.
+These values that are used replace appropriate values in the
+.I .gearrc
+file in order to ensure that the specified device is used.
+
+This script was written to work with an application such as
+.B cdWrite
+or 
+.B mediaWrite
+which interface with SYBASE.
+
+.SH OPERATION
+.B cdWriteRunGear\-33 
+requires eight command\-line parameters:
+.TP
+.I volume\-name:      
+Name of disk in upper\-case
+.TP
+.I gearrc\-file\-path: 
+Fully specified path and name of gearrc file
+.TP
+.I log\-file\-path:    
+Fully specified path and name of log file
+.TP
+.I gear\-work\-path:   
+Fully specified path to the work directory. This directory contains
+the physical image of the CD\-ROM to be written.
+.TP
+.I device\-information:
+The device information includes the following: 
+.RS 8
+.nf
+1. \fBdevice name\fR or mount point of the CD writer,
+2. \fBSCSI bus\fR the CD\-writer is located on,
+3. \fBSCSI target\fR number of the device,
+4. \fBSCSI logical unit number\fR of the device,
+5. the \fBread speed\fR of the device,
+6. the \fBwrite speed\fR of the device, and
+7. the \fBdriver\fR to be used with the device.  
+.fi
+.RE
+.sp 1
+.RS 5
+All of these values
+are expected to be separated with commas in the order they have been 
+listed.
+.RE
+.TP
+.I num\-copies:       
+Number of copies  to make.
+.TP 
+.I num\-files 
+The number of files to be written to the medium. This argument may not be used 
+by the script, however, it is needed in order to  maintain compatibility 
+with other media writing scripts. 
+.TP
+.I data\-path:
+Fully specified path to the directory of data.  This directory contains
+the data which will burned onto the CD\-ROM.  This argument is not used
+by the script but exists to maintain compatibility with other media 
+writing scripts.
+
+.SH OPTIONS
+.TP
+.B \-simulate
+Simulate mode.  When this flag is specified \fBcdWriteRunGear\-33\fR operates 
+in simulation mode.  In simulate mode data is sent to the CD\-write but no 
+data it is not written.
+
+ 
+.SH USAGE
+.B cdWriteRunGear\-33
+will require some operator input.  The operator will be prompted
+whenever a new CD\-ROM needs to be placed in the CD\-writer.
+The GEAR software will also ask if the operator wishes to change
+any of the settings before the CD\-ROM is burned.  GEAR may also prompt
+for other information.
+
+If 
+.B cdWriteRunGear\-33
+is being run in simulate mode then no data will be written to the
+CD\-ROM.  This is achieved by altering the GEAR configuration file,
+\fIWriteEnable\fR is set to FALSE. All operations are
+performed except the actual burning of data onto the CD\-ROM.
+
+
+.SH EXAMPLES
+.PP
+The following example demonstrates how to use
+.B cdWriteRunGear\-33
+.nf
+.TP
+.B "example% cdWriteRunGear\-33 USER1_002 /dot_file/gearrc /logs/cdWrite \e"
+.B "/staging/media/staging3 /dev/rdsk/c1t4d0s0,0,4,0,24,4,none 2 \e"
+.B "17392 /staging/user/staging3"
+.fi
+.PP
+In this example copies of volume (unit) 
+.B USER1_002,
+which is located in
+.I /staging/media/staging3
+will be written. The configuration file is located at
+.I /dot_files/gearrc
+and the log file is located
+at
+.I /logs/cdWrite.
+The CD\-ROM will contain 17392 files after it is burned.
+Finally, the device information tells us that there is no driver to
+be used.  The device is located on SCSI Bus 2, target 3, and logical
+unit number 0.  The device reads at 6x speed and writes at 4x speed.
+.RE
+
+.PP
+The following example demonstrates how to use
+.B cdWriteRunGear\-33
+in simulation mode.
+.nf
+.TP
+.B "example% cdWriteRunGear\-33 ARCHIVE2_2032 /dot_file/gearrc /logs/cdWrite \e"
+.B "/staging/media/staging0 /dev/rdsk/c5t2d0s0,2,3,0,24,4,none 2 \e"
+.B "823 /staging/user/staging0 -simulate"
+.fi
+.PP
+In this example copies of volume (unit) 
+.B ARCHIVE2_2032
+which is located in
+.I /staging/media/staging0
+will be written. The configuration file is located at
+.I /dot_files/gearrc
+and the log file is located
+at
+.I /logs/cdWrite.
+The CD\-Writer will simulate burning 823 files onto the CD\-ROM.
+Finally, the device information tells us that there is no driver to
+be used.  The device is located on SCSI Bus 0, target 4, and logical
+unit number 0.  The device reads at 24x speed and writes at 4x speed.
+Note that no data will be burned onto the CD\-ROM in this example.
+.RE
+
+.SH ENVIRONMENT VARIABLES
+The shell's path variable
+should include the locations of the GEAR,
+.B gear
+executable, the Elektroson CD\-ROM authoring software.
+ 
+.SH DIAGNOSTICS
+.B cdWriteRunGear\-33
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non\-zero number is returned. 
+ 
+.SH SEE ALSO
+.BR mediaWrite (1).
+ 
+.B GEAR for UNIX User's Manual, Elektroson USA
+ 
+.SH BUGS
+None known.
+ 
+.SH AUTHOR
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

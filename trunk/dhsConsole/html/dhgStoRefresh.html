@@ -1,0 +1,139 @@
+<!--  $Id: dhgStoRefresh.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1999                              (c) 1999
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgStoRefresh.html
+#
+# PURPOSE:
+# Provide HTML help information on how to execute the DHS "stoRefresh"
+# command from the DHS console.
+# 
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:12  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.1  1999/02/27 00:25:04  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Refresh Command</TITLE>
+  </HEAD>
+
+  <BODY>
+  <H1>Refresh Command</H1>
+    The execution of the refresh command will cause the
+    <A HREF="dhgSto.html">Storage Server</A>
+    to read the Archive Media database information.
+    Executing this command synchronizes the
+    Storage Server with the database.  This command is nice to use
+    when applications are run by hand.
+    <P>
+    This command can be performed on the Storage subsystem only.
+
+    <H2>Viewing affected Status information</H2>
+    As mentioned, during a refresh command the Archive Media database is
+    re-read.  A consequence of issuing this command is some or all
+    of the 
+    <A HREF="dhgStoRequest.html">media request</A> information,
+    displayed on the
+    <A HREF="dhgSto.html">Storage Subsystem</A> window, may be altered.
+    
+    <A NAME="window"><H2>The Refresh Dialogue Window</H2></A>
+    The Refresh Dialogue is displayed when the refresh command
+    has been selected on the 
+    <A HREF="dhgSto.html">Storage Subsystem</A> window.
+    This window is &quot;modal&quot;, which means that all other
+    windows are disabled while this window is viewable.
+    <P>
+      The refresh dialogue displays a prompt, which 
+      asks if the refresh command should proceed.
+    <P>
+      At the bottom of the dialogue are two buttons which can be 
+      <A HREF="dhgControls.html#button">selected</A>.
+      The buttons and their actions are described in the table below.
+      
+      <P><A NAME="buttons"></A>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	<CAPTION ALIIGN="top">Button Actions</CAPTION>
+	<TR><TH>Button</TH>
+	  <TH ALIGN="center">Action</TH>
+	</TR>
+	<TR> <TD>OK</TD>
+	  <TD>Sends the <I>stoRefresh</I> command to DHS, and removes the 
+	    refresh dialogue window from the display.</TD> 
+	</TR>
+	<TR> <TD>Cancel</TD>
+	  <TD>Does <B>not</B> send the <I>stoRefresh</I> command, but
+	    removes the refresh dialogue window from the display. </TD> 
+	</TR>
+      </TABLE>
+
+    <P><HR>
+    <H2>Refresh the Storage Subsystem</H2>
+    <OL>
+      <LI>Display the Storage Subsystem Window:<BR>
+	<A HREF="dhgControls.html#button">Select</A> the desired 
+	button labeled &quot;STO&quot; on the main window of the
+	<A HREF="dhsConsole.html#subsystem">Console</A>
+      <LI>Display the refresh dialogue window, described 
+	<A HREF="#window">above</A>
+        <UL TYPE="DISC">
+	  <LI>From the &quot;Commands&quot; menu:<BR>
+	    Display the &quot;Commands&quot; menu and
+	    <A HREF="dhgControls.html#menubar">select</A>
+	    &quot;Re<U>f</U>resh&quot; from the menu
+	  <LI>From the Toolbar:<BR>
+	    Below the status information is a row of buttons.  
+	    <A HREF="dhgControls.html#button">Select</A>
+	    &quot;Refresh&quot; from this row of buttons.
+	</UL>
+      <LI><A HREF="dhgControls.html#button">Select</A>
+	the appropriate button at the bottom of the window.
+	The actions taken by each button are described 
+	<A HREF="#buttons">above</A>.
+    </OL>
+      
+  <P>		
+  <HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Fri Feb 26 12:08:45 PST 1999 -->
+<!-- hhmts start -->
+Last modified: Fri Feb 26 16:23:50 PST 1999
+<!-- hhmts end -->
+  </BODY>
+</HTML>
+

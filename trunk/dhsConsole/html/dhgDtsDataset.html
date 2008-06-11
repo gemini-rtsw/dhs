@@ -1,0 +1,181 @@
+<!--  $Id: dhgDtsDataset.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998                              (c) 1998
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgDtsDataset.html
+#
+# PURPOSE:
+# To provide HTML help for the Data Server's dataset display window.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.3  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.2  1998/07/14 22:20:26  jaeger
+# Moved all information on manipulating widgets to a separate file.
+#
+# Revision 1.1  1998/07/02 19:14:42  jaeger
+# Initial revision
+#
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Dataset Display</TITLE>
+  </HEAD>
+
+  <BODY>
+  <H1>Dataset Display</H1>
+    The Data Server maintains a list of datasets that it is aware of.  These
+    datasets may reside in the of the Data Server's Permanent or
+    Temporary storage areas.  The Data Server is also aware of files at 
+    other locations,
+    such as a particular magnetic disk. The dataset display window lists 
+    these datasets. It does not list the archived data.
+
+    <H2>Viewing the Dataset List</H2>
+    The Data Server's dataset list is shown in the dataset display window.  
+    This window is displayed when the 
+    &quot;Datasets&quot; command is selected on the 
+    <A HREF="dhgDts.html#toolbar">Data Server's subsystem window</A>
+
+    <A NAME="datasetWindow"><H2>The Dataset Display Window</H2></A>
+    The Dataset Display window is displayed from the 
+    <A HREF="dhgDts.html#toolbar">Data Server's subsystem window</A>.
+    <P>
+      The known datasets are displayed in a 
+      <A HREF="dhgControls.html#scrollbar">scrollable</A> list.
+      Each dataset is displayed on a separate line and its information is 
+      shown in four columns.
+      The following information (columns) is given for each dataset:
+      <UL>
+        <LI><B>File Name</B>.  The name of the file, its full path is not given.
+	<LI><B>Format</B>. One of the following values: (F)ITS, or (R)aw.
+	<LI><B>Volume Name</B>. The name of the volume where the file is
+	  located.
+	<LI><B>Size</B>. The size of the file in kilobyes.
+    </UL>
+    <P>
+      Note that the list of datasets is static!  The list displayed is the
+      list of datasets given by the last <I>datasetInfo</I> command that 
+      was issued from the <A HREF="dhsConsole.html">Console</A>.
+      Thus, the list shown in this window may not be the same as the
+      Data Server's list.
+    <P>
+      At the bottom of the window is a row of buttons.  Two of these
+      buttons (Header, and Delete) require a dataset to be 
+      <A HREF="dhgControls.html#lists">selected</A>
+      before they are invoked.  
+      The actions taken by the buttons when they are 
+      <A HREF="dhgControls.html#button">selected</A> are as follows:
+    <P>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	<CAPTION ALIIGN="top">Button Actions</CAPTION>
+	<TR><TH>Button</TH>
+	  <TH ALIGN="center">Action</TH>
+	</TR>
+	<TR> <TD>Header</TD>
+	  <TD>Executes <I>dhsGet</I> to retrieve the FITS header of the
+	    <A HREF= "dhgControls.html#lists">selected dataset</A>.  
+	    The FITS header is displayed in a  separate window, the 
+	    <A HREF="dhgDtsFits.html">FITS Header window</A>
+	  </TD>
+	</TR>
+	<TR> <TD>Delete</TD>
+	  <TD>Asks the Data Server to issue a <I>bdDelete</I> command on the
+	    <A HREF= "dhgControls.html#lists">selected dataset</A>. 
+	    If this command
+	    is successful the dataset is removed from the list and if its
+	    FITS header was displayed then its
+	    <A HREF="dhgDtsFits.html">FITS Header window</A> will be
+	    removed from the display (destroyed).
+	  </TD>
+	</TR>    
+	<TR> <TD>Refresh</TD>
+	  <TD>Asks the Data Server to issue a <I>datasetInfo</I> command.
+	    The results of this command are displayed in the 
+	    <A HREF="#datasetWindow">dataset display window</A>
+	    the command was issued from.  This button allows
+	    a user to display an up-to-date list in the dataset display
+	    window.
+	  </TD>
+	</TR>    
+	<TR> <TD>OK</TD>
+	  <TD>Removes the dataset display window from the display.</TD>
+	</TR>
+      <TR> <TD>Help</TD>
+	<TD>Displays this help information.</TD>
+      </TR>
+    </TABLE>
+
+    <P><HR>
+    <H2>Viewing the FITS header of a dataset</H2>
+    The actions listed below are performed on the Dataset Display window.
+    <OL>
+	<LI><A HREF="dhgControls.html#lists">Select</A> a dataset
+	<LI><A HREF="dhgControls.html#button">Select</A> the &quot;Header&quot;
+	button.
+    </OL>
+
+    <P><HR>
+    <H2>Deleting a dataset</H2>
+    The actions listed below are performed on the Dataset Display window.
+    <OL>
+	<LI><A HREF="dhgControls.html#lists">Select</A> a dataset
+	<LI><A HREF="dhgControls.html#button">Select</A> the &quot;Delete&quot;
+	button.
+    </OL>
+
+    <P><HR>
+    <H2>Getting an up-to-date dataset list</H2>
+    The action listed below is performed on the Dataset Display window.
+
+    <OL>
+	<LI><A HREF="dhgControls.html#button">Select</A> the &quot;refresh&quot;
+	button.
+    </OL>
+ 
+  <P>		
+  <HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Wed Nov  5 12:22:24 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Wed Jul 22 14:53:29 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
+

@@ -1,0 +1,134 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: dvd/doc/dvdPrep
+.\"*
+.\"*	Purpose:
+.\"*	    Manpage for dvdPrep
+.\"*
+.\"*	Date			: Dec 17, 1998
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: dvdPrep.1
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 03/15/99
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*	    99/03/09 SDJ	: Copied from cdPrepRunMkisofs.1 
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH DVDPREP 09/03/99 "CADC"
+ 
+.SH NAME
+.B dvdPrep
+\- runs a yet to be named third party DVD authoring software which is
+use to prepare data for writing a DVD by creating a physical image of the
+DVD on magnetic disk.
+ 
+.SH SYNOPSIS
+.nf
+.B dvdPrep \fIvolume\-name config\-file\-path log\-file\-path\fR
+.I work\-path data\-path
+.fi
+
+.SH DESCRIPTION
+.B dvdPrep
+is a C\-shell script that uses third party software to prepare
+an image of a DVD on magnetic disk.
+
+This script places all files in the 
+.I data\-path
+on the magnetic disk image.  It is expected that this directory may
+contain hard links to the actual data.
+
+This script was written to work with an application such as
+.B mediaPrep
+which interfaces with a SYBASE server and tables.
+
+.SH OPERATION
+.B dvdPrep 
+requires five command\-line parameters:
+.TP
+.I volume\-name:      
+Name of disk in upper\-case.
+.TP
+.I config\-file\-path: 
+Fully specified path and name of the third party software's configuration
+file.
+.TP
+.I log\-file\-path:    
+Fully specified path and name of log file.
+.TP
+.I work\-path:   
+Fully specified path to the work directory.  This is the location on
+magnetic disk where the DVD image will be created.
+.TP
+.I data\-path
+Fully specified path to the directory which contains the data.
+This directory may contain the data or hard links to the real data.
+
+.SH OPTIONS
+There are no optional command\-line arguments for
+.B dvdPrep
+ 
+.SH USAGE
+.B dvdPrep
+should not require any operator input.
+
+.SH EXAMPLES
+.PP
+The following example demonstrates how to use
+.B dvdPrep
+.nf
+.TP
+.B "example% dvdPrep ARCH4_0202 /dot_files/myconfig /logs/dvdPrep \e"
+.B "/staging/media/staging2 /staging/archive/staging2"
+.fi
+.PP
+In this example copies of volume (unit) 
+.B ARCH4_0202
+will be created in
+.I /staging/media/staging2.
+The configuration file is located at
+.I /dot_files/myconfig
+and the log file is located
+at
+.I /logs/dvdPrep.
+The data can be found in
+.I /staging/archive/staging2
+
+
+.SH ENVIRONMENT VARIABLES
+The shell's path variable
+should include the locations of the 
+third party DVD authoring software.
+ 
+.SH DIAGNOSTICS
+.B dvdPrep
+returns a 0 to the calling environment upon successful completion.
+Otherwise a non\-zero number is returned. 
+ 
+.SH SEE ALSO
+.BR mediaPrep (1),
+.BR mediaWrite (1),
+and
+.BR dvdWrite (1),
+ 
+.SH BUGS
+None known.
+ 
+.SH AUTHOR
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

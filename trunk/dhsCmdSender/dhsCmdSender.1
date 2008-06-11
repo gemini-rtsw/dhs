@@ -1,0 +1,182 @@
+.\"/*+ $Id: dhsCmdSender.1,v 1.1.1.1 2002-11-24 20:25:13 brighton Exp $
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) 1998				(c) 1998
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-	ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME:
+.\" dhsCmdSender/doc/dhsCmdSender.1
+.\"
+.\" PURPOSE:
+.\" Manaul page that described the DHS command sender executable.
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:33  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:34  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.1  1998/08/06 23:32:11  nhill
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.TH	dhsCmdSender 1 06/08/98 "NRC"
+
+.SH NAME
+dhsCmdSender
+\- A test program used to send selected commands to a DHS server.
+
+.SH SYNOPSIS
+.B dhsCmdSender
+<
+.B clientName
+> <
+.B serverAddress
+> <
+.B serverName
+> [ 
+.B \-printResult 
+] [ 
+.B \-timeCommand 
+]
+
+.SH DESCRIPTION
+This is a test program which sends specific commands to DHS servers.
+The information about the commands to send is read from standard input,
+or can be read from a file using input redirection.
+
+.SH OPERATION
+The command line options specify the name to use for this client, the
+address of the host running the server application, and the IMP name
+of the server.
+
+The -printResult option causes any attribute value lists returned by
+the server to be printed.
+
+The -timeCommand option causes the time it takes for the server to accept
+the command to be
+measured and displayed to the standard output. Note: This is the only the
+time it takes for the server to decide that the command appears to be correct,
+not the time it takes to execute the command.
+
+The input to the \fBdhsCmdSender\fR program has the following form:
+
+\- Blank lines, or lines where the first non-blank character is "#" are ignored.
+
+\- Tokens in the input are either words separated by white space, or
+words containing white space but surrounded by quotes (").
+
+\- The lines which start at the leftmost column of the input are commands. The
+first token is the name of the command, and there is an optional token which
+indicates the amount of time to wait after sending the command before 
+aborting the command (if not present, the command will never be aborted).
+
+\- Lines where the first character is a tab are attributes for the 
+preceeding command. 
+The attributes are described by 3 tokens, followed by 0 or more tokens 
+containing the data. The first three tokens are: attribute name, data type
+(only DHS_DT_STRING, DHS_DT_UINT32, and DHS_DT_INT32 are supported), and
+a boolean flag indicating if the data should be sent as an array (the string
+"yes" indicates the data is sent as an array, anything else results in the data
+being interpreted as a scalar value). If the data is an array, the 
+attribute description is followed by 0 or more data values which will be sent
+as a one dimensional array (multi dimensional arrays are not supported). 
+If the data is a scalar value, the attribute description is followed by 
+a single data value.
+
+
+If there is more than one command in the standard input stream, each of the
+commands will be sent in turn, until an end of file is seen (or a control D).
+
+If the server is on a different host, the IMP \fBmaster\fR task must
+be run on both the client and server hosts before \fBdhsCmdSender\fR is run.
+
+
+.SH FILES
+There are no specific files, but command descriptions are often stored
+in files.
+
+
+.SH EXAMPLES
+.LP
+An example of a command line:
+.IP
+.B example> dhsCmdSender cmdSender daxka statusServer
+
+.LP
+An example of the data read from standard input is:
+.LP
+.nf
+
+simulateLevel		
+	level 		DHS_DT_STRING	no	"FAST"
+	subsystem       DHS_DT_STRING   yes     "CMD"
+
+debugLevel
+	level 		DHS_DT_STRING	no	"MIN"
+	subsystem       DHS_DT_STRING   yes     "CMD"
+
+test	1000
+	subsystem       DHS_DT_STRING   yes     "CMD"
+
+ping
+	subsystem       DHS_DT_STRING   yes     "CMD"
+.fi
+.LP
+To send the commands listed in the \fImyInput\fR file to the command
+server type the following on the command line:
+.LP
+.B example> dhsCmdSender cmdSender daxka commandServer <myInput
+
+.SH  ENVIRONMENT VARIABLES
+IMP_SCRATCH controls the directory in which the IMP scratch files are created. 
+This must match the IMP_SCRATCH environment variable used when running the 
+server if the server is on the same host, or when running the IMP \fBmaster\fR
+task if the server is on a different host.
+
+
+.SH SEE ALSO
+
+.SH BUGS
+The options for sending attributes is limited.
+
+The input parsing is primitive.
+
+.SH AUTHORS
+Shannon Jaeger
+.br
+
+
+
+National Research Council of Canada
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre

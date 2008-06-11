@@ -1,0 +1,1186 @@
+#
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+#                                       
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/config/CA_CONFIG
+#
+# PURPOSE:
+# Configuration for the EPICS service in OCSWish.
+#
+#
+#INDENT-OFF*
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:13  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.14  1999/06/24 17:47:08  jaeger
+# Removed "req%d:AutoRetrieve" record.
+#
+# Revision 1.13  1999/06/16 23:13:17  jaeger
+# Added new device records and extended many of the record arrays.
+#
+#INDENT-ON*
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+#
+
+
+#
+# This file was generanted by mkCaConfig
+#
+# Test CA configuration file
+#
+# Apply records need to come first since they are created when encountered
+# in the command entries.  The other sections/entires do not need to occur 
+# in any order.
+#
+# Apply section
+#   one line for each apply record in the form:
+#     apply ocs-name epics-name apply-car-epics-name description-to-end-of-line
+#
+
+# Status section
+#   first line describes the collection of status records
+#      status ocsName description-to-end-of-line
+#   Then one line for each entry in the status acceptor
+#      ocsName epicsName skipCount description-to-end-of-line
+#
+#   Skip count is the number of updates that will be thrown away before
+#   higher layers are notified.  This is useful for fast (10/second) TCS
+#   time updates. 
+
+
+
+status dhsSAD description
+{
+
+    dhsLog              	DHSS:logMessage               	0  comments
+    dhsHealth           	DHSS:health                   	0  comments
+    dhsState            	DHSS:state                    	0  comments
+    dhsDebug            	DHSS:debug                    	0  comments
+    dhsSim              	DHSS:simulate                 	0  comments
+
+    staHealth           	DHSS:STA:health                	0  comments
+    staDesc             	DHSS:STA:healthDesc            	0  comments
+    staState            	DHSS:STA:state                 	0  comments
+    staDebug            	DHSS:STA:debug                 	0  comments
+    staSim              	DHSS:STA:simulate              	0  comments
+
+    qlsHealth           	DHSS:QLS:health                	0  comments
+    qlsDesc             	DHSS:QLS:healthDesc            	0  comments
+    qlsState            	DHSS:QLS:state                 	0  comments
+    qlsDebug            	DHSS:QLS:debug                 	0  comments
+    qlsSim              	DHSS:QLS:simulate              	0  comments
+
+    hisHealth           	DHSS:HIS:health                	0  comments
+    hisDesc             	DHSS:HIS:healthDesc            	0  comments
+    hisState            	DHSS:HIS:state                 	0  comments
+    hisDebug            	DHSS:HIS:debug                 	0  comments
+    hisSim              	DHSS:HIS:simulate              	0  comments
+
+    dtsHealth           	DHSS:DTS:health                	0  comments
+    dtsDesc             	DHSS:DTS:healthDesc            	0  comments
+    dtsState            	DHSS:DTS:state                 	0  comments
+    dtsDebug            	DHSS:DTS:debug                 	0  comments
+    dtsSim              	DHSS:DTS:simulate              	0  comments
+
+    cmdHealth           	DHSS:CMD:health                	0  comments
+    cmdDesc             	DHSS:CMD:healthDesc            	0  comments
+    cmdState            	DHSS:CMD:state                 	0  comments
+    cmdDebug            	DHSS:CMD:debug                 	0  comments
+    cmdSim              	DHSS:CMD:simulate              	0  comments
+
+    stoHealth           	DHSS:STO:health                	0  comments
+    stoDesc             	DHSS:STO:healthDesc            	0  comments
+    stoState            	DHSS:STO:state                 	0  comments
+    stoDebug            	DHSS:STO:debug                 	0  comments
+    stoSim              	DHSS:STO:simulate              	0  comments
+
+    olpHealth           	DHSS:OLP:health                	0  comments
+    olpDesc             	DHSS:OLP:healthDesc            	0  comments
+    olpState            	DHSS:OLP:state                 	0  comments
+    olpDebug            	DHSS:OLP:debug                 	0  comments
+    olpSim              	DHSS:OLP:simulate              	0  comments
+
+    sdpHealth           	DHSS:SDP:health                	0  comments
+    sdpDesc             	DHSS:SDP:healthDesc            	0  comments
+    sdpState            	DHSS:SDP:state                 	0  comments
+    sdpDebug            	DHSS:SDP:debug                 	0  comments
+    sdpSim              	DHSS:SDP:simulate              	0  comments
+
+
+    dtsInc              	DHSS:DTS:numIncomplete         	0  comments
+    stoAlert            	DHSS:STO:alert                 	0  comments
+
+    resArraySize        	DHSS:resourceArraySize        	0  comments
+
+    res0Fullname        	DHSS:resource0:fullname       	0  comments
+    res0InUse           	DHSS:resource0:inUse          	0  comments
+    res0Max             	DHSS:resource0:max            	0  comments
+    res0Name            	DHSS:resource0:name           	0  comments
+    res0Type            	DHSS:resource0:type           	0  comments
+    res0Used            	DHSS:resource0:used           	0  comments
+    res0Units           	DHSS:resource0:units          	0  comments
+
+    res1Fullname        	DHSS:resource1:fullname       	0  comments
+    res1InUse           	DHSS:resource1:inUse          	0  comments
+    res1Max             	DHSS:resource1:max            	0  comments
+    res1Name            	DHSS:resource1:name           	0  comments
+    res1Type            	DHSS:resource1:type           	0  comments
+    res1Used            	DHSS:resource1:used           	0  comments
+    res1Units           	DHSS:resource1:units          	0  comments
+
+    res2Fullname        	DHSS:resource2:fullname       	0  comments
+    res2InUse           	DHSS:resource2:inUse          	0  comments
+    res2Max             	DHSS:resource2:max            	0  comments
+    res2Name            	DHSS:resource2:name           	0  comments
+    res2Type            	DHSS:resource2:type           	0  comments
+    res2Used            	DHSS:resource2:used           	0  comments
+    res2Units           	DHSS:resource2:units          	0  comments
+
+    res3Fullname        	DHSS:resource3:fullname       	0  comments
+    res3InUse           	DHSS:resource3:inUse          	0  comments
+    res3Max             	DHSS:resource3:max            	0  comments
+    res3Name            	DHSS:resource3:name           	0  comments
+    res3Type            	DHSS:resource3:type           	0  comments
+    res3Used            	DHSS:resource3:used           	0  comments
+    res3Units           	DHSS:resource3:units          	0  comments
+
+    res4Fullname        	DHSS:resource4:fullname       	0  comments
+    res4InUse           	DHSS:resource4:inUse          	0  comments
+    res4Max             	DHSS:resource4:max            	0  comments
+    res4Name            	DHSS:resource4:name           	0  comments
+    res4Type            	DHSS:resource4:type           	0  comments
+    res4Used            	DHSS:resource4:used           	0  comments
+    res4Units           	DHSS:resource4:units          	0  comments
+
+    res5Fullname        	DHSS:resource5:fullname       	0  comments
+    res5InUse           	DHSS:resource5:inUse          	0  comments
+    res5Max             	DHSS:resource5:max            	0  comments
+    res5Name            	DHSS:resource5:name           	0  comments
+    res5Type            	DHSS:resource5:type           	0  comments
+    res5Used            	DHSS:resource5:used           	0  comments
+    res5Units           	DHSS:resource5:units          	0  comments
+
+    res6Fullname        	DHSS:resource6:fullname       	0  comments
+    res6InUse           	DHSS:resource6:inUse          	0  comments
+    res6Max             	DHSS:resource6:max            	0  comments
+    res6Name            	DHSS:resource6:name           	0  comments
+    res6Type            	DHSS:resource6:type           	0  comments
+    res6Used            	DHSS:resource6:used           	0  comments
+    res6Units           	DHSS:resource6:units          	0  comments
+
+    res7Fullname        	DHSS:resource7:fullname       	0  comments
+    res7InUse           	DHSS:resource7:inUse          	0  comments
+    res7Max             	DHSS:resource7:max            	0  comments
+    res7Name            	DHSS:resource7:name           	0  comments
+    res7Type            	DHSS:resource7:type           	0  comments
+    res7Used            	DHSS:resource7:used           	0  comments
+    res7Units           	DHSS:resource7:units          	0  comments
+
+    res8Fullname        	DHSS:resource8:fullname       	0  comments
+    res8InUse           	DHSS:resource8:inUse          	0  comments
+    res8Max             	DHSS:resource8:max            	0  comments
+    res8Name            	DHSS:resource8:name           	0  comments
+    res8Type            	DHSS:resource8:type           	0  comments
+    res8Used            	DHSS:resource8:used           	0  comments
+    res8Units           	DHSS:resource8:units          	0  comments
+
+    res9Fullname        	DHSS:resource9:fullname       	0  comments
+    res9InUse           	DHSS:resource9:inUse          	0  comments
+    res9Max             	DHSS:resource9:max            	0  comments
+    res9Name            	DHSS:resource9:name           	0  comments
+    res9Type            	DHSS:resource9:type           	0  comments
+    res9Used            	DHSS:resource9:used           	0  comments
+    res9Units           	DHSS:resource9:units          	0  comments
+
+    res10Fullname       	DHSS:resource10:fullname      	0  comments
+    res10InUse          	DHSS:resource10:inUse         	0  comments
+    res10Max            	DHSS:resource10:max           	0  comments
+    res10Name           	DHSS:resource10:name          	0  comments
+    res10Type           	DHSS:resource10:type          	0  comments
+    res10Used           	DHSS:resource10:used          	0  comments
+    res10Units          	DHSS:resource10:units         	0  comments
+
+    res11Fullname       	DHSS:resource11:fullname      	0  comments
+    res11InUse          	DHSS:resource11:inUse         	0  comments
+    res11Max            	DHSS:resource11:max           	0  comments
+    res11Name           	DHSS:resource11:name          	0  comments
+    res11Type           	DHSS:resource11:type          	0  comments
+    res11Used           	DHSS:resource11:used          	0  comments
+    res11Units          	DHSS:resource11:units         	0  comments
+
+
+    stoReqOverflow      	DHSS:STO:reqOverflow           	0  comments
+    stoReqArraySize     	DHSS:STO:reqArraySize          	0  comments
+    stoNumReqs          	DHSS:STO:numReqs               	0  comments
+    stoReq0InUse        	DHSS:STO:req0:inUse            	0  comments
+    stoReq0ReqId        	DHSS:STO:req0:reqId            	0  comments
+    stoReq0ReqName      	DHSS:STO:req0:reqName          	0  comments
+    stoReq0ReqType      	DHSS:STO:req0:reqType          	0  comments
+    stoReq0MediaType    	DHSS:STO:req0:mediaType        	0  comments
+    stoReq0NumCopies    	DHSS:STO:req0:numCopies        	0  comments
+    stoReq0RetrieveSize 	DHSS:STO:req0:retrieveSize     	0  comments
+    stoReq0RetrieveState	DHSS:STO:req0:retrieveState    	0  comments
+    stoReq0QueueState   	DHSS:STO:req0:queueState       	0  comments
+    stoReq0QueueSize    	DHSS:STO:req0:queueSize        	0  comments
+    stoReq0PrepNum      	DHSS:STO:req0:prepNum          	0  comments
+    stoReq0PrepState    	DHSS:STO:req0:prepState        	0  comments
+    stoReq0WriteNum     	DHSS:STO:req0:writeNum         	0  comments
+    stoReq0WriteState   	DHSS:STO:req0:writeState       	0  comments
+    stoReq0CleanupNum   	DHSS:STO:req0:cleanupNum       	0  comments
+    stoReq0CleanupState 	DHSS:STO:req0:cleanupState     	0  comments
+    stoReq0NotifyValue  	DHSS:STO:req0:notifyValue      	0  comments
+    stoReq0NotifyState  	DHSS:STO:req0:notifyState      	0  comments
+
+    stoReq1InUse        	DHSS:STO:req1:inUse            	0  comments
+    stoReq1ReqId        	DHSS:STO:req1:reqId            	0  comments
+    stoReq1ReqName      	DHSS:STO:req1:reqName          	0  comments
+    stoReq1ReqType      	DHSS:STO:req1:reqType          	0  comments
+    stoReq1MediaType    	DHSS:STO:req1:mediaType        	0  comments
+    stoReq1NumCopies    	DHSS:STO:req1:numCopies        	0  comments
+    stoReq1RetrieveSize 	DHSS:STO:req1:retrieveSize     	0  comments
+    stoReq1RetrieveState	DHSS:STO:req1:retrieveState    	0  comments
+    stoReq1QueueState   	DHSS:STO:req1:queueState       	0  comments
+    stoReq1QueueSize    	DHSS:STO:req1:queueSize        	0  comments
+    stoReq1PrepNum      	DHSS:STO:req1:prepNum          	0  comments
+    stoReq1PrepState    	DHSS:STO:req1:prepState        	0  comments
+    stoReq1WriteNum     	DHSS:STO:req1:writeNum         	0  comments
+    stoReq1WriteState   	DHSS:STO:req1:writeState       	0  comments
+    stoReq1CleanupNum   	DHSS:STO:req1:cleanupNum       	0  comments
+    stoReq1CleanupState 	DHSS:STO:req1:cleanupState     	0  comments
+    stoReq1NotifyValue  	DHSS:STO:req1:notifyValue      	0  comments
+    stoReq1NotifyState  	DHSS:STO:req1:notifyState      	0  comments
+
+    stoReq2InUse        	DHSS:STO:req2:inUse            	0  comments
+    stoReq2ReqId        	DHSS:STO:req2:reqId            	0  comments
+    stoReq2ReqName      	DHSS:STO:req2:reqName          	0  comments
+    stoReq2ReqType      	DHSS:STO:req2:reqType          	0  comments
+    stoReq2MediaType    	DHSS:STO:req2:mediaType        	0  comments
+    stoReq2NumCopies    	DHSS:STO:req2:numCopies        	0  comments
+    stoReq2RetrieveSize 	DHSS:STO:req2:retrieveSize     	0  comments
+    stoReq2RetrieveState	DHSS:STO:req2:retrieveState    	0  comments
+    stoReq2QueueState   	DHSS:STO:req2:queueState       	0  comments
+    stoReq2QueueSize    	DHSS:STO:req2:queueSize        	0  comments
+    stoReq2PrepNum      	DHSS:STO:req2:prepNum          	0  comments
+    stoReq2PrepState    	DHSS:STO:req2:prepState        	0  comments
+    stoReq2WriteNum     	DHSS:STO:req2:writeNum         	0  comments
+    stoReq2WriteState   	DHSS:STO:req2:writeState       	0  comments
+    stoReq2CleanupNum   	DHSS:STO:req2:cleanupNum       	0  comments
+    stoReq2CleanupState 	DHSS:STO:req2:cleanupState     	0  comments
+    stoReq2NotifyValue  	DHSS:STO:req2:notifyValue      	0  comments
+    stoReq2NotifyState  	DHSS:STO:req2:notifyState      	0  comments
+
+    stoReq3InUse        	DHSS:STO:req3:inUse            	0  comments
+    stoReq3ReqId        	DHSS:STO:req3:reqId            	0  comments
+    stoReq3ReqName      	DHSS:STO:req3:reqName          	0  comments
+    stoReq3ReqType      	DHSS:STO:req3:reqType          	0  comments
+    stoReq3MediaType    	DHSS:STO:req3:mediaType        	0  comments
+    stoReq3NumCopies    	DHSS:STO:req3:numCopies        	0  comments
+    stoReq3RetrieveSize 	DHSS:STO:req3:retrieveSize     	0  comments
+    stoReq3RetrieveState	DHSS:STO:req3:retrieveState    	0  comments
+    stoReq3QueueState   	DHSS:STO:req3:queueState       	0  comments
+    stoReq3QueueSize    	DHSS:STO:req3:queueSize        	0  comments
+    stoReq3PrepNum      	DHSS:STO:req3:prepNum          	0  comments
+    stoReq3PrepState    	DHSS:STO:req3:prepState        	0  comments
+    stoReq3WriteNum     	DHSS:STO:req3:writeNum         	0  comments
+    stoReq3WriteState   	DHSS:STO:req3:writeState       	0  comments
+    stoReq3CleanupNum   	DHSS:STO:req3:cleanupNum       	0  comments
+    stoReq3CleanupState 	DHSS:STO:req3:cleanupState     	0  comments
+    stoReq3NotifyValue  	DHSS:STO:req3:notifyValue      	0  comments
+    stoReq3NotifyState  	DHSS:STO:req3:notifyState      	0  comments
+
+    stoReq4InUse        	DHSS:STO:req4:inUse            	0  comments
+    stoReq4ReqId        	DHSS:STO:req4:reqId            	0  comments
+    stoReq4ReqName      	DHSS:STO:req4:reqName          	0  comments
+    stoReq4ReqType      	DHSS:STO:req4:reqType          	0  comments
+    stoReq4MediaType    	DHSS:STO:req4:mediaType        	0  comments
+    stoReq4NumCopies    	DHSS:STO:req4:numCopies        	0  comments
+    stoReq4RetrieveSize 	DHSS:STO:req4:retrieveSize     	0  comments
+    stoReq4RetrieveState	DHSS:STO:req4:retrieveState    	0  comments
+    stoReq4QueueState   	DHSS:STO:req4:queueState       	0  comments
+    stoReq4QueueSize    	DHSS:STO:req4:queueSize        	0  comments
+    stoReq4PrepNum      	DHSS:STO:req4:prepNum          	0  comments
+    stoReq4PrepState    	DHSS:STO:req4:prepState        	0  comments
+    stoReq4WriteNum     	DHSS:STO:req4:writeNum         	0  comments
+    stoReq4WriteState   	DHSS:STO:req4:writeState       	0  comments
+    stoReq4CleanupNum   	DHSS:STO:req4:cleanupNum       	0  comments
+    stoReq4CleanupState 	DHSS:STO:req4:cleanupState     	0  comments
+    stoReq4NotifyValue  	DHSS:STO:req4:notifyValue      	0  comments
+    stoReq4NotifyState  	DHSS:STO:req4:notifyState      	0  comments
+
+    stoReq5InUse        	DHSS:STO:req5:inUse            	0  comments
+    stoReq5ReqId        	DHSS:STO:req5:reqId            	0  comments
+    stoReq5ReqName      	DHSS:STO:req5:reqName          	0  comments
+    stoReq5ReqType      	DHSS:STO:req5:reqType          	0  comments
+    stoReq5MediaType    	DHSS:STO:req5:mediaType        	0  comments
+    stoReq5NumCopies    	DHSS:STO:req5:numCopies        	0  comments
+    stoReq5RetrieveSize 	DHSS:STO:req5:retrieveSize     	0  comments
+    stoReq5RetrieveState	DHSS:STO:req5:retrieveState    	0  comments
+    stoReq5QueueState   	DHSS:STO:req5:queueState       	0  comments
+    stoReq5QueueSize    	DHSS:STO:req5:queueSize        	0  comments
+    stoReq5PrepNum      	DHSS:STO:req5:prepNum          	0  comments
+    stoReq5PrepState    	DHSS:STO:req5:prepState        	0  comments
+    stoReq5WriteNum     	DHSS:STO:req5:writeNum         	0  comments
+    stoReq5WriteState   	DHSS:STO:req5:writeState       	0  comments
+    stoReq5CleanupNum   	DHSS:STO:req5:cleanupNum       	0  comments
+    stoReq5CleanupState 	DHSS:STO:req5:cleanupState     	0  comments
+    stoReq5NotifyValue  	DHSS:STO:req5:notifyValue      	0  comments
+    stoReq5NotifyState  	DHSS:STO:req5:notifyState      	0  comments
+
+    stoReq6InUse        	DHSS:STO:req6:inUse            	0  comments
+    stoReq6ReqId        	DHSS:STO:req6:reqId            	0  comments
+    stoReq6ReqName      	DHSS:STO:req6:reqName          	0  comments
+    stoReq6ReqType      	DHSS:STO:req6:reqType          	0  comments
+    stoReq6MediaType    	DHSS:STO:req6:mediaType        	0  comments
+    stoReq6NumCopies    	DHSS:STO:req6:numCopies        	0  comments
+    stoReq6RetrieveSize 	DHSS:STO:req6:retrieveSize     	0  comments
+    stoReq6RetrieveState	DHSS:STO:req6:retrieveState    	0  comments
+    stoReq6QueueState   	DHSS:STO:req6:queueState       	0  comments
+    stoReq6QueueSize    	DHSS:STO:req6:queueSize        	0  comments
+    stoReq6PrepNum      	DHSS:STO:req6:prepNum          	0  comments
+    stoReq6PrepState    	DHSS:STO:req6:prepState        	0  comments
+    stoReq6WriteNum     	DHSS:STO:req6:writeNum         	0  comments
+    stoReq6WriteState   	DHSS:STO:req6:writeState       	0  comments
+    stoReq6CleanupNum   	DHSS:STO:req6:cleanupNum       	0  comments
+    stoReq6CleanupState 	DHSS:STO:req6:cleanupState     	0  comments
+    stoReq6NotifyValue  	DHSS:STO:req6:notifyValue      	0  comments
+    stoReq6NotifyState  	DHSS:STO:req6:notifyState      	0  comments
+
+    stoReq7InUse        	DHSS:STO:req7:inUse            	0  comments
+    stoReq7ReqId        	DHSS:STO:req7:reqId            	0  comments
+    stoReq7ReqName      	DHSS:STO:req7:reqName          	0  comments
+    stoReq7ReqType      	DHSS:STO:req7:reqType          	0  comments
+    stoReq7MediaType    	DHSS:STO:req7:mediaType        	0  comments
+    stoReq7NumCopies    	DHSS:STO:req7:numCopies        	0  comments
+    stoReq7RetrieveSize 	DHSS:STO:req7:retrieveSize     	0  comments
+    stoReq7RetrieveState	DHSS:STO:req7:retrieveState    	0  comments
+    stoReq7QueueState   	DHSS:STO:req7:queueState       	0  comments
+    stoReq7QueueSize    	DHSS:STO:req7:queueSize        	0  comments
+    stoReq7PrepNum      	DHSS:STO:req7:prepNum          	0  comments
+    stoReq7PrepState    	DHSS:STO:req7:prepState        	0  comments
+    stoReq7WriteNum     	DHSS:STO:req7:writeNum         	0  comments
+    stoReq7WriteState   	DHSS:STO:req7:writeState       	0  comments
+    stoReq7CleanupNum   	DHSS:STO:req7:cleanupNum       	0  comments
+    stoReq7CleanupState 	DHSS:STO:req7:cleanupState     	0  comments
+    stoReq7NotifyValue  	DHSS:STO:req7:notifyValue      	0  comments
+    stoReq7NotifyState  	DHSS:STO:req7:notifyState      	0  comments
+
+    stoReq8InUse        	DHSS:STO:req8:inUse            	0  comments
+    stoReq8ReqId        	DHSS:STO:req8:reqId            	0  comments
+    stoReq8ReqName      	DHSS:STO:req8:reqName          	0  comments
+    stoReq8ReqType      	DHSS:STO:req8:reqType          	0  comments
+    stoReq8MediaType    	DHSS:STO:req8:mediaType        	0  comments
+    stoReq8NumCopies    	DHSS:STO:req8:numCopies        	0  comments
+    stoReq8RetrieveSize 	DHSS:STO:req8:retrieveSize     	0  comments
+    stoReq8RetrieveState	DHSS:STO:req8:retrieveState    	0  comments
+    stoReq8QueueState   	DHSS:STO:req8:queueState       	0  comments
+    stoReq8QueueSize    	DHSS:STO:req8:queueSize        	0  comments
+    stoReq8PrepNum      	DHSS:STO:req8:prepNum          	0  comments
+    stoReq8PrepState    	DHSS:STO:req8:prepState        	0  comments
+    stoReq8WriteNum     	DHSS:STO:req8:writeNum         	0  comments
+    stoReq8WriteState   	DHSS:STO:req8:writeState       	0  comments
+    stoReq8CleanupNum   	DHSS:STO:req8:cleanupNum       	0  comments
+    stoReq8CleanupState 	DHSS:STO:req8:cleanupState     	0  comments
+    stoReq8NotifyValue  	DHSS:STO:req8:notifyValue      	0  comments
+    stoReq8NotifyState  	DHSS:STO:req8:notifyState      	0  comments
+
+    stoReq9InUse        	DHSS:STO:req9:inUse            	0  comments
+    stoReq9ReqId        	DHSS:STO:req9:reqId            	0  comments
+    stoReq9ReqName      	DHSS:STO:req9:reqName          	0  comments
+    stoReq9ReqType      	DHSS:STO:req9:reqType          	0  comments
+    stoReq9MediaType    	DHSS:STO:req9:mediaType        	0  comments
+    stoReq9NumCopies    	DHSS:STO:req9:numCopies        	0  comments
+    stoReq9RetrieveSize 	DHSS:STO:req9:retrieveSize     	0  comments
+    stoReq9RetrieveState	DHSS:STO:req9:retrieveState    	0  comments
+    stoReq9QueueState   	DHSS:STO:req9:queueState       	0  comments
+    stoReq9QueueSize    	DHSS:STO:req9:queueSize        	0  comments
+    stoReq9PrepNum      	DHSS:STO:req9:prepNum          	0  comments
+    stoReq9PrepState    	DHSS:STO:req9:prepState        	0  comments
+    stoReq9WriteNum     	DHSS:STO:req9:writeNum         	0  comments
+    stoReq9WriteState   	DHSS:STO:req9:writeState       	0  comments
+    stoReq9CleanupNum   	DHSS:STO:req9:cleanupNum       	0  comments
+    stoReq9CleanupState 	DHSS:STO:req9:cleanupState     	0  comments
+    stoReq9NotifyValue  	DHSS:STO:req9:notifyValue      	0  comments
+    stoReq9NotifyState  	DHSS:STO:req9:notifyState      	0  comments
+
+    stoReq10InUse       	DHSS:STO:req10:inUse           	0  comments
+    stoReq10ReqId       	DHSS:STO:req10:reqId           	0  comments
+    stoReq10ReqName     	DHSS:STO:req10:reqName         	0  comments
+    stoReq10ReqType     	DHSS:STO:req10:reqType         	0  comments
+    stoReq10MediaType   	DHSS:STO:req10:mediaType       	0  comments
+    stoReq10NumCopies   	DHSS:STO:req10:numCopies       	0  comments
+    stoReq10RetrieveSize	DHSS:STO:req10:retrieveSize    	0  comments
+    stoReq10RetrieveState	DHSS:STO:req10:retrieveState   	0  comments
+    stoReq10QueueState  	DHSS:STO:req10:queueState      	0  comments
+    stoReq10QueueSize   	DHSS:STO:req10:queueSize       	0  comments
+    stoReq10PrepNum     	DHSS:STO:req10:prepNum         	0  comments
+    stoReq10PrepState   	DHSS:STO:req10:prepState       	0  comments
+    stoReq10WriteNum    	DHSS:STO:req10:writeNum        	0  comments
+    stoReq10WriteState  	DHSS:STO:req10:writeState      	0  comments
+    stoReq10CleanupNum  	DHSS:STO:req10:cleanupNum      	0  comments
+    stoReq10CleanupState	DHSS:STO:req10:cleanupState    	0  comments
+    stoReq10NotifyValue 	DHSS:STO:req10:notifyValue     	0  comments
+    stoReq10NotifyState 	DHSS:STO:req10:notifyState     	0  comments
+
+    stoReq11InUse       	DHSS:STO:req11:inUse           	0  comments
+    stoReq11ReqId       	DHSS:STO:req11:reqId           	0  comments
+    stoReq11ReqName     	DHSS:STO:req11:reqName         	0  comments
+    stoReq11ReqType     	DHSS:STO:req11:reqType         	0  comments
+    stoReq11MediaType   	DHSS:STO:req11:mediaType       	0  comments
+    stoReq11NumCopies   	DHSS:STO:req11:numCopies       	0  comments
+    stoReq11RetrieveSize	DHSS:STO:req11:retrieveSize    	0  comments
+    stoReq11RetrieveState	DHSS:STO:req11:retrieveState   	0  comments
+    stoReq11QueueState  	DHSS:STO:req11:queueState      	0  comments
+    stoReq11QueueSize   	DHSS:STO:req11:queueSize       	0  comments
+    stoReq11PrepNum     	DHSS:STO:req11:prepNum         	0  comments
+    stoReq11PrepState   	DHSS:STO:req11:prepState       	0  comments
+    stoReq11WriteNum    	DHSS:STO:req11:writeNum        	0  comments
+    stoReq11WriteState  	DHSS:STO:req11:writeState      	0  comments
+    stoReq11CleanupNum  	DHSS:STO:req11:cleanupNum      	0  comments
+    stoReq11CleanupState	DHSS:STO:req11:cleanupState    	0  comments
+    stoReq11NotifyValue 	DHSS:STO:req11:notifyValue     	0  comments
+    stoReq11NotifyState 	DHSS:STO:req11:notifyState     	0  comments
+
+    stoReq12InUse       	DHSS:STO:req12:inUse           	0  comments
+    stoReq12ReqId       	DHSS:STO:req12:reqId           	0  comments
+    stoReq12ReqName     	DHSS:STO:req12:reqName         	0  comments
+    stoReq12ReqType     	DHSS:STO:req12:reqType         	0  comments
+    stoReq12MediaType   	DHSS:STO:req12:mediaType       	0  comments
+    stoReq12NumCopies   	DHSS:STO:req12:numCopies       	0  comments
+    stoReq12RetrieveSize	DHSS:STO:req12:retrieveSize    	0  comments
+    stoReq12RetrieveState	DHSS:STO:req12:retrieveState   	0  comments
+    stoReq12QueueState  	DHSS:STO:req12:queueState      	0  comments
+    stoReq12QueueSize   	DHSS:STO:req12:queueSize       	0  comments
+    stoReq12PrepNum     	DHSS:STO:req12:prepNum         	0  comments
+    stoReq12PrepState   	DHSS:STO:req12:prepState       	0  comments
+    stoReq12WriteNum    	DHSS:STO:req12:writeNum        	0  comments
+    stoReq12WriteState  	DHSS:STO:req12:writeState      	0  comments
+    stoReq12CleanupNum  	DHSS:STO:req12:cleanupNum      	0  comments
+    stoReq12CleanupState	DHSS:STO:req12:cleanupState    	0  comments
+    stoReq12NotifyValue 	DHSS:STO:req12:notifyValue     	0  comments
+    stoReq12NotifyState 	DHSS:STO:req12:notifyState     	0  comments
+
+    stoReq13InUse       	DHSS:STO:req13:inUse           	0  comments
+    stoReq13ReqId       	DHSS:STO:req13:reqId           	0  comments
+    stoReq13ReqName     	DHSS:STO:req13:reqName         	0  comments
+    stoReq13ReqType     	DHSS:STO:req13:reqType         	0  comments
+    stoReq13MediaType   	DHSS:STO:req13:mediaType       	0  comments
+    stoReq13NumCopies   	DHSS:STO:req13:numCopies       	0  comments
+    stoReq13RetrieveSize	DHSS:STO:req13:retrieveSize    	0  comments
+    stoReq13RetrieveState	DHSS:STO:req13:retrieveState   	0  comments
+    stoReq13QueueState  	DHSS:STO:req13:queueState      	0  comments
+    stoReq13QueueSize   	DHSS:STO:req13:queueSize       	0  comments
+    stoReq13PrepNum     	DHSS:STO:req13:prepNum         	0  comments
+    stoReq13PrepState   	DHSS:STO:req13:prepState       	0  comments
+    stoReq13WriteNum    	DHSS:STO:req13:writeNum        	0  comments
+    stoReq13WriteState  	DHSS:STO:req13:writeState      	0  comments
+    stoReq13CleanupNum  	DHSS:STO:req13:cleanupNum      	0  comments
+    stoReq13CleanupState	DHSS:STO:req13:cleanupState    	0  comments
+    stoReq13NotifyValue 	DHSS:STO:req13:notifyValue     	0  comments
+    stoReq13NotifyState 	DHSS:STO:req13:notifyState     	0  comments
+
+    stoReq14InUse       	DHSS:STO:req14:inUse           	0  comments
+    stoReq14ReqId       	DHSS:STO:req14:reqId           	0  comments
+    stoReq14ReqName     	DHSS:STO:req14:reqName         	0  comments
+    stoReq14ReqType     	DHSS:STO:req14:reqType         	0  comments
+    stoReq14MediaType   	DHSS:STO:req14:mediaType       	0  comments
+    stoReq14NumCopies   	DHSS:STO:req14:numCopies       	0  comments
+    stoReq14RetrieveSize	DHSS:STO:req14:retrieveSize    	0  comments
+    stoReq14RetrieveState	DHSS:STO:req14:retrieveState   	0  comments
+    stoReq14QueueState  	DHSS:STO:req14:queueState      	0  comments
+    stoReq14QueueSize   	DHSS:STO:req14:queueSize       	0  comments
+    stoReq14PrepNum     	DHSS:STO:req14:prepNum         	0  comments
+    stoReq14PrepState   	DHSS:STO:req14:prepState       	0  comments
+    stoReq14WriteNum    	DHSS:STO:req14:writeNum        	0  comments
+    stoReq14WriteState  	DHSS:STO:req14:writeState      	0  comments
+    stoReq14CleanupNum  	DHSS:STO:req14:cleanupNum      	0  comments
+    stoReq14CleanupState	DHSS:STO:req14:cleanupState    	0  comments
+    stoReq14NotifyValue 	DHSS:STO:req14:notifyValue     	0  comments
+    stoReq14NotifyState 	DHSS:STO:req14:notifyState     	0  comments
+
+    stoReq15InUse       	DHSS:STO:req15:inUse           	0  comments
+    stoReq15ReqId       	DHSS:STO:req15:reqId           	0  comments
+    stoReq15ReqName     	DHSS:STO:req15:reqName         	0  comments
+    stoReq15ReqType     	DHSS:STO:req15:reqType         	0  comments
+    stoReq15MediaType   	DHSS:STO:req15:mediaType       	0  comments
+    stoReq15NumCopies   	DHSS:STO:req15:numCopies       	0  comments
+    stoReq15RetrieveSize	DHSS:STO:req15:retrieveSize    	0  comments
+    stoReq15RetrieveState	DHSS:STO:req15:retrieveState   	0  comments
+    stoReq15QueueState  	DHSS:STO:req15:queueState      	0  comments
+    stoReq15QueueSize   	DHSS:STO:req15:queueSize       	0  comments
+    stoReq15PrepNum     	DHSS:STO:req15:prepNum         	0  comments
+    stoReq15PrepState   	DHSS:STO:req15:prepState       	0  comments
+    stoReq15WriteNum    	DHSS:STO:req15:writeNum        	0  comments
+    stoReq15WriteState  	DHSS:STO:req15:writeState      	0  comments
+    stoReq15CleanupNum  	DHSS:STO:req15:cleanupNum      	0  comments
+    stoReq15CleanupState	DHSS:STO:req15:cleanupState    	0  comments
+    stoReq15NotifyValue 	DHSS:STO:req15:notifyValue     	0  comments
+    stoReq15NotifyState 	DHSS:STO:req15:notifyState     	0  comments
+
+    stoReq16InUse       	DHSS:STO:req16:inUse           	0  comments
+    stoReq16ReqId       	DHSS:STO:req16:reqId           	0  comments
+    stoReq16ReqName     	DHSS:STO:req16:reqName         	0  comments
+    stoReq16ReqType     	DHSS:STO:req16:reqType         	0  comments
+    stoReq16MediaType   	DHSS:STO:req16:mediaType       	0  comments
+    stoReq16NumCopies   	DHSS:STO:req16:numCopies       	0  comments
+    stoReq16RetrieveSize	DHSS:STO:req16:retrieveSize    	0  comments
+    stoReq16RetrieveState	DHSS:STO:req16:retrieveState   	0  comments
+    stoReq16QueueState  	DHSS:STO:req16:queueState      	0  comments
+    stoReq16QueueSize   	DHSS:STO:req16:queueSize       	0  comments
+    stoReq16PrepNum     	DHSS:STO:req16:prepNum         	0  comments
+    stoReq16PrepState   	DHSS:STO:req16:prepState       	0  comments
+    stoReq16WriteNum    	DHSS:STO:req16:writeNum        	0  comments
+    stoReq16WriteState  	DHSS:STO:req16:writeState      	0  comments
+    stoReq16CleanupNum  	DHSS:STO:req16:cleanupNum      	0  comments
+    stoReq16CleanupState	DHSS:STO:req16:cleanupState    	0  comments
+    stoReq16NotifyValue 	DHSS:STO:req16:notifyValue     	0  comments
+    stoReq16NotifyState 	DHSS:STO:req16:notifyState     	0  comments
+
+    stoReq17InUse       	DHSS:STO:req17:inUse           	0  comments
+    stoReq17ReqId       	DHSS:STO:req17:reqId           	0  comments
+    stoReq17ReqName     	DHSS:STO:req17:reqName         	0  comments
+    stoReq17ReqType     	DHSS:STO:req17:reqType         	0  comments
+    stoReq17MediaType   	DHSS:STO:req17:mediaType       	0  comments
+    stoReq17NumCopies   	DHSS:STO:req17:numCopies       	0  comments
+    stoReq17RetrieveSize	DHSS:STO:req17:retrieveSize    	0  comments
+    stoReq17RetrieveState	DHSS:STO:req17:retrieveState   	0  comments
+    stoReq17QueueState  	DHSS:STO:req17:queueState      	0  comments
+    stoReq17QueueSize   	DHSS:STO:req17:queueSize       	0  comments
+    stoReq17PrepNum     	DHSS:STO:req17:prepNum         	0  comments
+    stoReq17PrepState   	DHSS:STO:req17:prepState       	0  comments
+    stoReq17WriteNum    	DHSS:STO:req17:writeNum        	0  comments
+    stoReq17WriteState  	DHSS:STO:req17:writeState      	0  comments
+    stoReq17CleanupNum  	DHSS:STO:req17:cleanupNum      	0  comments
+    stoReq17CleanupState	DHSS:STO:req17:cleanupState    	0  comments
+    stoReq17NotifyValue 	DHSS:STO:req17:notifyValue     	0  comments
+    stoReq17NotifyState 	DHSS:STO:req17:notifyState     	0  comments
+
+    stoReq18InUse       	DHSS:STO:req18:inUse           	0  comments
+    stoReq18ReqId       	DHSS:STO:req18:reqId           	0  comments
+    stoReq18ReqName     	DHSS:STO:req18:reqName         	0  comments
+    stoReq18ReqType     	DHSS:STO:req18:reqType         	0  comments
+    stoReq18MediaType   	DHSS:STO:req18:mediaType       	0  comments
+    stoReq18NumCopies   	DHSS:STO:req18:numCopies       	0  comments
+    stoReq18RetrieveSize	DHSS:STO:req18:retrieveSize    	0  comments
+    stoReq18RetrieveState	DHSS:STO:req18:retrieveState   	0  comments
+    stoReq18QueueState  	DHSS:STO:req18:queueState      	0  comments
+    stoReq18QueueSize   	DHSS:STO:req18:queueSize       	0  comments
+    stoReq18PrepNum     	DHSS:STO:req18:prepNum         	0  comments
+    stoReq18PrepState   	DHSS:STO:req18:prepState       	0  comments
+    stoReq18WriteNum    	DHSS:STO:req18:writeNum        	0  comments
+    stoReq18WriteState  	DHSS:STO:req18:writeState      	0  comments
+    stoReq18CleanupNum  	DHSS:STO:req18:cleanupNum      	0  comments
+    stoReq18CleanupState	DHSS:STO:req18:cleanupState    	0  comments
+    stoReq18NotifyValue 	DHSS:STO:req18:notifyValue     	0  comments
+    stoReq18NotifyState 	DHSS:STO:req18:notifyState     	0  comments
+
+    stoReq19InUse       	DHSS:STO:req19:inUse           	0  comments
+    stoReq19ReqId       	DHSS:STO:req19:reqId           	0  comments
+    stoReq19ReqName     	DHSS:STO:req19:reqName         	0  comments
+    stoReq19ReqType     	DHSS:STO:req19:reqType         	0  comments
+    stoReq19MediaType   	DHSS:STO:req19:mediaType       	0  comments
+    stoReq19NumCopies   	DHSS:STO:req19:numCopies       	0  comments
+    stoReq19RetrieveSize	DHSS:STO:req19:retrieveSize    	0  comments
+    stoReq19RetrieveState	DHSS:STO:req19:retrieveState   	0  comments
+    stoReq19QueueState  	DHSS:STO:req19:queueState      	0  comments
+    stoReq19QueueSize   	DHSS:STO:req19:queueSize       	0  comments
+    stoReq19PrepNum     	DHSS:STO:req19:prepNum         	0  comments
+    stoReq19PrepState   	DHSS:STO:req19:prepState       	0  comments
+    stoReq19WriteNum    	DHSS:STO:req19:writeNum        	0  comments
+    stoReq19WriteState  	DHSS:STO:req19:writeState      	0  comments
+    stoReq19CleanupNum  	DHSS:STO:req19:cleanupNum      	0  comments
+    stoReq19CleanupState	DHSS:STO:req19:cleanupState    	0  comments
+    stoReq19NotifyValue 	DHSS:STO:req19:notifyValue     	0  comments
+    stoReq19NotifyState 	DHSS:STO:req19:notifyState     	0  comments
+
+
+    stoDeviceArraySize  	DHSS:STO:deviceArraySize       	0  comments
+    stoNumDevices       	DHSS:STO:numDevices            	0  comments
+    stoDevice0InUse     	DHSS:STO:device0:inUse         	0  comments
+    stoDevice0LogicalName	DHSS:STO:device0:logicalName   	0  comments
+    stoDevice0Type      	DHSS:STO:device0:type          	0  comments
+    stoDevice0TypeDesc  	DHSS:STO:device0:typeDesc      	0  comments
+    stoDevice0Capacity  	DHSS:STO:device0:capacity      	0  comments
+    stoDevice0NumDevices	DHSS:STO:device0:numDevices    	0  comments
+    stoDevice0Available 	DHSS:STO:device0:available     	0  comments
+    stoDevice0DeviceInUse	DHSS:STO:device0:deviceInUse   	0  comments
+    stoDevice0ReqId     	DHSS:STO:device0:reqId         	0  comments
+    stoDevice0UnitName  	DHSS:STO:device0:unitName      	0  comments
+
+    stoDevice1InUse     	DHSS:STO:device1:inUse         	0  comments
+    stoDevice1LogicalName	DHSS:STO:device1:logicalName   	0  comments
+    stoDevice1Type      	DHSS:STO:device1:type          	0  comments
+    stoDevice1TypeDesc  	DHSS:STO:device1:typeDesc      	0  comments
+    stoDevice1Capacity  	DHSS:STO:device1:capacity      	0  comments
+    stoDevice1NumDevices	DHSS:STO:device1:numDevices    	0  comments
+    stoDevice1Available 	DHSS:STO:device1:available     	0  comments
+    stoDevice1DeviceInUse	DHSS:STO:device1:deviceInUse   	0  comments
+    stoDevice1ReqId     	DHSS:STO:device1:reqId         	0  comments
+    stoDevice1UnitName  	DHSS:STO:device1:unitName      	0  comments
+
+    stoDevice2InUse     	DHSS:STO:device2:inUse         	0  comments
+    stoDevice2LogicalName	DHSS:STO:device2:logicalName   	0  comments
+    stoDevice2Type      	DHSS:STO:device2:type          	0  comments
+    stoDevice2TypeDesc  	DHSS:STO:device2:typeDesc      	0  comments
+    stoDevice2Capacity  	DHSS:STO:device2:capacity      	0  comments
+    stoDevice2NumDevices	DHSS:STO:device2:numDevices    	0  comments
+    stoDevice2Available 	DHSS:STO:device2:available     	0  comments
+    stoDevice2DeviceInUse	DHSS:STO:device2:deviceInUse   	0  comments
+    stoDevice2ReqId     	DHSS:STO:device2:reqId         	0  comments
+    stoDevice2UnitName  	DHSS:STO:device2:unitName      	0  comments
+
+    stoDevice3InUse     	DHSS:STO:device3:inUse         	0  comments
+    stoDevice3LogicalName	DHSS:STO:device3:logicalName   	0  comments
+    stoDevice3Type      	DHSS:STO:device3:type          	0  comments
+    stoDevice3TypeDesc  	DHSS:STO:device3:typeDesc      	0  comments
+    stoDevice3Capacity  	DHSS:STO:device3:capacity      	0  comments
+    stoDevice3NumDevices	DHSS:STO:device3:numDevices    	0  comments
+    stoDevice3Available 	DHSS:STO:device3:available     	0  comments
+    stoDevice3DeviceInUse	DHSS:STO:device3:deviceInUse   	0  comments
+    stoDevice3ReqId     	DHSS:STO:device3:reqId         	0  comments
+    stoDevice3UnitName  	DHSS:STO:device3:unitName      	0  comments
+
+    stoDevice4InUse     	DHSS:STO:device4:inUse         	0  comments
+    stoDevice4LogicalName	DHSS:STO:device4:logicalName   	0  comments
+    stoDevice4Type      	DHSS:STO:device4:type          	0  comments
+    stoDevice4TypeDesc  	DHSS:STO:device4:typeDesc      	0  comments
+    stoDevice4Capacity  	DHSS:STO:device4:capacity      	0  comments
+    stoDevice4NumDevices	DHSS:STO:device4:numDevices    	0  comments
+    stoDevice4Available 	DHSS:STO:device4:available     	0  comments
+    stoDevice4DeviceInUse	DHSS:STO:device4:deviceInUse   	0  comments
+    stoDevice4ReqId     	DHSS:STO:device4:reqId         	0  comments
+    stoDevice4UnitName  	DHSS:STO:device4:unitName      	0  comments
+
+    stoDevice5InUse     	DHSS:STO:device5:inUse         	0  comments
+    stoDevice5LogicalName	DHSS:STO:device5:logicalName   	0  comments
+    stoDevice5Type      	DHSS:STO:device5:type          	0  comments
+    stoDevice5TypeDesc  	DHSS:STO:device5:typeDesc      	0  comments
+    stoDevice5Capacity  	DHSS:STO:device5:capacity      	0  comments
+    stoDevice5NumDevices	DHSS:STO:device5:numDevices    	0  comments
+    stoDevice5Available 	DHSS:STO:device5:available     	0  comments
+    stoDevice5DeviceInUse	DHSS:STO:device5:deviceInUse   	0  comments
+    stoDevice5ReqId     	DHSS:STO:device5:reqId         	0  comments
+    stoDevice5UnitName  	DHSS:STO:device5:unitName      	0  comments
+
+    stoDevice6InUse     	DHSS:STO:device6:inUse         	0  comments
+    stoDevice6LogicalName	DHSS:STO:device6:logicalName   	0  comments
+    stoDevice6Type      	DHSS:STO:device6:type          	0  comments
+    stoDevice6TypeDesc  	DHSS:STO:device6:typeDesc      	0  comments
+    stoDevice6Capacity  	DHSS:STO:device6:capacity      	0  comments
+    stoDevice6NumDevices	DHSS:STO:device6:numDevices    	0  comments
+    stoDevice6Available 	DHSS:STO:device6:available     	0  comments
+    stoDevice6DeviceInUse	DHSS:STO:device6:deviceInUse   	0  comments
+    stoDevice6ReqId     	DHSS:STO:device6:reqId         	0  comments
+    stoDevice6UnitName  	DHSS:STO:device6:unitName      	0  comments
+
+    stoDevice7InUse     	DHSS:STO:device7:inUse         	0  comments
+    stoDevice7LogicalName	DHSS:STO:device7:logicalName   	0  comments
+    stoDevice7Type      	DHSS:STO:device7:type          	0  comments
+    stoDevice7TypeDesc  	DHSS:STO:device7:typeDesc      	0  comments
+    stoDevice7Capacity  	DHSS:STO:device7:capacity      	0  comments
+    stoDevice7NumDevices	DHSS:STO:device7:numDevices    	0  comments
+    stoDevice7Available 	DHSS:STO:device7:available     	0  comments
+    stoDevice7DeviceInUse	DHSS:STO:device7:deviceInUse   	0  comments
+    stoDevice7ReqId     	DHSS:STO:device7:reqId         	0  comments
+    stoDevice7UnitName  	DHSS:STO:device7:unitName      	0  comments
+
+    stoDevice8InUse     	DHSS:STO:device8:inUse         	0  comments
+    stoDevice8LogicalName	DHSS:STO:device8:logicalName   	0  comments
+    stoDevice8Type      	DHSS:STO:device8:type          	0  comments
+    stoDevice8TypeDesc  	DHSS:STO:device8:typeDesc      	0  comments
+    stoDevice8Capacity  	DHSS:STO:device8:capacity      	0  comments
+    stoDevice8NumDevices	DHSS:STO:device8:numDevices    	0  comments
+    stoDevice8Available 	DHSS:STO:device8:available     	0  comments
+    stoDevice8DeviceInUse	DHSS:STO:device8:deviceInUse   	0  comments
+    stoDevice8ReqId     	DHSS:STO:device8:reqId         	0  comments
+    stoDevice8UnitName  	DHSS:STO:device8:unitName      	0  comments
+
+    stoDevice9InUse     	DHSS:STO:device9:inUse         	0  comments
+    stoDevice9LogicalName	DHSS:STO:device9:logicalName   	0  comments
+    stoDevice9Type      	DHSS:STO:device9:type          	0  comments
+    stoDevice9TypeDesc  	DHSS:STO:device9:typeDesc      	0  comments
+    stoDevice9Capacity  	DHSS:STO:device9:capacity      	0  comments
+    stoDevice9NumDevices	DHSS:STO:device9:numDevices    	0  comments
+    stoDevice9Available 	DHSS:STO:device9:available     	0  comments
+    stoDevice9DeviceInUse	DHSS:STO:device9:deviceInUse   	0  comments
+    stoDevice9ReqId     	DHSS:STO:device9:reqId         	0  comments
+    stoDevice9UnitName  	DHSS:STO:device9:unitName      	0  comments
+
+    stoDevice10InUse    	DHSS:STO:device10:inUse        	0  comments
+    stoDevice10LogicalName	DHSS:STO:device10:logicalName  	0  comments
+    stoDevice10Type     	DHSS:STO:device10:type         	0  comments
+    stoDevice10TypeDesc 	DHSS:STO:device10:typeDesc     	0  comments
+    stoDevice10Capacity 	DHSS:STO:device10:capacity     	0  comments
+    stoDevice10NumDevices	DHSS:STO:device10:numDevices   	0  comments
+    stoDevice10Available	DHSS:STO:device10:available    	0  comments
+    stoDevice10DeviceInUse	DHSS:STO:device10:deviceInUse  	0  comments
+    stoDevice10ReqId    	DHSS:STO:device10:reqId        	0  comments
+    stoDevice10UnitName 	DHSS:STO:device10:unitName     	0  comments
+
+    stoDevice11InUse    	DHSS:STO:device11:inUse        	0  comments
+    stoDevice11LogicalName	DHSS:STO:device11:logicalName  	0  comments
+    stoDevice11Type     	DHSS:STO:device11:type         	0  comments
+    stoDevice11TypeDesc 	DHSS:STO:device11:typeDesc     	0  comments
+    stoDevice11Capacity 	DHSS:STO:device11:capacity     	0  comments
+    stoDevice11NumDevices	DHSS:STO:device11:numDevices   	0  comments
+    stoDevice11Available	DHSS:STO:device11:available    	0  comments
+    stoDevice11DeviceInUse	DHSS:STO:device11:deviceInUse  	0  comments
+    stoDevice11ReqId    	DHSS:STO:device11:reqId        	0  comments
+    stoDevice11UnitName 	DHSS:STO:device11:unitName     	0  comments
+
+    stoDevice12InUse    	DHSS:STO:device12:inUse        	0  comments
+    stoDevice12LogicalName	DHSS:STO:device12:logicalName  	0  comments
+    stoDevice12Type     	DHSS:STO:device12:type         	0  comments
+    stoDevice12TypeDesc 	DHSS:STO:device12:typeDesc     	0  comments
+    stoDevice12Capacity 	DHSS:STO:device12:capacity     	0  comments
+    stoDevice12NumDevices	DHSS:STO:device12:numDevices   	0  comments
+    stoDevice12Available	DHSS:STO:device12:available    	0  comments
+    stoDevice12DeviceInUse	DHSS:STO:device12:deviceInUse  	0  comments
+    stoDevice12ReqId    	DHSS:STO:device12:reqId        	0  comments
+    stoDevice12UnitName 	DHSS:STO:device12:unitName     	0  comments
+
+    stoDevice13InUse    	DHSS:STO:device13:inUse        	0  comments
+    stoDevice13LogicalName	DHSS:STO:device13:logicalName  	0  comments
+    stoDevice13Type     	DHSS:STO:device13:type         	0  comments
+    stoDevice13TypeDesc 	DHSS:STO:device13:typeDesc     	0  comments
+    stoDevice13Capacity 	DHSS:STO:device13:capacity     	0  comments
+    stoDevice13NumDevices	DHSS:STO:device13:numDevices   	0  comments
+    stoDevice13Available	DHSS:STO:device13:available    	0  comments
+    stoDevice13DeviceInUse	DHSS:STO:device13:deviceInUse  	0  comments
+    stoDevice13ReqId    	DHSS:STO:device13:reqId        	0  comments
+    stoDevice13UnitName 	DHSS:STO:device13:unitName     	0  comments
+
+    stoDevice14InUse    	DHSS:STO:device14:inUse        	0  comments
+    stoDevice14LogicalName	DHSS:STO:device14:logicalName  	0  comments
+    stoDevice14Type     	DHSS:STO:device14:type         	0  comments
+    stoDevice14TypeDesc 	DHSS:STO:device14:typeDesc     	0  comments
+    stoDevice14Capacity 	DHSS:STO:device14:capacity     	0  comments
+    stoDevice14NumDevices	DHSS:STO:device14:numDevices   	0  comments
+    stoDevice14Available	DHSS:STO:device14:available    	0  comments
+    stoDevice14DeviceInUse	DHSS:STO:device14:deviceInUse  	0  comments
+    stoDevice14ReqId    	DHSS:STO:device14:reqId        	0  comments
+    stoDevice14UnitName 	DHSS:STO:device14:unitName     	0  comments
+
+    stoDevice15InUse    	DHSS:STO:device15:inUse        	0  comments
+    stoDevice15LogicalName	DHSS:STO:device15:logicalName  	0  comments
+    stoDevice15Type     	DHSS:STO:device15:type         	0  comments
+    stoDevice15TypeDesc 	DHSS:STO:device15:typeDesc     	0  comments
+    stoDevice15Capacity 	DHSS:STO:device15:capacity     	0  comments
+    stoDevice15NumDevices	DHSS:STO:device15:numDevices   	0  comments
+    stoDevice15Available	DHSS:STO:device15:available    	0  comments
+    stoDevice15DeviceInUse	DHSS:STO:device15:deviceInUse  	0  comments
+    stoDevice15ReqId    	DHSS:STO:device15:reqId        	0  comments
+    stoDevice15UnitName 	DHSS:STO:device15:unitName     	0  comments
+
+    stoDevice16InUse    	DHSS:STO:device16:inUse        	0  comments
+    stoDevice16LogicalName	DHSS:STO:device16:logicalName  	0  comments
+    stoDevice16Type     	DHSS:STO:device16:type         	0  comments
+    stoDevice16TypeDesc 	DHSS:STO:device16:typeDesc     	0  comments
+    stoDevice16Capacity 	DHSS:STO:device16:capacity     	0  comments
+    stoDevice16NumDevices	DHSS:STO:device16:numDevices   	0  comments
+    stoDevice16Available	DHSS:STO:device16:available    	0  comments
+    stoDevice16DeviceInUse	DHSS:STO:device16:deviceInUse  	0  comments
+    stoDevice16ReqId    	DHSS:STO:device16:reqId        	0  comments
+    stoDevice16UnitName 	DHSS:STO:device16:unitName     	0  comments
+
+    stoDevice17InUse    	DHSS:STO:device17:inUse        	0  comments
+    stoDevice17LogicalName	DHSS:STO:device17:logicalName  	0  comments
+    stoDevice17Type     	DHSS:STO:device17:type         	0  comments
+    stoDevice17TypeDesc 	DHSS:STO:device17:typeDesc     	0  comments
+    stoDevice17Capacity 	DHSS:STO:device17:capacity     	0  comments
+    stoDevice17NumDevices	DHSS:STO:device17:numDevices   	0  comments
+    stoDevice17Available	DHSS:STO:device17:available    	0  comments
+    stoDevice17DeviceInUse	DHSS:STO:device17:deviceInUse  	0  comments
+    stoDevice17ReqId    	DHSS:STO:device17:reqId        	0  comments
+    stoDevice17UnitName 	DHSS:STO:device17:unitName     	0  comments
+
+    stoDevice18InUse    	DHSS:STO:device18:inUse        	0  comments
+    stoDevice18LogicalName	DHSS:STO:device18:logicalName  	0  comments
+    stoDevice18Type     	DHSS:STO:device18:type         	0  comments
+    stoDevice18TypeDesc 	DHSS:STO:device18:typeDesc     	0  comments
+    stoDevice18Capacity 	DHSS:STO:device18:capacity     	0  comments
+    stoDevice18NumDevices	DHSS:STO:device18:numDevices   	0  comments
+    stoDevice18Available	DHSS:STO:device18:available    	0  comments
+    stoDevice18DeviceInUse	DHSS:STO:device18:deviceInUse  	0  comments
+    stoDevice18ReqId    	DHSS:STO:device18:reqId        	0  comments
+    stoDevice18UnitName 	DHSS:STO:device18:unitName     	0  comments
+
+    stoDevice19InUse    	DHSS:STO:device19:inUse        	0  comments
+    stoDevice19LogicalName	DHSS:STO:device19:logicalName  	0  comments
+    stoDevice19Type     	DHSS:STO:device19:type         	0  comments
+    stoDevice19TypeDesc 	DHSS:STO:device19:typeDesc     	0  comments
+    stoDevice19Capacity 	DHSS:STO:device19:capacity     	0  comments
+    stoDevice19NumDevices	DHSS:STO:device19:numDevices   	0  comments
+    stoDevice19Available	DHSS:STO:device19:available    	0  comments
+    stoDevice19DeviceInUse	DHSS:STO:device19:deviceInUse  	0  comments
+    stoDevice19ReqId    	DHSS:STO:device19:reqId        	0  comments
+    stoDevice19UnitName 	DHSS:STO:device19:unitName     	0  comments
+
+
+    stoStageArraySize   	DHSS:STO:stageArraySize        	0  comments
+    stoNumStages        	DHSS:STO:numStages             	0  comments
+    stoStage0InUse      	DHSS:STO:stage0:inUse          	0  comments
+    stoStage0DirName    	DHSS:STO:stage0:dirName        	0  comments
+    stoStage0ReqId      	DHSS:STO:stage0:reqId          	0  comments
+    stoStage0UnitName   	DHSS:STO:stage0:unitName       	0  comments
+
+    stoStage1InUse      	DHSS:STO:stage1:inUse          	0  comments
+    stoStage1DirName    	DHSS:STO:stage1:dirName        	0  comments
+    stoStage1ReqId      	DHSS:STO:stage1:reqId          	0  comments
+    stoStage1UnitName   	DHSS:STO:stage1:unitName       	0  comments
+
+    stoStage2InUse      	DHSS:STO:stage2:inUse          	0  comments
+    stoStage2DirName    	DHSS:STO:stage2:dirName        	0  comments
+    stoStage2ReqId      	DHSS:STO:stage2:reqId          	0  comments
+    stoStage2UnitName   	DHSS:STO:stage2:unitName       	0  comments
+
+    stoStage3InUse      	DHSS:STO:stage3:inUse          	0  comments
+    stoStage3DirName    	DHSS:STO:stage3:dirName        	0  comments
+    stoStage3ReqId      	DHSS:STO:stage3:reqId          	0  comments
+    stoStage3UnitName   	DHSS:STO:stage3:unitName       	0  comments
+
+    stoStage4InUse      	DHSS:STO:stage4:inUse          	0  comments
+    stoStage4DirName    	DHSS:STO:stage4:dirName        	0  comments
+    stoStage4ReqId      	DHSS:STO:stage4:reqId          	0  comments
+    stoStage4UnitName   	DHSS:STO:stage4:unitName       	0  comments
+
+    stoStage5InUse      	DHSS:STO:stage5:inUse          	0  comments
+    stoStage5DirName    	DHSS:STO:stage5:dirName        	0  comments
+    stoStage5ReqId      	DHSS:STO:stage5:reqId          	0  comments
+    stoStage5UnitName   	DHSS:STO:stage5:unitName       	0  comments
+
+    stoStage6InUse      	DHSS:STO:stage6:inUse          	0  comments
+    stoStage6DirName    	DHSS:STO:stage6:dirName        	0  comments
+    stoStage6ReqId      	DHSS:STO:stage6:reqId          	0  comments
+    stoStage6UnitName   	DHSS:STO:stage6:unitName       	0  comments
+
+    stoStage7InUse      	DHSS:STO:stage7:inUse          	0  comments
+    stoStage7DirName    	DHSS:STO:stage7:dirName        	0  comments
+    stoStage7ReqId      	DHSS:STO:stage7:reqId          	0  comments
+    stoStage7UnitName   	DHSS:STO:stage7:unitName       	0  comments
+
+    stoStage8InUse      	DHSS:STO:stage8:inUse          	0  comments
+    stoStage8DirName    	DHSS:STO:stage8:dirName        	0  comments
+    stoStage8ReqId      	DHSS:STO:stage8:reqId          	0  comments
+    stoStage8UnitName   	DHSS:STO:stage8:unitName       	0  comments
+
+    stoStage9InUse      	DHSS:STO:stage9:inUse          	0  comments
+    stoStage9DirName    	DHSS:STO:stage9:dirName        	0  comments
+    stoStage9ReqId      	DHSS:STO:stage9:reqId          	0  comments
+    stoStage9UnitName   	DHSS:STO:stage9:unitName       	0  comments
+
+
+    stoActionOverflow   	DHSS:STO:actionOverflow        	0  comments
+    stoActionArraySize  	DHSS:STO:actionArraySize       	0  comments
+    stoNumActions       	DHSS:STO:numActions            	0  comments
+    stoAction0InUse     	DHSS:STO:action0:inUse         	0  comments
+    stoAction0Position  	DHSS:STO:action0:position      	0  comments
+    stoAction0Active    	DHSS:STO:action0:active        	0  comments
+    stoAction0Action    	DHSS:STO:action0:action        	0  comments
+    stoAction0ReqId     	DHSS:STO:action0:reqId         	0  comments
+    stoAction0Option    	DHSS:STO:action0:option        	0  comments
+
+    stoAction1InUse     	DHSS:STO:action1:inUse         	0  comments
+    stoAction1Position  	DHSS:STO:action1:position      	0  comments
+    stoAction1Active    	DHSS:STO:action1:active        	0  comments
+    stoAction1Action    	DHSS:STO:action1:action        	0  comments
+    stoAction1ReqId     	DHSS:STO:action1:reqId         	0  comments
+    stoAction1Option    	DHSS:STO:action1:option        	0  comments
+
+    stoAction2InUse     	DHSS:STO:action2:inUse         	0  comments
+    stoAction2Position  	DHSS:STO:action2:position      	0  comments
+    stoAction2Active    	DHSS:STO:action2:active        	0  comments
+    stoAction2Action    	DHSS:STO:action2:action        	0  comments
+    stoAction2ReqId     	DHSS:STO:action2:reqId         	0  comments
+    stoAction2Option    	DHSS:STO:action2:option        	0  comments
+
+    stoAction3InUse     	DHSS:STO:action3:inUse         	0  comments
+    stoAction3Position  	DHSS:STO:action3:position      	0  comments
+    stoAction3Active    	DHSS:STO:action3:active        	0  comments
+    stoAction3Action    	DHSS:STO:action3:action        	0  comments
+    stoAction3ReqId     	DHSS:STO:action3:reqId         	0  comments
+    stoAction3Option    	DHSS:STO:action3:option        	0  comments
+
+    stoAction4InUse     	DHSS:STO:action4:inUse         	0  comments
+    stoAction4Position  	DHSS:STO:action4:position      	0  comments
+    stoAction4Active    	DHSS:STO:action4:active        	0  comments
+    stoAction4Action    	DHSS:STO:action4:action        	0  comments
+    stoAction4ReqId     	DHSS:STO:action4:reqId         	0  comments
+    stoAction4Option    	DHSS:STO:action4:option        	0  comments
+
+    stoAction5InUse     	DHSS:STO:action5:inUse         	0  comments
+    stoAction5Position  	DHSS:STO:action5:position      	0  comments
+    stoAction5Active    	DHSS:STO:action5:active        	0  comments
+    stoAction5Action    	DHSS:STO:action5:action        	0  comments
+    stoAction5ReqId     	DHSS:STO:action5:reqId         	0  comments
+    stoAction5Option    	DHSS:STO:action5:option        	0  comments
+
+    stoAction6InUse     	DHSS:STO:action6:inUse         	0  comments
+    stoAction6Position  	DHSS:STO:action6:position      	0  comments
+    stoAction6Active    	DHSS:STO:action6:active        	0  comments
+    stoAction6Action    	DHSS:STO:action6:action        	0  comments
+    stoAction6ReqId     	DHSS:STO:action6:reqId         	0  comments
+    stoAction6Option    	DHSS:STO:action6:option        	0  comments
+
+    stoAction7InUse     	DHSS:STO:action7:inUse         	0  comments
+    stoAction7Position  	DHSS:STO:action7:position      	0  comments
+    stoAction7Active    	DHSS:STO:action7:active        	0  comments
+    stoAction7Action    	DHSS:STO:action7:action        	0  comments
+    stoAction7ReqId     	DHSS:STO:action7:reqId         	0  comments
+    stoAction7Option    	DHSS:STO:action7:option        	0  comments
+
+    stoAction8InUse     	DHSS:STO:action8:inUse         	0  comments
+    stoAction8Position  	DHSS:STO:action8:position      	0  comments
+    stoAction8Active    	DHSS:STO:action8:active        	0  comments
+    stoAction8Action    	DHSS:STO:action8:action        	0  comments
+    stoAction8ReqId     	DHSS:STO:action8:reqId         	0  comments
+    stoAction8Option    	DHSS:STO:action8:option        	0  comments
+
+    stoAction9InUse     	DHSS:STO:action9:inUse         	0  comments
+    stoAction9Position  	DHSS:STO:action9:position      	0  comments
+    stoAction9Active    	DHSS:STO:action9:active        	0  comments
+    stoAction9Action    	DHSS:STO:action9:action        	0  comments
+    stoAction9ReqId     	DHSS:STO:action9:reqId         	0  comments
+    stoAction9Option    	DHSS:STO:action9:option        	0  comments
+
+    stoAction10InUse    	DHSS:STO:action10:inUse        	0  comments
+    stoAction10Position 	DHSS:STO:action10:position     	0  comments
+    stoAction10Active   	DHSS:STO:action10:active       	0  comments
+    stoAction10Action   	DHSS:STO:action10:action       	0  comments
+    stoAction10ReqId    	DHSS:STO:action10:reqId        	0  comments
+    stoAction10Option   	DHSS:STO:action10:option       	0  comments
+
+    stoAction11InUse    	DHSS:STO:action11:inUse        	0  comments
+    stoAction11Position 	DHSS:STO:action11:position     	0  comments
+    stoAction11Active   	DHSS:STO:action11:active       	0  comments
+    stoAction11Action   	DHSS:STO:action11:action       	0  comments
+    stoAction11ReqId    	DHSS:STO:action11:reqId        	0  comments
+    stoAction11Option   	DHSS:STO:action11:option       	0  comments
+
+    stoAction12InUse    	DHSS:STO:action12:inUse        	0  comments
+    stoAction12Position 	DHSS:STO:action12:position     	0  comments
+    stoAction12Active   	DHSS:STO:action12:active       	0  comments
+    stoAction12Action   	DHSS:STO:action12:action       	0  comments
+    stoAction12ReqId    	DHSS:STO:action12:reqId        	0  comments
+    stoAction12Option   	DHSS:STO:action12:option       	0  comments
+
+    stoAction13InUse    	DHSS:STO:action13:inUse        	0  comments
+    stoAction13Position 	DHSS:STO:action13:position     	0  comments
+    stoAction13Active   	DHSS:STO:action13:active       	0  comments
+    stoAction13Action   	DHSS:STO:action13:action       	0  comments
+    stoAction13ReqId    	DHSS:STO:action13:reqId        	0  comments
+    stoAction13Option   	DHSS:STO:action13:option       	0  comments
+
+    stoAction14InUse    	DHSS:STO:action14:inUse        	0  comments
+    stoAction14Position 	DHSS:STO:action14:position     	0  comments
+    stoAction14Active   	DHSS:STO:action14:active       	0  comments
+    stoAction14Action   	DHSS:STO:action14:action       	0  comments
+    stoAction14ReqId    	DHSS:STO:action14:reqId        	0  comments
+    stoAction14Option   	DHSS:STO:action14:option       	0  comments
+
+
+    stoUnitOverflow     	DHSS:STO:unitOverflow          	0  comments
+    stoUnitArraySize    	DHSS:STO:unitArraySize         	0  comments
+    stoNumUnits         	DHSS:STO:numUnits              	0  comments
+    stoUnit0InUse       	DHSS:STO:unit0:inUse           	0  comments
+    stoUnit0ReqId       	DHSS:STO:unit0:reqId           	0  comments
+    stoUnit0UnitName    	DHSS:STO:unit0:unitName        	0  comments
+    stoUnit0UnitSize    	DHSS:STO:unit0:unitSize        	0  comments
+    stoUnit0PrepValue   	DHSS:STO:unit0:prepValue       	0  comments
+    stoUnit0WriteNum    	DHSS:STO:unit0:writeNum        	0  comments
+    stoUnit0CleanupValue	DHSS:STO:unit0:cleanupValue    	0  comments
+
+    stoUnit1InUse       	DHSS:STO:unit1:inUse           	0  comments
+    stoUnit1ReqId       	DHSS:STO:unit1:reqId           	0  comments
+    stoUnit1UnitName    	DHSS:STO:unit1:unitName        	0  comments
+    stoUnit1UnitSize    	DHSS:STO:unit1:unitSize        	0  comments
+    stoUnit1PrepValue   	DHSS:STO:unit1:prepValue       	0  comments
+    stoUnit1WriteNum    	DHSS:STO:unit1:writeNum        	0  comments
+    stoUnit1CleanupValue	DHSS:STO:unit1:cleanupValue    	0  comments
+
+    stoUnit2InUse       	DHSS:STO:unit2:inUse           	0  comments
+    stoUnit2ReqId       	DHSS:STO:unit2:reqId           	0  comments
+    stoUnit2UnitName    	DHSS:STO:unit2:unitName        	0  comments
+    stoUnit2UnitSize    	DHSS:STO:unit2:unitSize        	0  comments
+    stoUnit2PrepValue   	DHSS:STO:unit2:prepValue       	0  comments
+    stoUnit2WriteNum    	DHSS:STO:unit2:writeNum        	0  comments
+    stoUnit2CleanupValue	DHSS:STO:unit2:cleanupValue    	0  comments
+
+    stoUnit3InUse       	DHSS:STO:unit3:inUse           	0  comments
+    stoUnit3ReqId       	DHSS:STO:unit3:reqId           	0  comments
+    stoUnit3UnitName    	DHSS:STO:unit3:unitName        	0  comments
+    stoUnit3UnitSize    	DHSS:STO:unit3:unitSize        	0  comments
+    stoUnit3PrepValue   	DHSS:STO:unit3:prepValue       	0  comments
+    stoUnit3WriteNum    	DHSS:STO:unit3:writeNum        	0  comments
+    stoUnit3CleanupValue	DHSS:STO:unit3:cleanupValue    	0  comments
+
+    stoUnit4InUse       	DHSS:STO:unit4:inUse           	0  comments
+    stoUnit4ReqId       	DHSS:STO:unit4:reqId           	0  comments
+    stoUnit4UnitName    	DHSS:STO:unit4:unitName        	0  comments
+    stoUnit4UnitSize    	DHSS:STO:unit4:unitSize        	0  comments
+    stoUnit4PrepValue   	DHSS:STO:unit4:prepValue       	0  comments
+    stoUnit4WriteNum    	DHSS:STO:unit4:writeNum        	0  comments
+    stoUnit4CleanupValue	DHSS:STO:unit4:cleanupValue    	0  comments
+
+    stoUnit5InUse       	DHSS:STO:unit5:inUse           	0  comments
+    stoUnit5ReqId       	DHSS:STO:unit5:reqId           	0  comments
+    stoUnit5UnitName    	DHSS:STO:unit5:unitName        	0  comments
+    stoUnit5UnitSize    	DHSS:STO:unit5:unitSize        	0  comments
+    stoUnit5PrepValue   	DHSS:STO:unit5:prepValue       	0  comments
+    stoUnit5WriteNum    	DHSS:STO:unit5:writeNum        	0  comments
+    stoUnit5CleanupValue	DHSS:STO:unit5:cleanupValue    	0  comments
+
+    stoUnit6InUse       	DHSS:STO:unit6:inUse           	0  comments
+    stoUnit6ReqId       	DHSS:STO:unit6:reqId           	0  comments
+    stoUnit6UnitName    	DHSS:STO:unit6:unitName        	0  comments
+    stoUnit6UnitSize    	DHSS:STO:unit6:unitSize        	0  comments
+    stoUnit6PrepValue   	DHSS:STO:unit6:prepValue       	0  comments
+    stoUnit6WriteNum    	DHSS:STO:unit6:writeNum        	0  comments
+    stoUnit6CleanupValue	DHSS:STO:unit6:cleanupValue    	0  comments
+
+    stoUnit7InUse       	DHSS:STO:unit7:inUse           	0  comments
+    stoUnit7ReqId       	DHSS:STO:unit7:reqId           	0  comments
+    stoUnit7UnitName    	DHSS:STO:unit7:unitName        	0  comments
+    stoUnit7UnitSize    	DHSS:STO:unit7:unitSize        	0  comments
+    stoUnit7PrepValue   	DHSS:STO:unit7:prepValue       	0  comments
+    stoUnit7WriteNum    	DHSS:STO:unit7:writeNum        	0  comments
+    stoUnit7CleanupValue	DHSS:STO:unit7:cleanupValue    	0  comments
+
+    stoUnit8InUse       	DHSS:STO:unit8:inUse           	0  comments
+    stoUnit8ReqId       	DHSS:STO:unit8:reqId           	0  comments
+    stoUnit8UnitName    	DHSS:STO:unit8:unitName        	0  comments
+    stoUnit8UnitSize    	DHSS:STO:unit8:unitSize        	0  comments
+    stoUnit8PrepValue   	DHSS:STO:unit8:prepValue       	0  comments
+    stoUnit8WriteNum    	DHSS:STO:unit8:writeNum        	0  comments
+    stoUnit8CleanupValue	DHSS:STO:unit8:cleanupValue    	0  comments
+
+    stoUnit9InUse       	DHSS:STO:unit9:inUse           	0  comments
+    stoUnit9ReqId       	DHSS:STO:unit9:reqId           	0  comments
+    stoUnit9UnitName    	DHSS:STO:unit9:unitName        	0  comments
+    stoUnit9UnitSize    	DHSS:STO:unit9:unitSize        	0  comments
+    stoUnit9PrepValue   	DHSS:STO:unit9:prepValue       	0  comments
+    stoUnit9WriteNum    	DHSS:STO:unit9:writeNum        	0  comments
+    stoUnit9CleanupValue	DHSS:STO:unit9:cleanupValue    	0  comments
+
+    stoUnit10InUse      	DHSS:STO:unit10:inUse          	0  comments
+    stoUnit10ReqId      	DHSS:STO:unit10:reqId          	0  comments
+    stoUnit10UnitName   	DHSS:STO:unit10:unitName       	0  comments
+    stoUnit10UnitSize   	DHSS:STO:unit10:unitSize       	0  comments
+    stoUnit10PrepValue  	DHSS:STO:unit10:prepValue      	0  comments
+    stoUnit10WriteNum   	DHSS:STO:unit10:writeNum       	0  comments
+    stoUnit10CleanupValue	DHSS:STO:unit10:cleanupValue   	0  comments
+
+    stoUnit11InUse      	DHSS:STO:unit11:inUse          	0  comments
+    stoUnit11ReqId      	DHSS:STO:unit11:reqId          	0  comments
+    stoUnit11UnitName   	DHSS:STO:unit11:unitName       	0  comments
+    stoUnit11UnitSize   	DHSS:STO:unit11:unitSize       	0  comments
+    stoUnit11PrepValue  	DHSS:STO:unit11:prepValue      	0  comments
+    stoUnit11WriteNum   	DHSS:STO:unit11:writeNum       	0  comments
+    stoUnit11CleanupValue	DHSS:STO:unit11:cleanupValue   	0  comments
+
+    stoUnit12InUse      	DHSS:STO:unit12:inUse          	0  comments
+    stoUnit12ReqId      	DHSS:STO:unit12:reqId          	0  comments
+    stoUnit12UnitName   	DHSS:STO:unit12:unitName       	0  comments
+    stoUnit12UnitSize   	DHSS:STO:unit12:unitSize       	0  comments
+    stoUnit12PrepValue  	DHSS:STO:unit12:prepValue      	0  comments
+    stoUnit12WriteNum   	DHSS:STO:unit12:writeNum       	0  comments
+    stoUnit12CleanupValue	DHSS:STO:unit12:cleanupValue   	0  comments
+
+    stoUnit13InUse      	DHSS:STO:unit13:inUse          	0  comments
+    stoUnit13ReqId      	DHSS:STO:unit13:reqId          	0  comments
+    stoUnit13UnitName   	DHSS:STO:unit13:unitName       	0  comments
+    stoUnit13UnitSize   	DHSS:STO:unit13:unitSize       	0  comments
+    stoUnit13PrepValue  	DHSS:STO:unit13:prepValue      	0  comments
+    stoUnit13WriteNum   	DHSS:STO:unit13:writeNum       	0  comments
+    stoUnit13CleanupValue	DHSS:STO:unit13:cleanupValue   	0  comments
+
+    stoUnit14InUse      	DHSS:STO:unit14:inUse          	0  comments
+    stoUnit14ReqId      	DHSS:STO:unit14:reqId          	0  comments
+    stoUnit14UnitName   	DHSS:STO:unit14:unitName       	0  comments
+    stoUnit14UnitSize   	DHSS:STO:unit14:unitSize       	0  comments
+    stoUnit14PrepValue  	DHSS:STO:unit14:prepValue      	0  comments
+    stoUnit14WriteNum   	DHSS:STO:unit14:writeNum       	0  comments
+    stoUnit14CleanupValue	DHSS:STO:unit14:cleanupValue   	0  comments
+
+    stoUnit15InUse      	DHSS:STO:unit15:inUse          	0  comments
+    stoUnit15ReqId      	DHSS:STO:unit15:reqId          	0  comments
+    stoUnit15UnitName   	DHSS:STO:unit15:unitName       	0  comments
+    stoUnit15UnitSize   	DHSS:STO:unit15:unitSize       	0  comments
+    stoUnit15PrepValue  	DHSS:STO:unit15:prepValue      	0  comments
+    stoUnit15WriteNum   	DHSS:STO:unit15:writeNum       	0  comments
+    stoUnit15CleanupValue	DHSS:STO:unit15:cleanupValue   	0  comments
+
+    stoUnit16InUse      	DHSS:STO:unit16:inUse          	0  comments
+    stoUnit16ReqId      	DHSS:STO:unit16:reqId          	0  comments
+    stoUnit16UnitName   	DHSS:STO:unit16:unitName       	0  comments
+    stoUnit16UnitSize   	DHSS:STO:unit16:unitSize       	0  comments
+    stoUnit16PrepValue  	DHSS:STO:unit16:prepValue      	0  comments
+    stoUnit16WriteNum   	DHSS:STO:unit16:writeNum       	0  comments
+    stoUnit16CleanupValue	DHSS:STO:unit16:cleanupValue   	0  comments
+
+    stoUnit17InUse      	DHSS:STO:unit17:inUse          	0  comments
+    stoUnit17ReqId      	DHSS:STO:unit17:reqId          	0  comments
+    stoUnit17UnitName   	DHSS:STO:unit17:unitName       	0  comments
+    stoUnit17UnitSize   	DHSS:STO:unit17:unitSize       	0  comments
+    stoUnit17PrepValue  	DHSS:STO:unit17:prepValue      	0  comments
+    stoUnit17WriteNum   	DHSS:STO:unit17:writeNum       	0  comments
+    stoUnit17CleanupValue	DHSS:STO:unit17:cleanupValue   	0  comments
+
+    stoUnit18InUse      	DHSS:STO:unit18:inUse          	0  comments
+    stoUnit18ReqId      	DHSS:STO:unit18:reqId          	0  comments
+    stoUnit18UnitName   	DHSS:STO:unit18:unitName       	0  comments
+    stoUnit18UnitSize   	DHSS:STO:unit18:unitSize       	0  comments
+    stoUnit18PrepValue  	DHSS:STO:unit18:prepValue      	0  comments
+    stoUnit18WriteNum   	DHSS:STO:unit18:writeNum       	0  comments
+    stoUnit18CleanupValue	DHSS:STO:unit18:cleanupValue   	0  comments
+
+    stoUnit19InUse      	DHSS:STO:unit19:inUse          	0  comments
+    stoUnit19ReqId      	DHSS:STO:unit19:reqId          	0  comments
+    stoUnit19UnitName   	DHSS:STO:unit19:unitName       	0  comments
+    stoUnit19UnitSize   	DHSS:STO:unit19:unitSize       	0  comments
+    stoUnit19PrepValue  	DHSS:STO:unit19:prepValue      	0  comments
+    stoUnit19WriteNum   	DHSS:STO:unit19:writeNum       	0  comments
+    stoUnit19CleanupValue	DHSS:STO:unit19:cleanupValue   	0  comments
+
+}
+
+
+# Command Section
+# Each Cad entry starts with an introduction
+#   command ocsName apply-ocsName description-to-end-of-line
+#
+#   Then one line for each entry in the command sender
+#     ocsName epicsName description-to-end-of-line
+#
+# Note: that a command entry can contain fields from many cad records
+#   allowing ocs level command senders that span many cad/systems.
+#
+

@@ -1,0 +1,182 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	tpIngestTar	
+#*
+#*   Purpose:
+#*	Read the whole tape on the <device> and send the outpot
+#*	to output_file.  The format of the output_file is
+#*	tape_offset,	file_offset,	file_name,	size
+#*	Log the status on status_file if the script is NOT success.
+#*
+#*   Date		: Jan 26, 1998
+#*
+#*   SCCS data		: @(#)
+#*	Module Name	: tpIngestTar
+#*	Version Number	: 1.7
+#*	Release Number	: 1
+#*	Last Updated	: 04/19/99
+#*
+#*   Programmer		: George Zhang
+#*
+#*   Modification History:
+#*	99/04/12 SDJ	: Added code to support HP platform.
+#*			  Switched to GNU version of tar and mt.
+#*	99/04/19 SJG	: Added another column to list to eventually
+#*			  contain the uncompressed file size.
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+#
+#   Check the arguments
+#
+
+if ( $#argv != 3 ) then
+    echo "Usage: tpIngestTar <device> <list_file> <status_file>"
+    exit 1
+endif
+
+
+#
+#   Set variables
+#
+
+set device = $1
+set list_file = $2
+set status_file = $3
+set temp_file = "/tmp/tpIngestTar."$device:t".tmp" 
+set tape_offset = 0
+set stop = 0
+
+#
+# Determine which operating system we are using, which changes the
+# arguments given to mt and location of gnu tar
+# on solaris and hpux.
+#
+
+switch( "`/bin/uname -rms`" )
+    case SunOS*4.*:
+    case SunOS*5.*:
+	set os = "sun"
+	set gnu_tar = /usr/local/bin/tar
+	set gnu_mt = /usr/local/gnu/bin/mt
+        breaksw
+    case HP-UX*:
+	set os = "hp"
+	set gnu_tar = /opt/tar/bin/tar
+        set gnu_mt = /tmp/cpio-2.4.2/mt
+	set advance = 1
+        breaksw
+    default:
+	set os = "unknown"
+	set gnu_tar = `which tar`
+        set mt_value = `which mt`
+	set advance = 1
+endsw
+if ( $status ) then 
+    echo "Error:  Unable to determine the operating system. >> $status_file
+    exit 1
+endif
+
+
+#
+#  Check that the files can be created.
+#
+
+foreach file ( $status_file $list_file )
+    rm -f $file
+    if ( $status ) then
+        exit 1
+    endif
+    touch $file
+    if ( $status ) then
+        exit 1
+    endif
+end
+
+echo $0 $* >>& $status_file
+
+
+#
+#   Rewind the tape
+#
+
+echo "$gnu_mt -f $device rewind"  >>& $status_file
+$gnu_mt -f $device rewind >>& $status_file
+if ( $status ) then
+    exit 1
+endif
+
+
+while ( 1 )
+    #
+    #  Read the files in the current offset.
+    #
+
+    echo "( $gnu_tar tvf $device >\! $temp_file" >>& $status_file
+    ( $gnu_tar tvf $device >! $temp_file ) >>& $status_file 
+    set done = $status
+    set num_files = `cat $temp_file | wc -l`
+    if ( $status || $num_files <= 0 ) then
+	#
+	#   Check if we reach the end of the tap EOT.
+	#
+
+	echo "$gnu_mt -f $device fsf 1" >> $status_file
+	$gnu_mt -f $device fsf 1 >>& $status_file
+	if ( $status ) then
+	    set stop = "EOT"
+	    break
+	endif
+    endif
+
+
+
+    #
+    #  Parse the temp file to extract file info.
+    #
+
+    ( awk 'BEGIN { file_offset = 0; } /^-/ { printf( "%d\t%d\t%s\t%d\t%d\n", tape_offset, file_offset, $6, $3, $3 ); file_offset++; }' tape_offset=$tape_offset  $temp_file >> $list_file ) >>& $status_file
+    if ( $status ) then
+        set stop = "Error in awk file processing."
+	break
+    endif
+
+    @ tape_offset ++
+end
+
+rm -f $temp_file
+
+if ( $stop != "EOT" ) then
+    exit 1
+endif
+
+rm -f $status_file
+$gnu_mt -f $device offline >& /dev/null &
+exit 0

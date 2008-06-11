@@ -1,0 +1,174 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: mfsdoc/mfs.1
+.\"*
+.\"*	Date			: Mar 09, 1999
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: mfs.3
+.\"*	    Version Number	: 1.4
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 04/07/00
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*	    99/03/23 SDJ	: Fixed typos and added macros.
+.\"*      2000/03/26 SDJ	: Converted from dvd lib. to mfs lib.
+.\"*	  2000/04/07 SDJ	: Added MFS_ISO9660_JB to differentiate
+.\"*				  CDs in a jukebox and those in a reader.
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.de Ty
+.ft 1
+.fi
+.RE
+.PP
+.ie n .TP 12n
+.el .TP 16n
+..
+.
+.\"			\" Td macro to display the type definition.
+.de Td
+.PP
+.RS
+.ft 3
+.nf
+.ie n .in 10n 53n
+.ta 25n 60n
+..
+.
+.\"			\" Ss macro to start a structure definition.
+.de Ss
+.PP
+.RS
+.nf
+.ft 3
+.ie n .ta 12n 26n 55n
+.el .ta 16n 40n 70n
+..
+.\"			\" Es macro to end a structure definition.
+.de Es
+.ft 1
+.fi
+.RE
+.PP
+..
+.\"
+.TH mfs 3 03/20/200 "CADC"
+.SH NAME 
+mfs \- routines for Mountable File Systems (MFS).
+.sp 1
+.ta 5c 10c 10c 20c 
+mfs_check_mnt	mfs_get_message
+
+.SH SYNOPSIS
+.LP
+.nf
+.ft
+#include "gen_types.h"
+#include "gen_msg.h"
+#include "mfs.h"
+.ft
+.fi
+
+.TP 7n
+int
+mfs_check_mnt( char * \fImount_point\fR, char * \fIvolume\fR, 
+time_t * \fIcreation_date\fR, \fIfile_system\fR );
+.TP 7n
+char
+*mfs_get_message( void );
+
+
+.SH DEFINITIONS
+The only definitions in the \fBmfs\fR library header file, \fImfs.h\fR,
+are strings which identify the types of mountable file systems supported.
+
+The recognized file systems are:
+.Ty 
+MFS_ISO9660
+Defines the ISO9660 (Rock Ridge format) string that 
+that is in  \fI/etc/mnttab\fR for optical media that are not stored
+in a jukebox.
+Typically this file format is used on CD\-ROMs but can also be found on
+DVD\-ROMs.  The 
+.Ty 
+MFS_ISO9660_JB
+Same as \fBMFS_ISO9660\fR execept it is expected that the
+optical media is stored in a jukebox.
+.Ty 
+MFS_UFS
+Defines the UNIX File System (UFS) string in \fI/etc/mnttab\fR.  Generally
+this file system is used on UNIX hard drives.
+.Ty 
+MFS_UDF_JB
+Defines the Universal Disk Format (UFS) string in \fI/etc/mnttab\fR.  This
+file system can be found on DVD\-ROMs, occasionally on CD\-ROMs.  It is
+expected that the DVD\-ROM is being stored in a jukebox.
+.Ty
+MFS_UNKNOWN
+Any file system that the mfs library does not support.
+
+.SH DESCRIPTION
+The
+.B mfs
+library provides an interface to mountable file systems.  
+
+.Ty
+mfs_check_mnt(\|)
+Checks that a specified path is a mountable file system.  This function gets 
+the actual mount point, the name of the mountable file system, and the
+file format (file system) that has been used to store the data.  The 
+mounted file system table is used to find the mount point of the path and
+the volume table, \fI/etc/vstab\fR and \fI/etc/vfstab\fR are used to 
+find its name.
+
+.Ty
+mfs_get_message(\|)
+Returns the mfs library character array which contains the success, warning, 
+and/or error messages the 
+.B mfs
+library reports.  See the 
+.I gen_msg
+UNIX man page for more information.
+
+.SH DIAGNOSTICS
+All of the  
+.B mfs
+library functions return a 0 value upon
+successful completion. Otherwise a non\-zero number is returned.
+
+.SH SEE ALSO
+.BR gen_msg ( 3 ),
+.BR mnttab ( 4 ),
+.BR vsftab ( 4 ),
+and
+.BR vstab( 4 )
+.br
+
+There are no other documents pertaining to MFS software.
+
+.SH NOTES
+Support for magnetic disks has not been added to the library yet.
+
+.SH BUGS
+.LP
+None Known
+
+.SH AUTHOR
+.LP
+Shannon Jaeger
+.br
+
+National Research Council of Canada 
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+

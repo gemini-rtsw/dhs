@@ -1,0 +1,408 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.				(c) 1998.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	cd/scripts/writeRunCdrecord16
+#*
+#*   Purpose:
+#*	Whatever
+#*
+#*   Date		: Sep 1, 1998
+#*
+#*   SCCS data          : @(#)
+#*      Module Name     : cdWriteRunCdrecord-16
+#*      Version Number  : 1.12
+#*      Release Number  : 1
+#*      Last Updated    : 03/17/00
+#*
+#*   Programmer		: Shannon Jaeger
+#*
+#*   Modification History:
+#*	98/12/15 SDJ	: Copied from cdWriteRunGear-33
+#*  	99/02/24 SDJ  : Script now expects the location of the data directory
+#*			even though it isn't used, however, it will be used 
+#*			by other write media scripts 
+#*			of the script.
+#*	99/03/17 SDJ  : Added num-files argument. 
+#*	99/04/08 SDJ  : Added optional command-line arg, "-simulate".
+#*			Fixed spelling and gramar.
+#*	99/04/29 SDJ  : Fixed relative path code.
+#*	99/09/25 SDJ  : Added verification of CD.
+#*    2000/01/12 SDJ  : Added the block size to the dd call for verification.
+#*    2000/02/03 SDJ  : Fixed location of ls, different ls's return 
+#*			different information.
+#*    2000/03/17 SDJ  : Chenged output (verify to verify errors).
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+umask 002
+
+set exec_name = $0
+set exec_name = $exec_name:t
+
+
+#
+# Parse command line.
+#
+
+
+if ( $#argv != 8 && $#argv != 9 ) then
+   goto USAGE
+endif
+
+if ( $#argv == 9 && "$9" != "-simulate" ) then
+    goto USAGE
+else if ( $#argv == 9 ) then
+    set simulate = 1
+else
+    set simulate = 0
+endif
+
+
+#
+# Parse the arguments.
+#
+
+set volume_name = $1
+set cdrecordrc_file_path = $2 #NOT USED
+set log_file_path = $3
+set work_path = $4
+set device_info = $5
+set num_copies = $6
+set num_files = $7  # note: this arg. is not used by this script.
+set data_path = $8  # note: this arg. is not used by this script.
+
+
+#
+# Check for relative path
+#
+
+set current_dir = `pwd`
+set result = `echo $log_file_path | grep "^/.*"` 
+if ( "$result" == "" ) then
+    set log_file_path = "$current_dir/$log_file_path"
+endif
+
+
+#
+#  Go to the cdrecord work path.
+#
+ 
+cd $work_path
+if ( $status ) then
+    echo Error: Unable to change to directory \'$work_path\'
+    sleep 10
+    exit 1
+endif
+
+
+#
+#  Remove any log files if present.
+#
+ 
+if ( -e $log_file_path ) then
+    rm -f $log_file_path
+    if ( $status ) then
+	echo Error: Unable to remove log file \`$log_file_path\'
+	sleep 10
+        exit 1
+    endif
+endif
+
+ 
+#
+# Parse the device information to get the SCSI bus and target, the
+# read speed, and write speed.
+#
+
+set device_name=`echo $device_info | awk 'BEGIN { FS="," ; } { print $1; }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    sleep 10
+    exit 1
+endif
+
+set dev_info=`echo $device_info | awk 'BEGIN { FS="," ; } { printf( "%d,%d,%d", $2, $3, $4 ); }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+set speed = `echo $device_info | awk 'BEGIN { FS="," ; } { print $6 }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+set driver = `echo $device_info | awk 'BEGIN { FS="," ; } { print $7 }'`
+if ( $status ) then
+    echo "Error: Unable to parse device information" >> $log_file_path
+    exit 1
+endif
+
+if ( "$driver" != "none" ) then
+    set command_line_args="dev=$dev_info speed=$speed timeout=60"
+else
+    set command_line_args="dev=$dev_info speed=$speed driver=$driver timeout=60"
+endif
+set noglob
+
+
+#
+# Determine if we need sudo (needed on suns but not hp)
+#
+
+switch( "`/bin/uname -rms`" )
+    case SunOS*4.*:
+    case SunOS*5.*:
+	set sudo_value = ""
+	breaksw
+    case HP-UX*:
+	set sudo_value = ""
+	breaksw
+   default:
+	set sudo_value = ""
+	breaksw
+endsw
+
+
+
+#
+# Verify the existence of the physical volume
+#
+
+if ( ! -e "$volume_name.vol" )  then
+    echo "Error: Unable to find physical volume `$volume_name.vol`"
+    exit 1
+endif
+
+
+#
+# Check that we have all of the need executables.
+#
+
+foreach item ( "cdrecord" "dd" "cmp" )
+    which $item
+    if ( $status ) then
+	echo "Error: $item Command not found." >> $log_file_path
+	echo "$exec_name Error: $executable Command not found." >> $log_file_path
+	sleep 10
+	exit 1
+    endif
+end
+
+
+#
+#  Run cdrecord.
+#  
+
+echo "Start cdrecord: `date`" >> $log_file_path
+set exit_status = 0
+set num_verify = 0
+set i = 1
+
+while ( $i <= $num_copies )
+    #
+    # Prompt user.
+    #
+
+    set prev = `expr $i - 1`
+    /usr/bin/echo "\007"
+    if ( $i > 1 ) then
+        echo "Please remove copy number $prev from the CD recorder and insert a."
+        echo "blank CD into the $device_name recorder."
+        echo -n "Press return when you are reading to record the next copy. "
+        set input = $<
+    else
+        echo "Please put a blank CD into the $device_name recorder"
+        echo -n "and press return when you are reading to start recording "
+        set input = $<
+    endif
+
+
+    #
+    # Check the drive to make sure it is okay.
+    #
+
+    if ( $sudo_value != "" ) then
+	which $sudo_value
+	if ( $status ) then 
+	    echo "Error: $sudo_value Command not found." >> $log_file_path 
+	    sleep 10
+	    exit 1
+	endif 
+    endif
+
+
+    $sudo_value cdrecord -v -VV -checkdrive $command_line_args >/dev/null
+    set exit_status = $status
+    if ( $exit_status ) then
+       echo "Error: There are problems with the CD writer on device $dev_info" >> $log_file_path
+       goto STATS
+    endif
+
+
+
+    #
+    # Start burning the CD
+    #
+
+    echo "***              Writing Copy $i               ***"
+
+
+    if ( $simulate ) then
+	$sudo_value cdrecord -v -V -dummy $command_line_args $volume_name.vol |& tee $log_file_path | grep "MB written"
+	set exit_status = $status
+    else
+	$sudo_value cdrecord -v -V $command_line_args $volume_name.vol |& tee $log_file_path | grep "MB written"
+	set exit_status = $status
+    endif
+
+    if ( $exit_status ) then
+        echo " " >>$log_file_path
+        echo "Error: Copy $i was NOT written."
+        echo "$exec_name Error: Copy $i was NOT written." >>$log_file_path
+	echo "$exec_name        return status of cdrecord was: $exit_status" >> $log_file_path 
+ else
+	echo " " >>$log_file_path
+        echo "Success: Copy $i has been written."
+        echo "$exec_name Success: Copy $i completed." >>$log_file_path
+
+
+	#
+	# Do verification.
+	#
+
+	echo "***             Verifying Copy $i              ***"
+    
+
+	#
+	# Determine the number of blocks that need to be read.
+	#
+
+	set file_size = `/bin/ls -l $volume_name.vol | awk '{ print $5; }'`
+	set num_blocks = `expr \( $file_size + 2047 \) / 2048`
+
+	set verified = 1
+	if ( ! $simulate ) then
+	    dd if=$device_name ibs=2048 conv=sync count=$num_blocks | cmp - $volume_name.vol >>& $log_file_path
+	    set exit_status = $status
+	    if ( $exit_status != 0 ) then
+		set verified = 0
+	    endif
+	endif
+
+
+	if ( $verified == 1 ) then
+	    echo "Verified: Copy $i successfully verified."
+	    echo "$exec_name Verified: Copy $i successfully verified." >> $log_file_path
+	    @ num_verify += 1
+       else
+	    echo "Verify Error: Copy $i NOT successfully verified."
+	    echo "$exec_name Verify Error: Copy $i NOT successfully verified." >> $log_file_path
+	    echo "$exec_name               return status was: $exit_status" >> $log_file_path
+	endif
+
+
+	#
+	# Eject CD
+	#
+    
+	/usr/bin/echo "\007"
+	$sudo_value cdrecord -v -eject $command_line_args >>& $log_file_path
+
+    endif  
+ 
+
+    echo "***              Copy $i Completed             ***"
+    echo " " >> $log_file_path
+    @ i += 1
+end
+
+
+#
+#  Parse the log file and add to it the number of copies, number of 
+#  of errors, number of files copied..
+#
+
+STATS:
+if ( -e $log_file_path ) then
+    set num_copies = `grep "$exec_name Success:" $log_file_path | wc -l`
+    set num_errors = `grep "$exec_name Error:" $log_file_path | wc -l`
+    set num_verify_errors = `expr $num_copies - $num_verify`
+    @ num_copies -= $num_verify_errors
+else
+    set num_copies = 0
+    set num_errors = 0
+    set num_verify = 0
+endif
+
+
+echo "$exec_name - Number of copies:           $num_copies" >> $log_file_path
+echo "$exec_name - Number verified:            $num_verify" >> $log_file_path
+echo "$exec_name - Number of errors:           $num_errors" >> $log_file_path
+echo "$exec_name - Number of verify errors:    $num_verify_errors" >> $log_file_path
+
+
+echo "$exec_name - Number of copies:    $num_copies" 
+echo "$exec_name - Number verified:    $num_verify" 
+echo "$exec_name - Number of errors:    $num_errors" 
+echo "$exec_name - Number of verify errors:    $num_verify_errors"
+
+ 
+
+echo "**             runCdrecord-16 done             ***"
+sleep 2
+if ( $num_verify_errors != 0 || $num_errors != 0 ) then
+   exit 1
+else
+   exit 0
+endif
+
+
+#
+# Display usage Information.
+#
+
+USAGE:
+    echo "USAGE: cdWriteRunCdrecord <volume_name> <cdrecordrc_file> <log_file_path> <work_path> <device_info> <num_copies> <num_files> <data_path> [-simulate]"
+    echo ""	
+    echo "              volume name      -Name of disk in upper-case"
+    echo "              cdrecordrc_file  -Fully specified path and name of the"
+    echo "                                cdrecordrc file."
+    echo "              log_file_path    -Fully specified path and name of the"
+    echo "                                log file."
+    echo "              work_path        -Fully specified path to the work directory."
+    echo "              device_info       SCSI Bus, Target, Logical Unit Number."
+    echo "              num_copies       -Number of copies to make."
+    echo "              num_files:        Number of files to put on the CD-ROM."
+    echo "              data_path        -Fully specified path to the directory which"
+    echo "                                contains the data to be written."
+    echo "              [-simulate]      -Run in simulate mode."
+
+ exit 1

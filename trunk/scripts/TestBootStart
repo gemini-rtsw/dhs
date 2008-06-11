@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+
+case `whoami` in
+
+root)
+	SU="su - gemdhs -c "
+	;;
+abrighto)
+	SU=""
+	;;
+*)
+	echo "Must be gemdhs to run GemBootStart"
+	exit 1
+	;;
+esac
+
+# Set DHS_BASE if not already set
+DHS_BASE=${DHS_BASE:=/gemini/dhs};
+echo "\$DHS_BASE is now \"$DHS_BASE\""
+
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$DHS_BASE/lib
+
+dhs_start() {
+	PROG=$1
+	BASE=`basename $PROG`
+	if [ $# -ge 2 ]
+	then
+		shift
+		ARGS=" $*"
+	else
+		ARGS=""
+	fi
+
+	echo "dhs_start: Starting $PROG$ARGS"
+        BASEPROG=`basename $PROG`
+       	$SU$PROG$ARGS < /dev/null | 2>&1 logger -p local0.debug -t $BASEPROG &
+	sleep 1
+}
+
+case $1 in
+
+start)
+	case `hostname` in
+	suse9)
+	      $0 stop
+
+              echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
+
+	      dhs_start $DHS_BASE/bin/master
+	      sleep 1
+	      dhs_start $DHS_BASE/bin/dhsStatus
+	      sleep 1
+	      dhs_start $DHS_BASE/bin/dhsSim4Data
+	      sleep 1
+	      dhs_start $DHS_BASE/bin/dhsData -debug MIN -noDb -temp /staging/temp -perm /staging/perm
+	      sleep 2
+	      dhs_start $DHS_BASE/bin/dhsQlServer -master
+	      sleep 1
+	      dhs_start $DHS_BASE/bin/dhsCommand
+	      ;;
+	*)
+	      echo "DHS does not run on `hostname`"
+	      ;;
+	esac
+	;;
+stop)
+        $SU $DHS_BASE/scripts/dhsCleanup
+        ;;
+*)
+	echo "Usage: TestBootStart [ start | stop ]"
+	exit 1
+	;;
+esac
+

@@ -1,0 +1,202 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(conf/include.mk.in)
+
+dnl Top level source dir.
+TOP=`pwd`
+AC_SUBST(TOP)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h unistd.h sys/mnttab.h mntent.h sys/statvfs.h synch.h bool.h)
+
+# -----------------------------------------------------------------------
+# 	Check if we need (or can use) shared memory (sysv/shm) prototypes
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([sysv shared memory prototypes])
+AC_EGREP_HEADER([int.*shmdt.*\(], [sys/shm.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_SHM_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check if we need a prototype for gethostname()
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([gethostname prototype])
+AC_EGREP_HEADER([int.*gethostname.*\(], [unistd.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_GETHOSTNAME_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check size of long
+# -----------------------------------------------------------------------
+AC_CHECK_SIZEOF(long, 4)
+
+# -----------------------------------------------------------------------
+# 	Check if semctl(2) takes an argument of type union semun
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([union semun])
+AC_EGREP_HEADER([union.*semun], [sys/sem.h], 
+	[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_UNION_SEMUN)], 
+	[AC_MSG_RESULT(no)])
+
+# -----------------------------------------------------------------------
+# 	Check if we need (or can use) mmap prototypes
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([mmap prototypes])
+AC_EGREP_HEADER([int.*munmap.*\(], [sys/mman.h], 
+	[AC_MSG_RESULT(yes)], 
+	[AC_MSG_RESULT(no); AC_DEFINE(NEED_MMAP_PROTO)])
+
+# -----------------------------------------------------------------------
+# 	Check if mtdrivetype is defined
+# -----------------------------------------------------------------------
+AC_MSG_CHECKING([mtdrivetype])
+AC_EGREP_HEADER([mtdrivetype], [sys/mtio.h], 
+	[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_MTDRIVETYPE)], 
+	[AC_MSG_RESULT(no)])
+
+
+# -----------------------------------------------------------------------
+# Check for the bool built-in type
+# -----------------------------------------------------------------------
+AC_DEFUN([AC_CXX_BOOL],
+[AC_CACHE_CHECK(whether the compiler recognizes bool as a built-in type,
+ac_cv_cxx_bool,
+[AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_TRY_COMPILE([
+int f(int  x){return 1;}
+int f(char x){return 1;}
+int f(bool x){return 1;}
+],[bool b = true; return f(b);],
+ ac_cv_cxx_bool=yes, ac_cv_cxx_bool=no)
+ AC_LANG_RESTORE
+])
+if test "$ac_cv_cxx_bool" = yes; then
+  AC_DEFINE(HAVE_BOOL,,[define if bool is a built-in type])
+fi
+])
+AC_CXX_BOOL
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_MODE_T
+AC_TYPE_SIZE_T
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(mkdir rmdir strerror strstr strtod)
+
+AC_PROG_RANLIB
+AC_CANONICAL_SYSTEM
+AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
+#AC_CHECK_LIB(socket, main, [LIBS="$LIBS -lsocket"])
+
+dnl dhsClient settings
+AC_MSG_CHECKING([DHS_CLIENT_INSTALL_BASE])
+if test "x${DHS_CLIENT_INSTALL_BASE}" = "x" ; then
+   DHS_CLIENT_INSTALL_BASE=${GEMINI_TOP}/opt/dhs
+fi
+
+AC_SUBST(DHS_CLIENT_INSTALL_BASE)
+AC_MSG_RESULT([$DHS_CLIENT_INSTALL_BASE])
+
+dnl Sybase settings
+AC_MSG_CHECKING([SYBASE])
+# enforce no sybase
+SYBASE=
+#if test "$SYBASE" = "" ; then
+#   SYBASE=`dirname $PWD`/sybase
+#   test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
+#   test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
+#fi
+AC_MSG_RESULT([$SYBASE])
+AC_SUBST(SYBASE)
+
+dnl Tcl settings
+AC_MSG_CHECKING([TCLTK_ROOT])
+if test "$TCLTK_ROOT" = "" ; then
+    TCLTK_ROOT=/usr
+    test -f $TCLTK_ROOT/include/tcl.h || TCLTK_ROOT=/usr/local
+fi
+AC_MSG_RESULT([$TCLTK_ROOT])
+AC_SUBST(TCLTK_ROOT)
+test -f $TCLTK_ROOT/lib/tclConfig.sh && . $TCLTK_ROOT/lib/tclConfig.sh
+AC_SUBST(TCL_VERSION)
+
+dnl SKYCAT settings
+AC_MSG_CHECKING([SKYCAT])
+if test "x${SKYCAT}" = "x" ; then
+    SKYCAT=${GEMINI_TOP}/opt/skycat
+fi
+AC_MSG_RESULT([$SKYCAT])
+AC_SUBST(SKYCAT)
+
+dnl CFITSIO settings
+AC_MSG_CHECKING([CFITSIO])
+CFITSIO_INCLUDES=-I/usr/include/cfitsio
+CFITSIO_LDLIBS=-lcfitsio
+CFITSIO_FLAGS=-UCFITSIO_OUTDATED
+# for cfitsio version < 2.430
+#CFITSIO_FLAGS=-DCFITSIO_OUTDATED
+#CFITSIO_INCLUDES=-I../cfitsio142
+#CFITSIO_LDLIBS=../cfitsio142/libcfitsio.a
+AC_SUBST(CFITSIO_FLAGS)
+AC_SUBST(CFITSIO_INCLUDES)
+AC_SUBST(CFITSIO_LDLIBS)
+
+dnl EPICS settings
+AC_MSG_CHECKING([EPICS])
+if test "x${EPICS}" = "x" ; then
+    EPICS=${GEMINI_TOP}/opt/epics
+fi
+AC_MSG_RESULT([$EPICS])
+EPICS_BASE=$EPICS/base
+AC_SUBST(EPICS_BASE)
+
+dnl Drama settings
+AC_MSG_CHECKING([DRAMA])
+if test "x${DRAMA}" = "x" ; then
+    DRAMA=${GEMINI_TOP}/opt/drama
+fi
+
+AC_MSG_RESULT([$DRAMA])
+. $DRAMA/dev.path
+IMP_DIR=$IMP_DEV
+SDS_DIR=$SDS_DEV
+ERS_DIR=$ERS_DEV
+
+#test -d $IMP_DIR  || echo "ERROR: can't find IMP_DIR directory" && exit 1
+#test -d $SDS_DIR  || echo "ERROR: can't find SDS_DIR directory" && exit 1
+#test -d $ERS_DIR  || echo "ERROR: can't find ERS_DIR directory" && exit 1
+AC_SUBST(IMP_DIR)
+AC_SUBST(SDS_DIR)
+AC_SUBST(ERS_DIR)
+
+dnl INSTALL PREFFIX
+AC_MSG_CHECKING([INSTALL_DIR])
+if test "x$prefix" = "xNONE" ; then
+    INSTALL_DIR=${GEMINI_TOP}/opt/dhs
+else
+   INSTALL_DIR=$prefix
+fi
+AC_SUBST(INSTALL_DIR)
+AC_MSG_RESULT([$INSTALL_DIR])
+
+dnl DHS-lite
+AC_MSG_CHECKING([DHSlite])
+# enforce DHS lite built
+DHS_LITE=YES
+AC_SUBST(DHS_LITE)
+AC_MSG_RESULT([$DHS_LITE])
+
+AC_OUTPUT(conf/include.mk)
+

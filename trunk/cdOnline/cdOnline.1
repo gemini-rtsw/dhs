@@ -1,0 +1,136 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: cdOnline/doc/cdOnline.1
+.\"*
+.\"*	Date			: Jun 8, 1995
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: cdOnline.1
+.\"*	    Version Number	: 1.2
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 07/04/97
+.\"*
+.\"*	Written by		: Norm Hill
+.\"*
+.\"*	Modification History:
+.\"*	  96/10/26 MAL  : Fixed typo.
+.\"*	  97/07/04 SEC  : Cleaned up. 
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH CDONLINE 1 "07/04/97" "CADC"
+
+.SH NAME
+.B cdOnline 
+\- Changes the online status and mountpoint of archive cds.
+
+.SH SYNOPSIS
+.B cdOnline 
+.I path
+
+.B cdOnline 
+.B -u
+.I volume-name
+
+.SH DESCRIPTION
+.B cdOnline
+is a utility which changes the online status of a cd to either online
+or offline.
+
+.SH OPERATION
+If a path to a mounted cd is given on the command line, 
+.B cdonline
+finds the cd in the archive, and marks the volume as being online and
+mounted at the cd's current mount point.
+If the 
+.B -u 
+option is used, the volume specified on the command line is marked as
+being offline.
+
+.SH OPTIONS
+.TP
+.B -u
+.I Un-mount	
+Mark the specfied volume as being offline.
+
+.SH FILES
+.SS
+.B ~/.dbrc
+The
+.I ~.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.B cdOnline
+.  A database reference must contain a server/database pair followed
+by the user's name and password. Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following order:
+ 
+.I server database username password
+  
+Each item should be separated by whitespace (spaces and/or tabs).
+If a required database is not included in the 
+.I ~/.dbrc 
+file, 
+.B cdOnline
+will prompt for a username and password.
+
+.SH TABLES
+.B cdOnline
+uses the asto database to determine if the diskname already exists.
+.B cdOnline
+updates the archive tables.
+ 
+The location of the asto database and the name of the tables
+are specified in the configuration file for the CADC 
+.I ad 
+library.
+
+The following is a list of SYBASE tables that must be present for
+.B cdOnline
+to run correctly:
+.TP
+.B asto..event_log
+.TP
+.B asto..cds
+
+.SH ENVIRONMENT VARIABLES
+The environment variable
+.B LIBAD_CONFIG_DIR may be set to the path of the 
+directory where the 
+.B ad
+configuration file can be found. If
+.B LIBAD_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR 
+should be set to the path of the directory where the file can be found. 
+
+.SH DIAGNOSTICS
+When marking a volume online, an error will be returned if the path
+specified is not on a cdrom or if the cdrom cannot be found in the
+archive (based on the original cdrom volume name and creation date).
+
+When marking a volume offline, an error will be returned if the 
+specified volume name cannot be found in the archive.
+
+.SH SEE ALSO
+.BR cdIngest (1).
+
+.SH BUGS
+None known.
+
+.SH AUTHORS
+Norman Hill
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+

@@ -1,0 +1,165 @@
+<!--  $Id: dhgStoActions.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998				(c) 1998
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgStoAction.html
+#
+# PURPOSE:
+# On-line help information for the Storage Server Action window, which
+# displays the Storage Server's Action Queue.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:12  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.4  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.3  1998/07/16 23:29:07  jaeger
+# Revised to reflect changes in the on-line help.  Widget manipulation has
+# been moved to a separate file and on-line help was created for all
+# actions and storage server commands.
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Storage Server's Action Queue</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Storage Server's Action Queue</H1>
+      The action queue contains all actions that are
+      currently being processed or waiting to be processed by
+      the Storage Server.  Actions are performed on media requests. 
+      The Storage Server can process more than one action
+      at a given time; the number of actions that can be processed is
+      determined
+      from the Storage Server's configuration file, <I>dhsStorage.config</I>.
+    <P>
+      An action is one of: 
+    <BLOCKQUOTE>
+      <A HREF="dhgStoRetrieve.html">retrieve</A>,
+      <A HREF="dhgStoQueue.html">queue</A>,
+      <A HREF="dhgStoPrepare.html">prepare</A>,
+      <A HREF="dhgStoWrite.html">write</A>,
+      <A HREF="dhgStoCleanup.html">cleanup</A>, or
+      <A HREF="dhgStoNotify.html">notify</A>.
+    </BLOCKQUOTE>
+
+
+    <H2>Viewing the Action Queue</H2>
+    The Storage Server's action queue is 
+    displayed in the <A HREF="#actionWindow">Action window</A>.
+    This window is displayed when either the &quot;Action&quot; button
+    is <A HREF="dhgControls.html#button">selected</A> or when 
+    &quot;Action&quot; is <A HREF="dhgControls.html#menubar">chosen</A>
+    from the  &quot;Views&quot; menu on the 
+    <A HREF="dhgSto.html#Views">Storage Server window</A>.
+
+    <H2>Changing the Action Queue</H2>
+    The action queue can not be changed directly.  However, it will 
+    change as the result of requesting, stopping, and rolling back actions.
+    These actions can be requested by 
+    <A HREF="dhgControls.html#button">selecting</A> buttons on the
+    <A HREF="dhgSto.html#request">Request Overview</A> section of the
+    Storage Server window.
+
+    <A NAME="actionWindow"><H2>The Action Window</H2></A>
+    The Action window displays the Storage Server's action queue.
+    <P>
+    The short help information for this window is displayed on the
+    <A HREF="dhgSto.html">Storage Server's</A> window.
+    <P>
+    The action queue is displayed in a non-editable list that has
+    <A HREF="dhgControls.html#scrollbar">scrollbars</A>.  
+    Each row of the list describes a separate
+    action.  The following information is shown for each action:
+    <UL>
+      <LI><B>Action</B>. One of the following:
+	<A HREF="dhgStoRetrieve.html">retrieve</A>,
+	<A HREF="dhgStoQueue.html">queue</A>,
+	<A HREF="dhgStoPrepare.html">prepare</A>,
+	<A HREF="dhgStoWrite.html">write</A>,
+	<A HREF="dhgStoCleanup.html">cleanup</A>, or
+	<A HREF="dhgStoNotify.html">notify</A>.
+      <LI><B>Request Identifier</B>. The associated request's unique, 
+	numerical identifier.
+      <LI><B>Optional Value</B>.
+	If a value was given to the optional parameter in the 
+	<A HREF="dhgStoRequestAction.html">stoRequestAction</A> 
+	command the value is displayed.
+    </UL>
+    <P>
+      The actions are listed in a sorted order.  Those that are being
+      processed (active) are listed first and are followed by the actions that
+      are waiting to be processed (inactive).  The inactive actions are 
+      sorted based on their position. Those actions which will be processed
+      first will appear closer to the top.
+    <P>
+      If the actions are <FONT COLOR="green">active</FONT> they appear 
+      green in colour and if they 
+      are <FONT COLOR="yellow">inactive</FONT> they are yellow in colour. 
+      The list of actions and 
+      their colours can be matched with the coloured buttons on the 
+      <A HREF="dhgSto.html#request">Storage Server window</A>. 
+    <P>
+      Two buttons appear at the bottom of the window: "OK" and "Help". 
+      The actions taken by the
+      buttons, when <A HREF="dhgControls.html#button">selected</A> are
+      as follows:
+
+    <P>
+      <CENTER>
+	<TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	  <CAPTION ALIIGN="top">Button Actions</CAPTION>
+	  <TR><TH>Button</TH>
+	    <TH ALIGN="center">Action</TH>
+	  </TR>
+	  <TR> <TD>OK</TD>
+	    <TD>Removes the action window from the display.</TD>
+	  </TR>
+	  <TR> <TD>Help</TD>
+	    <TD>Displays this help information.</TD>
+	  </TR>	
+	</TABLE>
+      </CENTER>
+    <P>
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+    <!-- Created: Mon Mar 16 11:10:58 PST 1998 -->
+    <!-- hhmts start -->
+Last modified: Thu Jul 23 23:33:40 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
