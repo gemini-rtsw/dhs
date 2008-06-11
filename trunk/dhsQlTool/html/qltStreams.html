@@ -1,0 +1,133 @@
+<!--  $Id: qltStreams.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998				1998
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsQlTool/doc/qltStreams.html
+#
+# PURPOSE:
+# On-line help information describing the Quick Look Streams used by
+# the Quick Look Server and Tool.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:27  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.2  1999/01/29 22:09:36  jaeger
+# Updated to reflect changes in the Quick Look Tool and fixed grammatical
+# and spelling errors.
+#
+# Revision 1.1  1998/07/27 22:49:13  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Quick Look Streams</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Quick Look Streams</H1>
+    The routing of data to Quick Look Tools is controlled by Quick Look Streams.
+    Quick Look Streams are assigned to datasets when they are created, and
+    subscribed to by the users of Quick Look Tools. Quick Look data is routed
+    to all Quick Look Tools which have subscribed to at least one of the
+    streams assigned to the data. Quick Look Tools subscribe to streams by
+    <A HREF="qltStreamSelect.html">selecting</A> one of the streams known 
+    to the Quick Look Server or by 
+    <A HREF="qltCustomStream.html">adding</A> streams to the custom 
+    stream list.
+
+    <P>
+      Quick Look Streams can be defined in four different but not mutually
+      exclusive ways:
+      <UL>
+      <LI>Streams can be defined in the Quick Look Server's configuration file
+	(<I>dhsQlServer.config</I>)
+	of the master Quick Look Server. These streams are always listed in one
+	of the list boxes of the 
+	<A HREF="qltStreamSelect.html">Subscribe Streams Window</A>. 
+	This is the preferred way to define Quick Look Streams.<P>
+	As many streams as possible should be defined in the master Quick Look
+	Server configuration file, since it is somewhat easier for the user
+	of a Quick Look to subscribe to these streams than it is to subscribe
+	to transient streams.
+	<P>
+      <LI>Streams can be defined when they are associated with a dataset. If the
+	stream name has already been defined in the configuration file
+	(<I>dhsQlServer.config</I>) of the master Quick Look Server, then
+	this has no effect on the list of streams known to the Quick Look 
+	Server.  
+	<P>
+	  If the stream name is 
+	  not defined in the configuration file, then the stream name will be 
+	  added to the list of streams known to the Quick Look Server, and will
+	  remain in the list of streams until the last of the data for the 
+	  dataset is received. If any Quick Look Tool activates the 
+	  stream selection window while
+	  data for the dataset is being received, the list of streams will 
+	  include the streams defined for
+	  the dataset. This feature would be useful for an instrument
+	  like the guide camera, where one dataset could be used to send many 
+	  frames to the Quick Look System over a long period of time.<P>
+
+      <LI>Streams can be defined in the Quick Look Tool's configuration
+	file (<I>dhsQlt.config</I>).  These streams will only be visible 
+	to the Quick 
+	Look Tool in which they are defined. This feature can be used to 
+	subscribe to streams which  are not defined in the master Quick 
+	Look Server configuration file, and where it is not practical to 
+	attempt to display the stream selection window while
+	the data for the dataset is being received.
+
+
+      <P><LI>Streams can be defined in the Quick Look Tool's 
+       <A HREF="qltCustomStream.html">custom stream editor</A>. 
+	Streams defined in this way will only be visible to the Quick 
+	Look Tool in which they are defined. This feature can be used to 
+	subscribe to streams which  are not defined in the master Quick 
+	Look Server configuration file, and where it is not practical to 
+	attempt to display the stream selection window while
+	the data for the dataset is being received.
+
+    </UL>
+
+    <P>
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Fri Jul 24 16:28:26 PDT 1998 -->
+<!-- hhmts start -->
+Last modified: Fri Jan 29 13:36:26 PST 1999
+<!-- hhmts end -->
+  </BODY>
+</HTML>

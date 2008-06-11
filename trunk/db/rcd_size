@@ -1,0 +1,316 @@
+#!/usr/cadc/misc/bin/perl   
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1998.                            (c) 1998.
+#* National Research Council            Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
+#* All rights reserved                  Tous droits reserves
+#*
+#* NRC disclaims any warranties,        Le CNRC denie toute garantie
+#* expressed, implied, or statu-        enoncee, implicite ou legale,
+#* tory, of any kind with respect       de quelque nature que se soit,
+#* to the software, including           concernant le logiciel, y com-
+#* without limitation any war-          pris sans restriction toute
+#* ranty of merchantability or          garantie de valeur marchande
+#* fitness for a particular pur-        ou de pertinence pour un usage
+#* pose.  NRC shall not be liable       particulier.  Le CNRC ne
+#* in any event for any damages,        pourra en aucun cas etre tenu
+#* whether direct or indirect,          responsable de tout dommage,
+#* special or general, consequen-       direct ou indirect, particul-
+#* tial or incidental, arising          ier ou general, accessoire ou
+#* from the use of the software.        fortuit, resultant de l'utili-
+#*                                      sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:       rcd_size
+#*
+#*   Purpose:
+#       Queries a hardcoded list of databases and their tables to get their
+#       size information and stores the database results in the 
+#       databases table(sizes_db) and the table results in the
+#       tables table(sizes_tbl).
+#*
+#*   Date               : Jan 06, 1999
+#*
+#*   SCCS data          : @(#)
+#*      Module Name     : rcd_size
+#*      Version Number  : 1.2
+#*      Release Number  : 1
+#*      Last Updated    : 01/27/99
+#*
+#*   Programmer         : David Delisle
+#*
+#*   Modification History:
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+
+unshift (@INC, "/usr/cadc/misc/lib/perl5/Sybase");
+require "sybperl.pl";
+
+
+#
+#  Initialize global variables
+#
+
+
+$ENV{'SYBASE'} = '/usr/cadc/sybase';
+$server = "SYBASE";
+$db = "cadctemp";
+$db_tbl = "sizes_db";
+$tbl_tbl = "sizes_tbl";
+@databases = sort qw( archive asto astrocat cfht dhscfht dhsjcmt 
+	hstcdbs hstdads hstecf hstmisc hstprop jcmt library preview );
+
+
+#
+#  Connect to the database
+#
+
+
+( $username, $password ) = split( /[ \t\n]+/, `dbrc_get $server $db` );
+$dbproc = &dblogin( $username, $password, $server );
+if ( $dbproc == -1 )
+{
+    die "ERROR: Can't login into $server $db\n";
+}
+
+
+#
+#  Get current date
+#
+
+
+&doSql( "select date = getdate()" );
+%buffer = &dbnextrow( $dbproc, 1 );
+$date = $buffer{ 'date' };
+&dbcanquery( $dbproc ); 
+
+
+#
+#  Call db_process on each database in list.
+#  If a database cannot be accesed then print an error 
+#  message and go to the next database.
+#
+
+
+foreach $database (@databases)
+{
+    if( !&dbuse( $database ) )
+    {
+	print"Couldn't login to $database\n"; 
+	next;
+    }
+
+    db_process( $database );
+
+    
+    #
+    #   Get table names for current database.
+    #
+
+
+    &doSql( "select owner=u.name, name=o.name 
+	from sysusers u, sysobjects o
+	where u.uid=o.uid and o.type = 'U' 
+	order by o.name, u.name" );
+    
+    $index = 0;
+    while ( %buffer = &dbnextrow( $dbproc, 1 ) )
+    {
+	$owners[$index] = $buffer{ 'owner' };
+	$tables[$index] = $buffer{ 'name' };
+	$index ++;
+    }
+    &dbcanquery();
+
+
+    #
+    #   Call table_process on each of the tables in the tables array.
+    #
+
+
+    for( $i = 0; $i < $index; $i++ )
+    {
+	table_process( $database, $owners[$i], $tables[$i] );
+    }
+
+
+    #
+    #   Update tables table with current date to confirm that the
+    #   tables of the current database have all been updated on 
+    #   this date.
+    #
+    
+    
+    &doSql( "insert $db..$tbl_tbl
+	    (
+		dbname, tblname, owner, date, reserved_sz, data_sz, 
+			index_sz, row_sz
+	    )
+	    values
+	    (
+		'$database', 'datestamp', 'rcd_size', '$date', 0, 0, 0, 0
+	    )" );
+    &dbcanquery( $dbproc );
+}
+
+
+#
+#  Close the database connection.
+#
+
+
+&dbclose( $dbproc );
+#
+#+
+########################################################################
+#
+#   Subroutine:  db_process 
+#
+#   Purpose:
+#	Gets the datestamp information on a specified database
+#       and stores the result in the databases table.
+#       All file size attributes are stored in kilobytes.
+#
+#   Arguments:
+#       $database       : specified database
+#
+#   Return values:
+#       None.
+#
+########################################################################
+#-
+
+sub	db_process
+{
+    local ( $database ) = @_;
+   
+
+    #
+    #   Get size data for database.
+    #
+
+
+    &doSql( "sp_spaceused" );
+    %buffer = &dbnextrow( $dbproc, 1 );
+    ( $database_sz, $void ) = split( / /, $buffer{ 'database_size' } );
+    $database_sz *= 1024.0;
+
+    &dbresults;
+    %buffer = &dbnextrow( $dbproc, 1 );
+    ( $reserved_sz, $void ) = split( / /, $buffer{ 'reserved' } );
+    ( $data_sz, $void ) = split( / /, $buffer{ 'data' } );
+    ( $index_sz, $void ) = split( / /, $buffer{ 'index_size' } );
+    &dbcanquery;
+
+
+    #
+    #   Update database table.
+    #
+    
+    
+    &doSql( "insert $db..$db_tbl
+	    (
+		name, date, database_sz, reserved_sz, data_sz, index_sz
+	    )
+	    values
+	    (
+		'$database', '$date', $database_sz, $reserved_sz,
+		    $data_sz, $index_sz
+	    )" );
+    &dbcanquery( $dbproc );
+}
+#
+#+
+########################################################################
+#
+#   Subroutine: table_process
+#
+#   Purpose:
+#       Gets the datestamp information on a specified table
+#       and stores the result in the tables table.
+#       All file size attributes are stored in kilobytes.
+#
+#   Arguments:
+#       $database       : database in which table is found
+#       $owner          : owner of given table
+#       $table          : specified table
+#
+#   Return values:
+#       None.
+#
+########################################################################
+#-
+
+sub table_process
+{
+    local ( $database ) = $_[0];
+    local ( $owner ) = $_[1];
+    local ( $table ) = $_[2];
+  
+
+    #
+    #   Get size data for table.
+    #
+
+
+    &doSql( "sp_spaceused '$owner.$table'" );
+    %buffer = &dbnextrow( $dbproc, 1 );
+    ( $reserved_sz, $void ) = split( / /, $buffer{ 'reserved' } );
+    ( $data_sz, $void ) = split( / /, $buffer{ 'data' } );
+    ( $index_sz, $void ) = split( / /, $buffer{ 'index_size' } );
+    $rowtotal = $buffer{ 'rowtotal' };
+    &dbcanquery;
+
+
+    #
+    #   Update table table. 
+    #
+
+
+    &doSql( "insert $db..$tbl_tbl
+	    (
+		dbname, tblname, owner, date, reserved_sz, data_sz, 
+			index_sz, row_sz
+	    )
+	    values
+	    (
+		'$database', '$table', '$owner', '$date', $reserved_sz, 
+			$data_sz, $index_sz, $rowtotal
+	    )" );
+    &dbcanquery( $dbproc );
+}
+#
+#+
+########################################################################
+#
+#   Subroutine: doSql
+#
+#   Purpose:
+#       Executes an SQL query.
+#
+#   Arguments:
+#       @_              : Query buffer
+#
+#   Return values:
+#       None.
+#
+########################################################################
+#-
+
+sub     doSql
+{
+    local( $sql ) = @_;
+
+    &dbcmd( $sql ) || die "Error: in dbcmd.\n";
+    &dbsqlexec || die "Error: in dbsqlexec.\n";
+    &dbresults;
+}
+
+

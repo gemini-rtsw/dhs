@@ -1,0 +1,136 @@
+<!--  $Id: dhgLog.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgLog.html
+#
+# PURPOSE:
+# Whatever
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.4  1998/07/14 19:14:23  jaeger
+# Made Norm's suggested edits.
+#
+# Revision 1.3  1998/06/01 22:13:50  jaeger
+# Fixed some typos.
+#
+# Revision 1.2  1998/05/25 20:50:46  jaeger
+# Added usage information, and update to reflect changes in the dhsConsole.
+#
+# Revision 1.1  1997/11/13 23:52:16  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Log Message</TITLE>
+  </HEAD>
+
+  <BODY>
+  <H1>Log Message</H1>
+    This indicator displays the DHS history logging message.  This
+    is a history of the commands executed by DHS, errors reported
+    by DHS, and the status of the system.  
+    
+    <H2>Viewing the Log Messages</H2>
+    The most recent log message is displayed in a box where
+    the text "Log Message:" appears on the main window of the
+    <A HREF="dhsConsole.html">Console</A>.  Because this message 
+    can change very rapidly at times, so rapidly
+    it is nearly impossible to read the message,
+    a &quot;log&quot; of messages is kept.
+    The log can be viewed by <A HREF="dhgControls.html#combobox">invoking</A>
+    the button which appears beside the log message.
+
+    <H2>Changing the amount of Information Logged</H2>
+    The amount of information
+    reported depends on the <A HREF="dhgDebug.html">Debug Level</A>
+    of the various DHS subsystems.  The greater the debug level the
+    larger the quantity of information being logged.  The debug level can
+    be altered with the 
+    <A HREF="dhgDebugCmd.html">Debug Level Command</A>.
+
+    <P>
+    <HR>
+    <A NAME="logLength"><H2>Changing the Log Length</H2></A>
+    To change the number of log messages retained in the &quot;log&quot
+    do the following:
+    <OL>
+      <LI>Select the &quot;Options&quot; menu: either press the 
+	<B>ALT</B> and
+	<B>O</B> keys simultaneously <B>OR</B> press mouse button
+	1 when the cursor is over the Options menu on the menubar on
+	the <A HREF="dhsConsole.html">Console</A><dfn>.
+      <LI>Select &quot;Log Length&quot;: either press the <B>L</B>
+	key or press <B>mouse button 1</B> when it is over the text 
+	&quot;Log Length&quot; A dialogue box should appear shortly.
+      <LI>Enter the desired length: enter a positive integer value 
+	in the dialogue box that was displayed.
+      <LI>Select one of the buttons: press <B>mouse button 1</B>;
+	    when the cursor is
+	    over the desired button.  The following actions are taken
+	by the buttons:
+    </OL>
+    <P>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	<CAPTION ALIIGN="top">Button Actions</CAPTION>
+	<TR><TH>Button</TH>
+	  <TH ALIGN="center">Action</TH>
+	</TR>
+	<TR> <TD>OK</TD>
+	  <TD>Changes the number of messages kept to the value given, if
+	    it is valid.  It also removes the dialogue
+	    window from the display.
+	</TR>
+	<TR> 
+	  <TD>Cancel</TD>
+	  <TD>Does <B>not</B> change the number of messages stored but
+	    does remove the input dialogue from the display.</TD>
+	</TR>
+      </TABLE>
+    <P>		
+    <HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Mon Nov  3 11:40:19 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 11:35:36 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>

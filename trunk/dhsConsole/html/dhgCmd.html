@@ -1,0 +1,216 @@
+<!-- $Id: dhgCmd.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/dhgCmd.html
+#
+# PURPOSE:
+# Help information for the Command Server window.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.4  1998/07/14 17:35:53  jaeger
+# Made Norm's suggested changes.  Moved widget manipulation information
+# to a separate file.
+#
+# Revision 1.3  1998/06/01 22:14:43  jaeger
+# Updated and added usage information.
+#
+# Revision 1.2  1997/11/13 23:52:16  jaeger
+# initial revision
+#
+# Revision 1.1  1997/11/04 20:45:10  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Command Server Window</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Command Server Window</H1>
+    The Command Server is the command interface between the DHS and the 
+    outside world.  It receives commands which are passed to
+    the appropriate subsystem(s) for execution.  The Command Server
+    may execute the command itself if it was one of the subsystems specified
+    for the command.  See the core track documentation for more information.
+    <P>
+      The Command Server window is displayed whenever the Command Server 
+      button (labeled CMD) is 
+      <A HREF="dhgControls.html#button">selected</A> on the main window of the 
+      <A HREF="dhsConsole.html">Console</A>.  
+      See the
+      <A HREF="dhsConsole.html#subsystem">Subsystem Overview</A> for
+      more details.
+      <P>
+      The components of the Command Server window include:
+      <UL TYPE="DISC">
+	<LI>A <A HREF="#menubar">menubar</A> at the top, which 
+	contains a number of menus.  The menus and the menubar are
+	described in more detail below.
+      <LI><A HREF="#status">Status information</A> in the
+	middle, which displays the running conditions of the 
+	Command Server.  
+      <LI>At the very bottom of the window is the 
+	<A HREF="dhgControls.html#help">short help</A> display.  
+	The short help message displays brief textual 
+	descriptions of the Console's components.
+    </UL>
+
+    <HR>
+    <A NAME="menubar"></A>
+    <H2>Menubar</H2>
+    The menubar has four menus:
+    <BLOCKQUOTE>
+      <A HREF="#Commands">Commands</A>,
+      <A HREF="#Options">Options</A>,
+      <A HREF="#Help">Help</A>, and
+      <A HREF="#Quit">Quit</A>,
+    </BLOCKQUOTE>
+    which are described below.
+
+    <A NAME="Commands"></A>
+    <H3>Commands Menu</H3>
+    This menu contains the list of commands that can be sent to the
+    <B>Command Server</B>.
+    The commands that can be 
+    <A HREF="dhgControls.html#menubar">selected</A> include:
+    <BLOCKQUOTE>
+      <A HREF="dhgDebugCmd.html">Debug</A>,
+      <A HREF="dhgSimCmd.html">Simulation</A>,
+      <A HREF="dhgResetHealth.html">Reset Health</A>,
+      <A HREF="dhgReset.html">Reset</A>,
+      <A HREF="dhgInit.html">Initialize</A>,
+      <A HREF="dhgPing.html">Ping</A>, and
+      <A HREF="dhgTest.html">Test</A>.
+    </BLOCKQUOTE>
+
+    After the command has been chosen from the menu a dialogue window
+    will appear (the dialogue windows are described in detail in the
+    command descriptions).  Most of the dialogue windows are &quot;modal&quot;,
+    which means other windows can not be manipulated
+    while the dialogue window is active.  Usually the dialogue that is
+    displayed confirms that the chosen command is indeed the one that 
+    was desired. If the command is &quot;confirmed&quot; then
+    the command is sent <B>only</B> to the Command Server for processing.
+    <P>
+      The commands shown on the &quot;Commands&quot; menu are 
+      also available from the <A HREF="#toolbar">toolbar</A> 
+      shown in the <A HREF="#status">status</A> section of the
+      Command Server window.
+
+    <A NAME="Options"></A>
+    <H3>Options Menu</H3>  
+    Currently the only item is 
+    <A HREF="dhgHealthDesc.html#length">&quot;Health Description Length&quot;</A>.
+    <A HREF="dhgControls.html#menubar">Choosing this item</A> 
+    allows the the operator to change the
+    number of health description messages shown in the 
+    <A HREF="dhgControls.html#combobox">drop down list</A>.
+    <P>
+      Note more items may be added to this menu in the future.
+
+    <A NAME="Help"></A>
+    <H3>Help Menu</H3>
+    This menu contains two items: &quot;About&quot; and &quot;Extended...&quot;.
+    If &quot;About&quot; is <A HREF="dhgControls.html#menubar">selected</A>
+    a brief message describing DHS is
+    displayed in a pop-up window.  If &quot;Extended...&quot; is 
+    <A HREF="dhgControls.html#menubar">chosen</A>
+    then this <B>HTML</B> page is displayed in a <B>Netscape</B> web
+    browser.
+
+    <A NAME="Quit"></A>
+    <H3>Quit Menu</H3>    
+    This menu contains one item: &quot;Close&quot;.  When 
+    &quot;Close&quot; is <A HREF="dhgControls.html#menubar">chosen</A> 
+    the Command Server window is removed from the display. However,
+    it does <B>not</B> shut down the Command Server.  See the
+    <A HREF="dhgShutDown.html">Shutdown</A> command for information
+    on shutting down DHS.
+
+    <HR>
+    <A NAME="status"></A>
+    <H2>Command Server Status</H2>
+    The middle section of the Command Server window contains the 
+    status information for the Command Server.  The status information
+    describes the current running conditions of the Command Server.
+    The status items shown include:
+    <BLOCKQUOTE>
+      <A HREF="dhgState.html">state</A>,
+      <A HREF="dhgHealth.html">health</A>, 
+      <A HREF="dhgHealthDesc.html">health description</A>,
+      <A HREF="dhgDebug.html">debug level</A>, and
+      <A HREF="dhgSim.html">simulation level</A>.
+    </BLOCKQUOTE>
+    The status items can be viewed only, they can not be changed from the
+    <A HREF="dhsConsole.html">Console</A>. 
+
+    <A NAME="toolbar"><H3>Toolbar</H3></A>
+    <P>
+      Below the status information is a toolbar, or row of
+      buttons. When one of these buttons are 
+      <A HREF="dhgControls.html#button">invoked</A> a dialogue 
+      window is displayed, usually
+      confirming that the command chosen is the one desired.
+      If the command is confirmed then the command is sent <B>only</B>
+      to the Command Server for processing.
+      
+    The commands that can be selected are:
+    <BLOCKQUOTE>
+      <A HREF="dhgDebugCmd.html">Debug</A>,
+      <A HREF="dhgSimCmd.html">Simulation</A>,
+      <A HREF="dhgResetHealth.html">Reset Health</A>,
+      <A HREF="dhgReset.html">Reset</A>,
+      <A HREF="dhgInit.html">Initialize</A>,
+      <A HREF="dhgPing.html">Ping</A>, and
+      <A HREF="dhgTest.html">Test</A>.
+    </BLOCKQUOTE>
+    These commands can also be issued from the
+      <A HREF="#Commands">Commands Menu</A>.
+
+  <P>		
+  <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Fri Oct 31 15:46:13 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Fri Jul 24 11:24:58 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>

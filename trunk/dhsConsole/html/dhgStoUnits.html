@@ -1,0 +1,154 @@
+<!--  $Id: dhgStoUnits.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) <year>                            (c) <year>
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgStoUnits
+#
+# PURPOSE:
+# On-line help description of the unit window.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:13  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1999/06/18 22:47:53  jaeger
+# Updated to reflect changes in the Console
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Storage Server's Unit List</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Storage Server's Unit List</H1>
+    The Storage Server's Unit List contains all of the media units known
+    to the Storage Server.  A unit of media contains a number of files, 
+    data that have been grouped together in order to be written to a
+    single CD, DVD, Mammoth Tape, or some other form of media.
+    A media unit remains in the unit list from the time it is created (
+    <A HREF="dhgStoQueue.html">queued</A>) until it is destroyed
+    (<A HREF="dhgStoCleanup.html">cleaned up</A>).
+    
+    <H2>Viewing the Unit List</H2>
+    The unit list is displayed in the Storage Server's 
+    <A HREF="#unitWindow">Unit window</A>.
+    This window is displayed when either the &quot;Units&quot; button
+    is <A HREF="dhgControls.html#button">selected</A> 
+    or when &quot;Units&quot; is 
+    <A HREF="dhgControls.html#menubar">chosen</A>
+    from the  &quot;Views&quot; menu on the 
+    <A HREF="dhgSto.html#Views">Storage Server window</A>.
+
+    <H2>Changing the Unit List</H2>
+    The unit list can not be changed directly.  However, it will 
+    change as the result of <A HREF="dhgStoRequestAction.html">requesting</A>, 
+    <A HREF="dhgStoCancelAction.html">stopping</A>, and 
+    <A HREF="dhgStoRequestRollback.html">rolling back</A> of
+    <A HREF="dhgStoQueue.html">queue</A>,
+    <A HREF="dhgStoPrepare.html">prepare</A>,
+    <A HREF="dhgStoWrite.html">write</A>, and
+    <A HREF="dhgStoCleanup.html">cleanup</A> actions.
+    These requests can be made from the buttons on the
+    <A HREF="dhgSto.html#request">Request Overview</A> section of the
+    Storage Server window.
+
+    <A NAME="unitWindow"><H2>The Unit Window</H2></A>
+    The Unit window displays the Storage Server's unit list.
+    The unit list is displayed in a 
+    <A HREF="dhgControls.html#scrollbar">scrollable</A>, non-editable list.
+    Each row of the list describes a separate unit.  The following information 
+    is shown for each unit:
+
+    <P>
+    <TABLE BORDER="0" CELLPADDING="5" ALIGN="center">
+      <TR><TD><B>Name</B></TD>
+	    <TD>The name that has been given to the unit.</TD>
+      </TR>
+      <TR><TD><B>Request Identifier</B></TD> 
+	<TD>The associated requests unique, numerical identifier.</TD>
+      </TR>
+      <TR><TD><B>Size</B></TD> 
+	<TD>The number of Megabytes of data in the media unit.</TD>
+      </TR>
+      <TR><TD><B>Prepared?</B></TD> 
+	<TD>True if the unit has been 
+	  <A HREF="dhgStoPrepare.html">prepared</A>.</TD>
+      </TR>
+      <TR><TD><B>Number Written</B></TD> 
+	<TD>The number of media units that have been
+	<A HREF="dhgStoWrite.html">written</A> so far.</TD>
+      </TR>
+      <TR><TD><B>Cleaned Up?</B></TD> 
+	<TD>True if the media unit as been 
+	<A HREF="dhgStoCleanup.html">cleaned up</A>.</TD>
+      </TR>
+    </TABLE>
+
+    <BR CLEAR="ALL">
+    <P>
+      The list of units is displayed in a sorted order.  First they are sorted
+      based on the request identifiers with the lowest one appearing at
+      the top.  If two units have the same request number then their 
+      unit names are used to sort them.  Those with lexicographically 
+      smaller names appear higher in the list.  
+    <P>
+      Two buttons appear at the bottom of the window: "OK" and "Help". 
+      The actions taken by the buttons, when 
+      <A HREF="dhgControls.html#button">selected</A> are as follows:
+    <P>
+      <CENTER>
+	<TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	  <CAPTION ALIIGN="top">Button Actions</CAPTION>
+	  <TR><TH>Button</TH>
+	    <TH ALIGN="center">Action</TH>
+	  </TR>
+	  <TR> <TD>OK</TD>
+	    <TD>Removes the Unit window from the display.</TD>
+	  </TR>
+	  <TR> <TD>Help</TD>
+	    <TD>Displays this help information.</TD>
+	  </TR>	
+	</TABLE>
+      </CENTER>
+
+    <P>
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+    <!-- Created: Mon Mar 16 12:05:14 PST 1998 -->
+    <!-- hhmts start -->
+Last modified: Fri Jun 18 15:47:21 PDT 1999
+<!-- hhmts end -->
+  </BODY>
+</HTML>

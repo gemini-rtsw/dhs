@@ -1,0 +1,387 @@
+.\"/*+ $Id: CLed.n,v 1.1.1.1 2002-11-24 20:26:01 brighton Exp $
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) 1997				(c) 1997
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-	ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME:
+.\" dhsConsole/doc/CLed.n
+.\"
+.\" PURPOSE:
+.\" Describe the CLed class.
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:10  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.4  1998/08/05 06:09:35  jaeger
+.\" Corrected grammatical and syntactical errors.  Added "COMPONENTS" section
+.\" and BINDINGS section.
+.\"
+.\" Revision 1.3  1998/07/22 06:41:33  jaeger
+.\" Updated to reflect latest changes.
+.\"
+.\" Revision 1.2  1997/12/03 21:05:20  jaeger
+.\" initial revision.
+.\"
+.\" Revision 1.1  1997/11/13 23:52:44  jaeger
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.\" Tcl/Tk Macro definitions - borrowed from Tcl/Tk man pages.
+.\"     # Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\" .BS Start box enclosure.  From here until next .BE, everything will be
+'\"     enclosed in one large box.
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+./"
+'\" .BE End of box enclosure.
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"     Draw four-sided box normally, but don't draw top of
+.\"     box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+./"
+'\" .CS Begin code excerpt.
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+./"
+'\" .CE End code excerpt.
+.de CE
+.fi
+.RE
+..
+./"
+'\" .DS Begin an indented unfilled display.
+.de DS
+.RS
+.nf
+.sp
+..
+./"
+'\" .DE End of indented unfilled display.
+'\"
+.de DE
+.fi
+.RE
+.sp
+..
+./"
+'\" .OP cmdName dbName dbClass
+'\"     Start of description of a specific option.  cmdName gives the
+'\"     option's name as specified in the class command, dbName gives
+'\"     the option's name in the option database, and dbClass gives
+'\"     the option's class in the option database.
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:      \\fB\\$1\\fR
+Database Name:  \\fB\\$2\\fR
+Database Class: \\fB\\$3\\fR
+.fi
+.IP
+..
+./"
+'\" .SO Start of list of standard options for a Tk widget.  The
+'\"     options follow on successive lines, in four columns separated
+'\"     by tabs.
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+./"
+'\" .SE End of list of standard options for a Tk widget.
+'\"     Start of description of a specific option.  cmdName gives the
+'\"     option's name as specified in the class command, dbName gives
+'\"     the option's name in the option database, and dbClass gives
+'\"     the option's class in the option database.
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+.\"
+.\"**********************************************************************
+.\"				End of Macros!!!
+.\"**********************************************************************
+.TH CLed n 03/08/98 "CADC"
+.\".BS
+.SH NAME
+CLed \- Create and manipulate a LED widget.
+
+.SH SYNOPSIS
+\fBCLed\fI \fIpathName \fR?\fIoptions\fR?
+
+.SH "INHERITANCE"
+itk::Widget \<- CLed
+
+.SO
+\-background		\-cursor
+.SE
+
+.SH "INHERITED OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+\fB\-clientdata\fR
+.fi
+.LP
+See the \fBitk::Widget\fR class manual entry for details on the 
+inherited options.
+
+.SH "WIDGET-SPECIFIC OPTIONS"
+
+.OP \-colorassoc colorAssociation ColorAssociation
+List that associates a color with a value.  The value of the 
+variable specified by the -ledvariable option is used to 
+determine the color of the LED.  The list should be something
+like:
+.IP
+{{green good} {yellow warning} {red bad}}.
+.IP
+Note that a case insensitive match is used between the variable's
+value and the color association list.
+
+.OP \-led led Led
+Specifies whether the LED is "on" or "off"  Default is value
+is "off".  This is a boolean value and accepts any of the
+values accepted by \fBTcl_GetBoolean\fR, as well as \fIbusy\fR,
+and \fIidle\fR.  The default value is "off".
+
+.OP \-ledcolor ledColor Background
+Specifies the color of the LED. The default color is grey85.
+
+
+.OP \-ledmargin ledMargin Margin
+Specifies the margin between the LED and the  childsite
+in any of the forms acceptable to \fBTK_GetPixels\fR.
+The default is one pixel.
+
+.OP \-ledpos ledPos Position
+Specifies the relative position of the LED with respect
+to the childsite: n, ne, e, se, s, sw, w, or nw. The
+default is w.
+
+.OP \-ledvariable ledVariable Variable
+Specifies a variable whose value is to be monitored, The
+value of this variable determines the color of the LED.
+
+.OP \-ledwidth ledWidth Width
+Specifies the width of the LED.
+
+.OP \-offcolor offColor Background
+Specifies the color of the LED when it is off.  The default value is
+grey.
+
+.OP \-oncolor onColor Background
+Specifies the color of the LED when it is on. The default value is
+green.
+.\".BE
+
+.SH DESCRIPTION
+.PP
+The \fBCLed\fR command creates a new window (given by the
+\fIpathName\fR argument) and makes it into a LED widget.
+Additional options, described above, may be specified on the 
+command line or in the option database to configure aspects of
+the LED. The \fBCLed\fR command returns its
+\fIpathName\fR argument.  At the time this command is invoked,
+there must not exist a window named \fIpathName\fR, but
+\fIpathName\fR's parent must exist.
+
+.SH "WIDGET COMMAND"
+The \fBCLed\fR command creates a new Tcl command whose
+name is \fIpathName\fR.  This
+command may be used to invoke various
+operations on the widget.  It has the following general form:
+.CS
+\fIpathName method \fR?\fIarg arg ...\fR?
+.CE
+\fImethod\fR and the \fIarg\fRs
+determine the exact behavior of the command.  
+.PP
+The following methods are possible for LED widgets:
+.TP
+\fIpathName \fBalignleds\fR  \fIwidget\fR ?\fIwidget ...\fR?
+This method aligns a list of widgets derived from the CLed class.
+It adjusts the LED margins so that each of the widgets has the
+same total space for the combination of LED and margin.  The
+net effect is to left align the LEDs.  Generally, this method
+is only useful with the LEDs in the "w" position, which is 
+the default.
+
+.TP
+\fIpathName \fBcget\fR \fIoption\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBCLed\fR
+command.
+
+.TP
+\fIpathName \fBchildsite\fR
+Return the path name of the child site.
+
+.TP
+\fIpathName \fBcomponent\fR ?\fIname\fR? ?\fIcommand arg arg ...\fR?
+Used to query or access component widgets within the LED
+widget.  With no arguments, this returns a list of
+symbolic names for component widgets that are accessible in the
+current scope.  
+.sp
+If a symbolic \fIname\fR is specified this method returns the window
+path name for that component.
+.sp
+Otherwise, the \fIcommand\fR and any remaining \fIarg\fR arguments
+are invoked as a method on the component with the symbolic \fIname\fR.
+This provides a well-defined mechanism for accessing internal components
+without relying on specific window path names.
+
+.TP
+\fIpathName \fBconfig\fR
+See \fBconfigure\fI.
+
+.TP
+\fIpathName\fR \fBconfigure\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+Query or modify the configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR may have any of the values accepted by the \fBCLed\fR
+command.
+
+.TP
+\fIpathName \fBisa\fR \fBclassName\fR
+Sets the LED widget's class to the specified class name.
+
+.SH "COMPONENTS"
+.LP
+.nf
+Name:   \fBled\fR
+Class:  \fBFrame\fR
+.fi
+.IP
+This component is the "led" of the led widget. See the 
+\fBframe\fR widget manual
+entry for details on the lwchildsite component item.
+
+.LP
+.nf
+Name:   \fBledmargin\fR
+Class:  \fBFrame\fR
+.fi
+.IP
+This component provides control over the spacing 
+between the led and lwchildsite component. 
+See the \fBframe\fR widget manual
+entry for details on the lwchildsite component item.
+
+.LP
+.nf
+Name:   \fBlwchildsite\fR
+Class:  \fBFrame\fR
+.fi
+.IP
+The lwchildsite component is the user child site for
+the led widget.  See the \fBframe\fR widget manual
+entry for details on the lwchildsite component item.
+
+.LP
+.nf
+Name:   \fBshell\fR
+Class:  \fBFrame\fR
+.fi
+.IP
+This component is the outer shell, widget, of the led
+widget.
+See the \fBframe\fR widget manual
+entry for details on the lwchildsite component item.
+
+.SH "DEFAULT BINDINGS"
+.PP
+No bindings are defined for this widget except those defined for the
+various components this widget is comprised of.
+.PP
+See the \fBFrame\fR manual entries for more information.
+pages for more information.
+
+.SH EXAMPLE
+.DS
+ CLed .led -ledcolor green 
+ set childsite [ .led childsite ]
+ label $childsite.label -text "Command Server"
+
+ pack .led  -fill both -expand yes
+.DE
+
+.SH AUTHOR
+Shannon Jaeger
+
+.SH KEYWORDS
+LED, widget

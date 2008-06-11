@@ -1,0 +1,132 @@
+<!--  $Id: dhgHealthDesc.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgHealth.html
+#
+# PURPOSE:
+# Provide help information for the "health Description" status value
+# for DHS and its subsystems.  This indicator is displayed on the
+# DHS Console.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.4  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.3  1998/07/14 19:57:41  jaeger
+# Added a link to widget manipulation page.
+#
+# Revision 1.2  1998/06/01 22:14:43  jaeger
+# Updated and added usage information.
+#
+# Revision 1.1  1997/11/13 23:52:16  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Health Description</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Health Description</H1>
+    The health description
+    is a textual message containing a describing the
+    DHS subsystem's health.  The Subsystem's health description is 
+    changed whenever its
+    <A HREF="dhgHealth.html">health</A> changes to something other
+    than <B>GOOD</B>.
+
+    <H2>Viewing the Health Descriptions</H2>
+    The most recent health description is displayed in a box beside
+    the text &quot;Health Description:&quot; on the subsystem windows.
+    See <A HREF="dhsConsole.html#subsystem">Subsystem Overview</A>
+    on displaying subsystem windows.  
+    <P>
+      A log of the health descriptions is kept.  This log can be
+      viewed by <A HREF="dhgControls.html#combobox">invoking</A>
+      the button which appears beside the health description.
+
+    <P><HR>
+    <A NAME="length"><H2>Changing the Health Description Length</H2></A>
+    To change the number of messages stored in the &quot;log&quot
+    do the following:
+    <OL>
+      <LI>Select the &quot;Options&quot; menu: either press the 
+	<B>ALT</B> and
+	<B>O</B> keys simultaneously <B>OR</B> press 
+	<B>mouse button 1</B>
+	when the cursor is over the Options menu on the menubar on
+	the subsystem window.
+      <LI>Select &quot;Health Description Length&quot;: either press 
+	the <B>H</B>
+	key or press <B>mouse button 1</B> when it is over the text 
+	&quot;Health Description Length&quot;. A dialogue box should appear
+	shortly.
+      <LI>Enter the desired length: enter a positive integer value 
+	in the dialogue box that was displayed.
+      <LI>Select one of the buttons: <B>press mouse button 1</B>
+	when cursor is
+	over the desired button.  The following actions are taken
+	by the buttons:
+    </OL>
+    <P>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+	<CAPTION ALIIGN="top">Button Actions</CAPTION>
+	<TR><TH>Button</TH>
+	  <TH ALIGN="center">Action</TH>
+	</TR>
+	<TR> <TD>OK</TD>
+	  <TD>Changes the number of messages kept to the value given, if
+	    it is valid.  It also removes the dialogue
+	    window from the display.
+	</TR>
+	<TR> 
+	  <TD>Cancel</TD>
+	  <TD>Does <B>not</B> change the number of messages stored but
+	    does remove the input dialogue from the display.</TD>
+	</TR>
+      </TABLE>
+    <P>		
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Mon Nov  3 11:40:19 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 10:16:53 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>

@@ -1,0 +1,601 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <1998>				(c) <1998>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-		ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsData.1
+.\"
+.\" PURPOSE:
+.\" Describe the data server.
+.\"
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:19  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.10  1998/10/22 16:09:55  dunn
+.\" fixed -noServer to -noServers option
+.\"
+.\" Revision 1.9  1998/08/10 19:46:56  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.8  1998/08/04 22:10:21  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.7  1997/10/29 21:47:11  jaeger
+.\" fixed typo's and some minor restructoring
+.\"
+.\" Revision 1.6  1997/10/17 18:50:19  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.5  1997/10/03 22:56:56  dunn
+.\" Changed config file.
+.\"
+.\" Revision 1.4  1997/09/29 21:55:46  dunn
+.\" Added list of commands.
+.\"
+.\" Revision 1.3  1997/09/29 19:13:27  dunn
+.\" Added ASIS and UNIQUE references
+.\"
+.\" Revision 1.2  1997/09/29 15:22:42  dunn
+.\" *** empty log message ***
+.\"
+.\" Revision 1.1  1997/09/17 22:44:04  dunn
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.                       \" Ty macro to start an indent for each type def.
+.de Ty
+.ie n .TP 14n
+.el .TP 16n
+..
+./"
+.TH dhsData  1 29/09/97 "CADC"
+
+.SH NAME
+
+.B dhsData
+\- Server for receiving, packaging and distributing data.
+
+
+.SH SYNOPSIS
+
+.B dhsData 
+[
+.B -debug NONE | MIN | FULL 
+[
+.B NO_DHS
+]
+] [
+.B -simulate
+] [
+.B -noServers
+] [
+.B -noParse
+] [
+.B -noCleanup
+] [
+.B -V
+]
+
+
+.SH DESCRIPTION
+
+.B dhsData 
+accepts connections from authorized users.  It receives bulk data get 
+requests and retrieves the data from the local store, uncompresses 
+if necessary, and sends the data in response to the request.
+It sends notification of significant events to the Status Server.
+It receives bulk data put requests and stores the data in its local
+store.  It also accepts control requests and command requests and 
+acts accordingly.
+
+
+.SH OPERATION
+
+.B dhsData
+will remain idle until a request is made.  As a minimum the Status Server 
+must be running prior to running 
+.B dhsData.
+Other servers that 
+.B dhsData 
+access are the Quick Look, OnLineDataProcessing, and Storage Server.
+
+Bulk data requests, using ICD 3 commands, contain the datasetName requested.
+The data will be sent back using the DHS library routine dhsBdResponse.
+The requester must have setup the callback routines to receive the
+data.  If any error occurs while retrieving, an error will
+be sent back using dhsBdResponse.
+.B dhsData
+will attempt to retrieve data locally first, 
+and if not available then attempts to locate it
+on remote dhsData's that it has knowledge about.
+.B dhsData 
+will accept bulk data get requests of data types 
+DHS_BD_GT_RAW, DHS_BD_GT_FITS and DHS_BD_GT_FITS_HEADER.  It will 
+also accept data types of DHS_BD_PT_RAW_ASIS and DHS_BD_GT_FITS_ASIS,
+which are for internal use only.
+
+.B dhsData
+will accept receipt of bulk data of DHS data types DHS_BD_PT_FITS, DHS_BD_PT_RAW, 
+DHS_BD_PT_DS and DHS_BD_PT_DS_QL.  It will also accept data types of
+DHS_BD_PT_RAW_UNIQUE and  DHS_BD_PT_FITS_UNIQUE which are for internal use only.
+The request must include a datasetName.
+This name must be unique for a complete dataset, otherwise dhsData will
+generate a new datasetName and return it in response to the put request.
+Data can be stored in the permanent or temporary storage, depending on
+the lifetime of the data.  The path to the storage areas are defined by
+the configuration file and database tables accessed by the Data Server.
+
+The lifetime of the dataset
+determines where it is to be stored.  All data stored in permanent storage
+will ultimately be archived.  The lifetime of a dataset can be set with the
+control command dhsBdCtl and must be set prior to
+dhsData receiving any data for that dataset.  If no lifetime is set, then
+the default lifetime in the dhsData configuration file is used.  
+
+For data type DHS_BD_PT_DS
+there can be multiple contributors to the dataset.  The contributors must 
+be set prior to sending the data, otherwise the contributor defaults to 
+the sender of the data.
+The contributor list can
+be set with the control command dhsBdCtl.  
+This is the only datatype
+where the parameter "last" can be unset in the dhsBdPut command.
+
+For data type DHS_BD_PT_DS each chunk or file is converted to FITS and
+sent to the dhsQlServer as it is received.  Further processing is done when all
+contributors have made their final contributions. That means that all
+contributors have completed bulk data puts with the "last" parameter set, 
+then the
+dataset is composed into one complete FITS file.  When the FITS file is
+composed a configurable amount of FITS header information is parsed and stored
+to the database.  See the man page for the dd and fh library for details.
+
+Failure when composing the final FITS format will cause the files of a dataset 
+to be stored as a tar file in its final destination.
+
+For data type DHS_BD_PT_FITS 
+header information is parsed and a configurable amount of FITS header information is stored in the database.
+The FITS file is then forwarded as is to the dhsQlServer (if available).
+
+For all data types, when the file is complete and stored,
+then the file is retrievable from the dhsData.  At that point, the completion
+response is sent to the sender.  Then the OnLineDataProcessing
+Server is notified that the file is available.  If the lifetime of the 
+dataset is permanent then the Storage Server is notified that the file 
+is available for archiving.  When the Storage Server sends back notification 
+that a file has been archived, then the dhsData will delete it from 
+its permanent storage area.
+
+If ANY warnings occur in the bulk data put then dhsData will return
+a DHS_CS_ERROR, otherwise DHS_CS_DONE.  For example, if raw data was put to
+the Data Server without the last flag set then DHS_CS_ERROR will be 
+returned, with a warning message in the returned string.  The data
+will be written and is retrievable.  If dhsData is not able to write
+the data, it will be indicated in the response string.
+
+.B dhsData
+will also respond to various control/command requests.  Refer to ICD 3.2
+for exact attribute names.  The possible commands are:
+.Ty 
+abort dataset
+This causes all information about a partially received dataset to be removed.
+.Ty
+contributors
+Can be set to anything prior to receiving any data.
+.Ty
+dataset information command
+This is an internal command.
+.Ty
+debugLevel
+This is to change the current debug level.
+.Ty
+delete a dataset
+This causes the Data Server to delete a temporary or partially received 
+dataset.
+.Ty
+exit 
+This causes the Data Server to exit.
+.Ty
+get name 
+Returns a new unique name to the requestor in the avList.
+.Ty
+init or reset command
+Re-initializes the Data Server.
+.Ty
+lifetime 
+can be set to permanent or temporary prior to receiving any data.
+.Ty
+oldp server startup command
+This is an internal command.
+.Ty
+ping 
+This is an internal command.
+.Ty
+quick look stream
+The stream gets sent directly to the Quick Look Server.
+.Ty
+reset dataset 
+This causes the data to be removed for a dataset, but to retain contributor and lifetime information.
+.Ty
+reset health command
+Resets the health of the Data Server to good.
+.Ty
+simulateLevel 
+This is to change the current simulation of the Data Server.
+.Ty
+storage server archive
+This accepts a list from the Storage Server of files that have been archived 
+and removes the files from this system as they are available from the Storage 
+Server.  This is an internal command.
+.Ty
+storage server startup command
+This is an internal command.
+.Ty
+test command
+Run tests and returns results on current state of the Data Server.
+
+
+.SH OPTIONS
+
+.TP
+.B -debug NONE | MIN | FULL [ NO_DHS ]
+Debug mode.  Depending on the mode set, it will print off various degrees of 
+error messages.  The NO_DHS option sets the debugging mode of the DHS 
+library to NONE, regardless of the other mode set.  The default mode is NONE.
+.TP
+.B -simulate
+Simulate mode.  dhsData is in simulate mode which means that all bulk data puts will be 
+responded to with success but the data will be discarded.
+All control commands, except requesting a new label, will also get a response 
+of success but the control will be ignored.  Requests for bulk data will be
+handled regardless.
+.TP
+.B -noServers
+No server mode.  This means that connection to the Storage, OLDP and 
+Quick Look Server will not be attempted.  The Status Server will always
+be connected.  This is for system debugging and not meant for operational use.
+.TP
+.B -noParse
+No FITS header parsing mode.  This means that when a FITS file is received
+or composed by dhsData, the header information is not parsed and written
+to the database.  This is for system debugging and not meant for operational use.
+.TP
+.B -noCleanup
+No cleanup mode.  Upon startup dhsData removes all files from the temporary
+storage area and from the database.  With this mode set the files are not 
+removed.  This is for system debugging and not meant for operational use.
+.TP
+.B -V
+Version.  Print version numbers and quit.
+
+
+.SH FILES
+
+.SS
+
+.B ~/.dbrc
+The
+.I ~.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.B dhsData.
+A database reference must contain a server/database pair followed
+by the user's name and password. If a required database is not included in the
+.I ~/.dbrc 
+file, 
+.B dhsData
+will prompt for a username and password.
+Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following orders separated by whitespace :
+
+.I server database username password
+
+.B dhsData.config
+.B dhsData
+also requires a configuration file
+to set some parameters necessary for its operation. 
+The following is an example configuration file.
+(Text followed by a '#' is treated as a comment and ignored by
+.B dhsData
+).
+
+.sp
+.nf
+
+#
+#  Application identification
+#
+# Keyword	application 
+#
+# -------	-----------
+#
+
+identity	dataServerNS
+
+
+
+#
+#  Imp information
+#
+# keyword       Max connects
+#
+# --------      ------------
+#
+
+imp             20
+
+
+#
+#  Database information - Warning, cannot name unique table "unique" it 
+#                         is a Sybase reserved word.
+#
+# keyword    ServerName   DatabaseName   Unique        Dataset    Process
+#                           Tbl            Tbl           Tbl       Tbl
+# --------   ----------   ------------   ------        -------    -------
+#
+
+database     SYBASE       gemini         uniqueName    dataset   process
+
+
+#
+#  Compression information - dhsData uncompresses stored compressed files.
+#
+# keyword       Compression     Compression
+#               Extension       Type
+# --------	-----------	-----------
+#
+
+compress          ".gz"          "GZIP"
+
+
+#
+#  Disk Storage information
+#
+# keyword       Temporary       Permanent	
+#               Volume Name     Volume Name 
+#               (Volume names must exist in the
+#               mds table (in diskname column)
+#               and contain the path
+#               to where files are written )
+# --------      -----------     -----------
+#
+
+storage           TEMP               PERM	
+
+
+#
+#  Server Identity Names that the Data Server connects to.
+#  Note that all servers must appear below in the authorized list
+#  with their IP address.
+#
+# keyword       Storage        Oldp             Status          QuickLook
+# -------       -------        ----             ------          ---------
+#
+
+servers         storeServerNS  oldpServerNS     statusServerNS  qlServer
+
+
+#
+#  Authorized sites connection information.
+#  Can use wildcard "*" in the identity name of only the client connections.
+#
+# keyword	Identity		IP Address
+# -------	--------		-------
+#
+
+authorized	storeServerNS		daxka
+authorized	oldpServerNS		daxka
+authorized	statusServerNS		daxka
+authorized	qlServer		daxka
+authorized	tool1			daxka
+authorized	ocs			daxka
+authorized	dhsPut*			daxka
+authorized	dhsGet*			daxka
+authorized	dataServerNB		siska
+
+
+#
+#  Default dataset and unique name settings.
+#
+# keyword   Lifetime       Location        Source
+#           ("P"erm        ("N" or "S")    ("O"CS,
+#           or "T"emp)                     "S"ummit, "B"ase)
+#-------    ------------    ------------    ------------------
+#
+
+names           P              N                S
+
+
+#
+#  FITS table name where FITS header information is stored.
+#
+# keyword	FITS table name
+# -------	---------------
+#
+
+fitsTable	fitsHeader
+
+
+#
+#  Archive Segregation Directory Name
+#
+# keyword	Segregation Dir
+# -------	----------------
+#
+
+segregation	sci
+
+.fi
+
+.B dhsData
+also requires a configuration file called
+.I libAd.config
+to set some parameters necessary for its operation. See the ad man page
+for specifications.
+
+
+.B dhsData
+also requires a configuration file called
+.I libdd.config
+to set some parameters necessary for its operation. See the dd man page
+for specifications.
+
+
+
+.SH TABLES
+
+.B dhsData
+uses the database to determine the location of a requested file.
+It also uses it to contain information about files stored in 
+the temporary and permanent store.
+
+The SYBASE server, database and name of the tables
+are specified in the 
+.B dhsData 
+and ad configuration files.
+
+The following is a minimum list of SYBASE tables that must be present for
+.B dhsData 
+to run correctly:
+
+.TP
+.B gemini..uniqueName
+.TP
+.B gemini..process
+.TP
+.B gemini..dataset
+.TP
+.B gemini..fitsHeader
+.TP
+.B gemini..mds
+.TP
+.B gemini..mdfiles
+.TP
+.B gemini..remote_files
+.TP
+.B gemini..remote_media
+.TP
+.B gemini..remote_servers
+
+.SH
+There must be initial inserts into the mds and remote_servers tables.
+The insert into the mds table specifies the directory of the temporary
+and permanent storage.  The diskname and archive name in the mds table
+must match the volume and archive name in the 
+.B dhsData 
+configuration file.
+
+
+
+.SH ENVIRONMENT VARIABLES
+
+Upon startup, 
+.B dhsData
+looks for its configuration file in the directory specified by the 
+environment variable
+.B DHSDATA_CONFIG_DIR.
+If not defined, it looks for the 
+.B DEFAULT_CONFIG_DIR 
+and finally will look in the current directory.
+
+
+The environment variable
+.B LIBAD_CONFIG_DIR may be set to the path of the 
+directory where the 
+.B ad
+configuration file can be found. 
+If not defined, it looks for the 
+.B DEFAULT_CONFIG_DIR 
+and finally will look in the current directory.
+
+The environment variable
+.B LIBDD_CONFIG_DIR may be set to the path of the 
+directory where the 
+.B dd
+configuration file can be found. 
+If not defined, it looks for the 
+.B DEFAULT_CONFIG_DIR 
+and finally will look in the current directory.
+
+
+.SH DIAGNOSTICS
+
+Returns 0 upon successful completion, otherwise -1.
+
+
+.SH SEE ALSO
+
+.BR dhsPut (1).
+.BR dhsGet (1).
+.BR dhsCmdSender (1).
+.BR ad (3).
+.BR dd (3).
+.BR sf (3).
+.BR fh (3).
+
+
+.SH DOCUMENTS
+
+.TP
+.B DHS User Manual
+.TP
+.B ICD 1c - Baseline DHS Interface
+.TP
+.B ICD 3 - Bulk Data Transfer
+.TP
+.B ICD 3.2 - The DHS Command Interface
+.TP
+.B Interprocess Message Passing (IMP) System
+
+
+
+.SH BUGS
+
+Few.
+
+.SH AUTHORS
+Jennifer Dunn
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+

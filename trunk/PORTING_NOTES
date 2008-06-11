@@ -1,0 +1,106 @@
+Porting Notes
+=============
+
+Below is a list of some of the changes made to get DHS to compile
+with gcc-3.2.1 under RedHat-7.2. 
+
+(Most of the non-trivial changes are commented with the string "XXX allan")
+
+
+* Changed the syntax for standard #include files from:
+  <file.h> to <file> (for C++) and <cfile> for C.
+  
+  For example: change <iostream.h> to <iostream> and
+  change <stdio.h> to <cstdio>.
+
+  The Standard C++ Header files are:
+
+     algorithm bitset complex deque exception fstream functional
+     iomanip ios iosfwd iostream istream iterator limits list locale map
+     memory new numeric ostream queue set sstream stack stdexcept streambuf
+     typeinfo utility valarray vector
+
+  The Standard C Header files are:
+ 
+     assert ctype errno float iso646 limits locale math setjmp signal
+     stdarg stddef stdio stdlib string time
+
+
+* Added std:: namespace prefix to all standard C++ names.
+  (For example: std::iostream, std::string, std::list, std::endl).
+
+
+* Replaced gets() with fgets(), tmpnam and tempnam with a new
+  utility routine (gen_tempnam()), mktemp() with mkstemp(), 
+  since gcc complains about these.
+
+
+* Replaced some #ifdef solaris/#ifdef hpux code with configure based
+  variables and code blocks. 
+
+* Fixed portability and "out of date" problems with mnttab.h/mntent.h
+  (media mounting code).
+
+* Added #ifdef code to handle system specific calls, such as fork1()
+
+* Replaced calls to "fusage()" with "statvfs()"
+
+* Fixed a number of problems with varargs/stdargs usage
+
+* Added numerous casts to please the compiler
+
+* Changed some methods from private to public as required by the compiler
+
+* Replaced lots of NULLs with 0s, as required by the compiler.
+
+* Fixed a number of obvious bugs that were missed by previous compilers
+
+* For the Linux port, had to compile some EPICS libraries from the sources
+  (not all will compile, but enough to get DHS to compile)
+
+* Updated outdated CFITSIO code usage (fits_set_mem_buff, etc.)
+
+* Replaced list.erase() with list.clear() (erase was no longer defined)
+
+* Had to replace the null first arg to attribute.info() with a dummy parameter
+  in numerous places, to please the compiler
+
+* Replaced heder file <strstream> with <sstream>
+* Replaced ostrstream with ostringstream (ostrstream is deprecated)
+* Same for istrstream (istringstream)
+  (Note that ostringstream is not compatible, so code changes were
+   needed)
+
+* Changed process thread id init values to 0, from -1 (type is unsigned)
+
+
+Other Changes
+=============
+
+The following changes were not required for compiling, but for running:
+
+* Pass a non-null (pthread_t) argument as first arg to pthread_create()
+
+* In the call to the cfitsio routine 'fits_read_key', replaced 'boolean'
+  &hasExtended with 'int', since bool is no one byte, and an int is 
+  expected. Since the address is passed and the object is written to, 
+  the following 3 bytes get clobbered is a one-byte bool is passed!
+
+* Added a call to "((cMutex *) dcdPMutex)->unlock();" in /clientDataset.C
+  to avoid error deleting a mutex
+
+* In Tcl files: replaced 'info objects' with 'itcl_info objects'
+
+* In Tcl files, removed calls to 'winfo command' (no longer supported, 
+  not needed).
+
+* Added code to  dhsQlTool/dhsOcsWish.tcl to strip the "0x" off of the
+  return value from "gethostid" (solaris just prints out the hex value
+  without the 0x)
+
+* Replaced the mixed sh/tcl script dhsQlTool-backend with two scripts:
+  dhsQlTool (sh) and dhsQlTool-backend.tcl (tcl), since the original
+  produced some errors on exit under Linux.
+
+* In the dhsClient package: added htonl() wrapper on IP address in 
+  dhs/connect.c, since the bytes were reversed.

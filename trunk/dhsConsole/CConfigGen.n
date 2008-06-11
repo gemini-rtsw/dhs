@@ -1,0 +1,252 @@
+.\"/*+ $Id: CConfigGen.n,v 1.1.1.1 2002-11-24 20:25:59 brighton Exp $
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) 1998				(c) 1998
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-	ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME:
+.\" dhsConsole/doc/CConfigGen.n
+.\"
+.\" PURPOSE:
+.\" Describe the CConfigGen class.
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:10  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.1  1998/08/05 06:12:52  jaeger
+.\" Initial revision
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+'\" Tcl/Tk Macro definitions - borrowed from Tcl/Tk man pages.
+'\"     # Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\" .BS Start box enclosure.  From here until next .BE, everything will be
+'\"     enclosed in one large box.
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+./"
+'\" .BE End of box enclosure.
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"     Draw four-sided box normally, but don't draw top of
+.\"     box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+./"
+'\" .CS Begin code excerpt.
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+./"
+'\" .CE End code excerpt.
+.de CE
+.fi
+.RE
+..
+./"
+'\" .DS Begin an indented unfilled display.
+.de DS
+.RS
+.nf
+.sp
+..
+./"
+'\" .DE End of indented unfilled display.
+'\"
+.de DE
+.fi
+.RE
+.sp
+..
+./"
+'\" .OP cmdName dbName dbClass
+'\"     Start of description of a specific option.  cmdName gives the
+'\"     option's name as specified in the class command, dbName gives
+'\"     the option's name in the option database, and dbClass gives
+'\"     the option's class in the option database.
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:      \\fB\\$1\\fR
+Database Name:  \\fB\\$2\\fR
+Database Class: \\fB\\$3\\fR
+.fi
+.IP
+..
+./"
+'\" .SO Start of list of standard options for a Tk widget.  The
+'\"     options follow on successive lines, in four columns separated
+'\"     by tabs.
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+./"
+'\" .SE End of list of standard options for a Tk widget.
+'\"     Start of description of a specific option.  cmdName gives the
+'\"     option's name as specified in the class command, dbName gives
+'\"     the option's name in the option database, and dbClass gives
+'\"     the option's class in the option database.
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+.\"
+.\"**********************************************************************
+.\"				End of Macros!!!
+.\"**********************************************************************
+.TH CConfigGen n 03/08/98 "CADC"
+.\".BS
+.SH NAME
+CConfigGen 
+\- Create and manipulate a CConfigGen class.
+
+.SH SYNOPSIS
+\fBCConfigGen\fI \fIobjectName\fR
+.\".BE
+
+.SH DESCRIPTION
+.PP
+The \fBCConfigGen\fR command creates a new object (given by the
+\fIobjectName\fR argument) and makes it into a CConfigGen object.
+The \fBCConfigGen\fR command returns its
+\fIobjectName\fR argument.  At the time this command is invoked,
+there must not exist an object named \fIobjectName\fR.
+.sp
+This class behaves much like the CADC gen C library, which also
+provides configuration support.
+
+.SH "WIDGET COMMAND"
+The \fBCConfigGen\fR command creates a new Tcl command whose
+name is \fIobjectName\fR.  This
+command may be used to invoke various
+operations on the widget.  It has the following general form:
+.CS
+\fIobjectName method \fR?\fIarg arg ...\fR?
+.CE
+\fImethod\fR and the \fIarg\fRs
+determine the exact behavior of the command.  
+.PP
+The following methods are possible for \fBCConfigGen\fR objects.
+.TP
+\fIobjectName \fBconfigClose\fR  
+closes the configuration library.
+
+.TP
+\fIobjectName \fBconfigGet\fR \fIkey\fR \fIfunction\fR
+Applys the configuration method or procedure \fIfunction\fR to 
+every line in
+the configuration file with keyword = \fIkey\fR.  
+The first word in a line is the keyword for that line.
+This function returns SUCCESS upon normal completion, 
+or KEY_NOT_FOUND if the \fIkey\fR could not be found
+in the configuration file.
+
+.TP
+\fIobjectName \fBconfigOpen\fR \fIappName\fR
+Initializes the configuration library.  The
+\fIappName\fR is used to calculate the configuration file name. The
+configuration file searched for is \fIappname.config\fR where 
+appname is \fIappName\fR.
+.sp
+This method returns a list where the first element is the
+status and the second element is some string.  The status value returned
+is SUCCESS upon normal completion, or ERROR if a problem occurs.
+The string returned is the file name of the configuration file,
+upon normal completion, and an error description if an error
+occurs.
+.sp
+The configuration file is located by the
+environement variable APPNAME_CONFIG_DIR  directory, where
+APPNAME is \fIappName\fR.
+If environment variable APPNAME_CONFIG_DIR
+is not set, then the directory defined by environment
+variable DEFAULT_CONFIG_DIR is searched.  Finally, if the
+configuration file is not located from either of these two
+environment variables, the current directory is searched.
+
+
+.SH SEE ALSO
+.BR gen_config (3)
+
+.SH EXAMPLE
+.DS
+ proc displayTokens {numTokens tokens} {
+     set output ""
+     for {set idx 1} {$idx < $numTokens} {incr idx} {
+         append output [lindex $tokens $idx]
+     }
+     puts "TOKENS: $output"
+ }
+ CConfigGen myConfig 
+ myConfig configClose	
+ myConfig configGet {token1 displayTokens}
+ myConfig configGet {token2 displayTokens}
+ myConfig configOpen myApplication
+.DE
+
+.SH AUTHOR
+Shannon Jaeger
+
+.SH KEYWORDS
+gen library, configuration file, object

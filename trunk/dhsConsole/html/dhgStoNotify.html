@@ -1,0 +1,152 @@
+<!--  $Id: dhgStoNotify.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998				(c) 1998
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgStoNotify.html
+#
+# PURPOSE:
+# On-line help describing the Storage Server's notify action.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:12  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.3  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.2  1998/07/20 19:48:34  jaeger
+# Moved bitmaps to "images" directory.  Code changed to reflect this.
+#
+# Revision 1.1  1998/07/16 23:31:20  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Notify Action</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Notify Action</H1>
+    Notification involves informing the requesting server that the
+    media request has completed.
+    <P>
+      In the case of an <B>archive</B> media request, the Data Server which 
+      made the request, is notified that the data contained on the media
+      unit(s) is now safely in the archive
+      and may be deleted from the Data Server's storage area. <B>Note that
+      <I>cdIngest</I> should be run to ingests the CD(s) into the archive
+	before the notify action is initiated.</B>
+    <P>
+      In the case of a <B>user</B>
+      media request, the OCS will be notified that the media request has
+      completed, and that a set of transportable media has been created
+      for the user.
+
+    <H2>Viewing Retrieval Information</H2>
+    There are two status records associated with retrieval.  They are:
+    <UL>
+      <LI><B>Notify Value</B>.<BR>
+	Indicates if a media unit (archive) or media request (user)
+	is ready for notification.
+      <LI><B>Notify State</B>.<BR>
+	Indicates the current state of the notify action, expected
+	values are given <A HREF="#expectedValues">below</A>.
+    </UL>
+
+    All status records are displayed on the 
+    <A HREF="dhgSto.html#request">Storage Server's</A> window
+    and on the <A HREF="dhgStoRequest.html">Request</A> window.  The 
+    Request window displays each of the status records in a non-editable
+    box.  The subsystem window uses a combination of text 
+    and colours to portray this information.
+
+
+    <H2>Obtaining Further information</H2>
+    Further information describing the media units ready for notification,
+    can be obtained by <A HREF="dhgControls.html#button">pressing</A>
+    the &quot;notify&quot; information button on the 
+    <A HREF="dhgSto.html#request">Storage Server</A> window. 
+    This will display the Storage Server's 
+    <A HREF="dhgStoInfo.html">Action Information</A> window.
+
+ 
+    <H2>Changing Notify Information</H2>
+    Notify information can not be changed directly.  However, it does
+    change when during 
+    <A HREF="dhgStoRequestAction.html">notification</A>.
+    <P>
+      Notify information can also change during a 
+      <A HREF="dhgReset.html">reset</A> or an
+      <A HREF="dhgInit.html">Initialize</A> command.
+
+     <P><HR>
+    <A NAME="expectedValues"><H2>Expected Notify State Values</H2></A>
+    The expected notify state values are listed in the table below.
+    Given any particular state there is one or more states the action
+    can move to.  The <A HREF="#transition">state transition</A> 
+    diagram below depicts the allowed moves (transitions).
+
+    <P>
+    <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+      <CAPTION ALIIGN="top">Expected Notify State Values</CAPTION>
+      <TR> <TH>Value</TH>
+	<TH>Interpretation</TH>
+      </TR>
+      <TR><TH>IDLE</TH>
+	<TH>No processing is currently being performed on the data
+	to be notified.</TH>
+      </TR>
+      <TR><TH>REQUESTED</TH>
+	<TH>A notification is waiting for processing.
+	</TH>
+      </TR>
+      <TR><TH>IN-PROGRESS</TH>
+	<TH>A notification is currently being processing</TH>
+      </TR>
+    </TABLE>
+
+    <P><BR>
+      <CENTER>
+	<A NAME="transition"><IMG SRC="../images/stoState1.gif" ALT="[Unable to load state transition diagram]" VSPACE="25"></IMG></A>
+      </CENTER>
+    <P>
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Wed Jul 15 16:05:53 PDT 1998 -->
+<!-- hhmts start -->
+Last modified: Fri Jul 24 10:20:39 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>

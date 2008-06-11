@@ -1,0 +1,250 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"* (c) 1999				(c) 1999.
+.\"* National Research Council		Conseil national de recherches
+.\"* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\"* All rights reserved		Tous droits reserves
+.\"* 					
+.\"* NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\"* expressed, implied, or statu-	enoncee, implicite ou legale,
+.\"* tory, of any kind with respect	de quelque nature que se soit,
+.\"* to the software, including		concernant le logiciel, y com-
+.\"* without limitation any war-	pris sans restriction toute
+.\"* ranty of merchantability or	garantie de valeur marchande
+.\"* fitness for a particular pur-	ou de pertinence pour un usage
+.\"* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\"* in any event for any damages,	pourra en aucun cas etre tenu
+.\"* whether direct or indirect,	responsable de tout dommage,
+.\"* special or general, consequen-	direct ou indirect, particul-
+.\"* tial or incidental, arising	ier ou general, accessoire ou
+.\"* from the use of the software.	fortuit, resultant de l'utili-
+.\"* 					sation du logiciel.
+.\"*
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: mfsOnline/doc/mfsOnline.1
+.\"*
+.\"*	Date			: March 10, 1999
+.\"*
+.\"*
+.\"*    SCCS data               : @(#)
+.\"*        Module Name         : mfsOnline.1
+.\"*        Version Number      : 1.2
+.\"*        Release Number      : 1
+.\"*        Last Updated        : 04/10/00
+.\"*
+.\"*	Written by		: Shannon Jaeger
+.\"*
+.\"*	Modification History:
+.\"*		 99/03/10 SDJ	: Copied from dvdOnline.
+.\"*	       2000/03/29 SDJ	: Switched from dvd to mfs.
+.\"*	       2000/04/10 SDJ	: Added examples.  Described new command
+.\"*				  line options (-a, -t, and -d).
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH MFSONLINE 1 "29/03/2000" "CADC"
+
+.SH NAME
+.B mfsOnline 
+\- Changes the mount point and host name of a mounted/unmounted file
+systems that has been archived.
+
+.SH SYNOPSIS
+.B mfsOnline 
+.I path
+
+.B mfsOnline 
+.B -u
+.I volume-name
+
+.SH DESCRIPTION
+.B mfsOnline
+is a utility which sets the mount point and host name of a mounted/unmounted
+file system, that has been placed in the archive.
+
+.SH OPERATION
+Before \fBmfsOnline\fR is executed the basic volume information must
+be ingested into the database.  An executable such as \fBmfsIngest\fR
+performs this operation.
+
+If a path to a mounted file system is given on the command line, 
+.B mfsOnline
+finds the file system in the archive, and sets the volumes mount point and
+host name to the values found.  If the \-a option was not specified on
+the command line then the default archive, defined in \fBad\fR library's 
+configuration file, will be used.  If the \-t option was not specified then
+the operator will be prompted for the volume type.
+
+If the 
+.B -u 
+option is used, the volume specified on the command line the volume's
+mount point and host name are set to "NULL".  Since the volume name is
+not guaranteed to be unique in the mountable file system volume table it
+is possible that more than one volume will be found.  If this happens 
+\fBmfsOnline\fR will display all volumes that were found and exit.  
+The operator will need to run \fBmfsOnline\fR again specifying one
+or more of the \-a, \-t, and \-d options in order to choose the single
+volume that is desired.
+
+.SH OPTIONS
+.TP
+.B \-a \fIarchive\fR
+Archive.	The archive that the volume belongs to.  If the \fB\-a\fR
+option is not present the default archive is taken from the \fBad\fR
+configuration file.
+.TP
+.B \-d \fIdate\fR
+Creation Date.	The date the CD\-R or DVD\-R was created, or in the case
+of magnetic disks the date the file system was first ingested into the
+database.  The \fIdate\fR must in in the format "YYYY/MM/DD HH:MM:SS"
+.TP
+.B -t \fIvolumetype\fR
+Volume Type.	The type of volume that is mounted/unmounted, such as
+CD, DVD or MD (CD\-R, DVD\-R, or magnetic disk).
+.TP
+.B -u
+Unmount.	Mark the specified volume as being offline by setting
+the mount point and host name to "NULL" in the database.
+.TP
+.B -v
+Verbose.	Print all information and error messages to the 
+operator's console.
+.TP
+.B -V
+Version.	Print version numbers and exit.
+.TP
+.B -? -h -help
+Help.	Prints the usage message and exits.
+
+.SH EXAMPLES
+.TP 3
+.B 1
+The following example sets the mount point and host name of the
+volume found at \fI/cds/archive1/volume001\fR.
+The volume belongs to the archive \fIARCHIVE1\fR which is specified on
+the command line.  Note that the operator is prompted for further information
+in this example.
+.RS 8n
+.sp 1n
+.nf
+\fB example% mfsOnline \-a\fR ARCHIVE1 /cds/archive1/volume0001
+.IB "messages from " mfsOnline
+\fI Enter the type of media to be mounted/unmounted (CD, DVD, or MD) :\fR CD
+.IB "more messages from " mfsOnline
+.sp 1n
+.fi
+.RE
+.TP 3
+.B 2
+The following example unsets the mount point and host name of the
+CD\-ROM volume "VOLUME127".
+The volume belongs to the archive \fIARCHIVE4\fR which is specified on
+the command line.  Note that the operator is not prompted for 
+further information in this example.  
+.RS 8n
+.sp 1n
+.nf
+\fB example% mfsOnline \-a\fR ARCHIVE4 \fB-u\fR VOLUME127 \fB-t\fR CD
+.IB "messages from " mfsOnline
+.sp 1n
+.fi
+.RE
+
+.SH FILES
+.SS
+.B ~/.dbrc
+The
+.I ~.dbrc
+file contains information about each database that a user may 
+reference with executables such as 
+.B mfsOnline
+.  A database reference must contain a server/database pair followed
+by the user's name and password. Each line of the 
+.I ~/.dbrc
+file must contain a complete server/database reference for every 
+database which may be accessed through this file. Each line of
+this file must be arranged in the following order:
+ 
+.I server database username password
+  
+Each item should be separated by whitespace (spaces and/or tabs).
+If a required database is not included in the 
+.I ~/.dbrc 
+file, 
+.B mfsOnline
+will prompt for a username and password.
+
+.SH SECURITY
+In order to ensure a secure
+.I ~/.dbrc
+file,
+.B mfsOnline
+requires that the
+file resides in the directory specified by the 
+.B HOME 
+environment variable, and the file protection must restrict read and write 
+access to the file owner.
+
+.SH TABLES
+.B mfsOnline
+uses the archive database to determine if the volume name already exists.
+.B mfsOnline
+updates the archive tables.
+ 
+The location of the Archive database and the name of the tables
+are specified in the configuration file for the CADC 
+.I ad 
+library.
+
+The following is a list of SYBASE tables that must be present for
+.B mfsOnline
+to run correctly:
+.TP
+.B archive..mfs
+.TP
+.B archive..mfsfiles
+
+.SH ENVIRONMENT VARIABLES
+The environment variable
+.B LIBAD_CONFIG_DIR
+may be set to the path of the directory where the 
+.B ad
+configuration file can be found. If
+.B LIBAD_CONFIG_DIR
+is not set, the environment variable
+.B DEFAULT_CONFIG_DIR 
+should be set to the path of the directory where the file can be found. 
+
+.SH DIAGNOSTICS
+When marking a volume online, an error will be returned if the path
+specified is not a recognized mountable file system or if the file system
+cannot be found in the archive (based on the archive, volume name, 
+creation date, and type of volume).
+
+When marking a volume offline, an error will be returned if the 
+specified volume name cannot be found in the archive.  If more than one
+volume is found a list of volumes is displayed and \fBmfsOnline\fR exits.
+
+.SH SEE ALSO
+.BR mfsIngest (1),
+and
+.BR ad (3).
+
+.SH BUGS
+Magnetic Disk support has not been completed.
+
+.SH AUTHORS
+Shannon Jaeger
+.br
+
+National Research Council of Canada
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+

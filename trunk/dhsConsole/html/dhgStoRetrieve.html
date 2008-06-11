@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!--  $Id: dhgStoRetrieve.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1998				(c) 1998
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgStoRetrieve.html
+#
+# PURPOSE:
+# On-line help information describing the Storage Server's retrieve Action.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:13  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.3  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.2  1998/07/20 19:50:36  jaeger
+# Moved bitmaps to "images" directory.  Code changed to reflect this.
+#
+# Revision 1.1  1998/07/16 23:28:31  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<HTML>
+  <HEAD>
+    <TITLE>Retrieval Action</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Retrieval Action</H1>
+    Retrieval is defined to be the action of fetching the files,
+    from the DHS, that are needed in order
+    to satisfy a <A HREF="dhgStoRequest.html">media request</A>.
+    
+    <H2>Viewing Retrieval Information</H2>
+    There are three status records associated with retrieval.  They are:
+    <UL>
+      <LI><B>Retrieve Size</B>.<BR>
+	A positive integer number, which is the number of megabytes 
+	of data that can be retrieved.
+      <LI><B>Retrieve State</B>.<BR>
+	Indicates the current state of the retrieval action, expected
+	values are given <A HREF="#expectedValues">below</A>.
+      <LI><B>Queue Size</B>.<BR>
+	The number of media units, CDs, of data that can be queued.  Also
+	could be defined as the amount of data that has been retrieved.
+    </UL>
+
+    All three status records are displayed on the 
+    <A HREF="dhgSto.html#request">Storage Server's</A> window
+    and also on the <A HREF="dhgStoRequest.html">Request</A> window.  The 
+    request window displays each of the status records in a non-editable
+    box.  The subsystem window uses a combination of text 
+    and colours to portray this information.
+
+
+    <H2>Obtaining Further information</H2>
+    Further information, describing the files ready for retrieval,
+    can be obtained by <A HREF="dhgControls.html#button">pressing</A>
+    the &quot;retrieval&quot; information button on the 
+    <A HREF="dhgSto.html#request">Storage Server</A> window. 
+    This will display the Storage Server's 
+    <A HREF="dhgStoInfo.html">Action Information</A> window.
+    Similarly, the
+    list of files that are ready for queuing (have been retrieved)
+    can be obtained by <A HREF="dhgControls.html#button">pressing</A>
+    the &quot;queue&quot; information button.
+ 
+    <H2>Changing Retrieval Information</H2>
+    Retrieval information can not be changed directly.  However, it does
+    change when 
+    data is <A HREF="dhgStoRequestAction.html">retrieved</A>, 
+    data is <A HREF="dhgStoRequestAction.html">queued</A>, or 
+    when a queue action is <A HREF="dhgStoRequestRollback.html">undone</A>.
+    <P>
+      Retrieval information can also change during a 
+      <A HREF="dhgReset.html">reset</A> or an
+      <A HREF="dhgInit.html">initialize</A> command.
+
+     <P><HR>
+    <A NAME="expectedValues"><H2>Expected Retrieve State Values</H2></A>
+    The expected retrieve state values are listed in the table below.
+    Given any particular state there is one or more states the action
+    can move to.  The <A HREF="#transition">state transition</A> 
+    diagram below depicts the allowed moves (transitions).
+
+    <P>
+    <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+      <CAPTION ALIIGN="top">Expected Retrieve State Values</CAPTION>
+      <TR> <TH>Value</TH>
+	<TH>Interpretation</TH>
+      </TR>
+      <TR><TH>IDLE</TH>
+	<TH>No processing is currently being performed on the data
+	to be retrieved.</TH>
+      </TR>
+      <TR><TH>REQUESTED</TH>
+	<TH>A retrieval of data process is currently waiting to start.
+	</TH>
+      </TR>
+      <TR><TH>IN-PROGRESS</TH>
+	<TH>A retrieval of data process is currently running, data
+	  is being retrieved.</TH>
+      </TR>
+    </TABLE>
+
+    <P><BR>
+      <CENTER>
+	<A NAME="transition"><IMG SRC="../images/stoState1.gif" ALT="[Unable to load state transition diagram]" VSPACE="25"></IMG></A>
+      </CENTER>
+    <P>
+    <HR>
+    <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Wed Jul 15 12:49:24 PDT 1998 -->
+<!-- hhmts start -->
+Last modified: Fri Jul 24 11:03:00 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>

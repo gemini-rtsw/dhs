@@ -1,0 +1,181 @@
+.\"/*+
+.\"***********************************************************************
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"
+.\" (c) <year>				(c) <year>
+.\" National Research Council		Conseil national de recherches
+.\" Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+.\" All rights reserved			Tous droits reserves
+.\" 					
+.\" NRC disclaims any warranties,	Le CNRC denie toute garantie
+.\" expressed, implied, or statu-	enoncee, implicite ou legale,
+.\" tory, of any kind with respect	de quelque nature que se soit,
+.\" to the software, including		concernant le logiciel, y com-
+.\" without limitation any war-		pris sans restriction toute
+.\" ranty of merchantability or		garantie de valeur marchande
+.\" fitness for a particular pur-		ou de pertinence pour un usage
+.\" pose.  NRC shall not be liable	particulier.  Le CNRC ne
+.\" in any event for any damages,	pourra en aucun cas etre tenu
+.\" whether direct or indirect,		responsable de tout dommage,
+.\" special or general, consequen-	direct ou indirect, particul-
+.\" tial or incidental, arising		ier ou general, accessoire ou
+.\" from the use of the software.	fortuit, resultant de l'utili-
+.\" 					sation du logiciel.
+.\"
+.\"***********************************************************************
+.\"
+.\" FILENAME
+.\" dhsQlTool.1
+.\"
+.\" PURPOSE:
+.\" Describe the DHS Quick Look Tool.
+.\"
+.\"
+.\"INDENT-OFF*
+.\" $Log: not supported by cvs2svn $
+.\" Revision 1.1.1.1  2002/11/24 20:29:55  brighton
+.\" Imported sources
+.\"
+.\" Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+.\"
+.\"
+.\" Revision 1.1.1.1  1999/08/23 19:58:26  cvs-tuc
+.\" Initial install into CVS of dhs-0.16
+.\"
+.\" Revision 1.3  1998/07/02 18:04:44  nhill
+.\" Updated.
+.\"
+.\" Revision 1.2  1997/11/18 23:14:41  nhill
+.\" Changed the application name to dhsQlt.
+.\"
+.\" Revision 1.1  1997/11/17 22:22:39  nhill
+.\" Initial revision
+.\"
+.\" Revision 1.1  1997/11/17 21:40:40  nhill
+.\" Initial revision
+.\"
+.\"
+.\"INDENT-ON*
+.\"
+.\"***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"***********************************************************************
+.\"-*/
+.\"
+.                       \" Ty macro to start an indent for each type def.
+.de Ty
+.ie n .TP 14n
+.el .TP 16n
+..
+./"
+.TH dhsQlTool  1 27/11/97 "CADC"
+
+.SH NAME
+
+dhsQlTool
+\- Tool for displaying quick look data
+
+
+.SH SYNOPSIS
+
+.B dhsQlTool 
+
+
+.SH DESCRIPTION
+
+The DHS Quick Look Tool (QLT) displays data from a DHS Quick Look 
+Server (QLS) and allows a user to manipulate the image and the Quick Look
+Tool setup. The QLT is
+based on the ESO Skycat display tool, and the bulk of the interface is
+unchanged. The Skycat interface is not described in this man page.
+
+A new control panel has been added to Skycat, which allows a user to control the
+DHS quick look functions. This control panel is described in detail in
+the document "The Gemini Data Handling System User Manual".
+ 
+.SH OPERATION
+
+As a minimum a DHS Quick Look Server
+must be running on the same computer on which the QLT will be run, 
+prior to running QLT. Once the QLT is running it connects
+to the QLS and waits for data notifications to begin.
+
+.SH COMMANDS
+
+The commands accepted by the QLT are documented in 
+"ICD 3.2 - The DHS interface".
+
+.SH OPTIONS
+None
+
+.SH FILES
+.B dhsQlt.config
+The QLT requires a configuration file
+to set some parameters necessary for its operation. 
+The following is an example configuration file.
+
+.sp
+.nf
+dataServerAddr daxka
+dataServerName dataServer1
+.fi
+
+A QLT will create temporary files in directory 
+.RI /tmp/dhsQlTool. pid ,
+where 
+.I pid 
+is the process id of the Quick Look Tool. This directory will be used
+when as a storage directory when the QLT saves the current display to a file.
+
+The temporary directory and its contents are removed when the QLT exits.
+
+The directories containing the FITS header and data files are specified
+in the notification commands received from the Quick Look Server.
+
+.SH ENVIRONMENT VARIABLES
+
+Upon startup, a QLT
+looks for its configuration file in the directory specified by the 
+environment variable
+.B DHSQLT_CONFIG_DIR.
+If not defined, it looks in the directory in the 
+.B DEFAULT_CONFIG_DIR 
+environment variable, and finally will look in the current directory.
+
+
+.SH DIAGNOSTICS
+
+Returns 0 upon successful completion, otherwise -1.
+
+.SH SEE ALSO
+
+.BR dhsQlServer (1).
+
+.SH DOCUMENTS
+
+.TP
+.B The Gemini Data Handling System User Manual
+.TP
+.B ICD 3.2 - The DHS interface
+
+.SH BUGS
+
+The sort order of frames in the available frame list should be improved.
+
+Error messages are displayed if notifications occur too soon after 
+the QLT is started.
+
+If the autodisplay option is tured off, and if the get data option is used,
+the data retrieved will not be automatically displayed.
+
+.SH AUTHORS
+Norman Hill
+.br
+
+National Research Council
+.br
+Herzberg Institute of Astrophysics
+.br
+Canadian Astronomy Data Centre
+
+
+

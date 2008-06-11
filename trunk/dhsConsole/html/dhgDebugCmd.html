@@ -1,0 +1,229 @@
+<!-- $Id: dhgDebugCmd.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) 1997                              (c) 1997
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgDebugCmd.html
+#
+# PURPOSE:
+# Describe, provide detailed help information, for the debug level
+# command that can be executed from the DHS Console.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:11  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.5  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.4  1998/07/14 21:15:01  jaeger
+# Changed based on Norm's suggested changes.  Moved widget control information
+# to a separate file.
+#
+# Revision 1.3  1998/05/25 21:54:29  jaeger
+# Moved Subsystem and Resource Overview description into dhsConsole.html,
+# instead of having a separate html file.
+#
+# Revision 1.2  1998/05/25 20:41:43  jaeger
+# Changed to reflect changes in dhsConsole, also added usage information.
+#
+# Revision 1.1  1997/11/13 23:52:16  jaeger
+# Initial revision
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>Debug Command</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>Debug Command</H1>
+      This command sets the debug level of one or more of
+      the DHS subsystems.  Setting the debug level for the entire
+      DHS causes sets the debug level for each DHS subsystems.
+    <P>
+      The debug level controls the amount of detail provided in the DHS
+      <A HREF="dhgLog.html">log message</A>, which is displayed on the 
+      <A HREF="dhsConsole.html">Console</A>.
+      The default value is the value given to the <CODE>-debug</CODE>
+      command-line option, or &quot;NONE&quot; if the <CODE>-debug</CODE>
+      option was not used.
+
+    <H2>Viewing the Debug Level</H2>
+    The current debug level can be obtained from the 
+    <A HREF="dhgDebug.html">debug level indicators</A>.
+
+    <H2>The Debug Level Command Window</H2>
+    The Debug Level Command window can be displayed from the main
+    window of the Console or from a subsystem window, as described below.
+    <P>
+      A separate debug level window can be displayed for each subsystem.
+      The title given on the window indicates which subsystem the
+      window is associated with, or if it is associated with the entire
+      DHS system.  The debug level command affects only the subsystem 
+      the window is associated with.
+      <P>
+      The Debug windows have a fixed set of choices: NONE, MIN, and FULL, 
+      described on the
+      <A HREF="dhgDebug.html#expectedValues">Debug Level</A> 
+      indicator help page.
+      This list of choices appears on the debug level menu. The debug 
+      level menu is displayed when the button 
+      beside the text &quot;Selected Debug Level&quot; is 
+      <A HREF="dhgControls.html#button">selected</A>.
+      Once the menu is displayed, <A HREF="dhgControls.html#lists">select</A>
+      the desired debug level, and the menu will disappear but the selected
+      value will now appear on the button. Note that debug level has not
+      changed yet!  It will change when the &quot;OK&quot; or 
+      &quot;Apply&quot; button is 
+      <A HREF="dhgControls.html#button">selected</A>.
+      <P>
+      The current debug level is displayed in an uneditable box beside
+      the text &quot;Current Debug Level:&quot;.        
+    <P>
+      At the bottom of the window is a row of buttons. The actions taken
+      by the buttons when they are 
+      <A HREF="dhgControls.html#button">selected</A>
+      are as follows:
+
+    <P>
+      <A NAME="buttons"></A>
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+      <CAPTION ALIIGN="top">Button Actions</CAPTION>
+      <TR><TH>Button</TH>
+	  <TH ALIGN="center">Action</TH>
+      </TR>
+      <TR> <TD>OK</TD>
+	<TD>Sends a <I>debugLevel</I> command to DHS, with the
+	    selected debug level.
+	    Removes the debug level command window from the display.</TD> 
+      </TR>
+      <TR> <TD>Apply</TD>
+	<TD>Sends a <I>debugLevel</I> command to DHS, with the
+	    selected debug level.
+	    The debug level command window is <B>NOT</B>
+	    removed from the display.</TD> 
+      </TR>
+      <TR> <TD>Cancel</TD>
+	<TD>Does not send a <I>debugLevel</I> command to DHS but,
+	    removes the debug level command window from 
+	    the display. </TD> 
+      </TR>
+      <TR> <TD>Help</TD>
+	<TD>Displays this help information.</TD>
+      </TR>
+    </TABLE>
+
+    <P><HR>
+    <H2>Changing Overall DHS Debug Level</H2>
+    <OL>
+      <LI>Display the Debug Level Command Window:<BR>
+	<UL TYPE="DISC">
+	  <LI>From the &quot;Commands&quot; menu:<BR>
+	    Display the &quot;Commands&quot; menu and
+	    <A HREF="dhgControls.html#menubar">select</A>
+	    &quot;Debug&quot; from the menu
+	  <LI>From the Toolbar:<BR>
+	    Below the status information is a row of buttons.  
+	    <A HREF="dhgControls.html#button">Select</A>
+	    &quot;Debug&quot; from this row of buttons.
+	</UL>
+      <LI>Select the desired Debug Level:
+	<OL TYPE="I">
+	    <LI>Display the Choice List:<BR>
+	    <A HREF="dhgControls.html#button">Select</A> the button
+	    beside the text &quot;Selected Debug Level&quot;
+	    <LI><A HREF="dhgControls.html#menbuar"</A>Select</A> a
+	    debug level from the pop up menu.
+	    After a choice is made the list
+	    of choices is removed from the display and the selected
+	    value is shown.  The debug
+	    level does <B>not</B> change until either the &quot;OK&quot; or
+	    the &quot;Apply&quot; button is 
+	    <A HREF="dhgControls.html#button">selected</A>.
+	</OL>
+      <LI><A HREF="dhgControls.html#button">Select</A>
+	the appropriate button at the bottom of the window.
+	The actions taken by each button are described 
+	<A HREF="#buttons">above</A>.
+    </OL>
+
+
+    <P><HR>
+    <H2>Changing Subsystem Debug Levels</H2>
+    <OL>
+      <LI>Display the Subsystem Window:<BR>
+	<A HREF="dhgControls.html#button">Select</A> the desired 
+	subsystem's button on the main window of the
+	<A HREF="dhsConsole.html#subsystem">Console</A>
+      <LI>Display the Debug Level Command Window:<BR>
+	<UL TYPE="DISC">
+	  <LI>From the &quot;Commands&quot; menu:<BR>
+	    Display the &quot;Commands&quot; menu and
+	    <A HREF="dhgControls.html#menubar">select</A>
+	    &quot;Debug&quot; from the menu
+	  <LI>From the Toolbar:<BR>
+	    Below the status information is a row of buttons.  
+	    <A HREF="dhgControls.html#button">Select</A>
+	    &quot;Debug&quot; from this row of buttons.
+	</UL>
+      <LI>Select the desired Debug Level:
+	<OL TYPE="I">
+	    <LI>Display the Choice List:<BR>
+	    <A HREF="dhgControls.html#button">Select</A> the button
+	    beside the text &quot;Selected Debug Level&quot;
+	    <LI><A HREF="dhgControls.html#menbuar"</A>Select</A> a
+	    debug level from the pop up menu.
+	    After a choice is made the list
+	    of choices is removed from the display and the selected
+	    value is shown.  The debug
+	    level does <B>not</B> change until either the &quot;OK&quot; or
+	    the &quot;Apply&quot; button is 
+	    <A HREF="dhgControls.html#button">selected</A>.
+	</OL>
+      <LI><A HREF="dhgControls.html#button">Select</A>
+	the appropriate button at the bottom of the window.
+	The actions taken by each button are described 
+	<A HREF="#buttons">above</A>.
+    </OL>
+
+  <P>		
+  <HR>
+  <ADDRESS><A HREF="mailto:">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Mon Nov  3 15:35:34 PST 1997 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 16:00:04 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
+

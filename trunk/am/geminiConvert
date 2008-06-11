@@ -1,0 +1,773 @@
+#!/bin/csh -f
+#/*+
+#************************************************************************
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#*
+#* (c) 1999.				(c) 1999.
+#* National Research Council		Conseil national de recherches
+#* Ottawa, Canada, K1A 0R6 		Ottawa, Canada, K1A 0R6
+#* All rights reserved			Tous droits reserves
+#* 					
+#* NRC disclaims any warranties,	Le CNRC denie toute garantie
+#* expressed, implied, or statu-	enoncee, implicite ou legale,
+#* tory, of any kind with respect	de quelque nature que se soit,
+#* to the software, including		concernant le logiciel, y com-
+#* without limitation any war-		pris sans restriction toute
+#* ranty of merchantability or		garantie de valeur marchande
+#* fitness for a particular pur-	ou de pertinence pour un usage
+#* pose.  NRC shall not be liable	particulier.  Le CNRC ne
+#* in any event for any damages,	pourra en aucun cas etre tenu
+#* whether direct or indirect,		responsable de tout dommage,
+#* special or general, consequen-	direct ou indirect, particul-
+#* tial or incidental, arising		ier ou general, accessoire ou
+#* from the use of the software.	fortuit, resultant de l'utili-
+#* 					sation du logiciel.
+#*
+#************************************************************************
+#*
+#*   Script Name:	geminiConvert
+#*
+#*   Purpose:
+#*	Converts AM tables (am library) to the new DHS version.
+#*
+#*   Date		: Feb 23, 1999
+#*
+#*   SCCS data          : @(#) 
+#*      Module Name     : geminiConvert 
+#*      Version Number  : 1.6 
+#*      Release Number  : 1 
+#*      Last Updated    : 05/10/99 
+#*
+#*   Programmer		: Shanonn Jaeger
+#*
+#*   Modification History:
+#*	99/03/14 SDJ	: Changed awk numerical reg. exp. to search for
+#*			  than one number.  Added filename to mf_primary
+#*			  index.
+#*	99/03/14 SDJ	: Made media_type 10 chars - from 3 chars.
+#*	99/04/29 SDJ	: Added media_actions.
+#* 	99/05/10 SDJ	: Fixed query for table existence.
+#*
+#****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#************************************************************************
+#-*/
+
+if ( $#argv != 4 ) then
+    echo "Usage: geminiConvert <server> <database> <username> <password>"
+    exit 1
+endif
+
+set server = $1
+set database = $2
+set username = $3
+set password = $4
+set input = "/tmp/geminiConvert.input.$$"
+set output = "/tmp/geminiConvert.output.$$"
+set bcpfile = "/tmp/geminiConvert.bcp.$$"
+
+echo "				 W A R N I N G"
+echo " "
+echo "This script will convert AM database tables into the new table schema"
+echo "and new status values.  The tables affected media, media_units,"
+echo "media_files and media_stages.  The status table will be completely"
+echo "reloaded."
+echo " "
+echo "To be safe please have a recent backup of the AM tables. "
+echo "Also ensure there is a large log space in the AM database".
+echo " "
+echo "All of the AM tables, including the new ones must exist."
+echo "The tables are: bookDevice, devices, keys, logicalDevices, mediaTypes,"
+echo "media, media_files, media_stages, media_units, media_actions, and"
+echo "status." 
+echo " "
+echo "There must be initial inserts made into the following tables:"
+echo "     devices,"
+echo "     media_actions",
+echo "     mediaTypes,"
+echo "     media_stages, and"
+echo "     logicalDevices." 
+echo " "
+echo "This script must be run on when there are no pending queue, write,"
+echo "cleanup, or notify actions pending or in progress."
+echo " "
+echo -n "Continue (y/n): "
+
+set answer = $<
+if ( $answer != "y" ) then
+    exit 0
+endif
+
+
+
+
+#
+#************************************************************************
+#   Checking for the existance of new tables.
+#************************************************************************
+#
+
+echo '***       Testing for existence of tables      ***'
+cat > $input << _EOF_
+use $database
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='bookDevice' and objs.uid = users.uid 
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='devices' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='keys' and objs.uid = users.uid 
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='logicalDevices' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='media' and objs.uid = users.uid 
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='mediaTypes' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='media_files' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='media_stages' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='media_units' and objs.uid = users.uid
+
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='media_actions' and objs.uid = users.uid
+go
+select objs.name, type, users.name
+    from sysobjects objs, sysusers users 
+    where users.name in ('$username', 'dbo', 'guest')
+    and objs.name='status' and objs.uid = users.uid 
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to check table existence"
+    goto ERROR
+endif
+
+echo " " >>! $output
+echo " " >>! $output
+set ok = 1
+foreach item ( "bookDevice" "devices" "keys" "logicalDevices" "media" \
+    "mediaTypes" "media_files" "media_stages" "media_units" "media_actions" \
+    "status" )
+    
+    set result = `cat $output | awk 'BEGIN { total=0; } NF==3 && $1 == i { total += 1; } END { print total }' i=$item`
+
+    if ( $result < 1 ) then
+	set ok = 0
+	echo "Table $item NOT Found" >>! $output
+    else
+	echo "Table $item Found" >>! $output
+    endif
+end
+
+if ( ! $ok ) then
+    echo "Error: Not all of the AM tables exist."
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+#   Checking for non-empty media_stages, logicalDevices, devices
+#   mediaTypes table.  Also checking there are devices and mediaTypes
+#   for all mediaTypes in the media table.
+#************************************************************************
+#
+
+echo '***    Testing for entries in some tables      ***'
+
+cat > $input << _EOF_
+use $database
+go
+sp_spaceused devices
+go
+sp_spaceused mediaTypes
+go
+sp_spaceused logicalDevices
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to check if devices, mediaTypes, media_stages"
+    echo "       and logicalDevices are non-empty tables."
+    goto ERROR
+endif
+
+foreach table ( "devices" "mediaTypes" "logicalDevices" )
+    set num = `cat $output | awk 'BEGIN { total=0; } $1 == tbl { total += $2; } END { print total ; }' tbl=$table`
+    if ( $num < 1 ) then
+	echo "Error: There $table table has no entries."
+	goto ERROR
+    endif
+end
+
+
+#
+#************************************************************************
+#   Checking media table for pending activity.
+#************************************************************************
+#
+
+echo '***         Testing for pending activity       ***'
+cat > $input << _EOF_
+use $database
+go
+set nocount on
+go
+select status, count(*) from media where status != "D" 
+    and media_request_type != "ARCH"
+group by status
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to get status information from media table"
+    goto ERROR
+endif
+
+set numMedia = `cat $output | awk 'BEGIN { total=0; } NF==2 && $2 ~ /^[0-9]+$/ { total += $2; } END { print total ; }'`
+if ( $numMedia != 0 ) then
+    echo "Error: There are $numMedia media request which are being processed."
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+# Check media_units table for pending activity.
+#************************************************************************
+#
+
+cat > $input << _EOF_
+use $database
+go
+set nocount on
+go
+select status, count(*) from media_units where status != "D"
+group by status
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to get status information from media_units table"
+    goto ERROR
+endif
+
+set numUnits = `cat $output | awk 'BEGIN { total=0; } NF==2 && $2 ~ /^[0-9]+$/ { total += $2; } END { print total ; }'`
+if ( $numUnits != 0 ) then
+    echo "Error: There are $numUnits  media uints which are being processed."
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+# Check media_files table for pending activity.
+#************************************************************************
+#
+
+cat > $input << _EOF_
+use $database
+go
+set nocount on
+go
+select status, count(*) from media_files where status != "D" group by status
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to get status information from media_files table"
+    goto ERROR
+endif
+
+set numFiles = `cat $output | awk 'BEGIN { total=0; } NF==2 && $2 ~ /^[0-9]+$/ { total += $2; } END { print total ; }'`
+if ( $numFiles != 0 ) then
+    echo "Error: There are $numFiles files which are being processed."
+    goto ERROR
+endif
+
+#
+#************************************************************************
+# Check media_stages table for pending activity.
+#************************************************************************
+#
+
+cat > $input << _EOF_
+use $database
+go
+set nocount on
+go
+select directory, count(*) from media_stages where 
+    media_request_id != NULL or
+    media_unit_name != NULL
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo "Error: Unable to get status information from media_files table"
+    goto ERROR
+endif
+
+set numInUse = `cat $output | awk 'BEGIN { total=0; } NF==2 && $2 ~ /^[0-9]+$/ { total += $1; } END { print total ; }'`
+
+if ( $numInUse != 0 ) then
+    echo "Error: There are some media staging areas in use."
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+# Do 'keys' Table the conversion.
+#************************************************************************
+# 
+
+echo '***        Performing "keys" Table Conversion          ***'
+echo '***          Renaming "keys" table columns             ***'
+cat > $input << _EOF_
+use $database
+go
+sp_rename 'keys.keyname', keyName
+go
+sp_rename 'keys.keyvalue', keyValue
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to rename columns in "keys" table.'
+    goto ERROR
+endif
+
+
+cat > $input << _EOF_
+use $database
+go
+select keyName, keyValue from keys
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to get values from "keys" table.'
+    goto ERROR
+endif
+
+set keyName = `cat $output | awk '$2 ~ /^[0-9]+$/ { print $1; }'`
+set keyValue = `cat $output | awk '$2 ~ /^[0-9]+$/ { print $2; }'`
+
+cat > $input << _EOF_
+use $database
+go
+if exists ( select name from sysobjects 
+    where name = 'get_medId' and type = 'P') 
+    drop procedure get_medId  
+go 
+ 
+create procedure get_medId 
+    @result int output 
+    with recompile 
+    as 
+ 
+    declare     @mediaId        int 
+    begin transaction 
+        update  keys 
+                set   keyValue = keyValue + 1 
+                where keyName = "$keyName" 
+  
+        /* 
+         *  Return the media id. 
+         */ 
+ 
+        select @result = keyValue from keys where keyName = "$keyName"
+    commit transaction 
+ 
+go 
+go 
+
+grant execute on get_medId to dbo
+go
+
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to rename columns in "keys" table.'
+    goto ERROR
+endif
+
+echo '***        Completed changes to "keys" table          ***'
+
+
+
+#
+#************************************************************************
+# Do 'media' Table the conversion.
+#************************************************************************
+# 
+
+echo '***       Performing "media" Table Conversion          ***'
+echo '***         Renaming "media" table columns             ***'
+cat > $input << _EOF_
+use $database
+go
+alter table media add unit_name_precision int default 4 null
+go
+update media set unit_name_precision = 4
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to rename columns in "media" table.'
+    goto ERROR
+endif
+
+echo '***      Altering column sizes in "media" table       ***'
+echo " "
+echo "The data in the media table is about to be copied from the table with"
+echo '"bcp" so it can be reloaded.'
+
+bcp $database..media out $bcpfile -U $username -P $password -S $server -c -e $output
+if ( $status ) then
+    echo 'Error: Unable to dump data from "media" table.'
+    goto ERROR
+endif
+
+cat > $input << _EOF_
+use $database
+go
+print 'dropping media table and creating a new one'
+go
+if exists ( select name from sysobjects 
+		where name = 'media' and type = 'U' )
+		begin 
+		    print "Dropping existing media table"
+		    drop table media
+		end
+go
+
+Create table media
+(
+	media_request_id 	int		not null,
+	media_request_name	varchar(32)	not null,
+	source_id	 	varchar(32)	not null,
+	date_requested	 	datetime	not null,
+	date_completed	 	datetime	null,
+	media_request_type	char(4)		not null,
+	media_type	 	char(10)	not null,
+	num_copies	 	int		not null,
+	unit_name_root	 	varchar(32)	not null,
+	status	 		char(1)		not null, 
+	unit_name_precision	int		not null
+)
+go
+
+print "Creating indices"
+go
+
+create unique index m_primary on media
+(
+    media_request_id
+)
+go
+
+print "Granting"
+go
+
+grant insert, update, delete, select on media to operator
+go
+
+grant select on media to public
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to create "media" table.'
+    goto ERROR
+endif
+
+
+echo 'Inserting data into new media table with "bcp".'
+bcp $database..media in $bcpfile -U $username -P $password -S $server -c -e $output
+if ( $status ) then
+    echo 'Error: Unable to dump data from "media" table.'
+    goto ERROR
+endif
+rm -f $bcpfile
+
+echo '***         Completed changes to media table          ***'
+
+#
+#************************************************************************
+# Do 'media_units' Table the conversion.
+#************************************************************************
+# 
+
+echo '***    Performing "media_units" Table Conversion       ***'
+echo '***      Renaming "media_units" table columns          ***'
+
+echo '***       Altering data in "media_units" table        ***'
+cat > $input << _EOF_
+use $database
+go
+
+drop index media_units.mu_primary
+go
+
+create unique clustered index mu_primary on media_units
+(
+    media_request_id, media_unit_name
+)
+go
+
+drop index media_units.mu_unit_name
+go
+
+drop index media_units.mu_status
+go
+
+create index mu_id_status on media_units
+(
+    media_request_id, status
+)
+go
+
+create index mu_id on media_units
+(
+    media_request_id
+)
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to alter data in "media_units" table.'
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+# Do 'media_files' Table the conversion.
+#************************************************************************
+# 
+
+echo '***    Performing "media_files" Table Conversion       ***'
+echo '***      Renaming "media_files" table columns          ***'
+
+echo '***       Altering data in "media_files" table        ***'
+cat > $input << _EOF_
+use $database
+go
+begin transaction
+go
+update media_files set compression_flag='Y' where compression_flag='T'
+go
+update media_files set compression_flag='N' where compression_flag='F'
+go
+
+drop index media_files.mf_primary on media_files
+go
+
+create unique clustered index mf_primary on media_files
+(
+    media_request_id, file_id, filename
+)
+go
+    
+drop index media_files.mf_status
+go
+
+create index mf_id_unit on media_files
+(
+	media_request_id, media_unit_name
+)
+go
+create index mf_id_status on media_files
+(
+	media_request_id, status
+)
+go
+commit transaction
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to alter data in "media_files" table.'
+    goto ERROR
+endif
+
+
+
+#
+#************************************************************************
+# Do 'status' Table the conversion.
+#************************************************************************
+# 
+
+echo '***      Performing  "status" Table Conversion         ***'
+echo '***         Dropping/creating "status" table           ***'
+cat > $input << _EOF_
+use $database
+go
+if exists ( select name from sysobjects 
+		where name = 'status' and type = 'U' )
+		begin 
+		    print "Dropping existing status table"
+		    drop table status
+		end
+go
+
+
+print "Creating status table"
+go
+
+Create table status
+(
+	status	 		char(2)  	not null,
+	column_name		varchar(32)	not null,
+	table_name		varchar(32)	not null,
+	short_description	varchar(45)	not null,
+	description		varchar(225)	not null 
+)
+go
+
+print "Creating index"
+go
+
+create unique index st_primary on status
+(
+	status, table_name, column_name
+)
+go
+
+print "Granting"
+go
+
+grant insert, update, delete, select on status to operator
+go
+
+grant select on status to public
+go
+
+print "Making initial inserts"
+go
+
+insert into status values (" ", "verified", "cds", "unverified", "long description field for unverified")
+insert into status values ("V", "verified", "cds", "verified", "long description field for verified")
+
+insert into status values (" ", "status", "cdfiles", "ok", "long description field for ok")
+insert into status values ("E", "status", "cdfiles", "error", "long description field for error")
+
+insert into status values (" ", "status", "media", "Creating", "Creating User Media Request")
+insert into status values ("E", "status", "media", "Error", "Error creating User Media Request ")
+insert into status values ("I", "status", "media", "In-Progress", "Media Request is In-Progress")
+insert into status values ("D", "status", "media", "Done", "Processing of Media Request is Done")
+
+insert into status values (" ", "status", "media_units", "Creating", "Creating Media Unit")
+insert into status values ("Q", "status", "media_units", "Queued", "Media Unit has been Queued")
+insert into status values ("P", "status", "media_units", "Prepared", "Media Unit has been Prepared for writing")
+insert into status values ("W", "status", "media_units", "Written", "All copies of Media Unit have been Written")
+insert into status values ("C", "status", "media_units", "Cleaned Up", "Cleanup task has been completed for Media Unit")
+insert into status values ("D", "status", "media_units", "Done", "Processing of Media Unit is Done")
+
+insert into status values (" ", "status", "media_files", "Unprocessed", "File has not yet been processed")
+insert into status values ("R", "status", "media_files", "Retrieved", "File has been Retrieved")
+insert into status values ("E", "status", "media_files", "Error", "Error occurred retrieving file")
+insert into status values ("U", "status", "media_files", "Unavailable", "File is currently Unavailable from the Data Server")
+insert into status values ("D", "status", "media_files", "Done", "Processing of this file is Done.")
+
+insert into status values ("I", "action", "media_actions", "Ingesting", "Ingesting file information into the database.")
+insert into status values ("IR", "action", "media_actions", "Uningesting", "Rolling back file ingesting into the database.")
+insert into status values ("Q", "action", "media_actions", "Queuing", "Creating Media Unit.")
+insert into status values ("QR", "action", "media_actions", "Unqueuing", "Removing Media Unit.")
+insert into status values ("P", "action", "media_actions", "Preparing", "Preparing the Media Unit for writing.")
+insert into status values ("PR", "action", "media_actions", "Unpreparing", "Rolling back the preparation proccess for the Media Unit.")
+insert into status values ("W", "action", "media_actions", "Writing", "Writing  copies of the Media Unit.")
+insert into status values ("WR", "action", "media_actions", "Unriting", "Decrementing the number of copies written for the Media Unit.")
+insert into status values ("C", "action", "media_actions", "Cleaning Up", "Cleaning up resources used by Media Unit.")
+insert into status values ("CR", "action", "media_actions", "Requeuing", "Setting unit back to the queued state after it has been cleaned up.")
+go
+_EOF_
+
+isql -S $server -U $username -P $password -i $input -o $output
+if ( $status ) then
+    echo 'Error: Unable to create new "status" table.'
+    goto ERROR
+endif
+
+
+#
+#************************************************************************
+#   All done remove temporary files.
+#************************************************************************
+#
+
+rm -rf $input
+rm -rf $output
+echo " "
+echo '***           AM table conversions complete            ***'
+echo " "
+echo " "
+echo "				 W A R N I N G"
+echo " "
+echo 'The new media column,  "unit name precision" was intialized to "4"' 
+echo 'This column will need to be changed manually if this is not the'
+echo 'desired value.'
+echo ''
+echo " "
+
+exit 0
+
+
+#
+#************************************************************************
+#   Error message
+#************************************************************************
+#
+
+ERROR:
+    echo " "
+    cat $output
+    echo " "
+    rm -f $input $output
+    exit 1

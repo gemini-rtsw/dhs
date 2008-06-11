@@ -1,0 +1,142 @@
+<!--  $Id: dhgResource.html,v 1.1 2003-01-15 18:23:35 brighton Exp $
+#***********************************************************************
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#
+# (c) <year>                            (c) <year>
+# National Research Council             Conseil national de recherches
+# Ottawa, Canada, K1A 0R6               Ottawa, Canada, K1A 0R6
+# All rights reserved                   Tous droits reserves
+# 
+# NRC disclaims any warranties,         Le CNRC denie toute garantie
+# expressed, implied, or statu-         enoncee, implicite ou legale,
+# tory, of any kind with respect        de quelque nature que se soit,
+# to the software, including            concernant le logiciel, y com-
+# without limitation any war-           pris sans restriction toute
+# ranty of merchantability or           garantie de valeur marchande
+# fitness for a particular pur-         ou de pertinence pour un usage
+# pose.  NRC shall not be liable        particulier.  Le CNRC ne
+# in any event for any damages,         pourra en aucun cas etre tenu
+# whether direct or indirect,           responsable de tout dommage,
+# special or general, consequen-        direct ou indirect, particul-
+# tial or incidental, arising           ier ou general, accessoire ou
+# from the use of the software.         fortuit, resultant de l'utili-
+#                                       sation du logiciel.
+#
+#***********************************************************************
+#
+# FILENAME
+# dhsConsole/doc/dhgResource.html
+#
+# PURPOSE:
+# On-line help information for the resource window.
+#
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
+#
+#
+# Revision 1.1.1.1  1999/08/23 19:58:12  cvs-tuc
+# Initial install into CVS of dhs-0.16
+#
+# Revision 1.3  1998/07/24 22:12:04  jaeger
+# Grammar corrected based on Steve Cockayne's suggested changes.
+#
+# Revision 1.2  1998/07/03 20:53:49  jaeger
+# Filled in the on-line help information.  This page was blank before.
+#
+#
+#***  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+#***********************************************************************
+-->
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+  <HEAD>
+    <TITLE>DHS Resources</TITLE>
+  </HEAD>
+
+  <BODY>
+    <H1>DHS Resources</H1>
+    DHS resources include magnetic disks for creating and manipulating data
+    and SYBASE database(s) for storing information.
+
+    <H2>Viewing Resource Information</H2>
+    An overview of resource information is provided on the 
+    main window of the <A HREF="dhsConsole.html#resource">Console</A>.
+    <P>
+      More detailed information can be examined on the 
+      <A HREF="#resourceWindow">resource window</A>.  This window is
+      is displayed when a resource identifier, on the main window,
+      is <A HREF="dhgControls.html#button">selected</A>.
+
+    <H2>Changing Resource Information</H2>
+    Resource information can not be changed directories.  However, the
+    resource usage will change as a result of DHS operations. 
+    <P>
+      Also direct manipulation of the resources can cause changes.
+      Direct manipulation includes things such as removing files from
+      and copying file to a magnetic disk, as well as, inserting into
+      or deleting from a database table.
+      
+      
+  <A NAME="resourceWindow"><H2>Resource Window</H2></A>
+      The resource window is a simple window in that it does not contain 
+      a menubar or a short help window. Despite the lack of a short help 
+      window short help information is provided, but the help message appears 
+      in the 
+      <A HREF="dhsConsole.html">Console's</A> short help window instead. 
+      The short help message can be viewed by moving the mouse cursor 
+      over a particular component of the resource window.
+      <P>
+      The resource window displays all of the status information for a 
+      particular resource.  Each status item is displayed in an uneditable
+      box with an appropriate label.  The name of the resource appears at
+      the top of the window. The information shown is updated when the
+      status information changes. The information displayed includes the
+      following:
+      <UL>
+      <LI><B>Full Name</B>.
+	For magnetic disks the fully specified path of the magnetic disk. 
+	For databases the SYBASE server and database name separated by
+	a colon.
+	<LI><B>Type</B>.
+	Either magnetic disk or database.
+	<LI><B>Units</B>.
+	The units used to specify the maximum, used, and available values.
+	An example would be kilobytes or megabytes.
+	<LI><B>Maximum</B>.
+	The total amount of resource that is available for use.
+	<LI><B>Used</B>.
+	The amount of resource that is currently being used.
+	<LI><B>Available</B>.
+	The amount of resource that is currently available for use.
+	<LI><B>Capacity</B>.
+	The percentage of resource that is being used.
+    </UL>
+    Each resource is displayed in a separate window.  The name at the top
+    of the resource window can be used to differentiate the various 
+    resource windows.
+    <P>
+      Two buttons appear at the bottom of the window: "OK" and "Help". 
+      The actions taken by the buttons, when 
+      <A HREF="dhgControls.html#button">selected</A> are as follows:
+      <TABLE BORDER="2" CELLPADDING="2" ALIGN="CENTER" >
+        <CAPTION ALIIGN="top">Button Actions</CAPTION>
+        <TR><TH>Button</TH>
+          <TH ALIGN="center">Action</TH>
+        </TR>
+        <TR> <TD>OK</TD>
+          <TD>Removes the Resource window from the display.</TD>
+        </TR>
+        <TR> <TD>Help</TD>
+          <TD>Displays this help information.</TD>
+        </TR>   
+    </TABLE>
+      
+    <P><HR>
+    <ADDRESS><A HREF="">Shannon Jaeger</A></ADDRESS>
+<!-- Created: Wed Feb  4 14:46:38 PST 1998 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 23 11:55:42 PDT 1998
+<!-- hhmts end -->
+  </BODY>
+</HTML>
