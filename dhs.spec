@@ -2,9 +2,8 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 3
+%define release 4
 %define repository gemini
-%define arch i386
 
 Summary: the dhs server
 Name: %{name}
