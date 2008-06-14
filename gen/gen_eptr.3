@@ -1,0 +1,248 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: gen/doc/gen_eptr.3 
+.\"*
+.\"*	Date			: Sept 12, 1992
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: gen_eptr.3
+.\"*	    Version Number	: 1.5
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 08/23/95
+.\"*
+.\"*	Written by		: Robyn Blaber
+.\"*
+.\"*	Modification History    : None
+.\"*
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH gen_eptr 3 "08/23/95" "CADC"
+.SH NAME
+gen_eptr, eptr_alloc, eptr_del, eptr_fit, eptr_free, eptr_init, eptr_insert, eptr_replace, eptr_search, eptr_sort, eptritem, eptrlen \- operations on dynamically changing arrays of elements
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "gen_types.h"
+#include "gen_eptr.h"
+.ft
+.fi
+.LP
+.nf
+.ta 0.8i
+.ft B
+EPTR	\(**eptr_alloc( n )
+int	n;
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	eptr_del( eptr, start, n, e_free )
+EPTR	\(**eptr;
+int	start, n;
+pfv	e_free;
+.ft
+.fi
+.LP
+.nf
+.ft B
+EPTR	\(**eptr_fit( eptr )
+EPTR	\(**eptr;
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	eptr_free( eptr, e_free )
+EPTR	\(**eptr;
+pfv	e_free;
+.ft
+.fi
+.LP
+.nf
+.ft B
+EPTR	\(**eptr_insert( eptr, index, ptr )
+EPTR	\(**eptr;
+int	index;
+pointer	ptr;
+.ft
+.fi
+.LP
+.nf
+.ft B
+void	eptr_replace( eptr, ptr, index, e_free )
+EPTR	\(**eptr;
+pointer	ptr;
+int	index;
+pfv	e_free;
+.ft
+.fi
+.LP
+.nf
+.ft B
+boolean	eptr_search( eptr, key, index, e_compare )
+EPTR_P	eptr;
+pointer	key;
+int	\(**index;
+pfi	e_compare;
+.ft
+.fi
+.LP
+.nf
+.ft B
+EPTR	\(**eptr_sort( eptr, e_compare )
+EPTR	\(**eptr;
+pfi	e_compare;
+.ft
+.fi
+.LP
+.nf
+.ft B
+pointer	eptritem( eptr, index )
+EPTR	\(**eptr;
+int	index;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int	eptrlen( eptr )
+EPTR	*eptr;
+
+.SH DESCRIPTION
+.LP
+.B eptr_alloc(\|)
+allocates and initializes an 
+.SM EPTR 
+structure with 
+an initial value of 
+.I n 
+elements in its
+.I array.
+.B eptr_alloc(\|)
+returns a pointer to the newly created array structure.  
+Note: A memory allocation error will result in a 
+.SM NULL
+pointer being returned.
+.LP
+.B eptr_del(\|)
+removes
+.I n
+elements from the array, beginning with the element indexed by
+the integer
+.IR start.
+.LP
+.B eptr_fit(\|)
+will free any memory not required by the 
+.I eptr
+array.  
+.B eptr_fit(\|)
+will return a pointer to the modified 
+.I eptr
+on completion, or a pointer to
+.SM NULL
+in the case of a memory allocation error.
+.LP
+.B eptr_free(\|)
+frees all of the allocated memory referenced by 
+.IR eptr,
+including the array elements. 
+.B eptr_free(\|)
+calls
+.I e_free
+supplied by the application program, which is responsible
+for the de-allocation of memory used by elements of the array.
+.I e_free 
+takes a single argument, which is a pointer to the element
+which is to be removed.
+.LP
+.B eptr_insert(\|)
+inserts an element referenced by
+.I ptr
+into location
+.I index
+in the
+.I eptr
+array.  If the array has been filled,
+.B eptr_insert(\|)
+will increase the size of the array to accommodate
+the newly added element.  
+.LP
+.B eptr_replace(\|)
+replaces the element indexed by the argument
+.I index
+with a new element, passed by the argument
+.IR ptr.
+.B eptr_replace(\|)
+returns
+.SM NULL
+in the case of a memory allocation error.
+Note: 
+.B eptr_replace(\|)
+also calles the application function
+.IR e_free,
+whose argument is a pointer to the element.
+.LP
+.B eptr_search(\|)
+performs a binary search on the
+.I eptr
+array, to find the
+.I key
+value.  The
+.I e_compare 
+function, suppied by the application progam, differs from the
+comparison function used by 
+.B eptr_sort(\|)
+as it must compare data stored in the array element to the value
+supplied by the argument
+.IR key.
+If the value is found,
+.B eptr_search(\|)
+will return
+.SM TRUE,
+and the argument
+.I index
+will be returned with the array location of the element.
+.LP
+.B eptr_sort(\|)
+sorts the
+.I eptr
+array, using a comparison function supplied by the application program,
+.IR e_compare.
+This function is called with two arguments that point to the elements
+being compared.  As the  function must return an integer less than,
+equal to, or greater thanzero, so must the first argument be considered
+less than, equal to, or greater than the second.
+.B eptr_sort(\|)
+returns
+.SM NULL
+in the case of a memory allocation error.
+.LP
+.B eptritem(\|)
+returns the pointer to the element at location
+.I index
+in the
+.I eptr
+array.
+.LP
+.B eptrlen(\|)
+returns the number of elements which currently reside in the
+.I eptr
+array.
+
+.SH SEE ALSO
+.LP
+gen_str(3), gen_types(3)
+
+.SH BUGS
+.LP
+None known.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre

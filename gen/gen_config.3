@@ -1,0 +1,91 @@
+.\"/*+
+.\"************************************************************************
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"*
+.\"*	Name			: gen/doc/gen_config.3
+.\"*
+.\"*	Date			: May 04, 1995
+.\"*
+.\"*	SCCS data		: @(#)
+.\"*	    Module Name		: gen_config.3
+.\"*	    Version Number	: 1.1
+.\"*	    Release Number	: 1
+.\"*	    Last Updated	: 05/12/95
+.\"*
+.\"*	Written by		: Paul Wierenga--CADC Coop
+.\"*
+.\"*	Modification History:
+.\"*
+.\"****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
+.\"************************************************************************
+.\"-*/
+.TH gen_config 3 "05/12/95" "CADC"
+.nh
+.SH NAME
+gen_config, config_close, config_get, config_open \- operations on 
+configuration library files.
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "gen_types.h"
+#include "gen_config.h"
+.ft
+.fi
+.LP
+.nf
+.ta 0.8i
+.ft B
+void	config_close()
+.ft
+.fi
+.LP
+.nf
+.ft B
+int	config_get( key, fn )
+char	\(**key;
+pfb	fn
+.ft
+.fi
+.LP
+.nf
+.ft B
+int	config_open( rootname, config_file )
+char	\(**rootname;
+char	\(**\(**config_file;
+
+.SH DESCRIPTION
+.LP
+.B config_close(\|)
+closes the configuration library.
+.LP
+.B config_get(\|)
+applys the config function
+.I fn 
+to every line in the config file with keyword \(eq
+.IR key.
+This function returns GC_SUCCESS upon normal completion, or 
+GC_E_KEY_NOT_FOUND if the key could not be found.
+.LP
+.B config_open(\|)
+Initializes the configuration file. The 
+.I rootname 
+is used to calculate the config file name. The
+.I config_file
+is returned from the function and is the name and full path of 
+the config file opened.
+The function returns GC_SUCCESS upon normal completion,
+GC_E_MEMORY if memory allocation failed, or GC_E_FILE_NOT_FOUND
+if the file could not be found.
+The config file is located by the environement variable
+APPNAME_CONFIG_DIR directory, where
+.I APPNAME
+is the name of the application for which the config file
+is required. If environment variable APPNAME_CONFIG_DIR is not set,
+then the directory defined by environment variable DEFAULT_CONFIG_DIR
+is searched. Finally, if the config file is not located from either
+of these two environment variables, the current directory is searched.
+
+.SH AUTHOR
+.LP
+Canadian Astronomy Data Centre
