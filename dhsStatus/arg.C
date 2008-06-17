@@ -85,7 +85,9 @@ static char rcsid[] = "$Id: arg.C,v 1.1.1.1 2002-11-24 20:30:25 brighton Exp $";
 //
 
 #include "globals.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "staDhs.H"
 #include "staMonitor.H"
 
@@ -169,25 +171,33 @@ void		argInit
 	    }
 	    if ( strcmp( argv[i], "NONE" ) == 0 )
 	    {
+#if defined(EPICS_DHS)
 		cStaChannel::simulate( cStaChannel::SIMULATE_NONE );
+#endif
 		cStaDhs::simulate( false );
 		cStaMon::simulate( false );
 	    }
 	    else if ( strcmp( argv[i], "VSM" ) == 0 )
 	    {
+#if defined(EPICS_DHS)
 		cStaChannel::simulate( cStaChannel::SIMULATE_VSM );
+#endif
 		cStaDhs::simulate( false );
 		cStaMon::simulate( false );
 	    }
 	    else if ( strcmp( argv[i], "FAST" ) == 0 )
 	    {
+#if defined(EPICS_DHS)
 		cStaChannel::simulate( cStaChannel::SIMULATE_FAST );
+#endif
 		cStaDhs::simulate( true );
 		cStaMon::simulate( true );
 	    }
 	    else if ( strcmp( argv[i], "FULL" ) == 0 )
 	    {
+#if defined(EPICS_DHS)
 		cStaChannel::simulate( cStaChannel::SIMULATE_FULL );
+#endif
 		cStaDhs::simulate( true );
 		cStaMon::simulate( true );
 	    }

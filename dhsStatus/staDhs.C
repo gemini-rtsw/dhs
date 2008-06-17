@@ -164,7 +164,9 @@ extern "C"
 
 
 #include "staDhs.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "staMonitor.H"    
 #include "subscriber.H"
 
@@ -451,7 +453,9 @@ void		cStaEventLog::exec
 	    //
 
 	    av.info( (void **) &message, dhsStatus );
+#if defined(EPICS_DHS)
 	    cStaChannel::logMessage( message, status );
+#endif
 
 
 	    //
@@ -743,8 +747,10 @@ void		cStaSequenceCmd::flush
 
     status.S_CMD_RECEIVED( status, "flush" );
 
+#if defined(EPICS_DHS)
     cStaChannel::dirtyAll( status );
     cStaChannel::chFlush( status );
+#endif
 
     response( DHS_CS_DONE, dhsStatus );
 }
@@ -966,7 +972,9 @@ void		cStaSequenceCmd::simulateLevel
 )
 {
     cDhsAttrib	attrib;		// The current attribute.
+#if defined(EPICS_DHS)
     cStaChannel	*channel;	// The channel for the simulation level.
+#endif
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
     char	*level;
     cStaStat	status;
@@ -983,7 +991,9 @@ void		cStaSequenceCmd::simulateLevel
 	attrib.info( (void **) &level, dhsStatus );
 	if ( strcmp( level, "NONE" ) == 0 )
 	{
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_NONE );
+#endif
 	    cStaStat::update( "simulate", "NONE", status );
 	    cStaStat::flush( status );
 	    cStaDhs::simulate( false );
@@ -993,33 +1003,45 @@ void		cStaSequenceCmd::simulateLevel
 	}
 	else if ( strcmp( level, "VSM" ) == 0 )
 	{
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_NONE );
+#endif
 	    status.S_SIMULATE_LEVEL( status, "VSM" );
 	    cStaStat::update( "simulate", "VSM", status );
 	    cStaStat::flush( status );
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_VSM );
+#endif
 	    cStaDhs::simulate( false );
 	    cStaMon::simulate( false );
 	    response( DHS_CS_DONE, dhsStatus );
 	}
 	else if ( strcmp( level, "FULL" ) == 0 )
 	{
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_NONE );
+#endif
 	    status.S_SIMULATE_LEVEL( status, "FULL" );
 	    cStaStat::update( "simulate", "FULL", status );
 	    cStaStat::flush( status );
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_FULL );
+#endif
 	    cStaDhs::simulate( true );
 	    cStaMon::simulate( true );
 	    response( DHS_CS_DONE, dhsStatus );
 	}
 	else if ( strcmp( level, "FAST" ) == 0 )
 	{
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_NONE );
+#endif
 	    status.S_SIMULATE_LEVEL( status, "FAST" );
 	    cStaStat::update( "simulate", "FAST", status );
 	    cStaStat::flush( status );
+#if defined(EPICS_DHS)
 	    cStaChannel::simulate( cStaChannel::SIMULATE_FAST );
+#endif
 	    cStaDhs::simulate( true );
 	    cStaMon::simulate( true );
 	    response( DHS_CS_DONE, dhsStatus );
@@ -1030,7 +1052,9 @@ void		cStaSequenceCmd::simulateLevel
 	    dhsStatus = DHS_S_SUCCESS;
 	    response( DHS_CS_ERROR, dhsStatus );
 	}
+#if defined(EPICS_DHS)
 	channel->chFlush( status );
+#endif
     }
     else
     {
@@ -1088,11 +1112,14 @@ void		cStaSequenceCmd::test
     cStaStat::flush( status );
 
     cStaMon::testAll( status );
+#if defined(EPICS_DHS)
     if ( cStaChannel::testAll( status )  && status. ok() )
     {
+#endif
 	status.S_TEST_SUCCESS( status );
 	response( DHS_CS_DONE, dhsStatus );
 	cStaStat::update( "state", "RUNNING", status );
+#if defined(EPICS_DHS)
     }
     else
     {
@@ -1101,6 +1128,7 @@ void		cStaSequenceCmd::test
 	response( DHS_CS_ERROR, dhsStatus );
 	cStaStat::update( "state", "RUNNING", status );
     }
+#endif
     cStaStat::flush( status );
 }
 
@@ -1172,7 +1200,9 @@ void		cStaUpdate::exec
 {
     cDhsAttrib	attrib;		// The current attribute.
     char	*attribName;	// Name of the attribute.
+#if defined(EPICS_DHS)
     cStaChannel	*channel;	// Channel to update.
+#endif
     int		i;
     char	*attribValue;	// Pointer to the attributes value.
     cStaStat	status;
@@ -1225,9 +1255,11 @@ void		cStaUpdate::exec
 		    // updates its value.
 		    //
 
+#if defined(EPICS_DHS)
 		    channel = cStaChannel::find( subSystem, attribName, 
 			    status );
 		    channel->put( attribValue, status );
+#endif
 		}
 	    }
 
@@ -1237,17 +1269,21 @@ void		cStaUpdate::exec
 	    // status acceptors.
 	    //
 
+#if defined(EPICS_DHS)
 	    cStaChannel::chFlush( status );
 
 	    if ( status.ok() )
 	    {
+#endif
 		response( DHS_CS_DONE, dhsStatus );
+#if defined(EPICS_DHS)
 	    }
 	    else
 	    {
 		response( DHS_CS_ERROR, status.message(), dhsStatus );
 		status.display();
 	    }
+#endif
 	    status.displayStart();
 	}
 	else
@@ -1320,7 +1356,9 @@ void		cStaGetStatus::exec
 {
     cDhsAttrib	attrib;		// The current attribute.
     cDhsAvList	avList;
+#if defined(EPICS_DHS)
     cStaChannel	*channel;	// Channel to query.
+#endif
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
     cStaStat	status;
     char	*subSystemName;	// The name of the subsystem.
@@ -1333,6 +1371,7 @@ void		cStaGetStatus::exec
     attrib.info( (void **) &statusItem, dhsStatus );
     if ( dhsStatus == DHS_S_SUCCESS )
     {
+#if defined(EPICS_DHS)
 	channel = cStaChannel::find( subSystemName, statusItem, status );
 	if ( status.ok() )
 	{
@@ -1342,12 +1381,15 @@ void		cStaGetStatus::exec
     }
     if ( status.ok() && dhsStatus == DHS_S_SUCCESS )
     {
+#endif
 	response( DHS_CS_DONE, "done", avList, dhsStatus );
     }
+#if defined(EPICS_DHS)
     else
     {
 	response( DHS_CS_ERROR, "failed", dhsStatus );
     }
+#endif
 }
 
 //

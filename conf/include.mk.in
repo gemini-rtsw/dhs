@@ -54,23 +54,28 @@ endif
 
 # Base dir for Epics
 EPICS_BASE = @EPICS_BASE@
+ifeq ($(EPICS_BASE),)
+   EPICS_DHS_FLAGS = -UEPICS_DHS
+   EPICS_BASE_INCLUDES =
+   EPICS_BASE_LDLIBS =
+else
+   EPICS_DHS_FLAGS = -DEPICS_DHS
+   UNAME = $(shell uname)
+   EPICS_BASE_INC_OS = $(UNAME)
+   ifeq ($(EPICS_BASE_INC_OS),SunOS)
+       EPICS_BASE_INC_OS = solaris
+   endif
+   EPICS_BASE_INCLUDES = -I$(EPICS_BASE)/include -I$(EPICS_BASE)/include/os/$(EPICS_BASE_INC_OS) 
 
-UNAME = $(shell uname)
-EPICS_BASE_INC_OS = $(UNAME)
-ifeq ($(EPICS_BASE_INC_OS),SunOS)
-    EPICS_BASE_INC_OS = solaris
+   EPICS_BASE_LIB_OS = $(UNAME)
+   ifeq ($(EPICS_BASE_LIB_OS),SunOS)
+       EPICS_BASE_LIB_OS = solaris-sparc-gnu
+   endif
+   ifeq ($(EPICS_BASE_LIB_OS),Linux)
+       EPICS_BASE_LIB_OS = linux-x86
+   endif
+   EPICS_BASE_LDLIBS = -L$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS} -lca -lCom -Wl,-rpath=$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS}
 endif
-EPICS_BASE_INCLUDES = -I$(EPICS_BASE)/include -I$(EPICS_BASE)/include/os/$(EPICS_BASE_INC_OS) 
-
-EPICS_BASE_LIB_OS = $(UNAME)
-ifeq ($(EPICS_BASE_LIB_OS),SunOS)
-    EPICS_BASE_LIB_OS = solaris-sparc-gnu
-endif
-ifeq ($(EPICS_BASE_LIB_OS),Linux)
-    EPICS_BASE_LIB_OS = linux-x86
-endif
-EPICS_BASE_LDLIBS = -L$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS} -lca -lCom -Wl,-rpath=$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS}
-
 
 # CFITSIO
 CFITSIO_INCLUDES = @CFITSIO_INCLUDES@

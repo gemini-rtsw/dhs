@@ -182,7 +182,9 @@ extern "C"
 }
 
 #include "staDhs.H"    
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "subscriber.H"
 
 pthread_t		cStaChannel::scElThread = 0;

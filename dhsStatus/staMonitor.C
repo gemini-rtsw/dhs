@@ -190,7 +190,9 @@ int statvfs(const char *, struct statvfs *);
 #include "globals.H"
 #include "staDhs.H"
 #include "staMonitor.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"    
+#endif
 
 
 
@@ -552,6 +554,7 @@ void	cStaMon::checkAliases
     cStaStat	&status		// (mod) Function return value.
 )
 {
+#if defined(EPICS_DHS)
     cStaChannel	*channel;	// EPICS channel.
     
 
@@ -589,6 +592,9 @@ void	cStaMon::checkAliases
     {
 	status.E_BAD_CHALIAS( status, aliases.inUse );
     }
+#else
+   status.E_BAD_CHALIAS( status, aliases.name );
+#endif
 }
 
 //

@@ -113,12 +113,11 @@ dnl Sybase settings
 AC_MSG_CHECKING([SYBASE])
 # enforce no sybase
 SYBASE=
-#if test "$SYBASE" = "" ; then
-#   SYBASE=`dirname $PWD`/sybase
-#   test -d $SYBASE || SYBASE=/ocs/software/dev/packages/sybase/M0001
-#   test -d $SYBASE || echo "ERROR: can't find SYBASE directory"
-#fi
-AC_MSG_RESULT([$SYBASE])
+if test "$SYBASE" = "" ; then
+   AC_MSG_RESULT([NO])
+else
+   AC_MSG_RESULT([$SYBASE])
+fi
 AC_SUBST(SYBASE)
 
 dnl Tcl settings
@@ -155,11 +154,15 @@ AC_SUBST(CFITSIO_LDLIBS)
 
 dnl EPICS settings
 AC_MSG_CHECKING([EPICS])
-if test "x${EPICS}" = "x" ; then
-    EPICS=${GEMINI_TOP}/opt/epics
+# enforce no EPICS
+EPICS=
+if test "x$EPICS" = "x" ; then
+   EPICS_BASE=
+   AC_MSG_RESULT([NO])
+else
+   EPICS_BASE=$EPICS/base
+   AC_MSG_RESULT([$EPICS])
 fi
-AC_MSG_RESULT([$EPICS])
-EPICS_BASE=$EPICS/base
 AC_SUBST(EPICS_BASE)
 
 dnl Drama settings

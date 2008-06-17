@@ -101,7 +101,9 @@ static char rcsid[] = "$Id: subscriber.C,v 1.2 2002-11-27 17:15:09 brighton Exp 
 #include <pthread.h>
 
 #include "globals.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "subscriber.H"
 
 cMutex	cStaSubscriber::ssMutex;
@@ -564,7 +566,9 @@ void		cStaSubscriber::post
     cStaStat	&status		// (mod) Function return status.
 )
 {
+#if defined(EPICS_DHS)
     cStaChannel	*pChannel( (cStaChannel *) channel );
+#endif
     ulong	data[3];
     int		nDims;
     ulong	dims[1];
@@ -602,10 +606,10 @@ void		cStaSubscriber::post
     // Add the channel value attribute to the update command.
     //
 
+#if defined(EPICS_DHS)
     checkDhs( ssUpdateCmd->add( pChannel->name(), DHS_DT_STRING, 
 	    pChannel->data(), dhsStatus ), dhsStatus, status, 
 	    ssMutex.unlock(); return );
-
 
     //
     // Add the channel info attribute to the update command.
@@ -619,6 +623,7 @@ void		cStaSubscriber::post
     data[2] = pChannel->time();
     checkDhs( ssUpdateCmd->add( buffer, DHS_DT_UINT32, nDims, dims, data,
 	    dhsStatus ), dhsStatus, status, ssMutex.unlock(); return );
+#endif
 
     ssMutex.unlock();
 }
@@ -898,11 +903,13 @@ void		cStaSubscribe::subscribe
     char	*pName;
     char	*name;
     char	*address;
+#if defined(EPICS_DHS)
     cStaChannel::tChMap
 		*pChMap;
     cStaChannel	*pChan;
     cStaChannel::iChMap
     		i;
+#endif
 	cStaSubscriber
     		*pSubscriber;
 
@@ -957,6 +964,7 @@ void		cStaSubscribe::subscribe
     // Post all status values to the subscriber.
     //
 
+#if defined(EPICS_DHS)
     pChMap = (cStaChannel::tChMap *) cStaChannel::scList;
     for ( i = pChMap->begin(); i != pChMap->end(); i++ )
     {
@@ -966,6 +974,7 @@ void		cStaSubscribe::subscribe
 	    pSubscriber->post( (void *) pChan, status );
 	}
     }
+#endif
 
 
     //
