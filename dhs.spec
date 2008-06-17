@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, dhsClient, skycat, dhsClient
+Requires: gemini-top, gemini-setup, gemini-runtime, drama, dhsClient, skycat, dhsClient
 BuildRequires: gemini-build, gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel
 Source0: %{name}-%{version}.tar.gz
 
@@ -49,9 +49,11 @@ cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
-# fixme:
-#  sample-config should supersede what's below - appears harmless, leaving it for now
-#  there's no executable in the var configuration so 0666 would be better - carefull with directories though,leaving it for now
+# FIXME:
+#  sample-config should supersede what's below - appears harmless, 
+# leaving it for now there's no executable in the var configuration 
+# so 0666 would be better - careful with directories though,leaving 
+# it for now
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
