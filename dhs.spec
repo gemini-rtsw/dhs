@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version __auto__
-%define release __auto__
+%define version 1.0
+%define release 8
 %define repository gemini
 
 Summary: the dhs server
