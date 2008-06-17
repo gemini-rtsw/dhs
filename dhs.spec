@@ -58,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT/opt/dhs
 %{_prefix}/etc/profile.d
 
 %changelog
-* Wed Apr 2 2008 Matthieu Bec <mbec@gemini.edu> 1.0
-- first rpm
 * Mon Jun 16 2008 Vasu Upadhya<vupadhya@gemini.edu> 2.0
 - second rpm
+* Wed Apr 2 2008 Matthieu Bec <mbec@gemini.edu> 1.0
+- first rpm
