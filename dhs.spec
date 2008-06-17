@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 7
+%define release 8
 %define repository gemini
 
 Summary: the dhs server
@@ -44,10 +44,10 @@ cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 #cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup/*
-chmod 0666 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup/*
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir/*
-chmod 0666 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir/*
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
+chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
+chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT/opt/dhs
