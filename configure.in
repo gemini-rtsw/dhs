@@ -103,7 +103,7 @@ AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])
 dnl dhsClient settings
 AC_MSG_CHECKING([DHS_CLIENT_INSTALL_BASE])
 if test "x${DHS_CLIENT_INSTALL_BASE}" = "x" ; then
-   DHS_CLIENT_INSTALL_BASE=${GEMINI_TOP}/opt/dhs
+   DHS_CLIENT_INSTALL_BASE=${GEMINI_TOP}/opt/dhsClient
 fi
 
 AC_SUBST(DHS_CLIENT_INSTALL_BASE)
