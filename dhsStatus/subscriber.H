@@ -117,10 +117,12 @@ class cStaSubscriber:
 	static void	exit( cStaStat & );
 	static void	flush( cStaStat & );
 	void		kill( cStaStat & );
+#if defined(EPICS_DHS)
 	static void	postAll( cStaChannel &channel, cStaStat &status )
 			{
 			    cStaSubscriber::forEach( &cStaSubscriber::post, &channel, status );
 			}
+#endif
 	void		post( void *, cStaStat & );
 	void		send( void *, cStaStat & );
     protected:

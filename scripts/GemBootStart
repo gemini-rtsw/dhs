@@ -1,131 +1,40 @@
-#!/bin/sh
-#
-# This file is originally /gemini/dhs/scripts/GemBootStart.
-# It is copied to the /etc/rc2.d/S98GemDHS on the DHS server machine
-# as well as /etc/rc2.d/K98GemDHS.  Only edit the original file and
-# then make copies in the system directories.
+#!/bin/bash
 
-case `whoami` in
-
-root)
-	SU="su - gemdhs -c "
-	;;
-gemdhs)
-	SU=""
-	;;
-*)
-	echo "Must be gemdhs to run GemBootStart"
-	exit 1
-	;;
-esac
-
-# Set DHS_BASE if not already set
-DHS_BASE=${DHS_BASE:=/gemini/dhs};
-echo "\$DHS_BASE is now \"$DHS_BASE\""
-
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$DHS_BASE/lib
-
-dhs_start() {
-	PROG=$1
-	BASE=`basename $PROG`
-	if [ $# -ge 2 ]
-	then
-		shift
-		ARGS=" $*"
-	else
-		ARGS=""
-	fi
-
-	echo "dhs_start: Starting $PROG$ARGS"
-        BASEPROG=`basename $PROG`
-       	$SU$PROG$ARGS < /dev/null | 2>&1 logger -p local0.debug -t $BASEPROG &
-	sleep 1
-}
+if [ $# != 1 ]; then
+   echo "Usage: GemBootStart [start|stop|server]"
+   exit 1
+fi
 
 case $1 in
-
-start)
-	case `hostname` in
-	archie)
-	      $0 stop
-
-              DEFAULT_CONFIG_DIR=$DHS_BASE/conf/archie
-              export DEFAULT_CONFIG_DIR
-              echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
-
-	      dhs_start $DHS_BASE/bin/master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsStatus
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsSim4Data
-	      sleep 10
-	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS
-	      dhs_start $DHS_BASE/bin/dhsData -debug MIN
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsQlServer -master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsCommand
-	      ;;
-	aladfar)
-	      $0 stop
-
-              DEFAULT_CONFIG_DIR=$DHS_BASE/conf/aladfar
-              export DEFAULT_CONFIG_DIR
-              echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
-
-	      dhs_start $DHS_BASE/bin/master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsStatus
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsSim4Data
-	      sleep 20
-	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS -noDb -temp /staging/temp -perm /staging/perm
-	      dhs_start $DHS_BASE/bin/dhsData -debug MIN -noDb -temp /staging/temp -perm /staging/perm
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsQlServer -master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsCommand
-	      ;;
-	draco)
-	      $0 stop
-
-              DEFAULT_CONFIG_DIR=$DHS_BASE/conf/draco
-              export DEFAULT_CONFIG_DIR
-              echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
-
-	      dhs_start $DHS_BASE/bin/master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsQlServer
-	      ;;
-	sabrina)
-	      $0 stop
-
-              DEFAULT_CONFIG_DIR=$DHS_BASE/conf/sabrina
-              export DEFAULT_CONFIG_DIR
-              echo "Using config files in \"$DEFAULT_CONFIG_DIR\""
-              cd /var/dhs 
-	      dhs_start $DHS_BASE/bin/master
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsStatus
-	      sleep 20
-	      #dhs_start $DHS_BASE/bin/dhsData -debug MIN NO_DHS
-	      dhs_start $DHS_BASE/bin/dhsData -debug MIN
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsStorage
-	      sleep 10
-	      dhs_start $DHS_BASE/bin/dhsCommand
-	      ;;
-	*)
-	      echo "DHS does not run on `hostname`"
-	      ;;
-	esac
-	;;
-stop)
-        $SU $DHS_BASE/scripts/dhsCleanup
-        ;;
-*)
-	echo "Usage: GemBootStart [ start | stop ]"
-	exit 1
-	;;
+   server)
+      GemBootStart stop
+      rm -fr $DHS_STAGING
+      mkdir -p $DHS_STAGING/temp $DHS_STAGING/perm
+      sleep 1
+      master &
+      sleep 1
+      dhsSim4Data &
+      sleep 1
+      dhsStatus -simulate FULL&
+      sleep 1
+      #dhsData -debug FULL NO_DHS -noServers -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm&
+      # -noDb implied -noParse, no need to specify it
+      # -noDb only works if -temp and -perm are given on the command line
+      dhsData -debug FULL NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm &
+      sleep 1
+      #dhsQlServer -master -debug NONE -simulate&
+      dhsQlServer -master -debug NONE&
+      ;;
+   start)
+      GemBootStart stop
+      master &
+      ;;
+   stop)
+      cleanup
+      find /tmp -type d -user $USER -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
+      ;;
+   *)
+      echo "Usage: GemBootStart [start|stop]"
+      exit 1
+      ;;
 esac
-

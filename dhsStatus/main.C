@@ -106,7 +106,9 @@ static char rcsid[] = "$Id: main.C,v 1.2 2002-11-27 17:15:09 brighton Exp $";
 
 #include "globals.H"
 #include "staDhs.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "staMonitor.H"    
 #include "subscriber.H"
 
@@ -208,7 +210,9 @@ int		main
 	    // Status to allow connections to the status server.
 	    //
 
+#if defined(EPICS_DHS)
 	    cStaChannel::init( status );
+#endif
 	    cStaDhs::isInit( true );
 
 
@@ -230,7 +234,9 @@ int		main
 	    // Close the channel access library.
 	    //
 
+#if defined(EPICS_DHS)
 	    cStaChannel::exit( status );
+#endif
 
 
 	    checkSubsystem( cDhsSubsystem::exit( ssStatus ), 

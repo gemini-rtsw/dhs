@@ -103,7 +103,9 @@ static char rcsid[] = "$Id: msg.C,v 1.1.1.1 2002-11-24 20:30:30 brighton Exp $";
 #include "dhsGenStatus.H"
 
 #include "globals.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 
 msgText( cStaStat, S_CA_CONNECT, P_DEBUG_FULL,
 	    "Creating channel access connection to record `%s'." );
@@ -250,7 +252,9 @@ void		cStaStat::flush
 	oldThread = thread;
 	thread = pthread_self();
 
+#if defined(EPICS_DHS)
 	cStaChannel::chFlush( status );
+#endif
 
 	thread = oldThread;
     }
@@ -425,7 +429,9 @@ bool		cStaStat::messageLog
 	oldThread = thread;
 	thread = pthread_self();
 	oldStatus = logStatus( false );
+#if defined(EPICS_DHS)
 	cStaChannel::logMessage( string, status );
+#endif
 	logStatus( oldStatus );
 	thread = oldThread;
     }
@@ -478,6 +484,7 @@ void		cStaStat::update
     cStaStat	&status		// (mod) Function return status.
 )
 {
+#if defined(EPICS_DHS)
     cStaChannel	*pChannel;
     pthread_t	oldThread;
     static pthread_t	
@@ -494,4 +501,5 @@ void		cStaStat::update
 
 	thread = oldThread;
     }
+#endif
 }

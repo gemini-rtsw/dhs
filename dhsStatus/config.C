@@ -77,7 +77,9 @@ extern "C"
 
 #include "globals.H"
 #include "staDhs.H"
+#if defined(EPICS_DHS)
 #include "staChannel.H"
+#endif
 #include "staMonitor.H"    
 
 //
@@ -137,7 +139,9 @@ void		configInit
     cDhs::config( status );
     checkSubsystem( cDhsSubsystem::config( ssStatus ), ssStatus, status, 
 	    return );
+#if defined(EPICS_DHS)
     cStaChannel::config( status );
+#endif
 
 
     //	
