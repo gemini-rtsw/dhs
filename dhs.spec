@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 8
+%define release 9
 %define repository gemini
 
 Summary: the dhs server
@@ -17,7 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top, gemini-setup, drama, dhsClient, skycat, epics-base, dhsClient
-BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, epics-base-devel, dhsClient-devel
+BuildRequires: gemini-build, gemini-top, imake, byacc, drama-devel, skycat-devel, epics-base-devel, dhsClient-devel
 Source0: %{name}-%{version}.tar.gz
 
 %define debug_package %{nil}
@@ -25,13 +25,20 @@ Source0: %{name}-%{version}.tar.gz
 %description
 Gemini Data Handling System server(s).
 
+%package devel
+Summary: dhs
+Group: Development/Gemini
+Requires: dhs
+%description devel
+dhs
+
 %prep
 %setup -q -n %name
 
 %build
 autoconf
 ./configure --prefix=$PWD/release
-gmake
+gmake install
 
 
 %install
@@ -54,8 +61,18 @@ rm -rf $RPM_BUILD_ROOT/opt/dhs
 
 %files
 %defattr(-,root,root,-)
-%{_prefix}/opt/%{name}
+%{_prefix}/opt/%{name}/bin
+%{_prefix}/opt/%{name}/lib
+%{_prefix}/opt/%{name}/man
+%{_prefix}/opt/%{name}/scripts
+%{_prefix}/opt/%{name}/config
+%{_prefix}/opt/%{name}/images
+%{_prefix}/opt/%{name}/sql
 %{_prefix}/etc/profile.d
+
+%files devel
+%defattr(-,root,root,-)
+%{_prefix}/opt/%{name}/include
 
 %changelog
 * Mon Jun 16 2008 Vasu Upadhya<vupadhya@gemini.edu> 2.0
