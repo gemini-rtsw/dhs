@@ -82,9 +82,9 @@ rm -rf $RPM_BUILD_ROOT/opt/dhs
 %{_prefix}/opt/%{name}/include
 
 %changelog
-* Mon Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 4.0
+* Tue Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 4.0
 - removed EPICS dependencies
-* Mon Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 3.0
+* Tue Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 3.0
 - added sample config that will work for a hostname called localhost
 * Mon Jun 16 2008 Vasu Upadhya<vupadhya@gemini.edu> 2.0
 - second rpm
