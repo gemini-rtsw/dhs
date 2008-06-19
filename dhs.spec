@@ -74,6 +74,7 @@ rm -rf $RPM_BUILD_ROOT/opt/dhs
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/images
 %{_prefix}/opt/%{name}/sql
+%{_prefix}/opt/%{name}/var
 %{_prefix}/etc/profile.d
 
 # fixme: doubt we'll ever need a dhs server development package
