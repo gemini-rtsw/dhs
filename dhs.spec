@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 13
+%define release 14
 %define repository gemini
 
 Summary: the dhs server
@@ -40,6 +40,7 @@ dhs
 %build
 autoconf
 ./configure --prefix=$PWD/release
+gmake
 gmake install
 
 
