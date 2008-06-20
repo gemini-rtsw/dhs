@@ -40,6 +40,7 @@ dhs
 %build
 autoconf
 ./configure --prefix=$PWD/release
+gmake
 gmake install
 
 
