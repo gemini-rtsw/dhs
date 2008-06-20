@@ -1,5 +1,5 @@
-export PATH=${PATH}:${GEMINI_TOP}/opt/dhs/bin
-export IMP_STARTUP=${GEMINI_TOP}/opt/dhs/var/imp_startup
-export DEFAULT_CONFIG_DIR=${GEMINI_TOP}/opt/dhs/var/default_config_dir
-export DHS_STAGING=${GEMINI_TOP}/opt/dhs/var/staging
-
+export DHS_BASE=${GEMINI_TOP}/opt/dhs
+export PATH=${PATH}:${DHAS_BASE}/bin
+export IMP_STARTUP=${DHS_BASE}/var/imp_startup
+export DEFAULT_CONFIG_DIR=${DHS_BASE}/var/default_config_dir
+export DHS_STAGING=${DHS_BASE}/var/staging
