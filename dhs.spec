@@ -46,26 +46,36 @@ gmake install
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
 cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
-cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
+cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 # FIXME:
 #  sample-config should supersede what's below - appears harmless, 
 # leaving it for now there's no executable in the var configuration 
 # so 0666 would be better - careful with directories though,leaving 
 # it for now
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
-chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
-chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
-mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
-chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
+#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
+#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
+#chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
+#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
+#chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
+
+%post
+chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
+chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/staging/*
+chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/*
+
+cd %{_prefix}/opt/%{name}/var
+if [ ! -d local-config-%{version} ]; then
+	cp -a sample-config local-config-%{version}
+	ln -snf local-config-%{version} local-config
+fi
 
 %clean
-rm -rf $RPM_BUILD_ROOT/opt/dhs
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
