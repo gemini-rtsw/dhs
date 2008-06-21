@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 16
+%define release 17
 %define repository gemini
 
 Summary: the dhs server
@@ -52,16 +52,6 @@ cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
-# FIXME:
-#  sample-config should supersede what's below - appears harmless, 
-# leaving it for now there's no executable in the var configuration 
-# so 0666 would be better - careful with directories though,leaving 
-# it for now
-#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
-#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
-#chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/imp_startup
-#mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
-#chmod -R 0777 $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/default_config_dir
 
 %post
 chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
