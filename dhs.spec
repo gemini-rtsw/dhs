@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, skycat, dhsClient
+Requires: gemini-top, gemini-setup, drama, skycat, dhsClient, xpa-tcl
 Requires: gemini-runtime
 BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel
 BuildRequires: gemini-build
