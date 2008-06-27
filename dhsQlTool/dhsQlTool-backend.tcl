@@ -75,7 +75,10 @@ package require Tclx
 package require Itcl
 package require Itk
 package require Iwidgets
-package require BLT
+## fkraemer: comment the following line out because of error message when 
+## importing Skycat (further down) that namespace blt already exists
+# package require BLT
+##
 package require tclxpa
 
 namespace import -force itcl::*
