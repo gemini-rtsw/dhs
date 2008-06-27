@@ -131,7 +131,7 @@ install_dirs: FORCE
 
 install_scripts: FORCE
 	-cp -uf ${SCRIPTS} release/scripts
-	(cd release/bin; ln -sf ../scripts/dhsQlTool; ln -sf ../scripts/dhsQlToolDS9)
+#	(cd release/bin; ln -sf ../scripts/dhsQlTool; ln -sf ../scripts/dhsQlToolDS9)
 
 install_config: FORCE
 	-cp -uf */*.config release/config

@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 19
+%define release 20
 %define repository gemini
 
 Summary: the dhs server
@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
 cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
-cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
+#cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 
