@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 20
+%define release 21
 %define repository gemini
 
 Summary: the dhs server
@@ -48,15 +48,23 @@ gmake install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d
 cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
+echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
+
+%postun
+/sbin/ldconfig
 
 %post
-chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
-chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/staging/*
-chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/*
+/sbin/ldconfig
+
+#chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
+## for now until we have a group gemsoft where these files could belong to
+chmod -R  777 %{_prefix}/opt/%{name}/var/sample-config
+#chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/*
 
 cd %{_prefix}/opt/%{name}/var
 if [ ! -d local-config-%{version} ]; then
@@ -79,6 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
 %{_prefix}/etc/profile.d
+%{_prefix}/etc/ld.so.conf.d
 
 # fixme: doubt we'll ever need a dhs server development package
 %files devel
