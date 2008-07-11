@@ -91,6 +91,9 @@ SCRIPTS = \
 	scripts/MakeUserMedia \
 	scripts/newsyslog \
 	dhsQlTool/dhsQlTool \
+	dhsQlTool/qlToolInst \
+	dhsQlTool/qlToolWFS \
+	dhsQlTool/qlToolAltair \
 	dhsQlToolDS9/dhsQlToolDS9
 
 RELEASE_DIRS = \
