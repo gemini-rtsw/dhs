@@ -90,6 +90,9 @@ The following changes were not required for compiling, but for running:
   to avoid error deleting a mutex
 
 * In Tcl files: replaced 'info objects' with 'itcl_info objects'
+--- fkraemer
+* In Tcl files: replaced 'itcl_info objects' with 'find objects' since
+itcl_info is deprecated
 
 * In Tcl files, removed calls to 'winfo command' (no longer supported, 
   not needed).

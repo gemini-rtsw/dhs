@@ -53,7 +53,7 @@
 #***********************************************************************
 #
 
-set dhs_base $env(DHS_BASE)
+set dhs_base $::env(DHS_BASE)
 set dhs_library $dhs_base/lib/dhsQlTool
 set _qltHelpDir $dhs_library/html
 lappend auto_path $dhs_base/lib $dhs_library

@@ -429,7 +429,7 @@ body	cQltFrame::checkFrame {
     # Look for an existing object for this frame.
     #
 
-    set frame [ itcl_info objects $objectName -class cQltFrame ] 
+    set frame [ find objects $objectName -class cQltFrame ] 
 
 
     #
@@ -503,7 +503,7 @@ body		cQltFrame::deleteDs {
     # Loop through all known frames.
     #
 
-    foreach frame [ itcl_info objects -class cQltFrame ] {
+    foreach frame [ find objects -class cQltFrame ] {
 	#
 	# If the dataset name of the frame matches the dataset being
 	# deleted, delete the frame.
@@ -597,7 +597,7 @@ body		cQltFrame::frameInfo {
 
 body		cQltFrame::frameList {
 } {
-    return [ lsort [ itcl_info objects -class cQltFrame ] ]
+    return [ lsort [ find objects -class cQltFrame ] ]
 }
 
 #

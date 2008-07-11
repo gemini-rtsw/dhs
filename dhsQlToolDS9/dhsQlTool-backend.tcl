@@ -80,7 +80,8 @@ package require Tclx
 package require Itcl
 package require Itk
 package require Iwidgets
-package require BLT
+## fkraemer - commenting out because already loaded elsewhere
+# package require BLT
 
 namespace import -force itcl::*
 namespace import -force itk::*
