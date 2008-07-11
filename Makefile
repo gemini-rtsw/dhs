@@ -90,9 +90,9 @@ SCRIPTS = \
 	scripts/MakePrImages \
 	scripts/MakeUserMedia \
 	scripts/newsyslog \
-	scripts/qlToolInst \
-	scripts/qlToolWFS \
-	scripts/qlToolAltair \
+	scripts/qlToolInst.sh \
+	scripts/qlToolWFS.sh \
+	scripts/qlToolAltair.sh \
 	dhsQlTool/dhsQlTool \
 	dhsQlToolDS9/dhsQlToolDS9
 
