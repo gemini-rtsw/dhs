@@ -18,7 +18,7 @@ BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top, gemini-setup, drama, skycat, dhsClient, xpa-tcl
 Requires: gemini-runtime
-BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel
+BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel, qlplugins
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
