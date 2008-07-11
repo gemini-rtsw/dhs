@@ -90,10 +90,10 @@ SCRIPTS = \
 	scripts/MakePrImages \
 	scripts/MakeUserMedia \
 	scripts/newsyslog \
+	scripts/qlToolInst \
+	scripts/qlToolWFS \
+	scripts/qlToolAltair \
 	dhsQlTool/dhsQlTool \
-	dhsQlTool/qlToolInst \
-	dhsQlTool/qlToolWFS \
-	dhsQlTool/qlToolAltair \
 	dhsQlToolDS9/dhsQlToolDS9
 
 RELEASE_DIRS = \
