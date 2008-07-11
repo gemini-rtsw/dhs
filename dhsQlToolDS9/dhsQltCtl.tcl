@@ -370,7 +370,7 @@ itcl::class CDhsQltCtl {
 
     			constructor { args } {}
     			destructor { 
-			   if { [ itcl_info objects ::_qltHelp ] != "" } {
+			   if { [ find objects ::_qltHelp ] != "" } {
 			       delete object _qltHelp
 			   }
 			    exit 

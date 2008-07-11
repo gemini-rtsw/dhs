@@ -63,14 +63,31 @@ echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf
 
 #chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
 ## for now until we have a group gemsoft where these files could belong to
-chmod -R  777 %{_prefix}/opt/%{name}/var/sample-config
 #chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/*
 
 cd %{_prefix}/opt/%{name}/var
 if [ ! -d local-config-%{version} ]; then
 	cp -a sample-config local-config-%{version}
+	cp -a sample-config auto-config
 	ln -snf local-config-%{version} local-config
 fi
+
+chmod -R  777 %{_prefix}/opt/%{name}/var
+
+cd %{_prefix}/opt/%{name}/var/sample-config/default_config_dir
+for i in `ls`; do 
+sed \
+-e 's/STORE_HOST/dhsstorage/g' \
+-e 's/OLDP_HOST/dhsoldp/g' \
+-e 's/STA_HOST/dhsstatus/g' \
+-e 's/QLS_HOST/dhsqls/g' \
+-e 's/CMD_HOST/dhscmd/g' \
+-e 's/TOOL1_HOST/dhstool1/g' \
+-e 's/OCS_HOST/dhsocs/g' \
+-e 's/SIM_HOST/dhssad/g' \
+-e 's/DTS_HOST/dhsdtsremote/g' \
+< $i > ../../auto-config/default_config_dir/$i
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
