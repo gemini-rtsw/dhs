@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 29
+%define release 30
 %define repository gemini
 
 Summary: the dhs server
@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, skycat, dhsClient, xpa-tcl, ocswish, qlplugins
+Requires: gemini-top, gemini-setup, drama, skycat, dhsClient, xpa-tcl, qlplugins
 Requires: gemini-runtime
 BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel, qlplugins
 BuildRequires: gemini-build
@@ -32,6 +32,20 @@ Summary: dhs
 Group: Development/Gemini
 Requires: dhs
 %description devel
+dhs
+
+%package QlTools
+Summary: dhs
+Group: Development/Gemini
+Requires: ocswish drama
+%description QlTools
+dhs
+
+%package Console
+Summary: dhs
+Group: Development/Gemini
+Requires: ocswish drama
+%description Console
 dhs
 
 %prep
@@ -96,13 +110,45 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 # fixme: looks like there's more than we need listed here - cleanup
 %{_prefix}/opt/%{name}/bin
-%{_prefix}/opt/%{name}/lib
+%{_prefix}/opt/%{name}/lib/*.a
+%{_prefix}/opt/%{name}/lib/*.so
+%{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/man
-%{_prefix}/opt/%{name}/scripts
+%{_prefix}/opt/%{name}/scripts/dhsCleanup
+%{_prefix}/opt/%{name}/scripts/GemBootStart
+%{_prefix}/opt/%{name}/scripts/MakeClassicalMedia
+%{_prefix}/opt/%{name}/scripts/MakePrImages
+%{_prefix}/opt/%{name}/scripts/MakeUserMedia
+%{_prefix}/opt/%{name}/scripts/newsyslog
+%{_prefix}/opt/%{name}/scripts/TestBootStart
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/images
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
+%{_prefix}/etc/profile.d
+%{_prefix}/etc/ld.so.conf.d
+
+%files QlTools
+%defattr(-,root,root,-)
+%{_prefix}/opt/%{name}/scripts/dhsQlTool
+%{_prefix}/opt/%{name}/scripts/qlToolInst.sh
+%{_prefix}/opt/%{name}/scripts/qlToolAltair.sh
+%{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
+%{_prefix}/opt/%{name}/scripts/dhsQlToolDS9
+%{_prefix}/opt/%{name}/scripts/GemBootStart
+%{_prefix}/opt/%{name}/lib/*.a
+%{_prefix}/opt/%{name}/lib/*.so
+%{_prefix}/opt/%{name}/lib/*.tcl
+%{_prefix}/opt/%{name}/lib/dhsQlTool*
+%{_prefix}/etc/profile.d
+%{_prefix}/etc/ld.so.conf.d
+
+%files Console
+%defattr(-,root,root,-)
+%{_prefix}/opt/%{name}/lib/*.a
+%{_prefix}/opt/%{name}/lib/*.so
+%{_prefix}/opt/%{name}/lib/*.tcl
+%{_prefix}/opt/%{name}/lib/dhsConsole
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 
