@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 30
+%define release 31
 %define repository gemini
 
 Summary: the dhs server
@@ -16,9 +16,9 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, skycat, dhsClient, xpa-tcl, qlplugins
+Requires: gemini-top, gemini-setup, drama, dhsClient, xpa-tcl
 Requires: gemini-runtime
-BuildRequires: gemini-top, imake, byacc, drama-devel, skycat-devel, dhsClient-devel, qlplugins
+BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
@@ -37,13 +37,17 @@ dhs
 %package QlTools
 Summary: dhs
 Group: Development/Gemini
-Requires: ocswish drama
+Requires: gemini-runtime
+BuildRequires: gemini-build
+Requires: ocswish drama skycat xpa-tcl qlplugins
+BuildRequires: imake, byacc, drama-devel, skycat-devel, dhsClient-devel, qlplugins
 %description QlTools
 dhs
 
 %package Console
 Summary: dhs
 Group: Development/Gemini
+Requires: gemini-runtime
 Requires: ocswish drama
 %description Console
 dhs
@@ -158,6 +162,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/include
 
 %changelog
+* Wed Sep 10 2008 Felix Kraemer <fkraemer@gemini.edu> 4.0
+- seperated out QlTools and Console (ever needed??) in extra rpms
 * Tue Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 4.0
 - removed EPICS dependencies
 * Tue Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 3.0
