@@ -16,9 +16,9 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, dhsClient, xpa-tcl
+Requires: gemini-top, gemini-setup, drama, dhsClient, xpa-tcl, cfitsio
 Requires: gemini-runtime
-BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel
+BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
@@ -39,8 +39,8 @@ Summary: dhs
 Group: Development/Gemini
 Requires: gemini-runtime
 BuildRequires: gemini-build
-Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets
-BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins
+Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets cfitsio
+BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
 %description QlTools
 dhs
 
