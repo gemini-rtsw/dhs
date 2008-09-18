@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 31
+%define release 32
 %define repository gemini
 
 Summary: the dhs server
@@ -39,8 +39,8 @@ Summary: dhs
 Group: Development/Gemini
 Requires: gemini-runtime
 BuildRequires: gemini-build
-Requires: ocswish drama skycat xpa-tcl qlplugins
-BuildRequires: imake, byacc, drama-devel, skycat-devel, dhsClient-devel, qlplugins
+Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets
+BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins
 %description QlTools
 dhs
 
@@ -135,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %files QlTools
 %defattr(-,root,root,-)
 %{_prefix}/opt/%{name}/scripts/dhsQlTool
+%{_prefix}/opt/%{name}/bin/dhsQlServer
 %{_prefix}/opt/%{name}/scripts/qlToolInst.sh
 %{_prefix}/opt/%{name}/scripts/qlToolAltair.sh
 %{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
