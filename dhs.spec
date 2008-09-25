@@ -22,7 +22,7 @@ BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-d
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
-%define debug_package %{nil}
+%define debug_package
 
 %description
 Gemini Data Handling System server(s).
