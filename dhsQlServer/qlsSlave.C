@@ -160,7 +160,7 @@ static char rcsid[] = "$Id: qlsSlave.C,v 1.1.1.1 2002-11-24 20:29:23 brighton Ex
     cQlsStatus	status;
 
 
-    lock();
+    //lock();
 
 
     //

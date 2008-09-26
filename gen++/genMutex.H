@@ -186,7 +186,6 @@ class cMutex
 {
     int		s;
 
-
     if ( ( s = pthread_mutex_destroy( &mutex ) ) != 0 )
     {
 	throw s;
