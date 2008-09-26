@@ -72,7 +72,7 @@ cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
-cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
+cp -a conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
 
 
@@ -88,8 +88,13 @@ echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf
 cd %{_prefix}/opt/%{name}/var
 if [ ! -d local-config-%{version} ]; then
 	cp -a sample-config local-config-%{version}
-	ln -snf local-config-%{version} local-config
 fi
+if [ ! -d `/bin/hostname` ]; then
+	ln -snf local-config-%{version} local-config
+else
+	ln -snf `/bin/hostname` local-config
+fi
+
 rm -rf auto-config
 cp -a sample-config auto-config
 
