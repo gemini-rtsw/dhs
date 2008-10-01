@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 35
+%define release 36
 %define repository gemini
 
 Summary: the dhs server
@@ -39,7 +39,7 @@ Summary: dhs
 Group: Development/Gemini
 Requires: gemini-runtime
 BuildRequires: gemini-build
-Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets cfitsio
+Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
 %description QlTools
 dhs
@@ -68,12 +68,15 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/tmp
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
-cp -a sample-config $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
+cp -a conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
+
+#cp -a conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
 
 
 %postun
@@ -88,8 +91,13 @@ echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf
 cd %{_prefix}/opt/%{name}/var
 if [ ! -d local-config-%{version} ]; then
 	cp -a sample-config local-config-%{version}
-	ln -snf local-config-%{version} local-config
 fi
+if [ ! -d `/bin/hostname` ]; then
+	ln -sn local-config-%{version} local-config &>/dev/null
+else
+	ln -sn `/bin/hostname` local-config &>/dev/null
+fi
+
 rm -rf auto-config
 cp -a sample-config auto-config
 
@@ -109,6 +117,7 @@ chmod 755 %{_prefix}/tmp/sedscript.tmp
 for i in `ls`; do 
 %{_prefix}/tmp/sedscript.tmp < $i > %{_prefix}/opt/%{name}/var/auto-config/default_config_dir/$i
 done
+cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname`
 rm -f %{_prefix}/tmp/sedscript.tmp 
 rm -f %{_prefix}/tmp/dhs.conf*
 #for i in `ls`; do 
@@ -147,6 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/images
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
+#%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
@@ -167,6 +177,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
+#%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
@@ -179,6 +190,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
+#%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
