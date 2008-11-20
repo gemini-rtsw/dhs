@@ -766,11 +766,11 @@ body	cQlServer::initialize {
     # XXX allan: On linux, hostid has a "0x" prefix, which needs to be removed!
     regsub 0x [ exec hostid ] {} hostid
 
-    set qlsDestName [exec hostname]:$qlsServerName.$hostid
+    set qlsDestName [exec hostname -s]:$qlsServerName.$hostid
     cs qlsClientStream set destName value $qlsDestName
 
     if { [ catch { cs qlsClientStream post} ] != 0 } {
-	set qlsDestName [exec hostname]:$qlsServerName
+	set qlsDestName [exec hostname -s]:$qlsServerName
 	cs qlsClientStream set destName value $qlsDestName
 	cs qlsClientStream post
     }
