@@ -74,7 +74,7 @@ set debug 0
 #
 
 set appName	dhsQlt
-set uniqueName	[join "dhsQlc [ exec hostname ] [ pid ]" "" ]
+set uniqueName	[join "dhsQlc [ exec hostname -s ] [ pid ]" "" ]
 
 package require Tclx
 package require Itcl

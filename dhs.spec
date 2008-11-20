@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.0
-%define release 37
+%define release 38
 %define repository gemini
 
 Summary: the dhs server
