@@ -56,11 +56,12 @@ dhs
 %setup -q -n %name
 
 %build
+cd dhs
 autoconf
-./configure --prefix=$PWD/release
+./configure --prefix=$PWD/../release
 gmake
 gmake install
-
+cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
