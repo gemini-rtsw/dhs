@@ -71,10 +71,10 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/tmp
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
-cp -a conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
+cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
-cp -a dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
-cp -a conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
+cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
+cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
 
 #cp -a conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
