@@ -33,9 +33,9 @@ case $1 in
       cleanup
       find /tmp -type d -user $DHS_USER -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
       rm -fr $DHS_STAGING
-      for i in dhsSim4Data dhsStatus dhsData dhsQlServer; do
-		killall $i
-      done
+#     for i in dhsSim4Data dhsStatus dhsData dhsQlServer; do
+#		killall $i
+#     done
       ;;
    *)
       echo "Usage: GemBootStart [server|start|stop]"

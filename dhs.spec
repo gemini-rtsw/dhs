@@ -78,9 +78,10 @@ cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
 
-cp -a conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
+cp -a dhs/conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
 
 cp -a etc/dhs.init.d $RPM_BUILD_ROOT/etc/init.d/dhs
+chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
 
 %postun
 /sbin/ldconfig
@@ -159,7 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/images
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
-#%{_prefix}/opt/%{name}/etc/
+%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
@@ -181,7 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
-#%{_prefix}/opt/%{name}/etc/
+%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
@@ -195,10 +196,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
-#%{_prefix}/opt/%{name}/etc/
+%{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/etc/init.d/dhs
 
 # fixme: doubt we'll ever need a dhs server development package
 %files devel

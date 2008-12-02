@@ -16,8 +16,8 @@ DHS_SERVERS=$DHS_BASE/etc/server.conf.$GEMINI_SITE
 
 start()
 {
-	hostname=`hostnmae -s`
-	if [ grep $hostname $DHS_SERVERS != "" ]; then
+	hostname=`hostname -s`
+	if [ `grep $hostname $DHS_SERVERS` != "" ]; then
 		echo "Starting dhs services (master version)"
 		su -c "GemBootStart server" $DHS_USER
 	else
