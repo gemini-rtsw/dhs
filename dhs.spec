@@ -70,15 +70,17 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/tmp
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
-cp -a release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
 
-#cp -a conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
+cp -a conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
 
+cp -a etc/dhs.init.d $RPM_BUILD_ROOT/etc/init.d/dhs
 
 %postun
 /sbin/ldconfig
@@ -118,7 +120,7 @@ chmod 755 %{_prefix}/tmp/sedscript.tmp
 for i in `ls`; do 
 %{_prefix}/tmp/sedscript.tmp < $i > %{_prefix}/opt/%{name}/var/auto-config/default_config_dir/$i
 done
-cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname`
+cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname -s`
 rm -f %{_prefix}/tmp/sedscript.tmp 
 rm -f %{_prefix}/tmp/dhs.conf*
 #for i in `ls`; do 
@@ -161,6 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/etc/init.d/dhs
 
 %files QlTools
 %defattr(-,root,root,-)
@@ -182,6 +185,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/etc/init.d/dhs
 
 %files Console
 %defattr(-,root,root,-)
