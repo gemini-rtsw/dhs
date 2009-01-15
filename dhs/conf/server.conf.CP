@@ -1,3 +1,3 @@
 # specify all servernames in this file
-suedbaden
-archie
+sbfdhstest01
+sbfdhs01

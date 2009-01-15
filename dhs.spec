@@ -85,9 +85,17 @@ chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
 
 %postun
 /sbin/ldconfig
+if [ "$1" = "0" ] ; then  #last uninstall
+	userdel dhsuser
+fi
 
 %post
 /sbin/ldconfig
+
+# create dhsuser account
+if [ "`cat /etc/passwd | grep dhsuser`" = "" ] ; then 
+	useradd -u 2945 -G gemini -d /gemsoft/opt/dhs/ -M dhsuser
+fi
 
 #chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
 ## for now until we have a group gemsoft where these files could belong to
@@ -105,7 +113,9 @@ fi
 rm -rf auto-config
 cp -a sample-config auto-config
 
-chmod -R  777 %{_prefix}/opt/%{name}/var
+chown -R dhsuser %{_prefix}/opt/%{name}/var
+chgrp -R gemini %{_prefix}/opt/%{name}/var
+chmod -R 775 %{_prefix}/opt/%{name}/var
 
 ## create auto configuration based on dhs.conf.$GEMINI_SITE
 if [ "`/sbin/ifconfig | egrep 'addr:10\.'`" != "" ]; then

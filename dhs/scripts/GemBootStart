@@ -8,8 +8,9 @@ fi
 case $1 in
    server)
       GemBootStart stop &>/dev/null
-      rm -fr $DHS_STAGING
-      mkdir -p $DHS_STAGING/temp $DHS_STAGING/perm
+      rm -fr $DHS_STAGING/temp
+      mkdir -p $DHS_STAGING/temp 
+      [ -d $DHS_STAGING/perm ] || mkdir -p $DHS_STAGING/perm
       sleep 1
       master &
       sleep 1
@@ -32,7 +33,7 @@ case $1 in
    stop)
       cleanup
       find /tmp -type d -user $DHS_USER -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
-      rm -fr $DHS_STAGING
+      rm -fr $DHS_STAGING/temp
 #     for i in dhsSim4Data dhsStatus dhsData dhsQlServer; do
 #		killall $i
 #     done
