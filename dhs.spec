@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama, dhsClient, xpa-tcl, cfitsio
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio
 Requires: gemini-runtime
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
@@ -39,7 +39,7 @@ Summary: dhs
 Group: Development/Gemini
 Requires: gemini-runtime
 BuildRequires: gemini-build
-Requires: ocswish drama skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
+Requires: ocswish drama >= 1.5.2-9.el5.2.gemini skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
 %description QlTools
 dhs
@@ -48,7 +48,7 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 Requires: gemini-runtime
-Requires: ocswish drama
+Requires: ocswish drama >= 1.5.2-9.el5.2.gemini
 %description Console
 dhs
 
@@ -131,7 +131,7 @@ chmod 755 %{_prefix}/tmp/sedscript.tmp
 for i in `ls`; do 
 %{_prefix}/tmp/sedscript.tmp < $i > %{_prefix}/opt/%{name}/var/auto-config/default_config_dir/$i
 done
-cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname -s`
+#cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname -s`
 rm -f %{_prefix}/tmp/sedscript.tmp 
 rm -f %{_prefix}/tmp/dhs.conf*
 #for i in `ls`; do 
