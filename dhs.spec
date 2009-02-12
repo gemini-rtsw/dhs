@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.1
-%define release 1
+%define release 2
 %define repository gemini
 
 Summary: the dhs server
@@ -189,7 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsQlTool*
-%{_prefix}/opt/%{name}/var/sample-config/imp_startup
+#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/etc/
@@ -204,7 +204,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
-%{_prefix}/opt/%{name}/var/sample-config/imp_startup
+#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
