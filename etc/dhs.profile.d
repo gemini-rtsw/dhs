@@ -5,7 +5,8 @@ export IMP_SCRATCH=${DHS_BASE}/var/tmp
 export IMP_KEY=0xffff
 export DEFAULT_CONFIG_DIR=${DHS_BASE}/var/local-config/default_config_dir
 export DHS_STAGING=${DHS_BASE}/var/local-config/staging
-export DHS_USER=dhsuser
+#export DHS_USER=dhsuser
+export DHS_USER=software
 
 if [ ! -e $IMP_SCRATCH ]; then
 	mkdir -p ${IMP_SCRATCH}
