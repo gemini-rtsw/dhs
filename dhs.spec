@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.1
-%define release 2
+%define release 3
 %define repository gemini
 
 Summary: the dhs server
@@ -69,12 +69,14 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/tmp
+mkdir -p $RPM_BUILD_ROOT/tmp
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 mkdir -p $RPM_BUILD_ROOT/etc/init.d
 cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 #cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
+cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
 
@@ -82,6 +84,7 @@ cp -a dhs/conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
 
 cp -a etc/dhs.init.d $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
+chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 
 %postun
 /sbin/ldconfig
@@ -90,63 +93,10 @@ if [ "$1" = "0" ] ; then  #last uninstall
 fi
 
 %post
-/sbin/ldconfig
+/tmp/createDhsConfigDirs.sh %{version}
 
-# create dhsuser account
-if [ "`cat /etc/passwd | grep dhsuser`" = "" ] ; then 
-	useradd -u 2945 -G gemini -d /gemsoft/opt/dhs/ -M dhsuser
-fi
-
-#chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/imp_startup/*
-## for now until we have a group gemsoft where these files could belong to
-#chmod  0666 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/*
-cd %{_prefix}/opt/%{name}/var
-if [ ! -d local-config-%{version} ]; then
-	cp -a sample-config local-config-%{version}
-fi
-if [ ! -d `/bin/hostname` ]; then
-	ln -sn local-config-%{version} local-config &>/dev/null
-else
-	ln -sn `/bin/hostname` local-config &>/dev/null
-fi
-
-rm -rf auto-config
-cp -a sample-config auto-config
-
-chown -R dhsuser %{_prefix}/opt/%{name}/var
-chgrp -R gemini %{_prefix}/opt/%{name}/var
-chmod -R 775 %{_prefix}/opt/%{name}/var
-
-## create auto configuration based on dhs.conf.$GEMINI_SITE
-if [ "`/sbin/ifconfig | egrep 'addr:10\.'`" != "" ]; then
-    export GEMINI_SITE=MK
-else
-    export GEMINI_SITE=CP
-fi
-sed -e '/#.*/ d' -e '/^$/ d' < %{_prefix}/tmp/dhs.conf.${GEMINI_SITE} > %{_prefix}/tmp/dhs.conf.tmp
-cd %{_prefix}/opt/%{name}/var/sample-config/default_config_dir
-echo sed \\ > %{_prefix}/tmp/sedscript.tmp
-awk '{printf "-e \"s/%s/%s/g\" \\\n", $1,$2}' %{_prefix}/tmp/dhs.conf.tmp >> %{_prefix}/tmp/sedscript.tmp
-chmod 755 %{_prefix}/tmp/sedscript.tmp
-for i in `ls`; do 
-%{_prefix}/tmp/sedscript.tmp < $i > %{_prefix}/opt/%{name}/var/auto-config/default_config_dir/$i
-done
-#cp %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.localhost %{_prefix}/opt/%{name}/var/auto-config/imp_startup/IMP_Startup.`/bin/hostname -s`
-rm -f %{_prefix}/tmp/sedscript.tmp 
-rm -f %{_prefix}/tmp/dhs.conf*
-#for i in `ls`; do 
-#sed \
-#-e 's/STORE_HOST/dhsstorage/g' \
-#-e 's/OLDP_HOST/dhsoldp/g' \
-#-e 's/STA_HOST/dhsstatus/g' \
-#-e 's/QLS_HOST/dhsqls/g' \
-#-e 's/CMD_HOST/dhscmd/g' \
-#-e 's/TOOL1_HOST/dhstool1/g' \
-#-e 's/OCS_HOST/dhsocs/g' \
-#-e 's/SIM_HOST/dhssad/g' \
-#-e 's/DTS_HOST/dhsdtsremote/g' \
-#< $i > ../../auto-config/default_config_dir/$i
-#done
+%post QlTools
+/tmp/createDhsConfigDirs.sh %{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -174,6 +124,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/tmp/createDhsConfigDirs.sh
 /etc/init.d/dhs
 
 %files QlTools
@@ -196,6 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/tmp/createDhsConfigDirs.sh
 /etc/init.d/dhs
 
 %files Console
@@ -210,6 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
+/tmp/createDhsConfigDirs.sh
 /etc/init.d/dhs
 
 # fixme: doubt we'll ever need a dhs server development package
