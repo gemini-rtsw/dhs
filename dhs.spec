@@ -17,7 +17,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio
-Requires: gemini-runtime
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -37,7 +36,6 @@ dhs
 %package QlTools
 Summary: dhs
 Group: Development/Gemini
-Requires: gemini-runtime
 BuildRequires: gemini-build
 Requires: ocswish drama >= 1.5.2-9.el5.2.gemini skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
@@ -47,7 +45,6 @@ dhs
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: gemini-runtime
 Requires: ocswish drama >= 1.5.2-9.el5.2.gemini
 %description Console
 dhs
