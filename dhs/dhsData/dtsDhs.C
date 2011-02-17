@@ -1522,10 +1522,11 @@ void		cDtsDhs::sizeGet
 	    //  format.  The root will be the datasetName (without any
 	    //  extensions added).
 	    //
-
+	    rootName[0] = '\0'; 
+	    format = ' '; // XXX allan TODO FIXME
+	    comp = ' '; // XXX allan TODO FIXME
 	    (void)cDtsDbManager::nameInfo( status, name, rootName, 
 		    &format, &comp );
-		
 
 	    //
 	    //  Look for the dataset in the list.
