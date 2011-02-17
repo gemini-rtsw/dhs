@@ -197,7 +197,7 @@ proc 	commandMenu {
     subsystem 
     dhsCommandObj
 } {
-    global _dhgDefaults
+    global ::_dhgDefaults
 
     set i 0 
     foreach command $_dhgDefaults($subsystem,commands) {
@@ -312,7 +312,7 @@ proc createAbout {
     # create the About window.
     #
 
-    messagedialog $window 						\
+    iwidgets::messagedialog $window 						\
 	-image dhsGemini						\
 	-text "Gemini Telescopes Data Handling System\n\n\n$version" 	\
 	-imagepos n							\
@@ -382,8 +382,8 @@ proc	displayResource {
    statusObj
    { parent "" } 
 } {
-    global resStatus
-    global _dhgDefaults
+    global ::resStatus
+    global ::_dhgDefaults
 
     #
     # Determine the dialog path name
@@ -437,7 +437,6 @@ proc	displayResource {
     # Place Max, Used, Available, and Capacity on separate lines.
     #
 
-    global resStatus
     $statusObj link res${resNum}Name resStatus(name$resNum)
     set sBox [ cStatusBox [ $window childsite ].sBox$resNum 	\
 	   -borderwidth 2 -relief groove -height 250 -width 100	\
@@ -445,7 +444,7 @@ proc	displayResource {
 	   -labelvariable resStatus(name$resNum) ]
     $statusObj link res${resNum}Fullname resStatus(fullname$resNum)
 
-    $sBox add EntryField fullname -textfont $_dhgDefaults(entryFont)	\
+    $sBox add entryfield fullname -textfont $_dhgDefaults(entryFont)	\
     	-labeltext "Full Name:" 					\
     	-justify right							\
 	-relief ridge							\
@@ -464,7 +463,7 @@ proc	displayResource {
     } 
 
     $statusObj link res${resNum}Type resStatus(type$resNum)
-    $sBox add EntryField type -textfont $_dhgDefaults(entryFont)	\
+    $sBox add entryfield type -textfont $_dhgDefaults(entryFont)	\
     	-labeltext "Type:" 						\
     	-justify right							\
 	-relief ridge						\
@@ -474,7 +473,7 @@ proc	displayResource {
 	"The type of resource being monitored."
 
     $statusObj link res${resNum}Units resStatus(units$resNum)
-    $sBox add EntryField units 	-labeltext "Units:"			\
+    $sBox add entryfield units 	-labeltext "Units:"			\
     	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -485,7 +484,7 @@ proc	displayResource {
 	"The units the max, used, and available values are presented in."
 
     $statusObj link res${resNum}Max resStatus(max$resNum)
-    $sBox add EntryField max -labeltext "Maximum:" 			\
+    $sBox add entryfield max -labeltext "Maximum:" 			\
 	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -495,7 +494,7 @@ proc	displayResource {
 	"The maximum amount available of a resource."
 
     $statusObj link res${resNum}Used resStatus(used$resNum)
-    $sBox add EntryField used -labeltext "Used:" 			\
+    $sBox add entryfield used -labeltext "Used:" 			\
 	-justify right							\
 	-relief ridge						\
 	-state disabled							\
@@ -504,7 +503,7 @@ proc	displayResource {
     [ winfo toplevel $parent ] add_short_help [ $sBox component used ]	\
 	"The current amount of a resource that is used."
 
-    $sBox add EntryField avail -labeltext "Available:" 			\
+    $sBox add entryfield avail -labeltext "Available:" 			\
 	-justify right 							\
 	-relief ridge							\
 	-state disabled							\
@@ -513,7 +512,7 @@ proc	displayResource {
     [ winfo toplevel $parent ] add_short_help [ $sBox component avail ]	\
 	"The current amount of a resource that is available."
 
-    $sBox add EntryField cap -labeltext "Capacity:" 			\
+    $sBox add entryfield cap -labeltext "Capacity:" 			\
 	-justify right 							\
 	-relief ridge							\
 	-state disabled							\
@@ -619,9 +618,9 @@ proc	displaySubsystem  {
     {descList ""} 
     {helpMsgs ""} 
 } {
-    global dhgDir
-    global _dhgDefaults
-    global ${subsystem}Status
+    global ::dhgDir
+    global ::_dhgDefaults
+    global ::${subsystem}Status
 
 
     # 
@@ -762,7 +761,7 @@ proc	displaySubsystem  {
     
     cLed $top.led							\
 	-colorassoc {{green good} {yellow warning} {red bad} {grey70 *}} \
-	-ledvariable "@scope :: ${subsystem}Status(health)"		\
+	-ledvariable "${subsystem}Status(health)"		\
 	-ledwidth 10						
     set ${lowerSub}Status(health) [ _dhgStatus value ${lowerSub}Health ]
     _dhgStatus link ${lowerSub}Health ${lowerSub}Status(health) 
@@ -804,8 +803,8 @@ proc	displaySubsystem  {
 		-editable false						\
 		-labeltext [ lindex $descList $i ]             		\
 		-relief ridge						\
-		-textfont $_dhgDefaults(EntryFont)			\
 		-unique false
+#		-textfont $_dhgDefaults(EntryFont)			
 
 	    #
 	    # Need to adjust OPtions menu
@@ -816,7 +815,7 @@ proc	displaySubsystem  {
 		-command "getLogLength $logWin \"$upperSub Health Description\""
 
 	} else {
-	    $top.$lowerSub add EntryField $status			\
+	    $top.$lowerSub add entryfield $status			\
 		-labeltext [ lindex $descList $i ]             		\
 		-relief ridge						\
 		-state disabled						\
@@ -998,7 +997,7 @@ proc getLogLength {
 #
 proc simMode {
 } {           
-    global simulate
+    global ::simulate
  
     if { "$simulate" == "FULL" || "$simulate" == "FAST" } {
         return 1

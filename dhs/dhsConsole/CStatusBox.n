@@ -387,9 +387,9 @@ methods.
 .DS
  CStatusBox .s -height 200 -width 100 -borderwidth 2 -relief ridge \\
      -labeltext "test"
- .s add entryField item1 -labeltext "item 1:" -textvariable myVar
- .s add labeledWidget item2 -labeltext "label widget:"
- .s add optionMenu item5 -items "NONE MIN FULL" 		\\
+ .s add entryfield item1 -labeltext "item 1:" -textvariable myVar
+ .s add labeledwidget item2 -labeltext "label widget:"
+ .s add optionmenu item5 -items "NONE MIN FULL" 		\\
      -labeltext "Debug Level:"
 pack .s -fill both -expand y
 .DE
