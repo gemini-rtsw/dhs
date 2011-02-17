@@ -21,7 +21,9 @@ BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-d
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
-%define debug_package
+# stop rpm from stripping binaries (for debugging)
+%define debug_package %{nil}
+%define __strip /bin/true
 
 %description
 Gemini Data Handling System server(s).
@@ -71,7 +73,6 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 mkdir -p $RPM_BUILD_ROOT/etc/init.d
 cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
-#cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
@@ -137,7 +138,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsQlTool*
-#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/etc/
@@ -153,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
-#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
+%{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
