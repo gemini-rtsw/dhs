@@ -421,13 +421,13 @@ body 	CLabeledWidget::destructor {} {
     #
 
     if { "$widgetVariable" != "" } {
-	set traceInfo [ namespace eval :: "trace vinfo \"$widgetVariable\"" ]
+	set traceInfo [ uplevel #0 [list trace info variable $widgetVariable] ]
 
 	foreach traceItem $traceInfo {
 	    set cmd [ lindex $traceItem 1 ]
 	    if { "[ code $this updateWidget ]" == "$cmd" } {
 		set op [ lindex $traceItem 0 ]
-		namespace eval :: "trace vdelete \"$widgetVariable\" $op \"$cmd\""
+		uplevel #0 [list trace remove variable $widgetVariable $op $cmd]
 	    }
 	}
     }
@@ -515,7 +515,7 @@ configbody CLabeledWidget::widgetvariable {
 	    set newVariable $itk_option(-widgetvariable)
 	    if { ( "$newVariable" == "" ) || 				\
 		     ( "$widgetVariable" != "$newVariable" ) } {
-		set traceInfo [ namespace eval :: "trace vinfo \"$widgetVariable\"" ]
+		set traceInfo [ uplevel #0 [list trace info variable $widgetVariable] ]
 		#
 		# Remove the trace on the old widget variable.
 		#
@@ -524,7 +524,7 @@ configbody CLabeledWidget::widgetvariable {
 		    set cmd [ lindex $traceItem 1 ]
 		    if { "[ code $this updateWidget ]" == "$cmd" } {
 			set op [ lindex $traceItem 0 ]
-			namespace eval :: "trace vdelete \"$widgetVariable\" $op \"$cmd\""
+			uplevel #0 [list trace remove variable $widgetVariable $op $cmd]
 		    }
 		}
 
@@ -535,7 +535,7 @@ configbody CLabeledWidget::widgetvariable {
 
 		set widgetVariable $newVariable
 		if { "$widgetVariable" != "" } {
-		    set traceInfo [ namespace eval :: "trace vinfo \"$widgetVariable\"" ]
+		    set traceInfo [ uplevel #0 [list trace info variable $widgetVariable] ]
 		    set found 0
 		    foreach traceItem $traceInfo {
 			set cmd [ lindex $traceItem 1 ]
@@ -550,7 +550,8 @@ configbody CLabeledWidget::widgetvariable {
 			# Update the widget.
 			#
 			
-			namespace eval :: "trace variable \"$widgetVariable\" wu \"[ code $this updateWidget ]\""
+
+			uplevel #0 [list trace add variable $widgetVariable {write unset} [ code $this updateWidget ]]
 		    }
 		}
 	    }
@@ -906,24 +907,14 @@ body 	CLabeledWidget::updateWidget {
     # "scoped" incr tcl/tk variables.
     #
 
-    if { [ string match "*@scope*::*" $name1 ] } {
-        set varScope [ lindex $name1 1 ] 
-        set varName [ lindex $name1 2 ] 
-    } else { 
-        set varScope "::" 
-        set varName $name1 
-    } 
- 
+    set varName $name1 
     if { $name2 == "" } { 
         set var "$varName" 
     } else { 
         set var "${varName}(${name2})" 
     } 
 
-    set fullVarName "${varScope}${var}" 
-    if { ( "$fullVarName" != "$widgetVariable" &&
-	   "$widgetVariable" != "$varName" ) ||
-         [ namespace eval $varScope "info exists $varName" ] == 0 } {
+    if { ( "$widgetVariable" != "$varName" ) || [ uplevel \#0 [list info exists $varName] ] == 0 } {
         # 
         # We aren't suppose to be monitoring this variable or
 	# it does not exist. 

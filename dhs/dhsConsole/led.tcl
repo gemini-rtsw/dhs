@@ -405,8 +405,8 @@ body CLed::constructor {
 body CLed::destructor {} {
     if { $reposition != "" } { after cancel $reposition }
 
-    if { [ namespace eval :: "trace vinfo \"$ledVariable\"" ] != "" } {
-	namespace eval :: "trace vdelete \"$ledVariable\" wu \"[ code $this updateColor ]\""
+    if { [ uplevel #0 [list trace info variable $ledVariable] ] != "" } {
+	   uplevel #0 [list trace remove variable $ledVariable {write unset} [ code $this updateColor ]]
     }
 }
 
@@ -592,11 +592,11 @@ configbody	CLed::ledvariable {
 
     set newVariable $itk_option(-ledvariable)
     if {  ( $newVariable == "" ) || ( $ledVariable  != $newVariable ) } {
-	set traceInfo [ namespace eval :: "trace vinfo \"$ledVariable\"" ]
+	set traceInfo [ uplevel "#0" [list trace info variable $ledVariable] ]
 	set found 0
 	foreach traceItem $traceInfo {
 	    if { "$this" == "[ lindex $traceItem 1 ] 2 ]" } {
-		namespace eval :: "trace vdelete \"$ledVariable\" wu \"[ code $this updateColor ]\""
+		uplevel #0 [list trace remove variable $ledVariable {write unset} [ code $this updateColor ]]
 		break
 	    }
 	}
@@ -604,7 +604,7 @@ configbody	CLed::ledvariable {
 
     set ledVariable $newVariable
     if { "$ledVariable" != "" } {
-	set traceInfo [ namespace eval :: "trace vinfo \"$ledVariable\"" ]
+	set traceInfo [ uplevel #0 [list trace info variable $ledVariable] ]
 	set found 0
 	foreach traceItem $traceInfo {
 	    if { "$this" ==  "[ lindex [ lindex $traceItem 1 ] 2 ]" } {
@@ -614,7 +614,7 @@ configbody	CLed::ledvariable {
 
 	if {  [ isFalse $found ] } {
 	    updateColor $ledVariable "" w
-	    namespace eval :: "trace variable \"$ledVariable\" wu \"[ code $this updateColor ]\""
+	    uplevel #0 [list trace add variable $ledVariable {write unset} [ code $this updateColor ]]
 	}
     }
 }
@@ -939,22 +939,14 @@ body	CLed::updateColor {
     op
 } {
     global ::dhsStatus
-    if { [ string match "*@scope*::*" $name1 ] } {
-	set varScope [ lindex $name1 1 ]
-	set varName [ lindex $name1 2 ]
-    } else {
-	set varScope "::"
-	set varName $name1
-    }
 
+    set varName $name1
     if { $name2 == "" } {
 	set var "$varName"
     } else {
 	set var "${varName}(${name2})"
     }
-    set fullVarName "${varScope}${var}"
-    if { "$fullVarName" != "$ledVariable" ||
-	 [ namespace eval $varScope "info exists $varName" ] == 0 } {
+    if { "$varName" != "$ledVariable" || [ uplevel \#0 [list info exists $varName] ] == 0 } {
 	#
 	# We aren't suppose to be monitoring this variable.
 	# 
@@ -974,7 +966,7 @@ body	CLed::updateColor {
 	#
 
 	set cmd "set junk \$$var"
-	set value [ namespace eval $varScope "$cmd" ]
+	set value [ uplevel \#0 $cmd ]
 	if { [ set pos [ lsearch -exact $values [ string toupper $value ] ] ] != -1 } {
 	    $itk_component(led) configure -background [ lindex $colors $pos ]
 	} elseif { [ set pos [ lsearch -exact $values "*" ] ] != -1 } {

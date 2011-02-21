@@ -705,6 +705,7 @@ body 	CStatusBox::makeNewItem {
     set bgColour [ $itk_component(hull) cget -background ]
     set itemWindow [ $this childsite ].item[ incr unique ]
 
+puts "XXX widgetType = $widgetType"
     switch -- "$widgetType" {
 	entryfield -
 	optionmenu {
@@ -753,6 +754,7 @@ body 	CStatusBox::makeNewItem {
 	    }
 	}
 	default {
+puts "XXX WARNING widgetType = $widgetType"
 	    itk_component add $item {
 		eval $widgetType $itemWindow -labelpos w $args 
 	    } {

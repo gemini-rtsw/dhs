@@ -204,7 +204,6 @@ class CForm {
 
     private variable unique 0		;# Unique entry identifier.
     private variable widgets {} 	;# List of labeled widgets.
-    private common widgetValues		;# Array of values
 }
 
 #
@@ -496,6 +495,7 @@ body	CForm::delete {
 body	CForm::get { 
     {index {}}
 }  {
+    global ::widgetValues
     if { "$index" == "" } {
 	#
 	# Find the value of all items on the form.
@@ -827,6 +827,7 @@ body	CForm::makeNewWidget {
     widget
     args
 } {
+    global ::widgetValues
     #
     # Define the window pathname.
     # 
@@ -848,8 +849,7 @@ body	CForm::makeNewWidget {
     }
 
     $windowName configure -labeltext "$label"
-    $windowName configure -widgetvariable 			\
-	"[ scope widgetValues(${this},${unique}) ]" 
+    $windowName configure -widgetvariable widgetValues(${this},${unique}) 
     eval $windowName configure $args
 
     

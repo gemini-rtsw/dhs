@@ -534,7 +534,7 @@ body 	CLogMonitor::_postList {
     }
 
     set _isPosted true
-    _drawArrow depressed      ;# sad button
+    _drawArrow ;#depressed
     _positionList
 
 
@@ -548,7 +548,7 @@ body 	CLogMonitor::_postList {
     raise $itk_component(popup)
     focus $itk_component(popup)
 
-    _drawArrow normal
+    _drawArrow ;#normal
 }
 
 # ------------------------------------------------------------------

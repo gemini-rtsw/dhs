@@ -743,13 +743,13 @@ body 	CDhgStatus::link {
 
 	    sa dhsSAD proc $status "[ code $this myUpdate ]"
 	    set linkArray($status) [ list "$variable" ]
-	    namespace inscope :: set $variable [ sa dhsSAD get $status ]
+	    uplevel #0 [list set $variable [ sa dhsSAD get $status ]]
 	} elseif { [ lsearch $linkArray($status) $variable ] == -1 } {
 	    lappend linkArray($status) "$variable"
-	    namespace inscope :: set $variable [ sa dhsSAD get $status ]
+	    uplevel #0 [list set $variable [ sa dhsSAD get $status ]]
 	}
     } else {
-	namespace inscope :: set $variable "Simulation Mode"
+	uplevel #0 [list set $variable "Simulation Mode"]
     }
 
     return

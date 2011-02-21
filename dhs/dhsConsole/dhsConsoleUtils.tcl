@@ -1815,7 +1815,7 @@ proc processMsgs {
 #
 # DESCRIPTION:
 # Create a labelled widget to hold the buttons then create the
-# buttons (reserve, stop, and forward).
+# buttons (reverse, stop, and forward).
 #
 # EXTERNAL VARIABLES:
 # ::dhgDir	   Directory where the bitmaps for the buttons are.
