@@ -147,7 +147,7 @@ set dhgDir $__source_path/../..
 #
 
 #source $__source_path/../tcl/dhsConsole.tcll
-set _helpDir "$__source_path/../html"
+set _helpDir "$__source_path/html"
 
 #
 # Determine the command line arguments. Need to clear argc and argv since

@@ -581,7 +581,7 @@ body CStgMain::constructor {
 # Destructor for the "CStgMain" class.
 #
 # DESCRIPTION:
-# Make sure the help information (netscape) is destroyed and make sure 
+# Make sure the help information (firefox) is destroyed and make sure 
 # the fillers are not being reconfigured.  Also remove the associations
 # between particular status records and methods of this class.
 #

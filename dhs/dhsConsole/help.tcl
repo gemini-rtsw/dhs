@@ -33,12 +33,12 @@
 #
 # CLASS NAME(S)
 # CHelp class		: A class that displays help information, in HTML.
-#	        	  Uses netscape to display the help information.
+#	        	  Uses firefox to display the help information.
 #
 # METHOD NAME(S)
 # CHelp::constructor 	: Constructor for the CHelp class.
 # CHelp::destructor 	: Destructor for the CHelp class.
-# CHelp::close 		: Closes the Netscape application.
+# CHelp::close 		: Closes the Firefox application.
 # CHelp::getHtmlDir	: Returns the directory that is searched for HTML
 #			  files.
 # CHelp::openUrl 	: Opens a particular HTML file.
@@ -47,7 +47,7 @@
 #
 # PRIVATE
 # CHelp::checkPid	: Checks output from "ps" command for the
-#			  Netscape application started by this class
+#			  Firefox application started by this class
 #
 # GLOBAL PROCEDURE(S)
 # cHelp		: Lowercased access method to the CHelp class.
@@ -61,11 +61,11 @@
 #
 # Revision 1.8  1999/06/08 19:12:17  jaeger
 # Use "kill -0" instead of output from "ps" to determine the existence
-# of a given process id.  Made sure all netscape calls are run in the
+# of a given process id.  Made sure all firefox calls are run in the
 # background.
 #
 # Revision 1.7  1999/02/01 19:55:05  jaeger
-# Changed constructor so by default netscape is not displayed, it may
+# Changed constructor so by default firefox is not displayed, it may
 # be displayed iconically or in a window on start-up depending on
 # the arguments given to the constructor.
 #
@@ -79,14 +79,14 @@
 # help class.
 #
 # Revision 1.4  1998/06/15 05:05:27  jaeger
-# Got rid of the "-install" flag used with netscape, fixed up the
+# Got rid of the "-install" flag used with firefox, fixed up the
 # ps call.
 #
 # Revision 1.3  1998/05/06 20:42:45  jaeger
-# added "catch" to catch any errors when killing the netscape process.
+# added "catch" to catch any errors when killing the firefox process.
 #
 # Revision 1.2  1998/05/04 18:40:42  jaeger
-# Fixed code so one netscape is shared between all instances.
+# Fixed code so one firefox is shared between all instances.
 #
 # Revision 1.1  1997/11/13 23:53:19  jaeger
 # Initial revision
@@ -109,7 +109,7 @@
 # PUBLIC METHODS: 
 # cget          : Standard cget method, returns the value of the specified
 #                 option.
-# close 	: Closes the Netscape application.
+# close 	: Closes the Firefox application.
 # configure     : Standard Tk method, sets or returns options.
 # constructor 	: Constructor for the CHelp class.
 # destructor 	: Destructor for the CHelp class.
@@ -176,7 +176,7 @@ class CHelp {
 # PARAMETERS: (">" input, "!" modified, "<" output)
 # (>)objectName	(string) 	    Name for the new CHelp object.
 # (>) url	(string)	    A URL of an HTML file.
-# (>) ?start?   (iconic|viewable)   Indicate how netscape is to be started,
+# (>) ?start?   (iconic|viewable)   Indicate how firefox is to be started,
 #				    iconic, viewable, or not at all.
 #
 # PROCEDURE VALUE:
@@ -222,7 +222,7 @@ proc	cHelp {
 #
 # PARAMETERS: (">" input, "!" modified, "<" output)
 # (>) url	(string)	A URL of an HTML file.
-# (>) ?start?   (iconic|viewable)   Indicate how netscape is to be started,
+# (>) ?start?   (iconic|viewable)   Indicate how firefox is to be started,
 #				    iconic, viewable, or not at all.
 #
 # PROCEDURE VALUE:
@@ -232,7 +232,7 @@ proc	cHelp {
 # Constructor for the "CHelp" class.
 #
 # DESCRIPTION:
-# Add "this" object to the Object list.  If there is no Netscape
+# Add "this" object to the Object list.  If there is no Firefox
 # browser running then start one.
 #
 # EXTERNAL VARIABLES:
@@ -263,14 +263,14 @@ body CHelp::constructor {
 
     switch -exact -- "$start" {
 	case "iconic" {
-	    set psId [ exec netscape $url -iconic & ]
+	    set psId [ exec firefox $url & ]
 	}
 	case "viewable" {
-	    set psId [ exec netscape $url & ]
+	    set psId [ exec firefox $url & ]
 	}
 	default {
 	    #
-	    # Don't start netscape.
+	    # Don't start firefox.
 	    #
 	}
     }
@@ -294,10 +294,10 @@ body CHelp::constructor {
 # PURPOSE:
 # Try and find "this" object on the objectList.  If it is there
 # remove it.  If there are no longer any object on the objectList
-# then destroy the Netscape application, if there is one running.
+# then destroy the Firefox application, if there is one running.
 #
 # DESCRIPTION:
-# Remove the netscape process.
+# Remove the firefox process.
 #
 # EXTERNAL VARIABLES:
 # CHelp::objectList
@@ -347,7 +347,7 @@ body CHelp::destructor {
 # None
 #
 # PURPOSE:
-# To close/exit the netscape process initiated by this class.
+# To close/exit the firefox process initiated by this class.
 #
 # DESCRIPTION:
 # Trivial
@@ -373,7 +373,7 @@ body	CHelp::close {
 	if { [ catch "exec kill -15 $psId" msg ] } {
 	}
     } else {
-	error "Netscape is not running. $msg"
+	error "Firefox is not running. $msg"
     }
 }
 
@@ -393,11 +393,11 @@ body	CHelp::close {
 # (string) url : The url provided.
 #
 # PURPOSE:
-# To display a particular URL in a Netscape application.
+# To display a particular URL in a Firefox application.
 #
 # DESCRIPTION:
 # Prepend the HTML directory to the given URL.  Display the page in
-# a Netscape browser, if one isn't running start one.
+# a Firefox browser, if one isn't running start one.
 #
 # EXTERNAL VARIABLES:
 # CHelp::psId
@@ -425,9 +425,9 @@ body	CHelp::openUrl {
     }
 
     if { [ catch checkPid msg ] } {
-	set psId [ exec netscape $page & ]
+	set psId [ exec firefox $page & ]
     } else {
-	after idle "exec netscape -remote openUrl($page) &"
+	after idle "exec firefox $page &"
     }
 }
 
@@ -449,12 +449,12 @@ body	CHelp::openUrl {
 # None.
 #
 # PROCEDURE VALUE:
-# If successful the process Id of the netscape application associated
+# If successful the process Id of the firefox application associated
 # with the help information.  Otherwise the return value of the TCL/TK
 # "error" command.
 #
 # PURPOSE:
-# To see if the netscape application is still running.
+# To see if the firefox application is still running.
 #
 # DESCRIPTION:
 # Check the value of psId, make sure we have one.

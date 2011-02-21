@@ -103,7 +103,7 @@
 # Fixed config file handling so it looks for SUCCESS instead of ERROR.
 #
 # Revision 1.28  1999/02/01 19:55:28  jaeger
-# Delay displaying of Netscape until help is selected.
+# Delay displaying of Firefox until help is selected.
 #
 # Revision 1.27  1998/08/05 23:05:20  jaeger
 # Fixed bug where resource 10 was not being dynamically displayed.
@@ -812,7 +812,7 @@ proc cDhgMain {
 # Destructor for the "CDhgMain" class.
 #
 # DESCRIPTION:
-# Make sure the help information (netscape) is destroyed
+# Make sure the help information (firefox) is destroyed
 # and make sure the fillers are not being reconfigured.
 #
 # EXTERNAL VARIABLES:

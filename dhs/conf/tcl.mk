@@ -13,9 +13,12 @@ install: index $(INSTALL_TARGET)
 	d=${RELEASE_DIR}/lib/${NAME}; \
 	test -d $$d || mkdir $$d ;\
 	test -d $$d/html || mkdir $$d/html ;\
-	rm -f $$d/*.tcl $$d/html/*.html;\
+	test -d $$d/images || mkdir $$d/images ;\
+	rm -f $$d/*.tcl $$d/html/*.html $$d/images/* ;\
 	cp *.tcl tclIndex $$d ;\
-	cp html/*.html $$d/html
+	test -d html && cp html/*.html $$d/html ;\
+	test -d images && cp images/* $$d/images ;\
+	echo done
 
 index tclIndex: FORCE
 	tclsh$(TCL_VERSION) ./mkIndex.tcl
