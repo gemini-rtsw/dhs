@@ -1067,7 +1067,7 @@ body	CDhsCommands::errorMonitor {
 	     "$cmd" == "init" ||
 	     "$cmd" == "ping" ||
 	     "$cmd" == "reset" ||
-	     "$cmd" == "resetealth" ||
+	     "$cmd" == "resetHealth" ||
 	     "$cmd" == "test" } {
 	    #
 	    # Display the "successful" command message and enable the window.
