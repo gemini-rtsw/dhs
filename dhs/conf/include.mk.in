@@ -121,7 +121,7 @@ ifneq ($(SYBASE),)
 endif
 
 # Define options
-DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE $(CFITSIO_FLAGS) $(SYBASE_DHS_FLAGS)
+DEFINES = @DEFS@ -DDSTDARG_OK -D_POSIX -DPOSIX_SOURCE $(CFITSIO_FLAGS) $(SYBASE_DHS_FLAGS) $(EPICS_DHS_FLAGS)
 
 # local library dependencies
 LOCAL_LIBS += $(TOP)/arrayMath/libarrayMath.a
