@@ -1522,8 +1522,12 @@ void		cDtsDhs::sizeGet
 	    //  format.  The root will be the datasetName (without any
 	    //  extensions added).
 	    //
-	    rootName[0] = '\0'; 
-	    format = ' '; // XXX allan TODO FIXME
+	    fprintf(stderr, "XXX1 name = %s\n", name);
+	    rootName[0] = '\0';  // XXX allan TODO FIXME
+	    (void) strncpy( rootName, name, sizeof(rootName)); // XXX allan TODO FIXME
+	    fprintf(stderr, "XXX2 name = %s\n", name);
+	    strroot(rootName); // XXX allan TODO FIXME
+	    format = 'F'; // XXX allan TODO FIXME
 	    comp = ' '; // XXX allan TODO FIXME
 	    (void)cDtsDbManager::nameInfo( status, name, rootName, 
 		    &format, &comp );

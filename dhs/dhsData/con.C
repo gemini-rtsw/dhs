@@ -283,7 +283,7 @@ void		cDtsConManager::config
 	 
     exit( status );
 	       
-    checkConfig( config_get( KEYWORD_CONNECT, (boolean (*) (int, char **))connectors ), status, 
+    checkConfig( config_get( KEYWORD_CONNECT, (boolean (*) (int, char **))&connectors ), status, 
 	    return );
 }
 
