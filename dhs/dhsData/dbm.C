@@ -155,8 +155,8 @@ extern "C"
 
 #if defined(SYBASE_DHS)
 #include "db.h"
-#include "ad.h"
 #endif
+#include "ad.h"
 }
 
 #include "globals.H"
@@ -1390,9 +1390,7 @@ void	cDtsDbManager::nameInfo
 )
 {
 
-#if defined(SYBASE_DHS)
     checkStat( status, return );
-
 
     //
     //  Initialize values of format & compression and call ad_file_info.
@@ -1410,10 +1408,8 @@ void	cDtsDbManager::nameInfo
     	*format = DTS_FM_RAW;
     }
     status.S_DEBUG_MSG( status, rootName );
-#else
-   status.E_DB(status, "cDtsDbManager::nameInfo - no SYBASE support: try -noDb?" );
-#endif
 }
+
 
 //
 //***********************************************************************
