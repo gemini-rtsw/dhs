@@ -55,13 +55,16 @@
 -*/
 
 #include <stdarg.h>
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
-
+#endif
 #include "gen_types.h"
 #include "gen_msg.h"
 #include "gen_eptr.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 
 #include "ad.h"
 #include "local_ad.h"
@@ -81,6 +84,7 @@
 ************************************************************************
 -*/
 
+#if defined(SYBASE_DHS)
 int	ad_tp_file_get
 (
     AD_FILEGET	select_type,	/* (in)  The selection type.		*/
@@ -448,3 +452,4 @@ int		ad_tp_volume_put
 
     return( AD_SUCCESS );
 }
+#endif

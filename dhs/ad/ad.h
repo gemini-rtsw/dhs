@@ -557,24 +557,34 @@ extern	AD_ARCHIVE
 		*ad_archive_info( AD_ARCHNAME );
 extern	void	ad_close( void );
 extern	int	ad_dbinfo_get( AD_MEDIUM, char **, char **, char **, char ** );
+#if defined(SYBASE_DHS)
 extern	int	ad_file_del( struct dbprocess *, AD_MEDIUM, char *, ... );
 extern	int	ad_file_get( AD_FILEGET, AD_FILE *, struct dbprocess *, ... );
+#endif
 extern	int	ad_file_info( char *, char *, char *, char * );
 extern	int	ad_file_init( AD_FILE *, AD_MEDIUM );
+#if defined(SYBASE_DHS)
 extern	int	ad_file_media( struct dbprocess *, AD_FILEMEDIA, char *, 
 			AD_MEDIA_MASK *, AD_MEDIA_MASK *, boolean *, ... );
+#endif
 extern	char	*ad_file_name( AD_FILE *, char * );
+#if defined(SYBASE_DHS)
 extern	int	ad_file_put( AD_FILE *, struct dbprocess * );
 extern	int	ad_server_id_get( struct dbprocess *, char ** );
+#endif
 extern	int	ad_init( void );
 extern	char	*ad_med_name( AD_MEDIUM );
 extern  AD_MEDIUM
 		ad_med_type( char * );
+#if defined(SYBASE_DHS)
 extern	int	ad_remote_get( AD_REMOTEGET, AD_FILE *, struct dbprocess *, char * );
 extern	int	ad_volume_get( AD_VOLGET, AD_VOLUME *, 
 			struct dbprocess *, ... );
+#endif
 extern	int	ad_volume_init( AD_VOLUME *, AD_MEDIUM );
+#if defined(SYBASE_DHS)
 extern	int	ad_volume_put( AD_VOLUME *, struct dbprocess * );
+#endif
 extern	boolean	ad_volume_verify( AD_VOLUME * );
 extern	char	ad_msg[];
 

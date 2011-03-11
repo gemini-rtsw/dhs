@@ -61,14 +61,17 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include "gen_types.h"
 #include "gen_msg.h"
 #include "gen_eptr.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
-
+#endif
 #include "ad.h"
 #include "local_ad.h"
 
@@ -86,7 +89,7 @@
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_md_file_del
 (
     DBPROCESS	*dbproc,	/* (in)  The dbprocess to use.		*/
@@ -464,3 +467,4 @@ int		ad_md_volume_put
 
     return( AD_SUCCESS );
 }
+#endif

@@ -83,8 +83,10 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include <unistd.h>
 #include <sys/types.h>

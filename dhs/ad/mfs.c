@@ -84,10 +84,10 @@
  *		   Sybase include files.
  ************************************************************************
  */
-
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
-
+#endif
 
 /*
  ************************************************************************
@@ -99,8 +99,10 @@
 #include "gen_msg.h"
 #include "gen_str.h"
 #include "gen_eptr.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
 #include "crc.h"
+#endif
 
 
 /*
@@ -136,7 +138,7 @@
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_mfs_file_get
 (
     AD_FILEGET	select_type,	/* (in)  The selection type.		*/
@@ -606,6 +608,8 @@ int		ad_mfs_volume_put
 
     return( AD_SUCCESS );
 }
+#endif
+
 
 /*+
 ************************************************************************
