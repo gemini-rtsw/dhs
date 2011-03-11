@@ -33,12 +33,12 @@
 #
 # CLASS NAME(S)
 # CHelp class		: A class that displays help information, in HTML.
-#	        	  Uses firefox to display the help information.
+#	        	  Uses netscape to display the help information.
 #
 # METHOD NAME(S)
 # CHelp::constructor 	: Constructor for the CHelp class.
 # CHelp::destructor 	: Destructor for the CHelp class.
-# CHelp::close 		: Closes the Firefox application.
+# CHelp::close 		: Closes the Netscape application.
 # CHelp::getHtmlDir	: Returns the directory that is searched for HTML
 #			  files.
 # CHelp::openUrl 	: Opens a particular HTML file.
@@ -47,7 +47,7 @@
 #
 # PRIVATE
 # CHelp::checkPid	: Checks output from "ps" command for the
-#			  Firefox application started by this class
+#			  Netscape application started by this class
 #
 # GLOBAL PROCEDURE(S)
 # cHelp		: Lowercased access method to the CHelp class.
@@ -61,11 +61,11 @@
 #
 # Revision 1.8  1999/06/08 19:12:17  jaeger
 # Use "kill -0" instead of output from "ps" to determine the existence
-# of a given process id.  Made sure all firefox calls are run in the
+# of a given process id.  Made sure all netscape calls are run in the
 # background.
 #
 # Revision 1.7  1999/02/01 19:55:05  jaeger
-# Changed constructor so by default firefox is not displayed, it may
+# Changed constructor so by default netscape is not displayed, it may
 # be displayed iconically or in a window on start-up depending on
 # the arguments given to the constructor.
 #
@@ -79,14 +79,14 @@
 # help class.
 #
 # Revision 1.4  1998/06/15 05:05:27  jaeger
-# Got rid of the "-install" flag used with firefox, fixed up the
+# Got rid of the "-install" flag used with netscape, fixed up the
 # ps call.
 #
 # Revision 1.3  1998/05/06 20:42:45  jaeger
-# added "catch" to catch any errors when killing the firefox process.
+# added "catch" to catch any errors when killing the netscape process.
 #
 # Revision 1.2  1998/05/04 18:40:42  jaeger
-# Fixed code so one firefox is shared between all instances.
+# Fixed code so one netscape is shared between all instances.
 #
 # Revision 1.1  1997/11/13 23:53:19  jaeger
 # Initial revision
