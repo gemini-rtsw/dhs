@@ -6,7 +6,6 @@ include conf/include.mk
 # make subdirectories
 ifneq ($(SYBASE),)
         SUBDIRS += db           # db backend
-        SUBDIRS += ad           # archive directory
         SUBDIRS += mfs          # mountable fs
         SUBDIRS += crc          # cyclic redundancy check
         SUBDIRS += cd           # CD-ROM devices
@@ -14,6 +13,7 @@ ifneq ($(SYBASE),)
         SUBDIRS += tp           # tape library routines
 endif
 
+SUBDIRS += ad           	# archive directory
 SUBDIRS += press                # compressing library
 
 ifneq ($(SYBASE),)
