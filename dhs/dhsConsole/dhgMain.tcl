@@ -2010,7 +2010,7 @@ body	CDhgMain::updateRes {
     if { "$current" == "max" } {
 	set resStatus($max) "$valueList"
     } elseif { "$current" == "used" } {
-	resStatus($used) "$valueList"
+	set resStatus($used) "$valueList"
     }
 
 
