@@ -1041,16 +1041,13 @@ body 	CDhgStatus::value {
 
     set retValue "[ sa dhsSAD get $status value ]"
     if { [ info exists arraySizes($alias) ] } {
-	if { ! [ info exists arraySizes(${alias},warn) ] ||
-	     [ isFalse $arraySizes(${alias},warn) ] } {
-	    
-	    if { ! [ isNumber $retValue ]  || $retValue < 0 } { 
-		warningDialog "Value of $status is not a positive numerical \
-value: \"${retValue}\""
+	if { ! [ info exists arraySizes(${alias},warn) ] || [ isFalse $arraySizes(${alias},warn) ] } {
+	    if { ! [ isNumber $retValue ] || $retValue < 0 } { 
+		# XXX allan: was warningDialog, but complained about "No Value" and empty values on start
+		puts "Warning: Value of $status is not a positive numerical value: \"${retValue}\""
 		set arraySizes(${alias},warn) 1
 	    } elseif { $retValue !=  $arraySizes($alias) } {
-		warningDialog "Value of $status (${retValue}) does not \
-match configuration file value: \"$arraySizes($alias)\""
+		warningDialog "Value of $status (${retValue}) does not match configuration file value: \"$arraySizes($alias)\""
 		set arraySizes(${alias},warn) 1
 	    }
 	}
