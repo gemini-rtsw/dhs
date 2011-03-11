@@ -329,7 +329,7 @@ bool		    cStaMon::stopping=FALSE;
 // (bool) : True if no errors occur.
 //
 // PURPOSE:
-// Find the channel sliases given for the EPICS resource data records.
+// Find the channel aliases given for the EPICS resource data records.
 //
 // DESCRIPTION:
 // If the channel name (token[2]) matches one of:
