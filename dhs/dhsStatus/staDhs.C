@@ -515,7 +515,7 @@ class 	cStaSequenceCmd: public cDhsServerCommand
 	// anyway, so I don't know why it cares.)
 	//
 
-	void		init( unsigned long, unsigned long, char *, long, cDhsCmdHandlerBase & );
+//	void		init( unsigned long, unsigned long, char *, long, cDhsCmdHandlerBase & ); XXX allan
 	void		ping( void );
 	void		resetHealth( void );
 	void		simulateLevel( void );
