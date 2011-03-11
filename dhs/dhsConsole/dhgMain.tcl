@@ -2609,7 +2609,7 @@ set _dhgDefaults(sdp,commandDesc) {					\
     {Initailze the Synchronized Data Processinge Server.} blank		\
     {Ping the Synchronized Data Processing Server.}			\
     {Perform tests on the Synchronized Data Processing Server.}}
-set _dhgDefaults(sdp,commandHelp) {					\ 
+set _dhgDefaults(sdp,commandHelp) {					\
     {_helpInfo openUrl "dhgSdp.html"}				\
     {_helpInfo openUrl "dhgSdp.html"}				\
     {_helpInfo openUrl "dhgSdp.html"} blank			\

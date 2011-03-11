@@ -1464,7 +1464,7 @@ Server's  media unit list has exceeded the number of units that can be \
 displayed%s."
 	    }
 	    stoActionOverflow {
-		set formatStr "The number of actions%sin the Storage Server's\ 
+		set formatStr "The number of actions%sin the Storage Server's\
  action list has exceeded the number of actions that can be displayed%s."
 	    }
 	    stoReqOverflow {

@@ -1810,10 +1810,10 @@ body	CTable::setRow {
 		-borderwidth $itk_option(-cellbd)                       \
 		-font "-Adobe-Helvetica-Bold-R-Normal--*-120-*-*-*-*-*-*"   \
 		-highlightthickness	0				\
-		-insertborderwidth 0					\  
+		-insertborderwidth 0					\
 		-justify $itk_option(-justify)                        	\
 		-relief flat                                            \
-		-state normal                                           \    
+		-state normal                                           \
 		-width $width
 
  
