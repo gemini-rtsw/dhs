@@ -86,7 +86,6 @@ CFITSIO_FLAGS = @CFITSIO_FLAGS@
 INCLUDES += -I.
 
 ifneq ($(SYBASE),)
-   INCLUDES += -I$(TOP)/ad
    INCLUDES += -I$(TOP)/am
    INCLUDES += -I$(TOP)/cd
    INCLUDES += -I$(TOP)/db
@@ -95,6 +94,7 @@ ifneq ($(SYBASE),)
    INCLUDES += -I$(TOP)/tp
 endif
 
+INCLUDES += -I$(TOP)/ad
 INCLUDES += -I$(TOP)/dd
 INCLUDES += -I$(TOP)/press
 INCLUDES += -I$(TOP)/sf
@@ -156,11 +156,11 @@ LOCAL_LDFLAGS += -L$(TOP)/gen++
 LOCAL_LDFLAGS += -L$(TOP)/dd
 LOCAL_LDFLAGS += -L$(TOP)/press
 LOCAL_LDFLAGS += -L$(TOP)/sf
+LOCAL_LDFLAGS += -L$(TOP)/ad
 
 ifneq ($(SYBASE),)
    LOCAL_LDFLAGS += -L$(TOP)/fh
    LOCAL_LDFLAGS += -L$(TOP)/mfs
-   LOCAL_LDFLAGS += -L$(TOP)/ad
    LOCAL_LDFLAGS += -L$(TOP)/am
    LOCAL_LDFLAGS += -L$(TOP)/cd
    LOCAL_LDFLAGS += -L$(TOP)/db
