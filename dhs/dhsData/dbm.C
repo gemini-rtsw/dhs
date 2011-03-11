@@ -748,7 +748,6 @@ void cDtsDbManager::init
 {
     checkStat( status, return );
 
-#if defined(SYBASE_DHS)
     char	*adIdentity;	// Ad identity string.
     char	*appName=NULL;	// Database application register name.
 
@@ -762,6 +761,7 @@ void cDtsDbManager::init
     msg_clear( ad_msg );
     status.display();
 
+#if defined(SYBASE_DHS)
 
     //
     //  If running standalone, check the mount points and return.
