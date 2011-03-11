@@ -6,6 +6,7 @@ if [ $# != 1 ]; then
 fi
 
 case $1 in
+
    server)
       GemBootStart stop &>/dev/null
       rm -fr $DHS_STAGING/temp
@@ -22,16 +23,18 @@ case $1 in
             echo "which should be okay."
             echo ""
       fi
-      dhsSim4Data &
-      sleep 1
       dhsStatus &
       sleep 1
-      dhsData -debug FULL NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm &
+      dhsSim4Data &
       sleep 1
-      dhsQlServer -master&
+      dhsData -debug MIN NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm &
+      sleep 1
+      #dhsQlServer -master -debug NONE -simulate&
+      dhsQlServer -master &
       sleep 1
       dhsCommand &
       ;;
+
    start)
       GemBootStart stop &>/dev/null
       if [ "`ps aux |grep master |grep -v grep`" = "" ]; then
@@ -45,15 +48,11 @@ case $1 in
       fi
       ;;
    stop)
-      ## fkraemer - don't execute cleanup here since IMP might still be in use
-      ## by seqexec.sh or other dhs clients
-      # cleanup
-      find /tmp -type d -user $DHS_USER -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
+      find /tmp -type d -user abrighto -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
       rm -fr $DHS_STAGING/temp
-#     for i in dhsSim4Data dhsStatus dhsData dhsQlServer; do
-#		killall $i
-#     done
+      cleanup
       ;;
+
    *)
       echo "Usage: GemBootStart [server|start|stop]"
       exit 1
