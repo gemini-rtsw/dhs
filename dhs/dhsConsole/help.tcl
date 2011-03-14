@@ -144,7 +144,7 @@ class CHelp {
     }
     public method openUrl { url }
     public method setHtmlDir { pathName } {
-	set htmlDir $pathName
+	set htmlDir file:$pathName
     }
     
 
