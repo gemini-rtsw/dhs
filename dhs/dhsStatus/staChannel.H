@@ -375,7 +375,7 @@ class cStaMerger:
 )
 {
     kAlias = alias;
-    strcpy( kSystem, subsystem );
+    strncpy( kSystem, subsystem, cDhsSubsystem::SYSTEM_NAME_LENGTH+1 );
     str2upper( kSystem, kSystem );
 }
 
