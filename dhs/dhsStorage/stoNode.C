@@ -310,7 +310,7 @@ bool		cStoNode::snSimulate=false;// Simulate mode.
     // Wait until the processing loop ends. 
     //
 
-    if ( snLoopThreadId != -1 )
+    if ( snLoopThreadId > 0 )
     {
 	pthread_join( snLoopThreadId, NULL );
     }
