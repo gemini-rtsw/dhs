@@ -524,8 +524,8 @@ body	CStoCommands::stoCancelAction {
 	cs stoCancelAction add mediaId
 	cs stoCancelAction set mediaId value "$mediaId"
 	printDebug stoCancelAction "$args"
-	set __errorMonitor "$this errorMonitor STO"
-	cs stoCancelAction postCallback "$this errorMonitor STO"
+	set __errorMonitor "[code $this errorMonitor STO]"
+	cs stoCancelAction postCallback "[code $this errorMonitor STO]"
 	return { Posted "stoCancelAction posted." "[ code $this errorMonitor ]"}
     } else {
 	return { Canceled "stoCancelAction not posted" "" }
@@ -925,8 +925,8 @@ body  CStoCommands::stoRefresh {
     if { [ confirmChoice "STO" "$msg" "stoRefresh" ] } {
 	disableWindow STO $win
 	printDebug stoRefresh ""
-	set __errorMonitor "$this errorMonitor STO"
-	cs stoRefresh postCallback "$this errorMonitor STO"
+	set __errorMonitor "[code $this errorMonitor STO]"
+	cs stoRefresh postCallback "[code $this errorMonitor STO]"
 	return [ list Posted "stoRefresh" "[ code $this errorMonitor ]" ]
     } else {
 	return [ list "Not Posted" "stoRefresh" "" ]
@@ -1237,8 +1237,8 @@ positive integer less than or equal to $max."
     }
 
     printDebug stoRequestAction "$args"
-    set __errorMonitor "$this errorMonitor STO"
-    cs stoRequestAction postCallback "$this errorMonitor STO" "$this errorMonitor STO"
+    set __errorMonitor "[code $this errorMonitor STO]"
+    cs stoRequestAction postCallback "[code $this errorMonitor STO]" "[code $this errorMonitor STO]"
     return [ list  Posted "stoRequestAction $action $mediaId posted." "[ code $this errorMonitor]" ]
 }
 
@@ -1349,8 +1349,8 @@ integer less than or equal to $max."
     cs stoRequestRollback set number value "$numUnits"
 
     printDebug stoRequestAction "$args"
-    set __errorMonitor "$this errorMonitor STO"
-    cs stoRequestRollback postCallback "$this errorMonitor STO"
+    set __errorMonitor "[code $this errorMonitor STO]"
+    cs stoRequestRollback postCallback "[code $this errorMonitor STO]"
 
     return [ list Posted "stoRequestRollback $action $mediaId posted." "[code $this errorMonitor ]" ]
 }
