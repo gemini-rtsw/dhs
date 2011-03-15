@@ -286,7 +286,7 @@ void		cStaSubscriber::kill
 
     ssExitNow = true;
     ssCond.broadcast();
-    pthread_join( ssUpdateThread, NULL );
+    if (ssUpdateThread > 0) {pthread_join( ssUpdateThread, NULL );} // XXX allan: added check for 0
 }
 
 //
