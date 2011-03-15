@@ -514,7 +514,6 @@ proc	createToolbar {
 	    set cmd "$cmd $parent"
 	}
 
-
 	set button [ $bar add button command$i				\
 	         -command "$cmd"					\
 	         -text "$commandName" ]
@@ -577,6 +576,10 @@ proc 	errorDialog {
     msg 
     { parent "" }
 } {
+    # XXX allan: want to see traceback
+    global ::errorInfo
+    puts stderr "$msg\n\nTraceback:$errorInfo\n"
+
     #
     # Determine the dialog's parent
     #
