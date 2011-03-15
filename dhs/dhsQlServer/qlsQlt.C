@@ -310,7 +310,7 @@ void          cQlsNotifyCmd::done
 
     dhsEventLoop( DHS_ELT_COND, checkRunningFlag, this, &dhsStatus );
 
-    pthread_join( qqtThreadId, NULL );
+    if ( qqtThreadId > 0) {pthread_join( qqtThreadId, NULL );} // XXX allan: added check
 
     while ( ! qqtCommandQueue.empty() )
     {
