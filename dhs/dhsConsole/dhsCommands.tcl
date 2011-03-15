@@ -725,10 +725,8 @@ body 	CDhsCommands::debugLevel {
     foreach item $subsystem {
 	if { [ lsearch $activeSubsystems $subsystem ] == -1 } {
 	    if { "$subsystem" != "DHS"  } {
-		errorDialog "Can not set Debug Level for subsystem the\
- ${subsystem}, it is not active."
-		return [ list "Not Posted" "debugLeveL" 		\
-			[ code $this errorMonitor ]" ]
+		errorDialog "Can not set Debug Level for subsystem the ${subsystem}, it is not active."
+		return [ list "Not Posted" "debugLeveL" "[ code $this errorMonitor ]" ]
 	    }
 	}
     }
@@ -875,8 +873,8 @@ body 	CDhsCommands::dhsExit {
 
 	cs exit add subsystem
 	cs exit set subsystem value \"\"
-	set __errorMonitor "$this errorMonitor DHS"
-	cs exit postCallback "$this errorMonitor DHS"
+	set __errorMonitor "[code $this errorMonitor DHS]"
+	cs exit postCallback "[code $this errorMonitor DHS]"
 	return [ list Posted "exit" "[ code $this errorMonitor ]" ]
     } else {
 	return [ list "Not Posted" "exit" "[ code $this errorMonitor ]" ]
@@ -1186,13 +1184,13 @@ body 	CDhsCommands::flush {
 	cs flush add subsystem
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs flush set subsystem value \"\"
-	    set __errorMonitor "$this errorMonitor DHS"
-	    cs flush postCallback "$this errorMonitor DHS"
+	    set __errorMonitor "[code $this errorMonitor DHS]"
+	    cs flush postCallback "[code $this errorMonitor DHS]"
 	    return [ list  Posted "flush `'" "[ code $this errorMonitor ]" ]
 	} else {
 	    cs flush set subsystem value "$subsystem"
-	    set __errorMonitor "$this errorMonitor $subsystem"
-	    cs flush postCallback "$this errorMonitor $subsystem"
+	    set __errorMonitor "[code $this errorMonitor $subsystem]"
+	    cs flush postCallback "[code $this errorMonitor $subsystem]"
 	    return [ list  Posted "flush `$subsystem'"  		\
 		"[ code $this errorMonitor ]" ]
 	}
@@ -1259,8 +1257,8 @@ body 	CDhsCommands::hisLogWrite {
     if { [ confirmChoice HIS "$msg" hisLogWrite ] } {
 	set CDhsCommands::window ""
 	set toolbarList {}
-	set __errorMonitor "$this errorMonitor HIS"
-	cs hisLogWrite postCallback "$this errorMonitor HIS"
+	set __errorMonitor "[code $this errorMonitor HIS]"
+	cs hisLogWrite postCallback "[code $this errorMonitor HIS]"
 	return [ list Posted "hisLogWrite" "[ code $this errorMonitor ]" ]
     } else {
 	return [ list "Not Posted" "hisLogWrite" "[ code $this errorMonitor ]" ]
@@ -1341,13 +1339,13 @@ body 	CDhsCommands::init {
 	cs init add subsystem
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs init set subsystem value \"\"
-	    set __errorMonitor "$this errorMonitor DHS"
-	    cs init postCallback "$this errorMonitor DHS"
+	    set __errorMonitor "[code $this errorMonitor DHS]"
+	    cs init postCallback "[code $this errorMonitor DHS]"
 	    return [ list Posted "init `'" "[ code $this errorMonitor ]" ]
 	 } else {
 	     cs init set subsystem value "$subsystem"
-	     set __errorMonitor "$this errorMonitor $subsystem"
-	     cs init postCallback "$this errorMonitor $subsystem"
+	     set __errorMonitor "[code $this errorMonitor $subsystem]"
+	     cs init postCallback "[code $this errorMonitor $subsystem]"
 	     return [ list Posted "init `$subsystem'" 		\
 			"[ code $this errorMonitor ]" ] 
 	 }
@@ -1426,13 +1424,13 @@ body 	CDhsCommands::ping {
 	cs ping add subsystem
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs ping set subsystem value \"\"
-	    set __errorMonitor "$this errorMonitor DHS"
-	    cs ping postCallback "$this errorMonitor DHS"
+	    set __errorMonitor "[code $this errorMonitor DHS]"
+	    cs ping postCallback "[code $this errorMonitor DHS]"
 	    return [ list  Posted "ping `'" "[ code $this errorMonitor ]" ]
 	} else {
 	    cs ping set subsystem value "$subsystem"
-	    set __errorMonitor "$this errorMonitor $subsystem"
-	    cs ping postCallback "$this errorMonitor $subsystem"
+	    set __errorMonitor "[code $this errorMonitor $subsystem]"
+	    cs ping postCallback "[code $this errorMonitor $subsystem]"
 	    return [ list  Posted "ping `$subsystem'"  		\
 		"[ code $this errorMonitor ]" ]
 	}
@@ -1522,13 +1520,13 @@ body 	CDhsCommands::reset {
 	cs reset add subsystem
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs reset set subsystem value \"\"
-	    set __errorMonitor "$this errorMonitor DHS"
-	    cs reset postCallback "$this errorMonitor DHS"
+	    set __errorMonitor "[code $this errorMonitor DHS]"
+	    cs reset postCallback "[code $this errorMonitor DHS]"
 	    return [ list  Posted "reset `'" "[ code $this errorMonitor ]" ]
 	} else {
 	    cs reset set subsystem value "$subsystem"
-	    set __errorMonitor "$this errorMonitor $subsystem"
-	    cs reset postCallback "$this errorMonitor $subsystem"
+	    set __errorMonitor "[code $this errorMonitor $subsystem]"
+	    cs reset postCallback "[code $this errorMonitor $subsystem]"
 	    return [ list Posted "reset `$subsystem'" "[ code $this errorMonitor ]" ]
 	}
     } else {
@@ -1620,12 +1618,12 @@ body 	CDhsCommands::resetHealth { {subsystem {}} } {
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs resetHealth set subsystem value \"\"
 	    cs resetHealth postCallbak "$this errorMonitor DHS"
-	    set __errorMonitor "$this errorMonitor DHS reset-"
+	    set __errorMonitor "[code $this errorMonitor DHS reset-]"
 	    return [ list  Posted "resetHealth `'" "[ code $this errorMonitor ]" ]
 	} else {
 	    cs resetHealth set subsystem value $subsystem	
 	    cs resetHealth postCallbak "$this errorMonitor $subsystem"
-	    set __errorMonitor "$this errorMonitor $subsystem reset-"
+	    set __errorMonitor "[code $this errorMonitor $subsystem reset-]"
 	    return [ list  Posted "resetHealth `$subsystem'" 		\
 			"[ code $this errorMonitor ]" ]
 	}
@@ -1867,13 +1865,13 @@ body 	CDhsCommands::test {
 	cs test add subsystem
 	if { $subsystem == "DHS" || $subsystem == "" } {
 	    cs test set subsystem value \"\"
-	    set __errorMonitor "$this errorMonitor DHS"
-	    cs test postCallback "$this errorMonitor DHS"
+	    set __errorMonitor "[code $this errorMonitor DHS]"
+	    cs test postCallback "[code $this errorMonitor DHS]"
 	    return [ list  Posted "test `'" "[ code $this errorMonitor ]" ]
 	 } else {
 	     cs test set subsystem value "$subsystem"
-	     set __errorMonitor "$this errorMonitor $subsystem"
-	     cs test postCallback "$this errorMonitor $subsystem"
+	     set __errorMonitor "[code $this errorMonitor $subsystem]"
+	     cs test postCallback "[code $this errorMonitor $subsystem]"
 	    return [ list  Posted "test `$subsystem'" "[ code $this errorMonitor ]" ]
 	 }
     } else {
@@ -2313,7 +2311,7 @@ body	CDhsCommands::dsCommand {
 	} else {
 	    cs debugLevel set subsystem value "$value"
 	}
-	set __errorMonitor "$this errorMonitor $subsystem"
+	set __errorMonitor "[code $this errorMonitor $subsystem]"
 
 
 	#
@@ -2329,7 +2327,7 @@ body	CDhsCommands::dsCommand {
 	# Post the command
 	#
 
-	cs debugLevel postCallback "$this errorMonitor $subsystem"
+	cs debugLevel postCallback "[code $this errorMonitor $subsystem]"
 	if { $value == "" } {
 	    return [ list  Posted "debugLevel `' `$level'" 		\
 			 "[ code $this errorMonitor ]" ]
@@ -2344,7 +2342,7 @@ body	CDhsCommands::dsCommand {
 	} else {
 	    cs simulateLevel set subsystem value "$value"
 	}
-	set __errorMonitor "$this errorMonitor $subsystem"
+	set __errorMonitor "[code $this errorMonitor $subsystem]"
 
 
 	#
@@ -2360,7 +2358,7 @@ body	CDhsCommands::dsCommand {
 	# Post the command
 	#
 
-	cs simulateLevel postCallback "$this errorMonitor $subsystem"
+	cs simulateLevel postCallback "[code $this errorMonitor $subsystem]"
 	if { $value == "" } {
 	    return [ list  Posted "simulateLevel `' `$level'" 		\
 			 "[ code $this errorMonitor ]" ]
