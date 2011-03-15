@@ -168,7 +168,7 @@ int	tp_device_type
 
     if ( strpattern( mtreq.mtdtp->name, TP_TYPE_DDS_PATTERN ) )
     {
-	(void) strcpy( tp_type, TP_TYPE_DDS );
+	strcpy( tp_type, TP_TYPE_DDS );
     }
     else if ( strpattern( mtreq.mtdtp->name, TP_TYPE_DLT_PATTERN ) )
     {
