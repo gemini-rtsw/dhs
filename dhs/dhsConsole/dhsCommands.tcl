@@ -1098,7 +1098,9 @@ body	CDhsCommands::errorMonitor {
 	
 	set winPos [ lsearch [ winfo children . ] ".cdhgmain*" ]
 	if { $winPos != -1 } {
-	    after 3000 "delete object [ lindex [ winfo children . ] $winPos ]; exit"
+	    after 3000 "delete object [ lindex [ winfo children . ] $winPos ]; cmdtrace on; exit"
+	    # XXX allan: above exit (_ocsExit) hangs sometimes
+	    #after 3000 "kill [pid]"
 	}
     } 
 
