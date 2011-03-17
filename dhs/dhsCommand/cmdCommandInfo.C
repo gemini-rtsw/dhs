@@ -1036,7 +1036,7 @@ void		cCmdCommandInfo::exec
 
 
 	//
-	// Send the command to the appropriate subsystems.
+	// Send the command to the appropriate subsystems. (XXX allan: entry point for commands from dhsConsole!)
 	//
 
 	if ( strcmp( command.name(), "reset" ) == 0 ||
