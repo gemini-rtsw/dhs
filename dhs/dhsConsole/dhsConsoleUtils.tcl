@@ -491,7 +491,11 @@ proc	createToolbar {
     set i 0
 
     foreach commandName $nameList {
-        if {  "$commandName" == "blank"  } {
+	# XXX allan: don't display some buttons that cause problems, for now
+        if {  "$commandName" == "blank" || \
+	      "$commandName" == "Initialize" ||
+	      "$commandName" == "Reset" || 
+	      "$commandName" == "Shutdown" } {
 	    incr i
 	    continue
 	}
@@ -513,6 +517,7 @@ proc	createToolbar {
 	} elseif { "$commandName" == "Datasets" } {
 	    set cmd "$cmd $parent"
 	}
+
 
 	set button [ $bar add button command$i				\
 	         -command "$cmd"					\

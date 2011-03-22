@@ -200,9 +200,13 @@ proc 	commandMenu {
     global ::_dhgDefaults
 
     set i 0 
+    set lastCommand ""
     foreach command $_dhgDefaults($subsystem,commands) {
-	if { $command == "separator" } {
-	    $menu add separator
+	if { $command == "separator"} {
+	    if {"$lastCommand" != "separator"} {
+		$menu add separator
+	    }
+	    set lastCommand $command
 	} elseif { [ string first "resetHealth" $command ] != -1 } {
 	    #
 	    # Need to underline the "H" instead of the first character.
@@ -225,8 +229,9 @@ proc 	commandMenu {
 		-underline 13
 	} elseif { [ string first "init" $command ] >= 0 ||
 		   [ string first "reset" $command ] >= 0 ||
-		   [ string first "dhsExit" $command ] >= 0 ||
-		   [ string first "test" $command ] >= 0 } {
+		   [ string first "dhsExit" $command ] >= 0 } {
+	    # XX allan: leave out for now
+	} elseif { [ string first "test" $command ] >= 0 } {
 	    #
 	    # Need to add the "parent" window between the command name and
 	    # the subsystem information at the end.
