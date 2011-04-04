@@ -938,15 +938,14 @@ body	CLed::updateColor {
     name2
     op
 } {
-    global ::dhsStatus
+    global ::dhsStatus ::$name1
 
-    set varName $name1
     if { $name2 == "" } {
-	set var "$varName"
+	set var "$name1"
     } else {
-	set var "${varName}(${name2})"
+	set var "${name1}(${name2})"
     }
-    if { "$varName" != "$ledVariable" || [ uplevel \#0 [list info exists $varName] ] == 0 } {
+    if { "$var" != "$ledVariable" || [ uplevel \#0 info exists $var ] == 0 } {
 	#
 	# We aren't suppose to be monitoring this variable.
 	# 
@@ -954,19 +953,18 @@ body	CLed::updateColor {
     }
 
 
-    if { $op == "u" } {
+    if { [string match u* $op] } {
 	#
 	# The variable has been unset so we should no longer trace it
 	#
 
 	$this configure -ledvariable ""
-    } elseif { $op == "w" } {
+    } elseif { [string match w* $op] } {
 	#
 	# Set the colour of the led according to the value of the variable.
 	#
 
-	set cmd "set junk \$$var"
-	set value [ uplevel \#0 $cmd ]
+	set value [ uplevel \#0 set $var ]
 	if { [ set pos [ lsearch -exact $values [ string toupper $value ] ] ] != -1 } {
 	    $itk_component(led) configure -background [ lindex $colors $pos ]
 	} elseif { [ set pos [ lsearch -exact $values "*" ] ] != -1 } {
