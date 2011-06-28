@@ -9,17 +9,35 @@ if [ "`cat /etc/passwd | grep dhsuser`" = "" ] ; then
 	useradd -u 2945 -G gemini -d /gemsoft/opt/dhs/ -M dhsuser
 fi
 
+
 #chmod  0666 $GEMINI_TOP/opt/dhs/var/sample-config/imp_startup/*
 ## for now until we have a group gemsoft where these files could belong to
 #chmod  0666 $GEMINI_TOP/opt/dhs/var/sample-config/default_config_dir/*
+
+if [ "$GEMINI_SITE" = "" ] ; then
+	if [ "`/sbin/ifconfig | egrep 'addr:10\.'`" != "" ]; then
+		export GEMINI_SITE=MK
+	else
+		export GEMINI_SITE=CP
+	fi
+fi
 cd $GEMINI_TOP/opt/dhs/var
 if [ ! -d local-config-$1 ]; then
 	cp -a sample-config local-config-$1
 fi
-if [ ! -d `/bin/hostname` ]; then
-	ln -sn local-config-$1 local-config &>/dev/null
+HOSTNAME=$(/bin/hostname -s)
+if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
+	HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
+fi
+if [ ! -d "$HOSTNAME" ]; then
+	DHS_SERVERS=$GEMINI_TOP/opt/dhs/etc/server.conf.$GEMINI_SITE
+	if [ -e $DHS_SERVERS ] && [ `grep $HOSTNAME $DHS_SERVERS` != "" ] && [ ! -d "ops-$GEMINI_SITE" ] ; then
+		ln -sn ops-$GEMINI_SITE local-config &>/dev/null
+	else
+		ln -sn local-config-$1 local-config &>/dev/null
+	fi
 else
-	ln -sn `/bin/hostname` local-config &>/dev/null
+	ln -sn "$HOSTNAME" local-config &>/dev/null
 fi
 
 rm -rf auto-config
@@ -30,11 +48,7 @@ chgrp -R gemini $GEMINI_TOP/opt/dhs/var
 chmod -R 775 $GEMINI_TOP/opt/dhs/var
 
 ## create auto configuration based on dhs.conf.$GEMINI_SITE
-if [ "`/sbin/ifconfig | egrep 'addr:10\.'`" != "" ]; then
-    export GEMINI_SITE=MK
-else
-    export GEMINI_SITE=CP
-fi
+
 sed -e '/#.*/ d' -e '/^$/ d' < $GEMINI_TOP/tmp/dhs.conf.${GEMINI_SITE} > $GEMINI_TOP/tmp/dhs.conf.tmp
 cd $GEMINI_TOP/opt/dhs/var/sample-config/default_config_dir
 echo sed \\ > $GEMINI_TOP/tmp/sedscript.tmp
