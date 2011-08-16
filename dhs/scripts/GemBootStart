@@ -36,6 +36,7 @@ case $1 in
       GemBootStart stop &>/dev/null
       if [ "`ps aux |grep master |grep -v grep`" = "" ]; then
             master &
+            sleep 1
       else
             echo ""
             echo "IMP master was already started (presumably either by"
@@ -43,6 +44,7 @@ case $1 in
             echo "which should be okay."
             echo ""
       fi
+      dhsQlServer &
       ;;
    stop)
       ## fkraemer - don't execute cleanup here since IMP might still be in use

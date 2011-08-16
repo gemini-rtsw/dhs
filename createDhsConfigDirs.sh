@@ -29,9 +29,10 @@ HOSTNAME=$(/bin/hostname -s)
 if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
 	HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
 fi
+[ -e local-config ] && rm local-config
 if [ ! -d "$HOSTNAME" ]; then
 	DHS_SERVERS=$GEMINI_TOP/opt/dhs/etc/server.conf.$GEMINI_SITE
-	if [ -e $DHS_SERVERS ] && [ `grep $HOSTNAME $DHS_SERVERS` != "" ] && [ ! -d "ops-$GEMINI_SITE" ] ; then
+	if [ -e $DHS_SERVERS ] && [ "`grep $HOSTNAME $DHS_SERVERS`" = "" ] && [ -d "ops-$GEMINI_SITE" ] ; then
 		ln -sn ops-$GEMINI_SITE local-config &>/dev/null
 	else
 		ln -sn local-config-$1 local-config &>/dev/null

@@ -17,15 +17,23 @@ DHS_SERVERS=$DHS_BASE/etc/server.conf.$GEMINI_SITE
 start()
 {
 	hostname=`hostname -s`
-	if [ `grep $hostname $DHS_SERVERS` != "" ]; then
+	if [ "`grep $hostname $DHS_SERVERS`" != "" ]; then
 		echo "Starting dhs services (master version)"
 		set -x
-		su -c "GemBootStart server" $DHS_USER
+		if [ "$USER" != "$DHS_USER" ]; then
+                    su -c "GemBootStart server" $DHS_USER
+                else
+                    GemBootStart server
+                fi
 		set +x
 	else
 		echo "Starting dhs services (slave version)"
 		set -x
-		su -c "GemBootStart start" $DHS_USER
+		if [ "$USER" != "$DHS_USER" ]; then
+                    su -c "GemBootStart start" $DHS_USER
+                else
+                    GemBootStart start
+                fi
 		set +x
 	fi
 }
@@ -34,7 +42,11 @@ stop()
 {
 	echo "Stopping dhs services"
 	set -x
-	su -c "GemBootStart stop" $DHS_USER
+	if [ "$USER" != "$DHS_USER" ]; then
+            su -c "GemBootStart stop" $DHS_USER
+        else
+            GemBootStart stop
+        fi
 	set +x
 }
 

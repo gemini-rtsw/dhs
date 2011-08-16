@@ -40,7 +40,7 @@ Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
 Requires: ocswish drama >= 1.5.2-9.el5.2.gemini skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
-BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
+BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
 %description QlTools
 dhs
 
@@ -140,6 +140,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/dhsQlTool*
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQls.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
@@ -155,12 +157,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
-/etc/init.d/dhs
 
 # fixme: doubt we'll ever need a dhs server development package
 %files devel

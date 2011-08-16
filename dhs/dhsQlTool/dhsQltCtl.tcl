@@ -2265,7 +2265,6 @@ body	CDhsQltCtl::streamSet {
     set streamList [ concat [ $itk_component(streamWidget) streamList ] \
 		[ $itk_component(customStreamWidget) streamList ] ]
 
-
     #
     # Send a command to the QLS subscribing to the list of streams.
     #
@@ -2276,8 +2275,7 @@ body	CDhsQltCtl::streamSet {
     #
     # Set the contents of the subscribed streams listbox.
     #
-
-    #$itk_component(streamList) configure -items $streamList
+    $itk_component(streamList) clear
     eval $itk_component(streamList) insert end $streamList
 }
 

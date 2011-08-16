@@ -170,7 +170,7 @@ body		CDhsQlTool::constructor {
 	error $msg $savedInfo
     }
     
-    $itk_component(dqtCtl) initialize
+    #$itk_component(dqtCtl) initialize
     if { [ catch { $itk_component(dqtCtl) initialize } msg ] != 0  } {
 	#
 	# An error occured, display an error message.
