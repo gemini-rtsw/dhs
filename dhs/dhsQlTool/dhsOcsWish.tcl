@@ -285,7 +285,6 @@ body	cQlServer::checkDisplay {
     set datasetName [ $frame cget -qfDatasetName ]
     set image [ $imageName get_image ]
 
-    puts "XXX cQlServer::checkDisplay: $frame == $qlsDisplayFrame"
     if { $frame == $qlsDisplayFrame } {
 	#
 	# Update the arithmetic.
@@ -300,7 +299,6 @@ body	cQlServer::checkDisplay {
 	# Update the image.
 	#
 
-	puts "XXX $image mmap update"
 	$image mmap update
 
 
@@ -352,7 +350,6 @@ body	cQlServer::checkDisplay {
 	#  Display the file containing the frame data.
 	#
 
-	puts "XXX $image mmap set $newDataFile 0 0 $newHeaderFile 0 0"
 	$image mmap set $newDataFile 0 0 $newHeaderFile 0 0
 
 

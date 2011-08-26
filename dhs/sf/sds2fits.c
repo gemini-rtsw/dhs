@@ -4312,7 +4312,8 @@ void	sfWriteScalarVal
     // keyword is truncated to 8 char, cfitsio takes care of upper-casing
     // .. let's be wild, uncomment if you want (FLEN_KEYWORD used to be 8, as of cfitio3.0.6 it's 72)
     // assert (FLEN_KEYWORD>8);
-    keyword[8]='\0';
+    if (strlen(keyword) > 8) // XXX allan: without this check, this writes outside the bounds of any string with length <= 8!
+      keyword[8]='\0';
 #endif
 
     fitsCheck( ffpky( fptr, fitsType, keyword, tmpData, comm, &fitsStatus ),

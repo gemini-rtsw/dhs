@@ -1522,10 +1522,8 @@ void		cDtsDhs::sizeGet
 	    //  format.  The root will be the datasetName (without any
 	    //  extensions added).
 	    //
-
 	    (void)cDtsDbManager::nameInfo( status, name, rootName, 
 		    &format, &comp );
-		
 
 	    //
 	    //  Look for the dataset in the list.

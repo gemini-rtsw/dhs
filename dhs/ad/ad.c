@@ -107,15 +107,19 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include "gen_types.h"
 #include "gen_msg.h"
 #include "gen_str.h"
 #include "gen_eptr.h"
 
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 
 #include "ad.h"
 #include "local_ad.h"
@@ -179,6 +183,7 @@ void	ad_close
 ************************************************************************
 -*/
 
+#if defined(SYBASE_DHS)
 int		ad_dbinfo_get
 (
     AD_MEDIUM	medium,		/* (in)  The medium to return.		*/
@@ -255,6 +260,7 @@ int		ad_dbinfo_get
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -328,7 +334,7 @@ AD_ARCHIVE	*ad_archive_info
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_file_del
 (
     DBPROCESS	*dbproc,	/* (in)  The dbprocess to use.		*/
@@ -364,6 +370,7 @@ int		ad_file_del
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -423,7 +430,7 @@ int		ad_file_del
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_file_get
 (
     AD_FILEGET	select_type,	/* (in)  The type of selction.		*/
@@ -558,6 +565,7 @@ int		ad_file_get
 	}
     }
 }
+#endif
 
 /*+
 ************************************************************************
@@ -785,7 +793,7 @@ int		ad_file_init
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_file_media
 (
     DBPROCESS	*dbproc,	/* (in)  The db process to use.		*/
@@ -935,6 +943,7 @@ int		ad_file_media
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -1028,7 +1037,7 @@ char		*ad_file_name
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_file_put
 (
     AD_FILE	*ad_file,	/* (in)  The file to write.		*/
@@ -1111,6 +1120,7 @@ int		ad_file_put
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -1246,7 +1256,7 @@ AD_MEDIUM	ad_med_type
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_remote_get
 (
     AD_REMOTEGET	
@@ -1332,6 +1342,7 @@ int		ad_remote_get
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -1357,7 +1368,7 @@ int		ad_remote_get
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_server_id_get
 (
     DBPROCESS	*dbproc,	/* (in)  dbprocess to use.		*/
@@ -1408,6 +1419,7 @@ int	ad_server_id_get
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -1461,7 +1473,7 @@ int	ad_server_id_get
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_volume_get
 (
     AD_VOLGET	select_type,	/* (in)  The selection type.		*/
@@ -1524,6 +1536,7 @@ int	ad_volume_get
 
     return( ad_get_next_volume( dbproc, ad_volume ) );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -1629,7 +1642,7 @@ int		ad_volume_init
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_volume_put
 (
     AD_VOLUME	*ad_volume,	/* (in)  The volume to write.		*/
@@ -1713,6 +1726,7 @@ int		ad_volume_put
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************

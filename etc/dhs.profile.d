@@ -1,14 +1,5 @@
 export DHS_BASE=${GEMINI_TOP}/opt/dhs
 export PATH=${PATH}:${DHS_BASE}/bin:${DHS_BASE}/scripts
-export IMP_STARTUP=${DHS_BASE}/var/local-config/imp_startup
-export IMP_SCRATCH=${DHS_BASE}/var/tmp
-export IMP_KEY=0xffff
-export DEFAULT_CONFIG_DIR=${DHS_BASE}/var/local-config/default_config_dir
-export DHS_STAGING=${DHS_BASE}/var/local-config/staging
-#export DHS_USER=dhsuser
-export DHS_USER=software
-
-if [ ! -e $IMP_SCRATCH ]; then
-	mkdir -p ${IMP_SCRATCH}
-	chmod -R 777 ${IMP_SCRATCH}
-fi
+export DEFAULT_CONFIG_DIR=${GEMINI_TOP}/etc/dhs
+export DHS_STAGING=/staging
+export DHS_USER=gemdhs

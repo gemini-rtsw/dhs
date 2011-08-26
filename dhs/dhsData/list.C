@@ -3206,7 +3206,7 @@ void	cDtsUniqueList::exit
 
     culElExit = true;
     culElCond.broadcast(); 
-    pthread_join( culElThread, NULL );
+    if (culElThread > 0) {pthread_join( culElThread, NULL );} // XXX allan: added check
 
 
     //

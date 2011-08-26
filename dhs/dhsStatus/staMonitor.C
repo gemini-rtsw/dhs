@@ -329,7 +329,7 @@ bool		    cStaMon::stopping=FALSE;
 // (bool) : True if no errors occur.
 //
 // PURPOSE:
-// Find the channel sliases given for the EPICS resource data records.
+// Find the channel aliases given for the EPICS resource data records.
 //
 // DESCRIPTION:
 // If the channel name (token[2]) matches one of:
@@ -650,7 +650,7 @@ void	cStaMon::cleanup
 
     if( staMonThread != 0 )
     {
-	if ( pthread_join( staMonThread, NULL ) != 0  )
+	if ( staMonThread > 0 && pthread_join( staMonThread, NULL ) != 0  ) // XXX allan: added check for 0
 	{
 	    status.E_MON_THREAD( status );
 	}
@@ -1602,11 +1602,11 @@ void	cStaMon::updateEpics
 	    checkNull( value = (char*) char_alloc( 2 ), status, return )
 	    if ( *((boolean*)data) == TRUE )
 	    {
-		strcpy( value, "T\0");
+		strcpy( value, "T");
 	    }
 	    else
 	    {
-		strcpy( value, "F\0");
+		strcpy( value, "F");
 	    }
 	    break;
 	case DHS_DT_CHAR:
@@ -2105,10 +2105,10 @@ void	cStaMonDb::init
 		   &dbConnection ), tStatus, dbConnection = NULL );
        }
     }
-#else
-    if (!simulate()) {
-       status.E_CDB(status, "no SYBASE support: use -simulate FULL", "cStaMonDb::init" );
-    }
+//#else
+//    if (!simulate()) {
+//       status.E_CDB(status, "no SYBASE support: use -simulate FULL", "cStaMonDb::init" );
+//    }
 #endif
 
 }
@@ -2243,6 +2243,7 @@ void	cStaMonDb::test
     std::list<tStaDb*>::iterator	i;
     for( i = dbList.begin(); i != dbList.end(); i++ )
     {
+#if defined(SYBASE_DHS)
 	checkDatabase( ((tStaDb*) (*i))->dbName, s );
 	if ( !s.ok() )
 	{
@@ -2250,6 +2251,7 @@ void	cStaMonDb::test
 	    status+=s;
 	    s.S_SUCCESS( s );
 	}
+#endif
 	checkAliases( *(((tStaDb*) (*i))->aliases), s );
 	if ( !s.ok() )
 	{

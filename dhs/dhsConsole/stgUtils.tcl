@@ -420,7 +420,7 @@ proc	displayRequestInfo {
    statusObject
    { parent "" }
 } {
-    global _stgDefaults
+    global ::_stgDefaults
 
 
     #
@@ -495,9 +495,9 @@ proc	displayRequestInfo {
 	PrepState WriteNum WriteState CleanupNum CleanupState 		\
 	NotifyValue NotifyState } {
 
-	global reqStatus
+	global ::reqStatus
 	$statusObject link stoReq${reqNum}$status reqStatus($status${reqNum})
-	$sBox add EntryField $status 					\
+	$sBox add entryfield $status 					\
 	    -labeltext "[ lindex $labels $sIndex ]:"			\
 	    -justify right				       		\
 	    -labelmargin 30						\

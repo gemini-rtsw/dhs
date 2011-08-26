@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+   echo "Usage: GemBootStart [start|stop|server]"
+   exit 1
+fi
+
+case $1 in
+
+   server)
+      GemBootStart stop &>/dev/null
+      rm -fr $DHS_STAGING/temp
+      mkdir -p $DHS_STAGING/temp 
+      [ -d $DHS_STAGING/perm ] || mkdir -p $DHS_STAGING/perm
+      sleep 1
+      if [ "`ps aux |grep master |grep -v grep`" = "" ]; then
+            master &
+            sleep 1
+      else
+            echo ""
+            echo "IMP master was already started (presumably either by"
+            echo "/etc/init.d/imp_startup or by seqexec.sh). Omitting it here,"
+            echo "which should be okay."
+            echo ""
+      fi
+      dhsStatus &
+      sleep 1
+      dhsSim4Data &
+      sleep 1
+      dhsData -debug MIN NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm &
+      sleep 1
+      #dhsQlServer -master -debug NONE -simulate&
+      dhsQlServer -master &
+      sleep 1
+      dhsCommand &
+      ;;
+
+   start)
+      GemBootStart stop &>/dev/null
+      if [ "`ps aux |grep master |grep -v grep`" = "" ]; then
+            master &
+      else
+            echo ""
+            echo "IMP master was already started (presumably either by"
+            echo "/etc/init.d/imp_startup or by seqexec.sh). Omitting it here,"
+            echo "which should be okay."
+            echo ""
+      fi
+      ;;
+   stop)
+      find /tmp -type d -user abrighto -name 'dhs*' -print -exec rm -fr '{}' \; >& /dev/null
+      rm -fr $DHS_STAGING/temp
+      cleanup
+      ;;
+
+   *)
+      echo "Usage: GemBootStart [server|start|stop]"
+      exit 1
+      ;;
+esac

@@ -343,14 +343,13 @@ void		cQlsConnect::error
     char	*name;			// Name of the client.
     cQlsQlt	*pQlsQlt;		// A new QLT object.
     cQlsStatus	status;
-
+    char        *qlServer = cDhs::identity(); // identity for qlServer (allan)
 
     //
     // Get the connection information from the DHS library.
     //
 
     dhsConnectInfo( connect(), &address, &name, &dhsStatus );
-
 
     //
     // Test to see if this is a quick look client.
@@ -389,7 +388,7 @@ void		cQlsConnect::error
 
 	cQlsMaster::updateStreams( status );
     }
-    else if ( strncmp( "qlServer.", name, strlen( "qlServer." ) ) == 0 )
+    else if ( strncmp( qlServer, name, strlen( qlServer ) ) == 0 )
     {
 	//
 	// Create a new cQlsSlave object.

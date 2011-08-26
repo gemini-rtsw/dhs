@@ -215,9 +215,9 @@ proc	addMsg {
     msgType
     msg
 } {
-    global dhsMsgLock
-    global dhsMsgQueue
-    global dhsTmpMsgQueue
+    global ::dhsMsgLock
+    global ::dhsMsgQueue
+    global ::dhsTmpMsgQueue
 
     #
     # If the dhs message queue is locked then add the new message to
@@ -288,7 +288,7 @@ if { [ info commands bgerror ] != "" } {
 proc	bgerror {
     errorMsg		 
 } {
-    global __errorMonitor debug
+    global ::__errorMonitor debug
 
 
     if { $debug == "FULL" } {
@@ -478,7 +478,7 @@ proc	createToolbar {
     # Create the toolbar
     #
  
-    set bar [ toolbar $parent.[ string tolower $name ] ]
+    set bar [ iwidgets::toolbar $parent.[ string tolower $name ] ]
     pack $bar -anchor center -expand y -padx 10 -pady 10
  
  
@@ -491,7 +491,11 @@ proc	createToolbar {
     set i 0
 
     foreach commandName $nameList {
-        if {  "$commandName" == "blank"  } {
+	# XXX allan: don't display some buttons that cause problems, for now
+        if {  "$commandName" == "blank" || \
+	      "$commandName" == "Initialize" ||
+	      "$commandName" == "Reset" || 
+	      "$commandName" == "Shutdown" } {
 	    incr i
 	    continue
 	}
@@ -577,6 +581,10 @@ proc 	errorDialog {
     msg 
     { parent "" }
 } {
+    # XXX allan: want to see traceback
+    global ::errorInfo
+    puts stderr "$msg\n\nTraceback:$errorInfo\n"
+
     #
     # Determine the dialog's parent
     #
@@ -604,7 +612,7 @@ proc 	errorDialog {
     # Create the error dialogue.
     #
 
-    messagedialog $w							\
+    iwidgets::messagedialog $w							\
 	-bitmap error  							\
 	-justify left							\
 	-modality application						\
@@ -613,10 +621,10 @@ proc 	errorDialog {
 	-title Error  							\
 	-text "Error: $msg"						
 
-    set wrapLength [ winfo pixels [ $w component msg ] 5i ]
+    set wrapLength [ winfo pixels [ $w component message ] 5i ]
     $w configure -wraplength $wrapLength
 
-    $w component shellchildsite configure 				\
+    $w component hull configure 				\
 	-borderwidth 2 							\
 	-relief raised
     $w hide Cancel
@@ -823,7 +831,7 @@ proc    getImages {
     images 
     imageDirs 
 } {
-    global debug 
+    global ::debug 
  
     set allFound 0
  
@@ -960,8 +968,8 @@ proc    getImages {
 proc	getMsg {
    { msgType "" }
 } {
-    global dhsMsgLock
-    global dhsMsgQueue
+    global ::dhsMsgLock
+    global ::dhsMsgQueue
 
     set dhsMsgLock 1
     set found 0
@@ -1048,7 +1056,7 @@ proc 	infoDialog {
     # Create the informational Dialogue.
     #
 	
-    messagedialog $w							\
+    iwidgets::messagedialog $w							\
 	-bitmap info 							\
 	-justify left							\
 	-modality application						\
@@ -1057,9 +1065,9 @@ proc 	infoDialog {
 	-title Information 						\
 	-text "$msg"
 
-    set wrapLength [ winfo pixels [ $w component msg ] 5i ]
+    set wrapLength [ winfo pixels [ $w component message ] 5i ]
     $w configure -wraplength $wrapLength
-    $w component shellchildsite configure 				\
+    $w component hull configure 				\
 	-borderwidth 2 							\
 	-relief raised
     $w hide Cancel
@@ -1568,7 +1576,7 @@ proc 	parseCommandLine {
     argv 
     argc
 } {
-    global debug epics simulate _dhgLongVersion
+    global ::debug ::epics ::simulate ::_dhgLongVersion
 
     set usageString {USAGE: dhsConsole [ -debug NONE|MIN|FULL ] [ -Help ]\
 	 [ -simulate NONE|VSM|FAST|FULL ] [ -V ] [ -epics ]}
@@ -1672,7 +1680,7 @@ proc 	parseCommandLine {
     #
 
     if { ! [ info exists debug ] || "$debug" == "" } {
-	set debug "NONE"
+	set debug "FULL"
     }
 
 
@@ -1751,8 +1759,8 @@ proc processMsgs {
     { msgType "" }
     { prefix "" }
 } {
-    global dhsMsgLock
-    global dhsMsgQueue 
+    global ::dhsMsgLock
+    global ::dhsMsgQueue 
 
 
     #
@@ -1815,7 +1823,7 @@ proc processMsgs {
 #
 # DESCRIPTION:
 # Create a labelled widget to hold the buttons then create the
-# buttons (reserve, stop, and forward).
+# buttons (reverse, stop, and forward).
 #
 # EXTERNAL VARIABLES:
 # ::dhgDir	   Directory where the bitmaps for the buttons are.
@@ -1841,8 +1849,8 @@ proc 	stopGoButtons {
     { label "" } 
     { parent "" } 
 } { 
-    global $defaultArray 
-    global dhgDir 
+    global ::$defaultArray 
+    global ::dhgDir 
  
     # 
     # Determine the parent 
@@ -1860,7 +1868,7 @@ proc 	stopGoButtons {
     # 
  
     eval set font \$${defaultArray}(labelFont)                           
-    labeledwidget $window.stopGo                                        \
+    iwidgets::labeledwidget $window.stopGo                                        \
 	-labelfont $font                                                \
 	-labelmargin 2                                                  \
 	-labeltext $label                                               \
@@ -1987,7 +1995,7 @@ proc	warningDialog {
     # Create the warning dialogue.
     #
 
-    messagedialog $w							\
+    iwidgets::messagedialog $w							\
 	-bitmap warning							\
 	-justify left							\
 	-modality application						\
@@ -1995,9 +2003,9 @@ proc	warningDialog {
 	-pady 5								\
 	-title Warning 							\
 	-text "Warning: $msg"
-    set wrapLength [ winfo pixels [ $w component msg ] 5i ]
+    set wrapLength [ winfo pixels [ $w component message ] 5i ]
     $w configure -wraplength $wrapLength
-    $w component shellchildsite configure 				\
+    $w component hull configure 				\
 	-borderwidth 2							\
 	-relief raised
     $w hide Cancel

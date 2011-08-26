@@ -302,7 +302,6 @@ body	cQlServer::checkDisplay {
     set datasetName [ $frame cget -qfDatasetName ]
 #    set image [ $imageName get_image ]
     
-    puts "XXX cQlServer::checkDisplay: $frame == $qlsDisplayFrame"
     if { $frame == $qlsDisplayFrame } {
 
 	#

@@ -244,36 +244,26 @@ typedef struct local_ad
 } LOCAL_AD;
 
 
-int	ad_archive_search( char *, AD_ARCHIVE * );
-int	ad_archive_sort( AD_ARCHIVE *, AD_ARCHIVE * );
+#if defined(SYBASE_DHS)
 int	ad_cd_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_cd_file_put( AD_FILE *, DBPROCESS * );
 int	ad_cd_volume_get( AD_VOLGET, DBPROCESS *, va_list );
 int	ad_cd_volume_put( AD_VOLUME *, DBPROCESS * );
-int     ad_comp_compare_srch( char *, AD_COMP_CONFIG * );
-int     ad_comp_compare_sort( AD_COMP_CONFIG *, AD_COMP_CONFIG * );
-int	ad_config_init( void );
 int	ad_db_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_db_file_put( AD_FILE *, DBPROCESS * );
 int	ad_db_volume_get( AD_VOLGET, DBPROCESS *, va_list );
 int	ad_db_volume_put( AD_VOLUME *, DBPROCESS * );
-int     ad_fmt_compare_srch( char *, AD_FMT_CONFIG * );
-int     ad_fmt_compare_sort( AD_FMT_CONFIG *, AD_FMT_CONFIG * );
-void	ad_format_message( int, ... );
 int	ad_get_next_file( DBPROCESS *, AD_FILE * );
 int	ad_get_next_volume( DBPROCESS *, AD_VOLUME * );
 int	ad_md_file_del( DBPROCESS *, char *, char * );
 int	ad_md_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_md_file_put( AD_FILE *, DBPROCESS * );
 int	ad_md_volume_get( AD_VOLGET, DBPROCESS *, va_list );
-int	ad_md_volume_put( AD_VOLUME *, DBPROCESS * );
-int	ad_mfs_compare_sort( AD_MFS_CONFIG *, AD_MFS_CONFIG * );
-int	ad_mfs_compare_srch( MFS_VOL_INFO *, AD_MFS_CONFIG * );
+int	ad_md_volume_put( AD_VOLUME *, DBPROCESS * );#
 int	ad_mfs_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_mfs_file_put( AD_FILE *, DBPROCESS * );
 int	ad_mfs_volume_get( AD_VOLGET, DBPROCESS *, va_list );
 int	ad_mfs_volume_put( AD_VOLUME *, DBPROCESS * );
-boolean	ad_mfs_volume_verify( AD_VOLUME * );
 int	ad_od_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_od_file_put( AD_FILE *, DBPROCESS * );
 int	ad_od_volume_get( AD_VOLGET, DBPROCESS *, va_list );
@@ -285,6 +275,18 @@ int	ad_tp_file_get( AD_FILEGET, DBPROCESS *, va_list );
 int	ad_tp_file_put( AD_FILE *, DBPROCESS * );
 int	ad_tp_volume_get( AD_VOLGET, DBPROCESS *, va_list );
 int	ad_tp_volume_put( AD_VOLUME *, DBPROCESS * );
+#endif
+int	ad_archive_search( char *, AD_ARCHIVE * );
+int	ad_archive_sort( AD_ARCHIVE *, AD_ARCHIVE * );
+int     ad_comp_compare_srch( char *, AD_COMP_CONFIG * );
+int     ad_comp_compare_sort( AD_COMP_CONFIG *, AD_COMP_CONFIG * );
+int	ad_config_init( void );
+int     ad_fmt_compare_srch( char *, AD_FMT_CONFIG * );
+int     ad_fmt_compare_sort( AD_FMT_CONFIG *, AD_FMT_CONFIG * );
+void	ad_format_message( int, ... );
+int	ad_mfs_compare_sort( AD_MFS_CONFIG *, AD_MFS_CONFIG * );
+int	ad_mfs_compare_srch( MFS_VOL_INFO *, AD_MFS_CONFIG * );
+boolean	ad_mfs_volume_verify( AD_VOLUME * );
 
 
 /*

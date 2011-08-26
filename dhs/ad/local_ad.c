@@ -86,17 +86,23 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include "gen_types.h"
 #include "gen_msg.h"
 #include "gen_eptr.h"
 
 #include "ad.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 #include "local_ad.h"
+#if defined(SYBASE_DHS)
 #include "crc.h"
+#endif
 
 LOCAL_AD	local_ad;
 boolean		ad_init_flag = FALSE;
@@ -348,7 +354,7 @@ int		ad_mfs_compare_sort
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_get_next_file
 (
     DBPROCESS	*dbproc,	/* (in)  The dbprocess to use.		*/
@@ -838,3 +844,4 @@ int		ad_onefile_media
 
     return( AD_SUCCESS );
 }
+#endif

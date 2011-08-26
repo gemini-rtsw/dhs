@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version 1.1
-%define release 3
+%define version 1.2
+%define release 0
 %define repository gemini
 
 Summary: the dhs server
@@ -16,13 +16,14 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio
-Requires: gemini-runtime
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio, dhs-config-server
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
-%define debug_package
+# stop rpm from stripping binaries (for debugging)
+%define debug_package %{nil}
+%define __strip /bin/true
 
 %description
 Gemini Data Handling System server(s).
@@ -37,17 +38,15 @@ dhs
 %package QlTools
 Summary: dhs
 Group: Development/Gemini
-Requires: gemini-runtime
 BuildRequires: gemini-build
 Requires: ocswish drama >= 1.5.2-9.el5.2.gemini skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
-BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, qlplugins, cfitsio-devel
+BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
 %description QlTools
 dhs
 
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: gemini-runtime
 Requires: ocswish drama >= 1.5.2-9.el5.2.gemini
 %description Console
 dhs
@@ -74,7 +73,6 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 mkdir -p $RPM_BUILD_ROOT/etc/init.d
 cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
-#cp -a scripts/GemBootStart $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/bin
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
@@ -140,15 +138,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsQlTool*
-#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQls.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/etc/
-%{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
-/etc/init.d/dhs
 
 %files Console
 %defattr(-,root,root,-)
@@ -156,14 +153,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
-#%{_prefix}/opt/%{name}/var/sample-config/imp_startup
+%{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
+%{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
-%{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
-/etc/init.d/dhs
 
 # fixme: doubt we'll ever need a dhs server development package
 %files devel

@@ -1166,7 +1166,9 @@ void		cStaChannel::exit
     scElExit = true;
     elCond.broadcast();
 
-    pthread_join( scElThread, NULL );
+    if (scElThread > 0) { // XXX allan: caused crash if not initialized
+	pthread_join( scElThread, NULL );
+    }
 
     if ( scEpicsActive )
     {
@@ -1525,8 +1527,8 @@ bool		cStaChannel::test
 )
 {
     bool	retVal( true );
-    char	oldMessage[DATA_LENGTH+1];
-    char	oldValue[DATA_LENGTH+1];
+    char	oldMessage[scMessageSize];
+    char	oldValue[scDataSize];
 
 
     checkStat( status, return( false ) );
@@ -1543,8 +1545,8 @@ bool		cStaChannel::test
 	// Save the original value.
 	//
 
-	(void) strcpy( oldValue, scData );
-	(void) strcpy( oldMessage, scMessage );
+	strncpy( oldValue, scData, scDataSize );
+	strncpy( oldMessage, scMessage, scMessageSize );
 
 
 	//
@@ -1897,7 +1899,7 @@ void		cStaChannel::put
     // Copy the new data to the data string.
     //
 
-    strcpy( scData, value );
+    strncpy( scData, value, scDataSize );
 
 
     //
@@ -1916,7 +1918,7 @@ void		cStaChannel::put
     // Copy the new message to the message string.
     //
 
-    strcpy( scMessage, message );
+    strncpy( scMessage, message, scMessageSize );
 
 
     //

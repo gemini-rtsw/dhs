@@ -1711,7 +1711,6 @@ body	CDhsQltCtl::constructor {
     #
 
     itk_component add imageArithmetic {
-	echo " XXX $itk_interior.imageArithmetic XXX"
 	CDhsImageArithmetic $itk_interior.imageArithmetic $this
     }
 
@@ -2050,7 +2049,6 @@ body		CDhsQltCtl::displaySave {
 	#[ [ cQlServer::getImageName ] get_image ] dump $tmpDir/$dsName-QL.fits
 
 	# use ds9 here instead...
-	puts [list XXX xpaset $xpa ds9 "savefits $tmpDir/$dsName-QL.fits" "" "" "" names errs 1]
 	xpaset $xpa ds9 "file save $tmpDir/$dsName-QL.fits" "" "" "" names errs 1
 
 	#

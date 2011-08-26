@@ -76,6 +76,10 @@ done
 DIR=`dirname "$PRG"`/..
 DHS_BASE=`(cd $DIR; pwd)`; export DHS_BASE
 
+if [ "`ps aux |grep dhsQlServer |grep -v grep`" = "" ]; then
+	dhsQlServer &
+fi
+
 QLT_TMP_DIR=/tmp/dhsQlTool.$$; export QLT_TMP_DIR
 mkdir -p $QLT_TMP_DIR
 trap "rm -rf $QLT_TMP_DIR; exit"  0 INT

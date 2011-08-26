@@ -64,12 +64,16 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include "gen_types.h"
 #include "gen_msg.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 #include "gen_eptr.h"
 
 #include "ad.h"
@@ -89,7 +93,7 @@
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_cd_file_get
 (
     AD_FILEGET	select_type,	/* (in)  The selection type.		*/
@@ -182,6 +186,7 @@ int	ad_cd_file_get
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -200,7 +205,7 @@ int	ad_cd_file_get
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_cd_file_put
 (
     AD_FILE	*ad_file,	/* (in)  The file to insert.		*/
@@ -274,6 +279,7 @@ int	ad_cd_file_put
 
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -289,7 +295,7 @@ int	ad_cd_file_put
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_cd_volume_get
 (
     AD_VOLGET	select_type,	/* (in)  The selection type.		*/
@@ -400,6 +406,7 @@ int		ad_cd_volume_get
     
     return( AD_SUCCESS );
 }
+#endif
 
 /*+
 ************************************************************************
@@ -416,7 +423,7 @@ int		ad_cd_volume_get
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int		ad_cd_volume_put
 (
     AD_VOLUME	*ad_volume,	/* (in)  The volume to insert.		*/
@@ -504,3 +511,5 @@ int		ad_cd_volume_put
 
     return( AD_SUCCESS );
 }
+#endif
+

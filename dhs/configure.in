@@ -155,7 +155,7 @@ AC_SUBST(CFITSIO_LDLIBS)
 dnl EPICS settings
 AC_MSG_CHECKING([EPICS])
 # enforce no EPICS
-EPICS=
+EPICS=/gemsoft/opt/epics
 if test "x$EPICS" = "x" ; then
    EPICS_BASE=
    AC_MSG_RESULT([NO])

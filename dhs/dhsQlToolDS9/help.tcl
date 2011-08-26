@@ -171,7 +171,7 @@ itcl::class CHelp {
     private common objectList {}
 
     # XXX allan: added webBrowser variable, instead of hard coded "netscape"
-    private common webBrowser "mozilla"
+    private common webBrowser "firefox"
 };
 
 #

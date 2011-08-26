@@ -58,12 +58,16 @@
 
 #include <stdarg.h>
 
+#if defined(SYBASE_DHS)
 #include <sybfront.h>
 #include <sybdb.h>
+#endif
 
 #include "gen_types.h"
 #include "gen_msg.h"
+#if defined(SYBASE_DHS)
 #include "db.h"
+#endif
 #include "gen_eptr.h"
 
 #include "ad.h"
@@ -86,7 +90,7 @@
 *
 ************************************************************************
 -*/
-
+#if defined(SYBASE_DHS)
 int	ad_remote_file_put
 (
     AD_FILE	*ad_file,	/* (in)  The file to insert.		*/
@@ -249,3 +253,4 @@ int		ad_remote_volume_put
 
     return( AD_SUCCESS );
 }
+#endif
