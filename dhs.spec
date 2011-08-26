@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio, dhs-config-server
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -143,11 +143,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/etc/
-%{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
-/etc/init.d/dhs
 
 %files Console
 %defattr(-,root,root,-)
@@ -159,7 +157,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
-%{_prefix}/etc/profile.d
 %{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh

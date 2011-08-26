@@ -12,30 +12,26 @@
 . /etc/rc.d/init.d/functions
 . /etc/profile
 
-DHS_SERVERS=$DHS_BASE/etc/server.conf.$GEMINI_SITE 
+if [ "$DEFAULT_CONFIG_DIR" = "" ] ; then
+	export DEFAULT_CONFIG_DIR=${DHS_BASE}/var/local-config/default_config_dir
+fi
+if [ "$DHS_STAGING" = "" ] ; then
+	export DHS_STAGING=${DHS_BASE}/var/local-config/staging
+fi
+if [ "$DHS_USER" = "" ] ; then
+	export DHS_USER=software
+fi
 
 start()
 {
-	hostname=`hostname -s`
-	if [ "`grep $hostname $DHS_SERVERS`" != "" ]; then
-		echo "Starting dhs services (master version)"
-		set -x
-		if [ "$USER" != "$DHS_USER" ]; then
-                    su -c "GemBootStart server" $DHS_USER
-                else
-                    GemBootStart server
-                fi
-		set +x
+	echo "Starting dhs services (master version)"
+	set -x
+	if [ "$USER" != "$DHS_USER" ]; then
+		su -c "GemBootStart server" $DHS_USER
 	else
-		echo "Starting dhs services (slave version)"
-		set -x
-		if [ "$USER" != "$DHS_USER" ]; then
-                    su -c "GemBootStart start" $DHS_USER
-                else
-                    GemBootStart start
-                fi
-		set +x
+		GemBootStart server
 	fi
+	set +x
 }
 
 stop()
@@ -43,12 +39,13 @@ stop()
 	echo "Stopping dhs services"
 	set -x
 	if [ "$USER" != "$DHS_USER" ]; then
-            su -c "GemBootStart stop" $DHS_USER
-        else
-            GemBootStart stop
-        fi
+		su -c "GemBootStart stop" $DHS_USER
+	else
+		GemBootStart stop
+	fi
 	set +x
 }
+
 
 restart()
 {
