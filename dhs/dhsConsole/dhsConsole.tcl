@@ -138,7 +138,7 @@ unset ocsVer itkVer iWidgetVer tclUtilVer
 # Make sure we can find the widgets for dhg and set the dhgDirectory
 #
 
-set dhgDir $__source_path/../..
+set dhgDir $__source_path
 
 
 #
