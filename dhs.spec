@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9.el5.2.gemini, dhsClient, xpa-tcl, cfitsio, dhs-config-server
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-config-server
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -39,7 +39,7 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: ocswish drama >= 1.5.2-9.el5.2.gemini skycat xpa-tcl qlplugins itk iwidgets cfitsio ds9
+Requires: ocswish drama >= 1.5.2-9 skycat xpa-tcl tclx qlplugins itk iwidgets cfitsio ds9
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
 %description QlTools
 dhs
@@ -47,7 +47,7 @@ dhs
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: ocswish drama >= 1.5.2-9.el5.2.gemini
+Requires: ocswish drama >= 1.5.2-9 xpa-tcl tclx
 %description Console
 dhs
 
@@ -86,15 +86,15 @@ chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 
 %postun
 /sbin/ldconfig
-if [ "$1" = "0" ] ; then  #last uninstall
-	userdel dhsuser
-fi
+#if [ "$1" = "0" ] ; then  #last uninstall
+#	userdel dhsuser
+#fi
 
 %post
 /tmp/createDhsConfigDirs.sh %{version}
 
-%post QlTools
-/tmp/createDhsConfigDirs.sh %{version}
+#%post QlTools
+#/tmp/createDhsConfigDirs.sh %{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,7 +115,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/scripts/newsyslog
 %{_prefix}/opt/%{name}/scripts/TestBootStart
 %{_prefix}/opt/%{name}/config
-%{_prefix}/opt/%{name}/images
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
 %{_prefix}/opt/%{name}/etc/
