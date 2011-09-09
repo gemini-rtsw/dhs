@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version 1.3
-%define release 0
+%define version __auto__
+%define release __auto__
 %define repository gemini
 
 Summary: the dhs server
@@ -72,6 +72,7 @@ mkdir -p $RPM_BUILD_ROOT/tmp
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 mkdir -p $RPM_BUILD_ROOT/etc/init.d
 cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
+rm -Rf $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/images
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
 cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
