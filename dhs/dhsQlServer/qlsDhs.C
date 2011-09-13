@@ -637,7 +637,7 @@ void		cQlsDhs::init
 	// way of doing this.
 	//
 
-	(void) sprintf( impName, "%s.%lx", cDhs::identity(), gethostid() );
+	(void) sprintf( impName, "%s.%08x", cDhs::identity(), gethostid() );
     }
     else
     {
