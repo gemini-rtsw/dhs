@@ -93,6 +93,12 @@ chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 
 %post
 /tmp/createDhsConfigDirs.sh %{version}
+if ! grep ^gemdhs /etc/passwd > /dev/null ; then
+	if ! grep ^gemini /etc/group > /dev/null ; then
+		groupadd -g 2000 gemini
+	fi
+	useradd -g gemini gemdhs
+fi
 
 #%post QlTools
 #/tmp/createDhsConfigDirs.sh %{version}
