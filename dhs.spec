@@ -121,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/scripts/MakeUserMedia
 %{_prefix}/opt/%{name}/scripts/newsyslog
 %{_prefix}/opt/%{name}/scripts/TestBootStart
+%{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
+%{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
+%{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
