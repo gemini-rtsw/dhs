@@ -93,6 +93,9 @@ SCRIPTS = \
 	scripts/qlToolInst.sh \
 	scripts/qlToolWFS.sh \
 	scripts/qlToolAltair.sh \
+	scripts/dhsServerStart.sh \
+	scripts/dhsServerStop.sh \
+	scripts/dhsServerRestart.sh \
 	dhsQlTool/dhsQlTool \
 	dhsQlToolDS9/dhsQlToolDS9
 

@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.4
-%define release 0
+%define release 1
 %define repository gemini
 
 Summary: the dhs server
@@ -93,6 +93,12 @@ chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 
 %post
 /tmp/createDhsConfigDirs.sh %{version}
+if ! grep ^gemdhs /etc/passwd > /dev/null ; then
+	if ! grep ^gemini /etc/group > /dev/null ; then
+		groupadd -g 2000 gemini
+	fi
+	useradd -g gemini gemdhs
+fi
 
 #%post QlTools
 #/tmp/createDhsConfigDirs.sh %{version}
@@ -115,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/scripts/MakeUserMedia
 %{_prefix}/opt/%{name}/scripts/newsyslog
 %{_prefix}/opt/%{name}/scripts/TestBootStart
+%{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
+%{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
+%{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
