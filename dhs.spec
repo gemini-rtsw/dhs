@@ -100,6 +100,22 @@ if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 	useradd -g gemini gemdhs
 fi
 
+if ! grep local0 /etc/syslog.conf > /dev/null ; then
+    echo -e "\nlocal0.*\t\t\t\t\t\t%{_prefix}/var/log/dhs/dhs.log" >> /etc/syslog.conf
+    if ! [ -e %{_prefix}/var/log/dhs/dhs.log ] ; then
+        touch %{_prefix}/var/log/dhs/dhs.log
+    fi
+    chmod a+r %{_prefix}/var/log/dhs/dhs.log
+    service syslog restart
+fi
+if ! [ -e /etc/logrotate.d/dhs ] ; then
+    echo -e "%{_prefix}/var/log/dhs/dhs.log {" >> /etc/logrotate.d/dhs
+    echo -e "\tdaily" >> /etc/logrotate.d/dhs
+    echo -e "\trotate 7" >> /etc/logrotate.d/dhs
+    echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
+    echo -e "}" >> /etc/logrotate.d/dhs
+fi
+
 #%post QlTools
 #/tmp/createDhsConfigDirs.sh %{version}
 
