@@ -972,7 +972,6 @@ void		cQlsFrame::dataMerge
 	    {
 		if ( qfdNaxis[i] != imageSize[i] )
 		{
-		    fprintf(stderr, "XXX: cQlsFrame::dataMerge: qfdNaxis[i] != imageSize[i]: %d != %d\n", qfdNaxis[i], imageSize[i]);
 		    error = true;
 		    break;
 		}
@@ -980,13 +979,11 @@ void		cQlsFrame::dataMerge
 	}
 	else
 	{
-	    fprintf(stderr, "XXX: cQlsFrame::dataMerge: qfdNaxes != imageDims: %d != %d\n", qfdNaxes, imageDims);
 	    error = true;
 	}
 
 	if ( naxes != 0 && qfdBytePix != abs( bitpix ) / 8 )
 	{
-	    fprintf(stderr, "XXX: cQlsFrame::dataMerge: naxes != 0 && qfdBytePix != abs( bitpix ) / 8:  %d != 0 && %d != abs(%d)/8\n", naxes, qfdBytePix, bitpix);
 	    error = true;
 	}
 
@@ -1043,7 +1040,7 @@ void		cQlsFrame::dataMerge
 	//
 
 	if ( &(qfdDataset->lastFrame()) == NULL || 
-	     ! (*this < qfdDataset->lastFrame()) ) // XXX allan: replaced ">" with "!<"
+	     qfdDataset->lastFrame() < *this )   // XXX allan: reversed order, since there is no operator> defined
 	{
 	    qfdDataset->lastFrame( *this );
 	}
