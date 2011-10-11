@@ -1040,7 +1040,7 @@ void		cQlsFrame::dataMerge
 	//
 
 	if ( &(qfdDataset->lastFrame()) == NULL || 
-	     ! (*this < qfdDataset->lastFrame()) ) // XXX allan: replaced ">" with "!<"
+	     qfdDataset->lastFrame() < *this )   // XXX allan: reversed order, since there is no operator> defined
 	{
 	    qfdDataset->lastFrame( *this );
 	}

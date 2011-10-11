@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version 1.4
-%define release 1
+%define version 1.5
+%define release 0
 %define repository gemini
 
 Summary: the dhs server
@@ -98,6 +98,22 @@ if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 		groupadd -g 2000 gemini
 	fi
 	useradd -g gemini gemdhs
+fi
+
+if ! grep local0 /etc/syslog.conf > /dev/null ; then
+    echo -e "\nlocal0.*\t\t\t\t\t\t%{_prefix}/var/log/dhs/dhs.log" >> /etc/syslog.conf
+    if ! [ -e %{_prefix}/var/log/dhs/dhs.log ] ; then
+        touch %{_prefix}/var/log/dhs/dhs.log
+    fi
+    chmod a+r %{_prefix}/var/log/dhs/dhs.log
+    service syslog restart
+fi
+if ! [ -e /etc/logrotate.d/dhs ] ; then
+    echo -e "%{_prefix}/var/log/dhs/dhs.log {" >> /etc/logrotate.d/dhs
+    echo -e "\tdaily" >> /etc/logrotate.d/dhs
+    echo -e "\trotate 7" >> /etc/logrotate.d/dhs
+    echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
+    echo -e "}" >> /etc/logrotate.d/dhs
 fi
 
 #%post QlTools
