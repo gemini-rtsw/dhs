@@ -140,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
 %{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
 %{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
@@ -159,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
 %{_prefix}/opt/%{name}/scripts/dhsQlToolDS9
 %{_prefix}/opt/%{name}/scripts/GemBootStart
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
 %{_prefix}/opt/%{name}/lib/*.a
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
@@ -179,6 +181,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %{_prefix}/opt/%{name}/scripts/dhsConsole
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/
