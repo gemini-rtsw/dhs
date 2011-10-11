@@ -19,7 +19,7 @@ dhs_start() {
         echo "dhs_start: Starting $PROG$ARGS"
         #$SU$PROG$ARGS >> $LOG 2>&1 < /dev/null &
         BASEPROG=`basename $PROG`
-        $SU$PROG$ARGS < /dev/null | 2>&1 logger -p local0.debug -t $BASEPROG &
+        $SU$PROG$ARGS < /dev/null 2>&1 | logger -p local0.debug -t $BASEPROG &
         sleep 1
 }
 
@@ -43,13 +43,13 @@ case $1 in
       fi
       dhs_start dhsSim4Data
       sleep 1
-      dhs_start dhsStatus &
+      dhs_start dhsStatus
       sleep 1
-      dhs_start dhsData -debug FULL NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm &
+      dhs_start dhsData -debug FULL NO_DHS -noDb -temp $DHS_STAGING/temp -perm $DHS_STAGING/perm
       sleep 1
-      dhs_start dhsQlServer -master&
+      dhs_start dhsQlServer -master
       sleep 1
-      dhsCommand &
+      dhs_start dhsCommand
       ;;
    start)
       GemBootStart stop &>/dev/null
