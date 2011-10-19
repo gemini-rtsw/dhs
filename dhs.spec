@@ -113,6 +113,10 @@ if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "\tdaily" >> /etc/logrotate.d/dhs
     echo -e "\trotate 7" >> /etc/logrotate.d/dhs
     echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
+    echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
+    echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
+    echo -e "\t\t/sbin/service syslog restart" >> /etc/logrotate.d/dhs
+    echo -e "\tendscript" >> /etc/logrotate.d/dhs
     echo -e "}" >> /etc/logrotate.d/dhs
 fi
 
@@ -130,17 +134,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/man
-%{_prefix}/opt/%{name}/scripts/dhsCleanup
-%{_prefix}/opt/%{name}/scripts/GemBootStart
-%{_prefix}/opt/%{name}/scripts/MakeClassicalMedia
-%{_prefix}/opt/%{name}/scripts/MakePrImages
-%{_prefix}/opt/%{name}/scripts/MakeUserMedia
-%{_prefix}/opt/%{name}/scripts/newsyslog
-%{_prefix}/opt/%{name}/scripts/TestBootStart
-%{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
-%{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
-%{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
-%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsCleanup
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/GemBootStart
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/MakeClassicalMedia
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/MakePrImages
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/MakeUserMedia
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/newsyslog
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/TestBootStart
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
@@ -154,13 +157,12 @@ rm -rf $RPM_BUILD_ROOT
 %files QlTools
 %defattr(-,root,root,-)
 %{_prefix}/opt/%{name}/scripts/dhsQlTool
-%{_prefix}/opt/%{name}/bin/dhsQlServer
-%{_prefix}/opt/%{name}/scripts/qlToolInst.sh
-%{_prefix}/opt/%{name}/scripts/qlToolAltair.sh
-%{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
-%{_prefix}/opt/%{name}/scripts/dhsQlToolDS9
-%{_prefix}/opt/%{name}/scripts/GemBootStart
-%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsQlServer
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolInst.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolAltair.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsQlToolDS9
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/GemBootStart
 %{_prefix}/opt/%{name}/lib/*.a
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
@@ -180,8 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
-%{_prefix}/opt/%{name}/scripts/dhsConsole
-%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/*
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/etc/

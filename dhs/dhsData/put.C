@@ -721,6 +721,7 @@ void cDtsDhsPut::qlSend
 	    bufSize = bufSize * 2880;
 
 	    checkNull( ( fitsBuffer = gen_alloc( bufSize )), status, return );
+	    memset(fitsBuffer, 0, bufSize);
 	    checkDhs( access( dhsStatus ), dhsStatus, status, VOID );
 
 	    cDtsPutDs::lockSf();
