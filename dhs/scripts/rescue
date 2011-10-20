@@ -28,7 +28,7 @@ set dirrescue = /staging/temp/rescue
 #
 ##
 
-if ( $HOST != ${dhsserver} || $USER != ${dhsuser} ) then
+if ( $USER != ${dhsuser} ) then
         echo "Logon to '${dhsserver}' as user '${dhsuser}' to run rescue"
         exit 1
 endif
