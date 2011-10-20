@@ -96,6 +96,7 @@ SCRIPTS = \
 	scripts/dhsServerStart.sh \
 	scripts/dhsServerStop.sh \
 	scripts/dhsServerRestart.sh \
+	scripts/rescue \
 	dhsQlTool/dhsQlTool \
 	dhsQlToolDS9/dhsQlToolDS9
 
