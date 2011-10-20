@@ -1,0 +1,109 @@
+#!/bin/tcsh -f
+
+##
+# edit those 3 lines your taste
+
+set dhsserver = `hostname -s`
+set dhsuser = $DHS_USER
+set dirrescue = /staging/temp/rescue
+
+# no modifications beyond this point
+##
+
+##
+# Usage:
+#     rescue <ds> [ds [ds ..]]
+# 
+# Purpose:
+#     Dataset automated trivial rescue from DHS limbo
+# 
+# Author:
+#     Matthieu Bec - mbec@gemini.edu
+#
+# History:
+#     07 Dec 2002 - alpha, untested
+#     24 Jul 2004 - work through individual chunks in order, test for clean chunks before post
+#     02 Mar 2006 - use perm and copy over /staging/rescue for review to avoid datamon events
+#                   use pid as identity
+#
+##
+
+if ( $HOST != ${dhsserver} || $USER != ${dhsuser} ) then
+        echo "Logon to '${dhsserver}' as user '${dhsuser}' to run rescue"
+        exit 1
+endif
+
+if ( $#argv == 0 ) then
+   echo "Usage: rescue <ds> [ds [ds ..]]"
+   exit 1
+endif
+
+set dhstemp = /staging/temp
+set dhsperm = /staging/perm
+set rescue_suffix = pid$$
+set identity = dhsPut$$
+
+set log=/home/gemdhs/log/rescue.`date "+%y%m%d_%H%M"`
+
+foreach ds ( $argv )
+   echo "rescue ${ds}"
+   if ( -f ${dirrescue}/${ds}.fits ) then
+      echo "   Already recovered? ${dirrescue}/${ds}.fits" |& tee -a ${log}
+      continue
+   endif
+   if ( -f ${dhstemp}/${ds}${rescue_suffix}.fits ) then
+      echo "   Already recovered? ${dhstemp}/${ds}${rescue_suffix}.fits" |& tee -a ${log}
+      continue
+   endif
+   if ( -d $dhstemp/${ds}${rescue_suffix} ) then
+      echo "   Previous rescue failed, call for support" |& tee -a ${log}
+      continue
+   endif
+   if ( -f ${dhsperm}/${ds}.tar ) then
+      echo "   Expanding from ${dhsperm}" |& tee -a ${log}
+      tar xvf /staging/perm/${ds}.tar >>& ${log}
+   endif
+   if ( ! -d $dhstemp/${ds} ) then
+      echo "   Can't find any data, call for support" |& tee -a ${log}
+   else
+      echo "   Rescuing from $dhstemp" |& tee -a ${log}
+      cd /staging/temp/${ds}
+      dhsPut -d dataServerSS -ip reggie -t DS -l TEMP -n ${ds}${rescue_suffix} -id $identity -bufZero -noLast >>& ${log}
+      if ($status) then
+         echo "   rescue init FAILED, call for support" |& tee -a ${log}
+         continue
+      endif
+      foreach f ( `find . -type f | sort -t . -k 3 -n` )
+			dhsPut -d dataServerSS -ip reggie -t QL $f >>& ${log}
+         if ($status) then
+         	echo "   chunk $f FAILED" |& tee -a ${log}
+      	else
+         	dhsPut -d dataServerSS -ip reggie -t DS -n ${ds}${rescue_suffix} $f -id $identity -noLast >>& ${log}
+            if ($status) then
+         	   echo "   chunk $f FAILED, call for support" |& tee -a ${log}
+      	   else
+      	      echo "   chunk $f OK" |& tee -a ${log}
+            endif
+         endif
+		end
+		dhsPut -d dataServerSS -ip reggie -t DS -n ${ds}${rescue_suffix} -id $identity -bufZero >>& ${log}
+      if ($status) then
+         echo "   rescue final FAILED" |& tee -a ${log}
+      else
+         if ( -f ${dhstemp}/${ds}${rescue_suffix}.fits ) then
+            echo "   fits -> ${dhstemp}/${ds}${rescue_suffix}.fits" |& tee -a ${log}
+            cp ${dhstemp}/${ds}${rescue_suffix}.fits ${dirrescue}/${ds}.fits
+            if ( -f ${dirrescue}/${ds}.fits ) then
+               echo "   rescue OK -> ${dirrescue}/${ds}.fits" |& tee -a ${log}
+            else
+               echo "   Rescue failed to create dataset, call for support" |& tee -a ${log}
+            endif
+         else
+            echo "   Rescue failed to create fits, call for support" |& tee -a ${log}
+         endif
+      endif
+   endif
+end
+
+
+#/usr/lib/sendmail -f rescue mbec@gemini.edu < ${log}

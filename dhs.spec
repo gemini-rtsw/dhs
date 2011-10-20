@@ -144,6 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerStart.sh
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerStop.sh
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsServerRestart.sh
+%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/rescue
 %{_prefix}/opt/%{name}/config
 %{_prefix}/opt/%{name}/sql
 %{_prefix}/opt/%{name}/var
