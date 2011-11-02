@@ -4,6 +4,7 @@
 # edit those 3 lines your taste
 
 set dhsserver = `hostname -s`
+set dhsserverid = `grep '^\s*identity' $DEFAULT_CONFIG_DIR/dhsData.config | awk '{ print $2 }'`
 set dhsuser = $DHS_USER
 set dirrescue = /staging/temp/rescue
 
@@ -38,6 +39,10 @@ if ( $#argv == 0 ) then
    exit 1
 endif
 
+if (! -d ${dirrescue} ) then
+	mkdir -p ${dirrescue}
+endif
+
 set dhstemp = /staging/temp
 set dhsperm = /staging/perm
 set rescue_suffix = pid$$
@@ -68,17 +73,17 @@ foreach ds ( $argv )
    else
       echo "   Rescuing from $dhstemp" |& tee -a ${log}
       cd /staging/temp/${ds}
-      dhsPut -d dataServerSS -ip reggie -t DS -l TEMP -n ${ds}${rescue_suffix} -id $identity -bufZero -noLast >>& ${log}
+      dhsPut -d $dhsserverid -ip $dhsserver -t DS -l TEMP -n ${ds}${rescue_suffix} -id $identity -bufZero -noLast >>& ${log}
       if ($status) then
          echo "   rescue init FAILED, call for support" |& tee -a ${log}
          continue
       endif
       foreach f ( `find . -type f | sort -t . -k 3 -n` )
-			dhsPut -d dataServerSS -ip reggie -t QL $f >>& ${log}
+			dhsPut -d $dhsserverid -ip $dhsserver -t QL $f >>& ${log}
          if ($status) then
          	echo "   chunk $f FAILED" |& tee -a ${log}
       	else
-         	dhsPut -d dataServerSS -ip reggie -t DS -n ${ds}${rescue_suffix} $f -id $identity -noLast >>& ${log}
+         	dhsPut -d $dhsserverid -ip $dhsserver -t DS -n ${ds}${rescue_suffix} $f -id $identity -noLast >>& ${log}
             if ($status) then
          	   echo "   chunk $f FAILED, call for support" |& tee -a ${log}
       	   else
@@ -86,7 +91,7 @@ foreach ds ( $argv )
             endif
          endif
 		end
-		dhsPut -d dataServerSS -ip reggie -t DS -n ${ds}${rescue_suffix} -id $identity -bufZero >>& ${log}
+		dhsPut -d $dhsserverid -ip $dhsserver -t DS -n ${ds}${rescue_suffix} -id $identity -bufZero >>& ${log}
       if ($status) then
          echo "   rescue final FAILED" |& tee -a ${log}
       else
