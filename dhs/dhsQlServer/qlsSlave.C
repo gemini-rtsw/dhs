@@ -74,6 +74,8 @@ static char rcsid[] = "$Id: qlsSlave.C,v 1.1.1.1 2002-11-24 20:29:23 brighton Ex
 #include "qlsStream.H"
 #include "qlsSlave.H"
 
+
+
 //
 //***********************************************************************
 //+
@@ -114,6 +116,8 @@ static char rcsid[] = "$Id: qlsSlave.C,v 1.1.1.1 2002-11-24 20:29:23 brighton Ex
 ):	cQlsSubscriber( connection ),
 	cListOf< cQlsSlave, DHS_CONNECT, cQlsStatus >( connection )
 {
+	pendingForwards = 0;
+	pPendCountMutex = new cMutex;
 }
 
 //
@@ -168,6 +172,8 @@ static char rcsid[] = "$Id: qlsSlave.C,v 1.1.1.1 2002-11-24 20:29:23 brighton Ex
     //
 
     unSubscribeAll( status );
+
+    delete pPendCountMutex;
 }
 
 //
@@ -237,44 +243,48 @@ void		cQlsSlave::checkForward
     pDataset = pCfArg->first;
     pPutRequest = pCfArg->second;
 
+    pPendCountMutex->lock();
+    ++pendingForwards;
+    pPendCountMutex->unlock();
 
-    //
-    // Everything else is done with the mutex locked to ensure the list
-    // of streams is not changing as we look at it.
-    //
-
-    lock();
-
-
-    //
-    // check each stream subscribed by the slave.
-    //
-
-    for ( i = streamList().begin(); i != streamList().end(); i++ )
+    if ( pendingForwards <= MAX_PENDING_FORWARDS )
     {
-	pStream = (*i).second;
+		//
+		// Everything else is done with the mutex locked to ensure the list
+		// of streams is not changing as we look at it.
+		//
 
+		lock();
 
-	//
-	// Check to see if the stream is associated with the dataset.
-	//
+		//
+		// check each stream subscribed by the slave.
+		//
 
-	if ( strcmp( pStream->name(), "*" ) == 0 || 
-		pDataset->hasStream( *pStream ) )
-	{
-	    //
-	    // The stream is associated with the dataset, so forward the
-	    // data to the slave.
-	    //
-
-	    dsStreams( *pDataset, status );
-	    forward( pPutRequest, status );
-	    break;
-	}
+		for ( i = streamList().begin(); i != streamList().end(); i++ )
+		{
+			pStream = (*i).second;
+			//
+			// Check to see if the stream is associated with the dataset.
+			//
+			if ( strcmp( pStream->name(), "*" ) == 0 ||
+					pDataset->hasStream( *pStream ) )
+			{
+				//
+				// The stream is associated with the dataset, so forward the
+				// data to the slave.
+				//
+				dsStreams( *pDataset, status );
+				forward( pPutRequest, status );
+				break;
+			}
+		}
+		unlock();
     }
-    unlock();
+    pPendCountMutex->lock();
+    --pendingForwards;
+    pPendCountMutex->unlock();
 }
-
+
 //
 //***********************************************************************
 //+
