@@ -5,7 +5,7 @@
 %define release __auto__
 %define repository gemini
 
-Summary: the dhs server
+Summary: The DHS Server
 Name: %{name}
 Version: %{version}
 Release: %{release}.%{dist}.%{repository}
@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-config-server
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-config-server dhs-libs dhs-QlServer
 BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -39,7 +39,7 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: ocswish drama >= 1.5.2-9 skycat xpa-tcl tclx qlplugins itk iwidgets cfitsio ds9
+Requires: ocswish drama >= 1.5.2-9 skycat xpa-tcl tclx qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
 %description QlTools
 dhs
@@ -47,9 +47,24 @@ dhs
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: ocswish drama >= 1.5.2-9 xpa-tcl tclx
+Requires: ocswish drama >= 1.5.2-9 xpa-tcl tclx dhs-libs
 %description Console
 dhs
+
+%package libs
+Summary: dhs
+Group: Development/Gemini
+BuildRequires: gemini-build
+%description libs
+DHS common libraries.
+
+%package QlServer
+Summary: dhs
+Group: Development/Gemini
+BuildRequires: gemini-build
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-libs
+%description QlServer
+Quicklook Server.
 
 %prep
 %setup -q -n %name
@@ -85,11 +100,7 @@ cp -a etc/dhs.init.d $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 
-%postun
-/sbin/ldconfig
-#if [ "$1" = "0" ] ; then  #last uninstall
-#	userdel dhsuser
-#fi
+
 
 %post
 /tmp/createDhsConfigDirs.sh %{version}
@@ -123,16 +134,23 @@ fi
 #%post QlTools
 #/tmp/createDhsConfigDirs.sh %{version}
 
+%post libs
+/sbin/ldconfig
+
+%postun libs
+/sbin/ldconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
 # fixme: looks like there's more than we need listed here - cleanup
-%{_prefix}/opt/%{name}/bin
-%{_prefix}/opt/%{name}/lib/*.a
-%{_prefix}/opt/%{name}/lib/*.so
-%{_prefix}/opt/%{name}/lib/*.tcl
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsCommand
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsData
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsPut
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsSim4Data
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsStatus
 %{_prefix}/opt/%{name}/man
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsCleanup
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/GemBootStart
@@ -150,7 +168,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/var
 %{_prefix}/opt/%{name}/etc/
 %{_prefix}/etc/profile.d
-%{_prefix}/etc/ld.so.conf.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
 /etc/init.d/dhs
@@ -158,43 +175,39 @@ rm -rf $RPM_BUILD_ROOT
 %files QlTools
 %defattr(-,root,root,-)
 %{_prefix}/opt/%{name}/scripts/dhsQlTool
-%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsQlServer
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolInst.sh
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolAltair.sh
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/qlToolWFS.sh
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsQlToolDS9
-%attr(755, root, root) %{_prefix}/opt/%{name}/scripts/GemBootStart
-%{_prefix}/opt/%{name}/lib/*.a
-%{_prefix}/opt/%{name}/lib/*.so
-%{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsQlTool*
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsQlt.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQls.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsQlt.config
-%{_prefix}/opt/%{name}/etc/
-%{_prefix}/etc/ld.so.conf.d
-%{_prefix}/tmp
-/tmp/createDhsConfigDirs.sh
 
 %files Console
 %defattr(-,root,root,-)
-%{_prefix}/opt/%{name}/lib/*.a
 %{_prefix}/opt/%{name}/lib/*.so
-%{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
 %{_prefix}/opt/%{name}/var/ops-*/default_config_dir/dhsConsole.config
-%{_prefix}/opt/%{name}/etc/
+
+%files libs
+%defattr(-,root,root,-)
+%{_prefix}/opt/%{name}/lib/*.so
+%{_prefix}/opt/%{name}/lib/*.tcl
 %{_prefix}/etc/ld.so.conf.d
-%{_prefix}/tmp
-/tmp/createDhsConfigDirs.sh
+
+%files QlServer
+%attr(755, root, root) %{_prefix}/opt/%{name}/bin/dhsQlServer
+
 
 # fixme: doubt we'll ever need a dhs server development package
 %files devel
 %defattr(-,root,root,-)
 %{_prefix}/opt/%{name}/include
+%{_prefix}/opt/%{name}/lib/*.a
 
 %changelog
 * Wed Sep 10 2008 Felix Kraemer <fkraemer@gemini.edu> 4.0
