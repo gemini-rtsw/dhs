@@ -567,9 +567,42 @@ void		*cDhsCmdHandlerBase::execThread
 
     pCmdObj = (cDhsServerCommand *) arg;
 
+    try {
+    	pCmdObj->dscPHandler->exec( pCmdObj );
+	}
+	catch( const char * s )
+	{
+		//
+		// Some memory allocation errors will cause this exception.
+		//
+		std::cout << "cDhsCmdHandlerBase::execThread: Execution of command "
+				<< pCmdObj->dscName << " died with string: " << s << std::endl;
+	}
+	catch( const DHS_STATUS s )
+	{
+		DHS_STATUS	st;
+		DHS_STATUS	s1( DHS_S_SUCCESS );
+		DHS_ERR_LEVEL	el;
+		const char *str;
+		//
+		// Error in the dhs library.
+		//
 
-    pCmdObj->dscPHandler->exec( pCmdObj );
+		std::cout << "cDhsCmdHandlerBase::execThread: Error in the dhs library: "
+				<< s << " while executing command " << pCmdObj->dscName << std::endl;
 
+		for ( str = cDhs::message( st, el, s1 ); s1 == DHS_S_SUCCESS;
+			str = cDhs::message( st, el, s1 ) )
+		{
+			std::cerr << str << std::endl;
+			cDhs::messageClear( s1 );
+		}
+	}
+	catch ( ... )
+	{
+		std::cout << "cDhsCmdHandlerBase::execThread: Execution of command "
+				<< pCmdObj->dscName << " terminated with unknown exception." << std::endl;
+	}
     free( pCmdObj->dscName );
 
     threadDestroy();

@@ -429,8 +429,39 @@ void		*cDhsGetHandlerBase::execThread
     pGetObj = (cDhsGetRequest *) arg;
 
 
-    pGetObj->exec();
+    try {
+    	pGetObj->exec();
+	}
+	catch( const char * s )
+	{
+		//
+		// Some memory allocation errors will cause this exception.
+		//
+		std::cout << "cDhsGetHandlerBase::execThread: Died with string: " << s << std::endl;
+	}
+	catch( const DHS_STATUS s )
+	{
+		DHS_STATUS	st;
+		DHS_STATUS	s1( DHS_S_SUCCESS );
+		DHS_ERR_LEVEL	el;
+		const char *str;
+		//
+		// Error in the dhs library.
+		//
 
+		std::cout << "cDhsGetHandlerBase::execThread: Error in the dhs library: " << s << std::endl;
+
+		for ( str = cDhs::message( st, el, s1 ); s1 == DHS_S_SUCCESS;
+			str = cDhs::message( st, el, s1 ) )
+		{
+			std::cerr << str << std::endl;
+			cDhs::messageClear( s1 );
+		}
+	}
+	catch ( ... )
+	{
+		std::cout << "cDhsGetHandlerBase::execThread: Terminated with unknown exception." << std::endl;
+	}
 
     threadDestroy();
     delete pGetObj;
