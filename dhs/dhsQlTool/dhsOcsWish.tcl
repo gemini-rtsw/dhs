@@ -195,6 +195,9 @@ itcl::class cQlServer {
     proc		serverName { value } { set qlsServerName $value }
     proc		streamSet { streams }
     proc		testCmd { cmdRunner directive }
+    
+    proc        setFrameUpdateCallback {callback} { set qlsFrameUpdateCallback $callback }
+    proc        getFrameUpdateCallback {} { return $qlsFrameUpdateCallback }
 
     public common	displayLast 1
     public common	autoCut 1
@@ -221,6 +224,7 @@ itcl::class cQlServer {
     private common	qlsServerName ""
     private common	qlsNextFrame ""
     private common	qlsStartCount 0
+    private common  qlsFrameUpdateCallback ""
 }
 
 #
@@ -402,6 +406,10 @@ body	cQlServer::checkDisplay {
 
     if { $autoCut } {
 	$image autocut
+    }
+
+    if { $qlsFrameUpdateCallback ne "" } {
+        eval $qlsFrameUpdateCallback
     }
 }
 
