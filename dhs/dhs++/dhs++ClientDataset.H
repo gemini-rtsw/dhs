@@ -79,6 +79,9 @@
 #ifndef DHSPPCLIENTDATASET_H
 #define	DHSPPCLIENTDATASET_H
 
+
+#include "dhs++Dataset.H"
+
 //
 //***********************************************************************
 //+
@@ -87,7 +90,7 @@
 //
 // PUBLIC METHODS: 
 // (char *) label - Return the label associated with a dataset.
-// (void) label - Set the lavel associated with a dataset.
+// (void) label - Set the label associated with a dataset.
 //
 // PURPOSE:
 // Contains methods use by both put and get datasets on a client.

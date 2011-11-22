@@ -440,12 +440,7 @@ void		cQlsDataset::chunkAdd
 	//
 
 	qdsNumWaitsLock.lock();
-	qdsNumWaits --;
-	qdsNumWaitsLock.unlock();
-
-
-	qdsNumWaitsLock.lock();
-	nw = qdsNumWaits;
+	nw = -- qdsNumWaits;
 	qdsNumWaitsLock.unlock();
 
 

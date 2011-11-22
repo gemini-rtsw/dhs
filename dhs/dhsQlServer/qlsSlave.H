@@ -118,6 +118,10 @@ class	cQlsSlave:
     private:
 	void		dsStreams( cQlsDataset &, cQlsStatus & );
 	void		forward( cDhsPutRequest *, cQlsStatus & );
+
+	static const int MAX_PENDING_FORWARDS = 100;
+	int pendingForwards;
+	cMutex *pPendCountMutex;
 };
 
 //
