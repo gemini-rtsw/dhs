@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 0
+%define release 1
 %define repository gemini
 
 Summary: The DHS Server
@@ -16,8 +16,8 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-config-server dhs-libs dhs-QlServer
-BuildRequires: gemini-top, imake, byacc, drama-devel, dhsClient-devel, cfitsio-devel
+Requires: gemini-top, gemini-setup, drama >= 1.6.4, dhsClient, xpa-tcl, cfitsio, dhs-config-server dhs-libs dhs-QlServer
+BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.6.4, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
