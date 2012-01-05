@@ -187,7 +187,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files Console
 %defattr(-,root,root,-)
-%{_prefix}/opt/%{name}/lib/*.so
 %{_prefix}/opt/%{name}/lib/dhsConsole
 %attr(755, root, root) %{_prefix}/opt/%{name}/scripts/dhsConsole
 %{_prefix}/opt/%{name}/var/sample-config/default_config_dir/dhsConsole.config
