@@ -31,8 +31,15 @@ DRAMA_LDLIBS += -L${ERS_DIR} -lers -Wl,-rpath=${ERS_DIR}
 # Root dir for Tcl include files and libs
 TCL_VERSION = @TCL_VERSION@
 TCLTK_ROOT = @TCLTK_ROOT@
+
+ifeq ($(shell uname -p),x86_64)
+    TCLTK_LIB_PATH = $(TCLTK_ROOT)/lib64
+else
+    TCLTK_LIB_PATH = $(TCLTK_ROOT)/lib
+endif
+
 TCLTK_INCLUDES = -I$(TCLTK_ROOT)/include
-TCLTK_LDLIBS = -L$(TCLTK_ROOT)/lib -ltcl$(TCL_VERSION) -ltk$(TCL_VERSION)
+TCLTK_LDLIBS = -L$(TCLTK_LIB_PATH) -ltcl$(TCL_VERSION) -ltk$(TCL_VERSION)
 
 DHS_LITE = @DHS_LITE@
 
@@ -72,7 +79,7 @@ else
        EPICS_BASE_LIB_OS = solaris-sparc-gnu
    endif
    ifeq ($(EPICS_BASE_LIB_OS),Linux)
-       EPICS_BASE_LIB_OS = linux-x86
+       EPICS_BASE_LIB_OS = linux-x86_64
    endif
    EPICS_BASE_LDLIBS = -L$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS} -lca -lCom -Wl,-rpath=$(EPICS_BASE)/lib/${EPICS_BASE_LIB_OS}
 endif
