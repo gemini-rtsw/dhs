@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 1
+%define release 2
 %define repository gemini
 
 Summary: The DHS Server
@@ -16,7 +16,10 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.6.4, dhsClient, xpa-tcl, cfitsio, dhs-config-server dhs-libs dhs-QlServer
+Requires: gemini-top, gemini-setup, drama >= 1.6.4, dhsClient, cfitsio, dhs-config-server dhs-libs dhs-QlServer
+#These requirements are to force the same architecture for the packages
+Requires: libtclxpa.so.1
+#Requires: xpa-tcl
 BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.6.4, dhsClient-devel, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -39,7 +42,10 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: ocswish drama >= 1.5.2-9 skycat xpa-tcl tclx qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
+Requires: ocswish drama >= 1.5.2-9 skycat qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
+#These requirements are to force the same architecture for the packages
+Requires: libtclx8.4.so libtclxpa.so.1
+#Requires: tclx xpa-tcl
 BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
 %description QlTools
 dhs
@@ -47,7 +53,10 @@ dhs
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: ocswish drama >= 1.5.2-9 xpa-tcl tclx dhs-libs
+Requires: ocswish drama >= 1.5.2-9 dhs-libs
+#These requirements are to force the same architecture for the packages
+Requires: libtclx8.4.so libtclxpa.so.1
+#Requires: tclx xpa-tcl
 %description Console
 dhs
 
@@ -62,7 +71,11 @@ DHS common libraries.
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, xpa-tcl, cfitsio, dhs-libs
+Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, cfitsio, dhs-libs
+#These requirements are to force the same architecture for the packages
+Requires: libtclxpa.so.1
+#Requires: xpa-tcl
+%description Console
 %description QlServer
 Quicklook Server.
 
@@ -111,6 +124,14 @@ if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 	useradd -g gemini gemdhs
 fi
 
+if [ "$1" = "0" ] ; then
+	/sbin/chkconfig netfs on
+	service netfs status || service netfs start
+fi
+
+#Register dhs service for autostart
+/sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
+
 if ! grep local0 /etc/syslog.conf > /dev/null ; then
     echo -e "\nlocal0.*\t\t\t\t\t\t%{_prefix}/var/log/dhs/dhs.log" >> /etc/syslog.conf
     if ! [ -e %{_prefix}/var/log/dhs/dhs.log ] ; then
@@ -130,12 +151,20 @@ if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "\tendscript" >> /etc/logrotate.d/dhs
     echo -e "}" >> /etc/logrotate.d/dhs
 fi
+exit 0
 
 #%post QlTools
 #/tmp/createDhsConfigDirs.sh %{version}
 
 %post libs
 /sbin/ldconfig
+
+%preun
+if [ "$1" = "0" ] ; then  #last uninstall
+	service dhs stop
+	/sbin/chkconfig --del dhs
+fi
+exit 0
 
 %postun libs
 /sbin/ldconfig
