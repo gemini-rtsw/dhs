@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 3
+%define release 4
 %define repository gemini
 
 Summary: The DHS Server
@@ -128,6 +128,11 @@ if [ "$1" = "0" ] ; then
 	/sbin/chkconfig netfs on
 	service netfs status || service netfs start
 fi
+
+#Make sure staginf folder exist
+[ -d /staging ] ||  mkdir -p /staging
+chmod 775 /staging
+chown root:gemini /staging
 
 #Register dhs service for autostart
 /sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
