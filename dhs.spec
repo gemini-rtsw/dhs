@@ -151,6 +151,7 @@ if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "\tendscript" >> /etc/logrotate.d/dhs
     echo -e "}" >> /etc/logrotate.d/dhs
 fi
+service dhs start
 exit 0
 
 #%post QlTools
@@ -199,7 +200,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/etc/profile.d
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
-/etc/init.d/dhs
+%attr(755, root, root) /etc/init.d/dhs
 
 %files QlTools
 %defattr(-,root,root,-)
