@@ -2,12 +2,8 @@
 #
 #       /gemsoft/etc/init.d/dhs
 #
-# Starts the Gemini dhs application. 
-# It uses nasty techniques: su -c "GemBootServer server" dhsuser, for example.
-# This is necessary, because eventually started client tools and the
-# services need to have the same $UID on a local machine! If you want
-# to run the dhsQlTool this now works only successfully as dhsuser.
-
+# chkconfig: 2345 71 02
+# description: Starts the Gemini DHS Server application. 
 
 . /etc/rc.d/init.d/functions
 . /etc/profile
