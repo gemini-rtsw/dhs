@@ -129,6 +129,11 @@ if [ "$1" = "0" ] ; then
 	service netfs status || service netfs start
 fi
 
+#Make sure staginf folder exist
+[ -d /staging ] ||  mkdir -p /staging
+chmod 775 /staging
+chown root:gemini /staging
+
 #Register dhs service for autostart
 /sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
 
