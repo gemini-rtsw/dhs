@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 5
+%define release 6
 %define repository gemini
 
 Summary: The DHS Server
@@ -121,7 +121,7 @@ if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 	if ! grep ^gemini /etc/group > /dev/null ; then
 		groupadd -g 2000 gemini
 	fi
-	useradd -g gemini gemdhs
+	useradd -g gemini -u 5052 gemdhs
 fi
 
 if [ "$1" = "0" ] ; then
@@ -129,7 +129,7 @@ if [ "$1" = "0" ] ; then
 	service netfs status || service netfs start
 fi
 
-#Make sure staginf folder exist
+#Make sure staging folder exist
 [ -d /staging ] ||  mkdir -p /staging
 chmod 775 /staging
 chown root:gemini /staging
@@ -137,16 +137,32 @@ chown root:gemini /staging
 #Register dhs service for autostart
 /sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
 
-if ! grep local0 /etc/syslog.conf > /dev/null ; then
-    echo -e "\nlocal0.*\t\t\t\t\t\t%{_prefix}/var/log/dhs/dhs.log" >> /etc/syslog.conf
-    if ! [ -e %{_prefix}/var/log/dhs/dhs.log ] ; then
-        touch %{_prefix}/var/log/dhs/dhs.log
-    fi
-    chmod a+r %{_prefix}/var/log/dhs/dhs.log
+HOSTNAME=$(hostname -s)
+if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
+        HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
+fi
+if [ ! -z $HOSTNAME ] && [ $HOSTNAME != localhost ] ; then
+    logfolder=%{_prefix}/var/log/dhs/$HOSTNAME
+else
+    echo "DHS installation: could not determine the host name." >&2
+    exit 1
+fi
+
+if ! [ -e $logfolder/dhs.log ] ; then
+    [ -d $logfolder ] mkdir -p $logfolder
+    chmod 775 $logfolder
+    chown root:gemini $logfolder
+    touch $logfolder/dhs.log
+fi
+chmod a+r $logfolder/dhs.log
+
+if ! grep "local0.*$logfolder/dhs.log' /etc/syslog.conf > /dev/null ; then
+    sed '/local0/d' /etc/syslog.conf
+    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/syslog.conf
     service syslog restart
 fi
 if ! [ -e /etc/logrotate.d/dhs ] ; then
-    echo -e "%{_prefix}/var/log/dhs/dhs.log {" >> /etc/logrotate.d/dhs
+    echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
     echo -e "\tdaily" >> /etc/logrotate.d/dhs
     echo -e "\trotate 7" >> /etc/logrotate.d/dhs
     echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
