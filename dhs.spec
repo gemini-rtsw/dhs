@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 7
+%define release 8
 %define repository gemini
 
 Summary: The DHS Server
@@ -141,7 +141,7 @@ chown root:gemini /staging
 logfolder=%{_prefix}/var/log/dhs
 
 if ! [ -e $logfolder/dhs.log ] ; then
-    [ -d $logfolder ] mkdir -p $logfolder
+    [ -d $logfolder ] && mkdir -p $logfolder
     chmod 775 $logfolder
     chown root:gemini $logfolder
     touch $logfolder/dhs.log
