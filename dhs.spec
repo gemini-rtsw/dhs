@@ -141,7 +141,7 @@ chown root:gemini /staging
 logfolder=%{_prefix}/var/log/dhs
 
 if ! [ -e $logfolder/dhs.log ] ; then
-    [ -d $logfolder ] && mkdir -p $logfolder
+    [ -d $logfolder ] || mkdir -p $logfolder
     chmod 775 $logfolder
     chown root:gemini $logfolder
     touch $logfolder/dhs.log
