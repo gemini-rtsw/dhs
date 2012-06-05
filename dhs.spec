@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 10
+%define release 11
 %define repository gemini
 
 Summary: The DHS Server
@@ -16,7 +16,7 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top, gemini-setup, drama >= 1.6.4, dhsClient, cfitsio, dhs-config-server dhs-libs dhs-QlServer
+Requires: gemini-top gemini-setup drama >= 1.6.4 dhsClient cfitsio dhs-config-server dhs-libs dhs-QlServer syslog
 #These requirements are to force the same architecture for the packages
 Requires: libtclxpa.so.1
 #Requires: xpa-tcl
@@ -112,10 +112,19 @@ cp -a dhs/conf/server.conf.* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc/
 cp -a etc/dhs.init.d $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
-
-
+exit 0
 
 %post
+#Determine which syslog to use
+if service syslog status &>/dev/null ; then
+    logservice=syslog
+elseif service rsyslog status &>/dev/null ; then
+    logservice=rsyslog
+else
+    echo "Cannot find log service." >&2
+    exit 1
+fi
+
 /tmp/createDhsConfigDirs.sh %{version}
 if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 	if ! grep ^gemini /etc/group > /dev/null ; then
@@ -135,7 +144,7 @@ chmod 775 /staging
 chown root:gemini /staging
 
 #Register dhs service for autostart
-/sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
+/sbin/chkconfig --list dhs  || /sbin/chkconfig --add dhs
 
 
 logfolder=%{_prefix}/var/log/dhs
@@ -148,10 +157,11 @@ if ! [ -e $logfolder/dhs.log ] ; then
 fi
 chmod a+r $logfolder/dhs.log
 
-if ! grep "local0.*$logfolder/dhs.log" /etc/syslog.conf > /dev/null ; then
-    sed '/local0/d' /etc/syslog.conf
-    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/syslog.conf
-    service syslog restart
+
+if ! grep "local0.*$logfolder/dhs.log" /etc/$logsystem.conf > /dev/null ; then
+    sed '/local0/d' /etc/$logsystem.conf
+    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logsystem.conf
+    service $logsystem restart
 fi
 if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
@@ -160,7 +170,7 @@ if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
     echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
     echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
-    echo -e "\t\t/sbin/service syslog restart" >> /etc/logrotate.d/dhs
+    echo -e "\t\t/sbin/service $logsystem restart" >> /etc/logrotate.d/dhs
     echo -e "\tendscript" >> /etc/logrotate.d/dhs
     echo -e "}" >> /etc/logrotate.d/dhs
 fi
