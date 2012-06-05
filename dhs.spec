@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 6
+%define release 7
 %define repository gemini
 
 Summary: The DHS Server
@@ -137,16 +137,8 @@ chown root:gemini /staging
 #Register dhs service for autostart
 /sbin/chkconfig --list dhs || /sbin/chkconfig --add dhs
 
-HOSTNAME=$(hostname -s)
-if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
-        HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
-fi
-if [ ! -z $HOSTNAME ] && [ $HOSTNAME != localhost ] ; then
-    logfolder=%{_prefix}/var/log/dhs/$HOSTNAME
-else
-    echo "DHS installation: could not determine the host name." >&2
-    exit 1
-fi
+
+logfolder=%{_prefix}/var/log/dhs
 
 if ! [ -e $logfolder/dhs.log ] ; then
     [ -d $logfolder ] mkdir -p $logfolder
