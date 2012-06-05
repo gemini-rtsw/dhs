@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 11
+%define release 12
 %define repository gemini
 
 Summary: The DHS Server
@@ -118,11 +118,13 @@ exit 0
 #Determine which syslog to use
 if service syslog status &>/dev/null ; then
     logservice=syslog
-elseif service rsyslog status &>/dev/null ; then
-    logservice=rsyslog
 else
-    echo "Cannot find log service." >&2
-    exit 1
+    if service rsyslog status &>/dev/null ; then
+        logservice=rsyslog
+    else
+        echo "Cannot find log service." >&2
+        exit 1
+    fi
 fi
 
 /tmp/createDhsConfigDirs.sh %{version}
