@@ -126,6 +126,7 @@ else
         exit 1
     fi
 fi
+echo "Using log service $logservice"
 
 /tmp/createDhsConfigDirs.sh %{version}
 if ! grep ^gemdhs /etc/passwd > /dev/null ; then
@@ -146,7 +147,7 @@ chmod 775 /staging
 chown root:gemini /staging
 
 #Register dhs service for autostart
-/sbin/chkconfig --list dhs  || /sbin/chkconfig --add dhs
+/sbin/chkconfig --list dhs &>/dev/null  || /sbin/chkconfig --add dhs
 
 
 logfolder=%{_prefix}/var/log/dhs
@@ -160,10 +161,10 @@ fi
 chmod a+r $logfolder/dhs.log
 
 
-if ! grep "local0.*$logfolder/dhs.log" /etc/$logsystem.conf > /dev/null ; then
-    sed '/local0/d' /etc/$logsystem.conf
-    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logsystem.conf
-    service $logsystem restart
+if ! grep "local0.*$logfolder/dhs.log" /etc/$logservice.conf > /dev/null ; then
+    sed '/local0/d' /etc/$logservice.conf
+    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logservice.conf
+    service $logservice restart
 fi
 if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
@@ -172,7 +173,7 @@ if ! [ -e /etc/logrotate.d/dhs ] ; then
     echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
     echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
     echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
-    echo -e "\t\t/sbin/service $logsystem restart" >> /etc/logrotate.d/dhs
+    echo -e "\t\t/sbin/service $logservice restart" >> /etc/logrotate.d/dhs
     echo -e "\tendscript" >> /etc/logrotate.d/dhs
     echo -e "}" >> /etc/logrotate.d/dhs
 fi
