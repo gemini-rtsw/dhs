@@ -148,7 +148,7 @@ if ! [ -e $logfolder/dhs.log ] ; then
 fi
 chmod a+r $logfolder/dhs.log
 
-if ! grep "local0.*$logfolder/dhs.log' /etc/syslog.conf > /dev/null ; then
+if ! grep "local0.*$logfolder/dhs.log" /etc/syslog.conf > /dev/null ; then
     sed '/local0/d' /etc/syslog.conf
     echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/syslog.conf
     service syslog restart
