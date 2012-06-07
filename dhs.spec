@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 13
+%define release 14
 %define repository gemini
 
 Summary: The DHS Server
@@ -166,17 +166,19 @@ if ! grep "local0.*$logfolder/dhs.log" /etc/$logservice.conf > /dev/null ; then
     echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logservice.conf
     service $logservice restart
 fi
-if ! [ -e /etc/logrotate.d/dhs ] ; then
-    echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
-    echo -e "\tdaily" >> /etc/logrotate.d/dhs
-    echo -e "\trotate 7" >> /etc/logrotate.d/dhs
-    echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
-    echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
-    echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
-    echo -e "\t\t/sbin/service $logservice restart" >> /etc/logrotate.d/dhs
-    echo -e "\tendscript" >> /etc/logrotate.d/dhs
-    echo -e "}" >> /etc/logrotate.d/dhs
-fi
+
+#recreate logrotate configuration file
+[ -e /etc/logrotate.d/dhs ] && rm -f /etc/logrotate.d/dhs
+echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
+echo -e "\tdaily" >> /etc/logrotate.d/dhs
+echo -e "\trotate 7" >> /etc/logrotate.d/dhs
+echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
+echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
+echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
+echo -e "\t\t/sbin/service $logservice restart" >> /etc/logrotate.d/dhs
+echo -e "\tendscript" >> /etc/logrotate.d/dhs
+echo -e "}" >> /etc/logrotate.d/dhs
+
 service dhs start
 exit 0
 
