@@ -114,19 +114,33 @@ chmod 755 $RPM_BUILD_ROOT/etc/init.d/dhs
 chmod 755 $RPM_BUILD_ROOT/tmp/createDhsConfigDirs.sh
 exit 0
 
+%pre
+service dhs stop &>/dev/null
+
 %post
 #Determine which syslog to use
-if service syslog status &>/dev/null ; then
-    logservice=syslog
+if service rsyslog status &>/dev/null ; then
+    logservice=rsyslog
 else
-    if service rsyslog status &>/dev/null ; then
-        logservice=rsyslog
+    if service syslog status &>/dev/null ; then
+        logservice=syslog
     else
         echo "Cannot find log service." >&2
         exit 1
     fi
 fi
-echo "Using log service $logservice"
+echo "DHS Server installation: Using log service $logservice"
+
+HOSTNAME=$(hostname -s)
+if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
+	HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
+fi
+if [ ! -z $HOSTNAME ] && [ $HOSTNAME != localhost ] ; then
+	logfolder=%{_prefix}/var/log/dhs/$$HOSTNAME
+else
+	echo "DHS Server installation: could not determine the host name." >&2
+	exit 1
+fi
 
 /tmp/createDhsConfigDirs.sh %{version}
 if ! grep ^gemdhs /etc/passwd > /dev/null ; then
@@ -149,8 +163,6 @@ chown root:gemini /staging
 #Register dhs service for autostart
 /sbin/chkconfig --list dhs &>/dev/null  || /sbin/chkconfig --add dhs
 
-
-logfolder=%{_prefix}/var/log/dhs
 
 if ! [ -e $logfolder/dhs.log ] ; then
     [ -d $logfolder ] || mkdir -p $logfolder
