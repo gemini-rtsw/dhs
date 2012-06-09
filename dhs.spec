@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 16
+%define release 17
 %define repository gemini
 
 Summary: The DHS Server
@@ -137,7 +137,7 @@ if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; th
 	HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
 fi
 if [ ! -z $HOSTNAME ] && [ $HOSTNAME != localhost ] ; then
-	logfolder=%{_prefix}/var/log/dhs/$$HOSTNAME
+	logfolder=%{_prefix}/var/log/dhs/$HOSTNAME
 else
 	echo "DHS Server installation: could not determine the host name." >&2
 	exit 1
@@ -175,7 +175,7 @@ chmod a+r $logfolder/dhs.log
 
 
 if ! grep "local0.*$logfolder/dhs.log" /etc/$logservice.conf > /dev/null ; then
-    sed '/local0/d' /etc/$logservice.conf
+    sed -i '/local0/d' /etc/$logservice.conf
     echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logservice.conf
     service $logservice restart
 fi
