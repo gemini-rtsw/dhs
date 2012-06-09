@@ -175,7 +175,7 @@ chmod a+r $logfolder/dhs.log
 
 
 if ! grep "local0.*$logfolder/dhs.log" /etc/$logservice.conf > /dev/null ; then
-    sed '/local0/d' /etc/$logservice.conf
+    sed -i '/local0/d' /etc/$logservice.conf
     echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logservice.conf
     service $logservice restart
 fi
