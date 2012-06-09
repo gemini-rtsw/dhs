@@ -137,7 +137,7 @@ if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; th
 	HOSTNAME=$(sed -n "s/HOSTNAME:\([^.]*\).*/\1/p" < /root/postvars)
 fi
 if [ ! -z $HOSTNAME ] && [ $HOSTNAME != localhost ] ; then
-	logfolder=%{_prefix}/var/log/dhs/$$HOSTNAME
+	logfolder=%{_prefix}/var/log/dhs/$HOSTNAME
 else
 	echo "DHS Server installation: could not determine the host name." >&2
 	exit 1
