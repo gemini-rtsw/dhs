@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.7
-%define release 15
+%define release 16
 %define repository gemini
 
 Summary: The DHS Server
@@ -116,6 +116,7 @@ exit 0
 
 %pre
 service dhs stop &>/dev/null
+exit 0
 
 %post
 #Determine which syslog to use
