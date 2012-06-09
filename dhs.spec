@@ -116,6 +116,7 @@ exit 0
 
 %pre
 service dhs stop &>/dev/null
+exit 0
 
 %post
 #Determine which syslog to use
