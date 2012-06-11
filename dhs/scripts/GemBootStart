@@ -31,15 +31,13 @@ case $1 in
       mkdir -p $DHS_STAGING/temp 
       [ -d $DHS_STAGING/perm ] || mkdir -p $DHS_STAGING/perm
       sleep 1
-      if [ "`ps aux |grep master |grep -v grep`" = "" ]; then
-            master &
-            sleep 1
+      if /etc/init.d/imp_master status | grep "is running" &>/dev/null ; then
+            echo ""
+            echo "IMP master was already started."
+            echo ""
       else
-            echo ""
-            echo "IMP master was already started (presumably either by"
-            echo "/etc/init.d/imp_startup or by seqexec.sh). Omitting it here,"
-            echo "which should be okay."
-            echo ""
+         /etc/init.d/imp_master start
+         sleep 1
       fi
       dhs_start dhsSim4Data
       sleep 1
