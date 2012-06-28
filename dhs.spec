@@ -16,11 +16,11 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top gemini-setup drama >= 1.6.4 dhsClient cfitsio dhs-config-server dhs-libs dhs-QlServer syslog
+Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer syslog
 #These requirements are to force the same architecture for the packages
 Requires: libtclxpa.so.1
 #Requires: xpa-tcl
-BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.6.4, dhsClient-devel, cfitsio-devel
+BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
@@ -42,18 +42,18 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: ocswish drama >= 1.5.2-9 skycat qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
+Requires: ocswish drama >= 1.7 skycat qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
 #These requirements are to force the same architecture for the packages
 Requires: libtclx8.4.so libtclxpa.so.1
 #Requires: tclx xpa-tcl
-BuildRequires: imake, byacc, itk-devel, drama-devel, skycat-devel, dhsClient-devel, cfitsio-devel
+BuildRequires: imake, byacc, itk-devel, drama-devel >= 1.7, skycat-devel, dhsClient-devel >= 0.5, cfitsio-devel
 %description QlTools
 dhs
 
 %package Console
 Summary: dhs
 Group: Development/Gemini
-Requires: ocswish drama >= 1.5.2-9 dhs-libs
+Requires: ocswish drama >= 1.7 dhs-libs
 #These requirements are to force the same architecture for the packages
 Requires: libtclx8.4.so libtclxpa.so.1
 #Requires: tclx xpa-tcl
@@ -71,7 +71,7 @@ DHS common libraries.
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: gemini-top, gemini-setup, drama >= 1.5.2-9, dhsClient, cfitsio, dhs-libs
+Requires: gemini-top, gemini-setup, drama >= 1.7, dhsClient >= 0.5, cfitsio, dhs-libs
 #These requirements are to force the same architecture for the packages
 Requires: libtclxpa.so.1
 #Requires: xpa-tcl
