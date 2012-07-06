@@ -667,7 +667,6 @@ body CDhgMain::constructor {
 	# an even number - ensures that the last one is lined up
 	# up properly
 	#
-
 	frame $subChildsite.$frame.filler -width 1 -height 1
 	pack $subChildsite.$frame.filler -expand y -fill x -padx 4 	\
 	    -pady 4 -side right
@@ -1240,13 +1239,11 @@ body CDhgMain::createResInfo {
         itk_component add res${resNum} {
             cProgressBar $childsite.slider                              \
                 -from 0                                                 \
-                -length 220                                             \
                 -idlecolor blue                                         \
                 -labelpos w                                             \
                 -length 200                                             \
                 -orient horizontal                                      \
                 -showvalue false                                        \
-                -sliderlength 0                                         \
                 -state idle                                             \
                 -valueforeground blue
         } {
@@ -2044,7 +2041,6 @@ body	CDhgMain::updateRes {
 	    [ $ledWindow childsite].slider config -idlecolor blue 	\
 		-to $maxVal -value $usedVal -variable resStatus($used)
 	}
-
 
 	#
 	# Make sure used value is within range, between 0 and max.
