@@ -200,14 +200,14 @@ CC = @CC@
 CXX = @CXX@
 
 # For now, assume gcc, otherwise this needs to go into configure.in
-SHLIB_CFLAGS = -fPIC
-SHLIB_LDFLAGS = -shared
+SHLIB_CFLAGS += -fPIC
+SHLIB_LDFLAGS += -shared
 
 # C Compiler options
-CFLAGS = -g $(SHLIB_CFLAGS) ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
+CFLAGS += -g $(SHLIB_CFLAGS) ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
 
 # C++ Compiler options
-CXXFLAGS = $(CFLAGS) 
+CXXFLAGS += $(CFLAGS) 
 
 # Script used to install files
 INSTALL = @INSTALL@

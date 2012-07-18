@@ -92,7 +92,7 @@ class cCmdSubsystem: public cDhsSubsystem
 {
     public:
 	static void	config( cStatus & );
-	void		connect( cCmdStatus & );
+	void		connect( cCmdStatus &, int retries=10, int retryDelay=2);
 	cDhsConnection	&connect( void )
 				{
 				    return( cssConnect );
@@ -135,6 +135,8 @@ class cCmdSubsystem: public cDhsSubsystem
 	cDhsConnection	cssConnect;	// Connection to the server.
 	char		*cssServerName;	// IMP name of the server.
 	static bool	cssSubsystemExit;// Exit subsystems on exit?
+	int retryDelay;
+	int maxRetries;
 };
 
 //
