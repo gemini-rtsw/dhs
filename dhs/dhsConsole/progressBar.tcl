@@ -169,7 +169,6 @@ option add *CProgressBar.from 0 widgetDefault
 option add *CProgressBar.idleColor grey widgetDefaul
 option add *CProgressBar.labelMargin 2 widgetDefault
 option add *CProgressBar.orient horizontal widgetDefault
-option add *CProgressBar.sliderlength 0 widgetDefault
 option add *CProgressBar.state busy widgetDefault
 option add *CProgressBar.to 1 widgetDefault
 option add *CProgressBar.value 0 widgetDefault
@@ -202,28 +201,26 @@ class CProgressBar {
 
     itk_option define -busycolor busyColor Color blue  {
 	if { $itk_option(-state) == "busy" } {
-	    $itk_component(scale) config -troughcolor $itk_option(-busycolor)
+	    $itk_component(canvas) itemconfig $bar -fill $itk_option(-busycolor)
 	}
     }
 
     itk_option define -from from From 0 {
-	$itk_component(scale) configure -from $itk_option(-from)
-	$itk_component(from) configure 				\
-	    -text "[ lindex [ split $itk_option(-from) . ] 0 ]"
-	repackValues
+      $itk_component(from) configure 				\
+          -text "[ lindex [ split $itk_option(-from) . ] 0 ]"
+      repackValues
     }
 
     itk_option define -idlecolor idleColor Color grey80 {
-	if { $itk_option(-state) == "idle" } {
-	    $itk_component(scale) config -troughcolor $itk_option(-idlecolor)
-	}
-    }
+      if { $itk_option(-state) == "idle" } {
+          $itk_component(canvas) itemconfig $bar -fill $itk_option(-idlecolor)
+      }
+   }
 
     itk_option define -length length Length 1
 
     itk_option define -orient orient Orient horizontal {
-	$itk_component(scale) configure -orient $itk_option(-orient)
-	repackValues
+      repackValues
     }
 
     itk_option define -showvalue showValue ShowValue 1 {
@@ -234,19 +231,20 @@ class CProgressBar {
 	}
     }
 
-    itk_option define -sliderlength sliderLength SliderLength 0
+
     itk_option define -state state State busy
 
     itk_option define -to to To 1 {
-	$itk_component(scale) configure -to $itk_option(-to)
 	$itk_component(to) configure 				\
 	    -text "[ lindex [ split $itk_option(-to) . ] 0  ]"
 	repackValues
     }
 
-    itk_option define -value value Value 0
-
-
+    itk_option define -value value Value 0 {
+       repackValues
+    }
+    itk_option define -width width Width 15
+    itk_option define -variable variable Variable ""
     #
     # speed in ms/tick when looking busy
     #
@@ -299,6 +297,7 @@ class CProgressBar {
 
     private variable doingSomething ""	;# Result of the "doSomething"
 					 # after script.
+   private variable bar
 }
 
 #
@@ -349,33 +348,17 @@ body 	CProgressBar::constructor {
     #
 
     set childsite [ $this childsite ]
-    itk_component add scale {
-	scale $childsite.scale 						\
-	    -borderwidth 1 						\
-	    -from 0 							\
-	    -highlightthickness 0 					\
-	    -orient horizontal 						\
-	    -relief sunken						\
-	    -showvalue false 						\
-	    -state disabled						\
-	    -troughcolor blue						\
-	    -to 1 							
+   itk_component add canvas {
+      canvas $childsite.canvas  \
+         -borderwidth 1         \
+         -relief sunken
+   }
 
-	} {	   
-	    keep -digits						\
-		-font							\
-		-from							\
-		-length 						\
-		-orient							\
-		-sliderlength						\
-		-to							\
-		-variable						\
-		-width
-	}
-
-    pack $itk_component(scale) -expand yes -fill x  	\
+    pack $itk_component(canvas) -expand yes -fill x  	\
 	-padx 2 -pady 2
-	
+   set bar [ $itk_component(canvas) create \
+      rectangle 0 0 [winfo width $itk_component(canvas)] [winfo height $itk_component(canvas)] -fill blue \
+   ]
 
     #
     # Create a frame for displaying the value, below the scale widget.
@@ -397,7 +380,7 @@ body 	CProgressBar::constructor {
 
     itk_component add from {
 	label $itk_component(valueFrame).from 				\
-	    -text "[lindex [split [$itk_component(scale) cget -from] .] 0]"
+	    -text ""
     } {
 	keep -background -cursor -foreground
     }
@@ -422,7 +405,7 @@ body 	CProgressBar::constructor {
 
     itk_component add value {
 	label $itk_component(valueFrame).value				\
-	    -text "[$itk_component(scale) get]"
+	    -text ""
     } {
 	keep -background -cursor 
 	rename -foreground -valueforeground valueForeground Foreground
@@ -437,7 +420,7 @@ body 	CProgressBar::constructor {
 
     itk_component add to {
 	label $itk_component(valueFrame).to 				\
-	    -text "[lindex [split [$itk_component(scale) cget -to] .] 0]"
+	    -text ""
     } {
 	keep -background -cursor -foreground
     }
@@ -465,7 +448,9 @@ body 	CProgressBar::constructor {
 		component $i ] ] end $itk_component(hull) ]
     }
 
-    eval itk_initialize -sliderlength 0 -width 15 $args
+    eval itk_initialize $args
+   
+   bind $itk_component(canvas)  <Configure> [itcl::code $this repackValues]
 }
 
 
@@ -532,7 +517,7 @@ proc 	cProgressBar {
 # INVOCATION:
 # pathName configure -length ?value?
 #             OR
-# CProgressBar pathName -lenth value
+# CProgressBar pathName -length value
 #
 # where pathName is a window path of a "CProgressBar" widget and value 
 # is a pixel value.
@@ -568,9 +553,15 @@ configbody 	CProgressBar::length {
     if { $itk_option(-length) < 0 } {
 	$this config -length 0
     } else {
-	$itk_component(scale) config -length $itk_option(-length)
-	$itk_component(valueFrame) config -width $itk_option(-length)
-    }
+       if { $itk_option(-orient) eq "horizontal" } {
+      	$itk_component(canvas) config -width $itk_option(-length)
+      	$itk_component(valueFrame) config -width $itk_option(-length)
+       } else  {
+         $itk_component(canvas) config -height $itk_option(-length)
+         $itk_component(valueFrame) config -height $itk_option(-length)
+       }
+       repackValues
+    }  
 }
 
 #
@@ -616,17 +607,14 @@ configbody 	CProgressBar::length {
 #
 
 configbody	CProgressBar::state {
-    $itk_component(scale) configure -state normal
-    if { $itk_option(-state) == "busy" } {
-	$itk_component(scale) config -troughcolor $itk_option(-busycolor)
+   if { $itk_option(-state) == "busy" } {
+      $itk_component(canvas) itemconfig $bar -fill $itk_option(-busycolor)
     } elseif { $itk_option(-state) == "idle" } {
-	$itk_component(scale) config -troughcolor $itk_option(-idlecolor)
+      $itk_component(canvas) itemconfig $bar -fill $itk_option(-idlecolor)
     } else {
-	$itk_component(scale) configure -state disabled
-	error "Unknown state \"$itk_option(-state)\": should be one of\
-		\"busy\" or \"idle\"."
+   	error "Unknown state \"$itk_option(-state)\": should be one of\
+   		\"busy\" or \"idle\"."
     }
-    $itk_component(scale) configure -state disabled
 }
 
 #
@@ -685,14 +673,14 @@ configbody 	CProgressBar::value {
     } elseif { ( $itk_option(-to) <= $itk_option(-from) ) && 		\
 		   ( $itk_option(-value) < $itk_option(-to) ) } {
 	#
-	# value is never more than "to so set it to the "to" value.
+	# value is never more than "to" so set it to the "to" value.
 	#
 
 	$this config -value $itk_option(-to)
     } elseif { ( $itk_option(-from) > $itk_option(-to) ) &&		\
 	     ( $itk_option(-value) > $itk_option(-from) ) } {
 	#
-	# value is never less than "from: so set it to the "from" value.
+	# value is never less than "from" so set it to the "from" value.
 	#
 
 	$this config -value $itk_option(-from)
@@ -704,13 +692,9 @@ configbody 	CProgressBar::value {
 
 	$this config -value $itk_option(-from)
     } else {
-	$itk_component(scale) configure -state normal
-	$itk_component(scale) set $itk_option(-value)
-	$itk_component(scale) configure -state disabled
-
-	$itk_component(value) config -text $itk_option(-value)
-
-	repackValues
+   	$itk_component(value) config -text $itk_option(-value)
+   
+   	repackValues
     }
 }
 
@@ -822,20 +806,20 @@ body CProgressBar::doSomething {
 body 	CProgressBar::lookBusy {
     { bool 1 }
 } {
-    $itk_component(scale) set [ set itk_option(-value) 0 ]
-    $itk_component(scale) config 					\
-	-from $itk_option(-from)					\
-	-to $itk_option(-to)						\
-	-troughcolor $itk_option(-idlecolor)
+#    $itk_component(scale) set [ set itk_option(-value) 0 ]
+#    $itk_component(scale) config 					\
+#	-from $itk_option(-from)					\
+#	-to $itk_option(-to)						\
+#	-troughcolor $itk_option(-idlecolor)
 
     if { [ set lookingBusy $bool ] } {
 	set itk_option(-value) 0
-	$itk_component(scale) config \
-	    -background $itk_option(-busycolor)
+#	$itk_component(scale) config \
+#	    -background $itk_option(-busycolor)
 	doSomething
     } else {
-	$itk_component(scale) config \
-	    -background $itk_option(-idlecolor)
+#	$itk_component(scale) config \
+#	    -background $itk_option(-idlecolor)
 	if { $itk_option(-value) != $itk_option(-to) && 
 	     $doingSomething != "" } {
 	    after cancel $doingSomething
@@ -892,20 +876,38 @@ body CProgressBar::repackValues {} {
 	update idletasks
     }
 
-    if { $itk_option(-showvalue) } {
-    } else {
-	return
-    }
+   if { $itk_option(-orient) == "horizontal" } {
+      $itk_component(canvas) configure -height 15
+      if { $itk_option(-to) != $itk_option(-from) } {
+         set extension [ expr "[winfo width $itk_component(canvas)] * ( double($itk_option(-value)) - double($itk_option(-from)) ) / ( double($itk_option(-to)) - double($itk_option(-from)) )" ]
+      } else {
+         set extension [ winfo width $itk_component(canvas) ]
+      }
+      $itk_component(canvas) coords $bar 0 0 $extension [winfo height $itk_component(canvas)]
+   } else {
+      $itk_component(canvas) configure -width 15
+      if { $itk_option(-to) != $itk_option(-from) } {
+         set extension [ expr "[winfo height $itk_component(canvas)] * ( double($itk_option(-value)) - double($itk_option(-from)) ) / ( double($itk_option(-to)) - double($itk_option(-from)) )" ]
+      } else {
+         set extension [ winfo height $itk_component(canvas) ]
+      }
+      $itk_component(canvas) coords $bar 0 0  \
+                                       [winfo width $itk_component(canvas)] $extension
+   }
+   if { ! $itk_option(-showvalue) } { 
+      return
+   }
 
 
     if { $itk_option(-orient) == "horizontal" } {
 	#
-	# Make sure the scale and values are position horizongally
+	# Make sure the scale and values are position horizontally
 	#
-
-	pack configure $itk_component(scale) -side top -anchor n -fill x
+   
+   
+	pack configure $itk_component(canvas) -side top -anchor n -fill x
 	pack configure $itk_component(valueFrame) -side top -anchor n	\
-	    -after $itk_component(scale) -fill x
+	    -after $itk_component(canvas) -fill x
 
 	
 	#
@@ -913,7 +915,7 @@ body CProgressBar::repackValues {} {
 	# of the value frame.
 	#
 
-	set totalWidth [ winfo reqwidth $itk_component(scale) ]
+	set totalWidth [ winfo reqwidth $itk_component(canvas) ]
 	set valueWidth [ winfo width $itk_component(value) ]
 	set fromWidth [ winfo width $itk_component(from) ]
 	set toWidth [ winfo width $itk_component(to) ]
@@ -975,22 +977,22 @@ body CProgressBar::repackValues {} {
 	# a vertical manner
 	#
 
-	pack configure $itk_component(scale) -side right -anchor w -fill y
+	pack configure $itk_component(canvas) -side right -anchor w -fill y
 	pack configure $itk_component(valueFrame) -side right -anchor w	\
-	    -after $itk_component(scale) -fill y
+	    -after $itk_component(canvas) -fill y
 
 	
 	#
 	# Find the height of the scale and all of the values
 	#
 
-	set totalHeight [ winfo reqheight $itk_component(scale) ]
+	set totalHeight [ winfo reqheight $itk_component(canvas) ]
 	set valueHeight [ winfo height $itk_component(value) ]
 	set fromHeight [ winfo height $itk_component(from) ]
 	set toHeight [ winfo height $itk_component(to) ]
 
 	
-v	#
+	#
 	# Find the relative place for the value, should be
 	# the same place as the "slider" position
 	# 

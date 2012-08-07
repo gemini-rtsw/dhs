@@ -1680,7 +1680,7 @@ proc 	parseCommandLine {
     #
 
     if { ! [ info exists debug ] || "$debug" == "" } {
-	set debug "FULL"
+	set debug "NONE"
     }
 
 

@@ -92,6 +92,7 @@ static char rcsid[] = "$Id: subsystem.C,v 1.1.1.1 2002-11-24 20:25:32 brighton E
 //
 
 #include <unistd.h>
+#include <stdlib.h>
 
 extern "C"
 {
@@ -233,7 +234,9 @@ bool	cCmdSubsystem::cssSubsystemExit = false;
 
 void		cCmdSubsystem::connect
 (
-    cCmdStatus	&status		// (mod) Function return status.
+    cCmdStatus	&status,		// (mod) Function return status.
+    int retries,				// Maximum number of connection retries
+    int retryDelay				// Delay (in seconds) between connection retries
 )
 {
     DHS_STATUS	dhsStatus;
@@ -250,7 +253,7 @@ void		cCmdSubsystem::connect
 	//
 
 	dhsStatus = DHS_S_SUCCESS;
-	for ( i =0; i < 10 && !cCmdSubsystem::subsystemExit(); i++ )
+	for ( i =0; (retries == 0 || i < retries) && !cCmdSubsystem::subsystemExit(); i++ )
 	{
 	    checkDhs( cssConnect.open( cssAddress, cssServerName, dhsStatus ),
 		    dhsStatus, status, VOID );
@@ -260,7 +263,7 @@ void		cCmdSubsystem::connect
 	    }
 	    else
 	    {
-		sleep(2);
+		sleep(retryDelay);
 		dhsStatus = DHS_S_SUCCESS;
 	    }
 	}
@@ -321,7 +324,7 @@ void		cCmdSubsystem::connectAll
     {
 	if ( ! ( *(*i) == PREFIX  ) )
 	{
-	    ((cCmdSubsystem *) (*i))->connect( status );
+	    ((cCmdSubsystem *) (*i))->connect( status, 0, 5);
 	    if ( status == status.E_INIT )
 	    {
 		status.S_SUCCESS( status );

@@ -1,7 +1,7 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version 1.8
+%define version 1.8.1
 %define release 0
 %define repository gemini
 
