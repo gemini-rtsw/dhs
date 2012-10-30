@@ -2993,9 +2993,9 @@ void		cDtsUniqueList::composeUName
     {
 	//
 	//  It is after 14:00, so the day in the prefix is tomorrow's date.
-	//
+	// JLU: Added less than 24 hours to avoid problems with DST
 
-	t = t + ( 86400 ) ;
+	t = t + ( 64800 ) ;
 	tm = localtime_r(&t, &tm1);
     }
 
@@ -3127,7 +3127,7 @@ void		cDtsUniqueList::createUniqueName
 	//  It is after 14:00, so the day in the prefix is tomorrow's date.
 	//
 
-	t = t + ( 86400 ) ;
+	t = t + ( 64800 ) ;
 	tm = localtime_r(&t, &tm1 );
     }
     strftime( s, sizeof(s), "%Y%m%d", tm );
