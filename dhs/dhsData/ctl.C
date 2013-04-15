@@ -43,6 +43,9 @@ static char rcsid[] = "$Id: ctl.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2013/03/19 02:56:52  pjy
+// Added support for qlsDsAbort command to allow QL server to cleanup memory after abort. New abortQlStream method
+//
 // Revision 1.1.1.1  2002/11/24 20:26:44  brighton
 // Imported sources
 //
@@ -288,6 +291,7 @@ void cDtsDhsControl::exec
 		    //
 
 		    ctrlName = strsav( "abort dataset" );
+		    abortQlStream( status, returnLabel() );
 		    rmDataset( status, returnLabel(), TRUE );
 		    break;
 
@@ -1184,6 +1188,118 @@ void 	 cDtsDhsControl::setQlStream
 	    //
 
 	    status.S_QL_CONNECT( status, "QL stream control", sourceName(), 
+		    sourceAddr(), datasetName );
+	}
+    }
+
+}
+
+//
+//***********************************************************************
+//+
+// FUNCTION NAME:
+// cDtsDhsControl::abortQlStream
+//
+// INVOCATION:
+// n.a.  This function is executed by the exec function.
+//
+// PARAMETERS: (">" input, "!" modified, "<" output)
+// (!) status (cDtsStatus &) return function status.
+// (>) datasetName (char *) Dataset name to remove.
+//
+// FUNCTION VALUE:
+// None.
+//
+// PURPOSE:
+// This function is called to abort the quick look stream on the QL server.
+//
+// DESCRIPTION:
+// This function is called to abort the quick look stream on the QL server.
+//
+// EXTERNAL VARIABLES:
+// None.
+//
+// PRIOR REQUIREMENTS:
+// None.
+//
+// DEFICIENCIES:
+// None.
+//-
+//***********************************************************************
+//
+
+void 	 cDtsDhsControl::abortQlStream
+(
+    cDtsStatus	&status,		// (mod) Returned function status.
+    char	*datasetName		// (in)  Dataset name.
+)
+{
+    DHS_STATUS			dhsStatus( DHS_S_SUCCESS );
+    cDhsClientCommand		pCmd( DTS_QL_ABORT_CMD );
+
+
+    //
+    //  Check the status.
+    //
+
+    checkStat( status, return );
+
+
+    //
+    // Lookup the ql server ip address and connect to the ql server.
+    //
+
+    cDhsConnection	*pConn;
+    DHS_CMD_STATUS	cmdStat = DHS_CS_DONE;
+
+    if ( status.serversOn() )
+    {
+	if ( cDtsConManager::connectTo( status, cDtsDhs::qlServer(), &pConn ) )
+	{
+	    //
+	    //  Are connected, send control to quick look.
+	    //
+
+	    checkDhs( pCmd.add( DTS_QL_DS_ATTRIB, DHS_DT_STRING, 
+		    datasetName, dhsStatus ), dhsStatus, status, VOID );
+
+	    //
+	    //  Apply the command and wait for the reply.
+	    //
+
+	    checkDhs( pCmd.apply( *pConn, dhsStatus ), 
+		dhsStatus, status, VOID );
+	    pCmd.wait( dhsStatus );
+	    checkDhs( (cmdStat = pCmd.status( dhsStatus )), dhsStatus, status, 
+		    VOID );
+
+	    if ( cmdStat != DHS_CS_DONE || !status.ok() || 
+		    dhsStatus != DHS_S_SUCCESS )
+	    {
+		//
+		//  Put failed, log the error.
+		//
+
+		status.S_QL_ABORT( status, sourceName(), sourceAddr(), 
+			datasetName, "DHS_CS_ERROR" );
+	    }
+	    else
+	    {
+		//
+		//  Put succeeded.
+		//
+
+		status.S_QL_ABORT( status, sourceName(), sourceAddr(), 
+			datasetName, "DHS_CS_DONE" );
+	    }
+	}
+	else
+	{
+	    //
+	    //  Could not connect to QL server.
+	    //
+
+	    status.S_QL_CONNECT( status, "QL abort dataset", sourceName(), 
 		    sourceAddr(), datasetName );
 	}
     }

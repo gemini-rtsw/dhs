@@ -39,6 +39,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2013/03/19 02:56:34  pjy
+// Added support for qlsDsAbort command to allow QL server to cleanup memory after abort. New abortQlStream method
+//
 // Revision 1.1.1.1  2002/02/21 20:23:34  tpaz
 //
 //
@@ -102,6 +105,7 @@
 #define	DTS_QL_DS_ATTRIB	"dataset"
 #define	DTS_QL_NOTIFY_CMD	"qlsDsStream"
 #define	DTS_QL_STREAM_ATTRIB	"streams"
+#define	DTS_QL_ABORT_CMD	"qlsDsAbort"
 
 #define	DTS_SS_FILE_ID		"fileId"
 #define DTS_SS_FILE_SZ		"fileSize"
@@ -206,6 +210,7 @@ class 	cDtsDhsDsInfo: public cDhsServerCommand, public cDtsDhsName
 // (void) generateUniqueName - Generate a unique name.
 // (void) rmDataset - Remove the dataset.
 // (void) setQlStream - Send the set ql stream to ql server.
+// (void) abortQlStream - Abort the ql stream on the ql server.
 // (void) setLifetime - Set the lifetime of the dataset.
 // (void) setContribList - Set the contributor list of the dataset.
 //
@@ -241,6 +246,7 @@ class 	cDtsDhsControl : public cDhsServerCommand , public cDtsDhsName
 	void		rmDataset( cDtsStatus &, char *, bool );
 	void		setQlStream( cDtsStatus &, char **, char *, 
 				unsigned long * );
+	void		abortQlStream( cDtsStatus &, char * );
 	void		setLifetime( cDtsStatus &, DHS_BD_LIFETIME, char * );
 	void		setContribList( cDtsStatus &, char **, int, char * );
 

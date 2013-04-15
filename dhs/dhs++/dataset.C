@@ -173,6 +173,7 @@ void		cDhsDataset::exportDataset
     if ( ddsPBuffer != NULL && ddsBufferFree )
     {
 	free( ddsPBuffer );
+	ddsPBuffer = NULL;
     }
 
     ddsLength = dhsBdDsSize( ddsObject, &status );

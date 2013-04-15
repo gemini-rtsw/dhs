@@ -36,6 +36,9 @@ static char rcsid[] = "$Id: msg.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2013/03/19 03:01:14  pjy
+// Added support for qlsDsAbort command to allow QL server to cleanup memory after abort. New abortQlStream method
+//
 // Revision 1.1.1.1  2002/11/24 20:27:18  brighton
 // Imported sources
 //
@@ -198,6 +201,8 @@ static char rcsid[] = "$Id: msg.C,v 1.2 2002-11-27 17:15:08 brighton Exp $";
 	    "Error connecting to QL server for %s request by `%s' on `%s' for dataset `%s'." );
 	msgText( cDtsStatus,  S_QL_STREAM, P_DEBUG_FULL | P_LOG,
 	    "QL Stream control by `%s' on `%s' for dataset `%s' passed on to QL with `%s'." );
+	msgText( cDtsStatus,  S_QL_ABORT, P_DEBUG_FULL | P_LOG,
+	    "QL Stream ABORT by `%s' on `%s' for dataset `%s' passed on to QL with `%s'." );
 	msgText( cDtsStatus,  S_REQUEST_REMOTELY, P_DEBUG_MIN | P_LOG,
 	    "Requesting dataset `%s' from remote dataServer `%s'." );
 	msgText( cDtsStatus,  S_RUNNING, P_LOG, 
