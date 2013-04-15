@@ -374,8 +374,13 @@ void		cDhsPutHandlerBase::putCallback
     {
 	status = DHS_S_SUCCESS;
 	pPutObj->dprFreeData = true;
-	pPutObj->ddsPBuffer = new char[length];
-	memcpy( pPutObj->ddsPBuffer, pData, length );
+	// PJY - Must use malloc/free for this buffer because cfistio may(will) use
+	// realloc to resize the buffer to hold full FITS file
+	if ((pPutObj->ddsPBuffer = malloc(length)) != NULL) {
+		memcpy( pPutObj->ddsPBuffer, pData, length );
+	} else {
+	  status = DHS_E_MEMORY;
+	}
 	pPutObj->dprLabel = strsav( pPutObj->dprLabel );
 
 	if ( status != DHS_S_SUCCESS )
@@ -546,7 +551,10 @@ void		*cDhsPutHandlerBase::execThread
 	    ddsObjectFree = false;
 	}
 	    
-	delete [] (char*)ddsPBuffer;
+	if (ddsPBuffer != NULL) {
+	  free(ddsPBuffer);
+	  ddsPBuffer = NULL;
+	}
     }
 }
 

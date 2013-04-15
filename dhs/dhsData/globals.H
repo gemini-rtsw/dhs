@@ -35,6 +35,9 @@
 //
 //INDENT-OFF*
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2013/03/19 03:01:01  pjy
+// Added support for qlsDsAbort command to allow QL server to cleanup memory after abort. New abortQlStream method
+//
 // Revision 1.2  2002/11/25 10:32:32  brighton
 // added genBool.H
 //
@@ -186,6 +189,7 @@ class 	cDtsStatus: public cStaStatus
 	msgId( S_PUT_REQ	);	// Put request.
 	msgId( S_QL_CONNECT	);	// Error connecting to ql.
 	msgId( S_QL_STREAM	);	// QL Stream request.
+	msgId( S_QL_ABORT	);	// QL Abort request.
 	msgId( S_REQUEST_REMOTELY);	// Request remotely.
 	msgId( S_RUNNING	);	// Running event loop.
 	msgId( S_SDS2TAR	);	// Info message to tar sds files.
