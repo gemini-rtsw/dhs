@@ -1386,6 +1386,7 @@ void		cDtsDhs::recursiveLook
             dirent = readdir( dirp ) )
     {
         if ( streq( dirent->d_name, "." ) ||
+                streq( dirent->d_name, ".snapshot" ) ||
                 streq( dirent->d_name, ".." ) )
         {
             continue;
@@ -1407,6 +1408,7 @@ void		cDtsDhs::recursiveLook
     {
 	status.E_DIR_CLOSE( status, path );
 	return;
+	
     }
 
 }
