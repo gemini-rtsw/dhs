@@ -1385,9 +1385,8 @@ void		cDtsDhs::recursiveLook
     for ( dirent = readdir( dirp ); dirent != NULL;
             dirent = readdir( dirp ) )
     {
-        if ( streq( dirent->d_name, "." ) ||
-                streq( dirent->d_name, ".snapshot" ) ||
-                streq( dirent->d_name, ".." ) )
+    	// Skip directory whose names start with a dot. That includes ., .. and .snapshot
+        if ( dirent->d_name[0] == '.' )
         {
             continue;
         }
