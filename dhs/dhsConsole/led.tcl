@@ -938,7 +938,7 @@ body	CLed::updateColor {
     name2
     op
 } {
-    global ::dhsStatus ::$name1
+    global ::dhsStatus
 
     if { $name2 == "" } {
 	set var "$name1"
