@@ -171,15 +171,35 @@ if test "x${DRAMA}" = "x" ; then
     DRAMA=${GEMINI_TOP}/opt/drama
 fi
 
-AC_MSG_RESULT([$DRAMA])
-. $DRAMA/dev.path
-IMP_DIR=$IMP_DEV
-SDS_DIR=$SDS_DEV
-ERS_DIR=$ERS_DEV
+case "$host_os" in
+    linux-gnu)     DRAMA_OS=linux_x86;;
+    solaris*)      DRAMA_OS=sun4_solaris;;
+    vxworks*)	   VXWORKS=yes; DRAMA_OS=mv2700; SUBDIRS="gen dhs"; MAKE_SHARED_LIBS=no;;
+    *)             echo "*** Unsupported host: $host_os **"; exit 1;;
+esac
+echo "drama OS = $DRAMA_OS"
+AC_SUBST(DRAMA_OS)
 
-#test -d $IMP_DIR  || echo "ERROR: can't find IMP_DIR directory" && exit 1
-#test -d $SDS_DIR  || echo "ERROR: can't find SDS_DIR directory" && exit 1
-#test -d $ERS_DIR  || echo "ERROR: can't find ERS_DIR directory" && exit 1
+AC_MSG_RESULT([$DRAMA])
+if test -f $DRAMA/dev.path ; then
+	. $DRAMA/dev.path
+	IMP_DIR=$IMP_DEV
+	SDS_DIR=$SDS_DEV
+	ERS_DIR=$ERS_DEV
+else
+	tmp=$DRAMA/imp/r*/$DRAMA_OS
+	IMP_DIR=`echo $tmp`
+	
+	tmp=$DRAMA/sds/r*/$DRAMA_OS
+	SDS_DIR=`echo $tmp`
+	
+	tmp=$DRAMA/ers/r*/$DRAMA_OS
+	ERS_DIR=`echo $tmp`
+fi
+
+#test -d $IMP_DIR  || echo "ERROR: can't find IMP_DIR directory (expected $IMP_DIR)" && exit 1
+#test -d $SDS_DIR  || echo "ERROR: can't find SDS_DIR directory (expected $SDS_DIR)" && exit 1
+#test -d $ERS_DIR  || echo "ERROR: can't find ERS_DIR directory (expected $ERS_DIR)" && exit 1
 AC_SUBST(IMP_DIR)
 AC_SUBST(SDS_DIR)
 AC_SUBST(ERS_DIR)

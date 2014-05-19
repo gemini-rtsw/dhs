@@ -95,7 +95,7 @@ extern "C"
 #define	DHS_NO_GET
 #define	DHS_NO_COMMAND
 #include "dhs++.H"
-
+#include "dhs++PutRequest.H"
 typedef std::map< DHS_BD_PUT_TYPE, cDhsPutHandlerBase *, std::less<DHS_BD_PUT_TYPE> >
 		tHandlerList;
 typedef tHandlerList::iterator
@@ -447,6 +447,10 @@ void		*cDhsPutHandlerBase::execThread
 
     try {
     	pPutObj->exec();
+
+        threadDestroy();
+        delete pPutObj;
+
     }
     catch( const char * s )
     {
@@ -455,7 +459,7 @@ void		*cDhsPutHandlerBase::execThread
 		//
 		std::cout << "cDhsPutHandlerBase::execThread: Died with string: " << s << std::endl;
     }
-    catch( const DHS_STATUS s )
+    catch( const DHS_STATUS &s )
     {
 		DHS_STATUS	st;
 		DHS_STATUS	s1( DHS_S_SUCCESS );
@@ -478,9 +482,6 @@ void		*cDhsPutHandlerBase::execThread
     {
     	std::cout << "cDhsPutHandlerBase::execThread: Terminated with unknown exception." << std::endl;
     }
-
-    threadDestroy();
-    delete pPutObj;
 
     return( NULL );
 }
