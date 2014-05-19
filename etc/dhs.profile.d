@@ -4,3 +4,4 @@ export DEFAULT_CONFIG_DIR=${GEMINI_TOP}/etc/dhs
 export DHS_STAGING=/staging
 export DHS_USER=gemdhs
 export DRAMA_USER=gemdhs
+export IMP_NET_KBYTES=4096
