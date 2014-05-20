@@ -1,8 +1,8 @@
 %define _prefix __auto__
 %define gemopt opt
 %define name dhs
-%define version 1.8.4
-%define release 1
+%define version 1.8.5
+%define release 0
 %define repository gemini
 
 Summary: The DHS Server
@@ -20,7 +20,7 @@ Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-conf
 #These requirements are to force the same architecture for the packages
 Requires: libtclxpa.so.1
 #Requires: xpa-tcl
-BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel
+BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 

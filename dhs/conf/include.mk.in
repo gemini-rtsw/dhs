@@ -177,7 +177,7 @@ LOCAL_LDFLAGS += -L$(DHS_CLIENT_TOP)/lib
 LOCAL_LDFLAGS += -Wl,-rpath=$(DHS_CLIENT_TOP)/lib
 
 # Linker options
-LDFLAGS = -g
+LDFLAGS += -g @LDFLAGS@
 
 # Libraries to link
 LDLIBS += ${LOCAL_LDFLAGS}
@@ -204,10 +204,10 @@ SHLIB_CFLAGS += -fPIC
 SHLIB_LDFLAGS += -shared
 
 # C Compiler options
-CFLAGS += -g $(SHLIB_CFLAGS) ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
+CFLAGS += -g @CFLAGS@ $(SHLIB_CFLAGS) ${DEFINES} ${INCLUDES} ${CXX_INCLUDES} 
 
 # C++ Compiler options
-CXXFLAGS += $(CFLAGS) 
+CXXFLAGS += @CFLAGS@  $(CFLAGS)
 
 # Script used to install files
 INSTALL = @INSTALL@
