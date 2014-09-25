@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 1
+%define release 2
 %define repository gemini
 
 Summary: The DHS Server
@@ -99,6 +99,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_prefix}/tmp
 mkdir -p $RPM_BUILD_ROOT/tmp
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/etc
 mkdir -p $RPM_BUILD_ROOT/etc/init.d
+mkdir -p $RPM_BUILD_ROOT/etc/rsyslog.d
 cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 rm -Rf $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/images
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
