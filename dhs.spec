@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 2
+%define release 3
 %define repository gemini
 
 Summary: The DHS Server
@@ -104,7 +104,7 @@ cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 rm -Rf $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/images
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
-cp -a etc/dhs.rsyslog.d $RPM_BUILD_ROOT/%{_prefix}/etc/rsyslog.d/dhs.conf
+cp -a etc/dhs.rsyslog.d $RPM_BUILD_ROOT/etc/rsyslog.d/dhs.conf
 cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
