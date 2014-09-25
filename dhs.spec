@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 0
+%define release 1
 %define repository gemini
 
 Summary: The DHS Server
@@ -16,10 +16,10 @@ Group: Gemini
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
-Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer syslog
+Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer
+Requires: rsyslog
 #These requirements are to force the same architecture for the packages
 Requires: libtclxpa.so.1
-#Requires: xpa-tcl
 BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -103,6 +103,7 @@ cp -a dhs/release/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}
 rm -Rf $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/images
 cp -a dhs/conf/dhs.conf* $RPM_BUILD_ROOT/%{_prefix}/tmp/
 cp -a etc/dhs.profile.d $RPM_BUILD_ROOT/%{_prefix}/etc/profile.d/dhs.sh
+cp -a etc/dhs.rsyslog.d $RPM_BUILD_ROOT/%{_prefix}/etc/rsyslog.d/dhs.conf
 cp -a createDhsConfigDirs.sh $RPM_BUILD_ROOT/tmp/
 cp -a dhs/conf/dhsconfig/* $RPM_BUILD_ROOT/%{_prefix}/opt/%{name}/var/
 echo "%{_prefix}/%{gemopt}/dhs/lib" >  $RPM_BUILD_ROOT/%{_prefix}/etc/ld.so.conf.d/dhs.so.conf
@@ -119,18 +120,6 @@ service dhs stop &>/dev/null
 exit 0
 
 %post
-#Determine which syslog to use
-if service rsyslog status &>/dev/null ; then
-    logservice=rsyslog
-else
-    if service syslog status &>/dev/null ; then
-        logservice=syslog
-    else
-        echo "Cannot find log service." >&2
-        exit 1
-    fi
-fi
-echo "DHS Server installation: Using log service $logservice"
 
 HOSTNAME=$(hostname -s)
 if ([ -z $HOSTNAME ] || [ $HOSTNAME = localhost ]) && [ -e /root/postvars ] ; then
@@ -173,12 +162,12 @@ if ! [ -e $logfolder/dhs.log ] ; then
 fi
 chmod a+r $logfolder/dhs.log
 
-
-if ! grep "local0.*$logfolder/dhs.log" /etc/$logservice.conf > /dev/null ; then
-    sed -i '/local0/d' /etc/$logservice.conf
-    echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/$logservice.conf
-    service $logservice restart
+#Clear the syslog config from old installations 
+if grep "local0.*$logfolder/dhs.log" /etc/rsyslog.conf > /dev/null ; then
+    sed -i '/local0/d' /etc/rsyslog.conf
 fi
+
+echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/rsyslog.d/dhs.conf
 
 #recreate logrotate configuration file
 [ -e /etc/logrotate.d/dhs ] && rm -f /etc/logrotate.d/dhs
@@ -242,6 +231,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/tmp
 /tmp/createDhsConfigDirs.sh
 %attr(755, root, root) /etc/init.d/dhs
+%attr(755, root, root) /etc/rsyslog.d/dhs.conf
 
 %files QlTools
 %defattr(-,root,root,-)
