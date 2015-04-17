@@ -178,7 +178,7 @@ echo -e "\trotate 7" >> /etc/logrotate.d/dhs
 echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
 echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
 echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
-echo -e "\t\t/sbin/service $logservice restart" >> /etc/logrotate.d/dhs
+echo -e "\t\t/sbin/service rsyslog restart" >> /etc/logrotate.d/dhs
 echo -e "\tendscript" >> /etc/logrotate.d/dhs
 echo -e "}" >> /etc/logrotate.d/dhs
 
@@ -271,6 +271,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/opt/%{name}/lib/*.a
 
 %changelog
+* Fri Apr 17 2015 Javier Luhrs <jluhrs@gemini.edu> 1.8.5-4
+- Fixed problem with log output not following file rotation.
 * Wed Sep 10 2008 Felix Kraemer <fkraemer@gemini.edu> 4.0
 - seperated out QlTools and Console (ever needed??) in extra rpms
 * Tue Jun 17 2008 Matthieu Bec <mbec@gemini.edu> 4.0
