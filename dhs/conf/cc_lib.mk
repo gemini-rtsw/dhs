@@ -10,6 +10,8 @@ include ../conf/include.mk
 OBJECTS = $(SOURCES:.c=.o)
 LIBRARY = lib$(NAME).a
 SHARED_LIBRARY = lib$(NAME).so
+CC = gcc -m32
+CXX = g++ -m32
 
 all: $(LIBRARY) $(SHARED_LIBRARY)
 

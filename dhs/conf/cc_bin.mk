@@ -10,7 +10,8 @@ include ../conf/include.mk
 
 OBJECTS = $(SOURCES:.c=.o) version.o
 PROGRAM = $(NAME)
-
+CC = gcc -m32
+CXX = g++ -m32
 
 all: $(PROGRAM)
 

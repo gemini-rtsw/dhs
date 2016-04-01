@@ -194,10 +194,10 @@ LDLIBS += $(SYSLIBS)
 RANLIB = @RANLIB@
 
 # C compiler
-CC = @CC@
+CC = @CC@ -m32
 
 # C++ compiler
-CXX = @CXX@
+CXX = @CXX@ -m32
 
 # For now, assume gcc, otherwise this needs to go into configure.in
 SHLIB_CFLAGS += -fPIC
