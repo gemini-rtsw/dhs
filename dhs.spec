@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 5
+%define release 6
 %define repository gemini
 
 Summary: The DHS Server
@@ -18,8 +18,6 @@ BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer
 Requires: rsyslog
-#These requirements are to force the same architecture for the packages
-Requires: libtclxpa.so.1
 BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
@@ -43,9 +41,7 @@ Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
 Requires: ocswish drama >= 1.7 skycat qlplugins itk iwidgets cfitsio ds9 dhs-libs dhs-QlServer
-#These requirements are to force the same architecture for the packages
-Requires: libtclx8.4.so libtclxpa.so.1
-#Requires: tclx xpa-tcl
+Requires: tclx%{?_isa} xpa-tcl%{?_isa}
 BuildRequires: imake, byacc, itk-devel, drama-devel >= 1.7, skycat-devel, dhsClient-devel >= 0.5, cfitsio-devel
 %description QlTools
 dhs
@@ -55,8 +51,7 @@ Summary: dhs
 Group: Development/Gemini
 Requires: ocswish drama >= 1.7 dhs-libs
 #These requirements are to force the same architecture for the packages
-Requires: libtclx8.4.so libtclxpa.so.1
-#Requires: tclx xpa-tcl
+Requires: tclx%{?_isa} xpa-tcl%{?_isa}
 %description Console
 dhs
 
@@ -73,8 +68,7 @@ Group: Development/Gemini
 BuildRequires: gemini-build
 Requires: gemini-top, gemini-setup, drama >= 1.7, dhsClient >= 0.5, cfitsio, dhs-libs
 #These requirements are to force the same architecture for the packages
-Requires: libtclxpa.so.1
-#Requires: xpa-tcl
+Requires: xpa-tcl%{?_isa}
 %description Console
 %description QlServer
 Quicklook Server.
