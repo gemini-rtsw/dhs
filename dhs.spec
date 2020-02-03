@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 7
+%define release 8
 %define repository gemini
 
 Summary: The DHS Server
@@ -162,7 +162,7 @@ if grep "local0.*$logfolder/dhs.log" /etc/rsyslog.conf > /dev/null ; then
     sed -i '/local0/d' /etc/rsyslog.conf
 fi
 
-echo -e "\nlocal0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/rsyslog.d/dhs.conf
+echo -e "\nsyslog,local0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/rsyslog.d/dhs.conf
 
 #recreate logrotate configuration file
 [ -e /etc/logrotate.d/dhs ] && rm -f /etc/logrotate.d/dhs
