@@ -1,1 +1,2 @@
-$SystemLogRateLimitInterval 0
+$SystemLogRateLimitInterval 10
+$SystemLogRateLimitBurst 400
