@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 8
+%define release 9
 %define repository gemini
 
 Summary: The DHS Server
@@ -168,7 +168,7 @@ echo -e "\nsyslog,local0.*\t\t\t\t\t\t$logfolder/dhs.log" >> /etc/rsyslog.d/dhs.
 [ -e /etc/logrotate.d/dhs ] && rm -f /etc/logrotate.d/dhs
 echo -e "$logfolder/dhs.log {" >> /etc/logrotate.d/dhs
 echo -e "\tdaily" >> /etc/logrotate.d/dhs
-echo -e "\trotate 7" >> /etc/logrotate.d/dhs
+echo -e "\trotate 90" >> /etc/logrotate.d/dhs
 echo -e "\tcreate 0644 root root" >> /etc/logrotate.d/dhs
 echo -e "\tsharedscripts" >> /etc/logrotate.d/dhs
 echo -e "\tpostrotate" >> /etc/logrotate.d/dhs
