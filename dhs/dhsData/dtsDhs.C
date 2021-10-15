@@ -982,8 +982,7 @@ void		cDtsDhs::initLibs
     {
 	status.E_SS_CONNECT_INFO( status );
 	return;
-    } 
-    
+    }
     dtsStSrConnect.open( statIpAddr, sdStatServer, dhsStatus);
     if ( dhsStatus != DHS_S_SUCCESS )
     {

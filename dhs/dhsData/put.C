@@ -403,10 +403,8 @@ void cDtsDhsPut::fileProcess
 {
     FILE        *fp;                    // File pointer.
     int		actWritten;		// Num bytes actually written.
-    char	*path;
+    std::string path;
     
-
-
     //
     //  Check the status.  If the status is not ok at this point, then
     //  generate a new name and write it there so that at least the data
@@ -421,7 +419,7 @@ void cDtsDhsPut::fileProcess
     }
     else
     {
-	path = filePath;
+        path = std::string(filePath) + std::string(".tmp");
     }
     
 
@@ -429,7 +427,7 @@ void cDtsDhsPut::fileProcess
     //  Open the file for writing.
     //
 
-    if ( ( fp = fopen( path,  "w" ) ) == NULL )
+    if ( ( fp = fopen( path.c_str(),  "w" ) ) == NULL )
      {
 	status.E_FILE_OPEN( status, path );
 	status.sysErrno();
@@ -452,6 +450,9 @@ void cDtsDhsPut::fileProcess
 	return;
     }
     (void) fclose ( fp );
+
+    rename(path.c_str(), filePath);  // remove the .tmp
+
     status.S_WROTE_FILE( status, path );
 
 }
