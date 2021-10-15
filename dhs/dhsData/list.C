@@ -255,7 +255,7 @@ static cCond	culElCond;
 bool cDtsLists::fileWriteLabelPrefix(std::string inPrefixStr, int inPrefixInt)
 {
 
-    std::string filePath = std::string(cDtsStoreManager::tempPath()) + std::string("/") + cDtsLists::prefixFilename;
+    std::string filePath = std::string(cDtsStoreManager::permPath()) + std::string("/") + cDtsLists::prefixFilename;
 
     printf("Attempting to write %s\n", filePath.c_str());
     std::ofstream outStream(filePath.c_str(), std::ios::trunc);     // open and erase the old file 
@@ -308,7 +308,7 @@ bool cDtsLists::fileWriteLabelPrefix(std::string inPrefixStr, int inPrefixInt)
 bool cDtsLists::fileReadLabelPrefix(std::string& outPrefixStr, int& outPrefixInt)
 {
 
-    std::string filePath = std::string(cDtsStoreManager::tempPath()) + std::string("/") + cDtsLists::prefixFilename;
+    std::string filePath = std::string(cDtsStoreManager::permPath()) + std::string("/") + cDtsLists::prefixFilename;
 
     printf("Attempting to read %s\n", filePath.c_str());
     std::ifstream inStream (filePath.c_str());
@@ -321,7 +321,7 @@ bool cDtsLists::fileReadLabelPrefix(std::string& outPrefixStr, int& outPrefixInt
         std::string num = outPrefixStr.substr(outPrefixStr.length() - 4, 4);
 
         if (num.length() > 0) {                       // if we found a valid prefix number continue the count
-            printf("Found current prefix, continuing count: %s\n", num.c_str());
+            printf("Found last used prefix: %s\n", outPrefixStr.c_str());
             outPrefixInt = std::atoi(num.c_str());
             inStream.close();		
             return true;
@@ -2528,8 +2528,8 @@ void	cDtsDatasetList::findNameMax
     if (fileReadLabelPrefix(strPrefix, numPrefix)) {                    // found a match - continue the count
         *num = numPrefix;                                               // where it left off
     }
-    else {                                                              // no match (aka new day) - start from 1
-        *num = 1;
+    else {                                                              // no match (aka new day) - start from 0
+        *num = 0;                                                       // count will be incremented 
     }
 }
 
@@ -2587,6 +2587,7 @@ void		cDtsDatasetList::newDatasetName
     if ( status.standAlone() )
     {
 	findNameMax( status, *datasetName, &num );
+	num++;
     }
     else
     {
@@ -3130,6 +3131,7 @@ void		cDtsUniqueList::composeUName
 		cDtsLists::defaultSource() );
 
 	findNameMax( status, tmp, &num );
+	num++;
     }
     else
     {
