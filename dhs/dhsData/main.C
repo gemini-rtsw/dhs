@@ -200,7 +200,9 @@ int	main
 	    //
 
 	    dtsDhs.cleanupTemp( status );
-	    dtsDhs.makeList( status );
+	    
+	    // No need to rebuild lists anymore, reading last label prefix from file
+	    //dtsDhs.makeList( status );
 
 
 	    //

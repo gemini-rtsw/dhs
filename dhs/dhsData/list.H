@@ -160,6 +160,8 @@ class 	cDtsLists
 				    free( lstUkPrefix );
 				lstUkPrefix = strsav( x );
 				lstUkPrefixNum = i;
+
+				fileWriteLabelPrefix(lstUkPrefix, lstUkPrefixNum);
 			    };
 	static inline int 
 			nextPrefixNum ( void )
@@ -172,14 +174,24 @@ class 	cDtsLists
 							// ds calls.
 
     protected:
+        static bool     fileWriteLabelPrefix(std::string inPrefixStr, int inPrefixInt);
+        static bool     fileReadLabelPrefix(std::string& outPrefixStr, int& outPrefixInt); 
+
     private:
 	static boolean	nameInfo( int, char ** );	// Using in config.
 	static char	lstLifetime;			// Default Lifetime
 	static char	lstLocation;			// North or South
 	static char	lstSource;			// Source, O, S, B.
+
 	static char	*lstUkPrefix;			// Composed name prefix.
 	static int	lstUkPrefixNum;			// Composed prefix num.
+
+
+
+
+	static const std::string prefixFilename;
 };
+
 
 
 //

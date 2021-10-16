@@ -100,6 +100,7 @@
 *			fsv_hostname to the MFS_VOL_INFO structure.
 *    2000/04/10 SDJ   : Used AD_CRC_UNKNOWN to initialiaze crc values.
 *    2000/05/10 NRH   : Added the ad_file_media function.
+*    2021/09/22 HKS   : Fixed bug in ad_file_info(); missing strroot. 
 *
 ****  C A N A D I A N   A S T R O N O M Y   D A T A   C E N T R E  *****
 ************************************************************************
@@ -601,7 +602,6 @@ int		ad_file_info
     char	*ext_ptr;	/* Pointer to buffer of extension.	*/
     int		index;		/* Index into eptr list.		*/
 
-
     /*
      *	Set up the default compression and format. Take copy of file_id. 
      */
@@ -674,7 +674,7 @@ int		ad_file_info
 
     /*
      *  If we get to this point, we must have either not matched the
-     *  first extension, or there was a second extension to check. 
+     *  first extension, and/or there was a second extension to check. 
      */
      
     if ( eptr_search( local_ad.la_fmt_list, ext, &index, 
@@ -691,6 +691,7 @@ int		ad_file_info
 
     if ( root != NULL )
     {
+	strroot( copy );
 	(void) strcpy( root, copy );
     }
     return( AD_SUCCESS );

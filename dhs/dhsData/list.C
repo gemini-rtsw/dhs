@@ -164,6 +164,10 @@ static char rcsid[] = "$Id: list.C,v 1.3 2002-11-27 17:15:08 brighton Exp $";
 
 #include <iostream>
 //#include <pthread.h>
+#include <cstdio>
+#include <fstream>
+#include <string>
+#include <iomanip>
 
 #include "genCond.H"
 
@@ -199,6 +203,8 @@ char		cDtsLists::lstSource      = 'X';
 char		*cDtsLists::lstUkPrefix;
 int		cDtsLists::lstUkPrefixNum = 0;
 
+const std::string cDtsLists::prefixFilename = ".lastlabelprefix";
+
 
 cDtsDatasetList::tDataList
 		cDtsDatasetList::cdlDataList;// List of current datasets.
@@ -213,6 +219,126 @@ cMutex	cDtsLists::lstMutexNumIncomp;
 static cCond	culElCond;
 
 #define 	DTS_KEYWORD_NAMES	"names"
+
+//
+//***********************************************************************
+//+
+// FUNCTION NAME:
+//	static bool     fileWriteLabelPrefix(char *inPrefixStr, int inPrefixInt);
+//
+// INVOCATION:
+//
+// PARAMETERS: 
+//	(char *inPrefixStr, int inPrefixInt);
+//
+// FUNCTION VALUE:
+// None.
+//
+// PURPOSE:
+// Write the current label prefix to file
+//
+// DESCRIPTION:
+// Writes the current label prefix to file for persistent storage
+// used to continue the label prefix after a reboot
+//
+// EXTERNAL VARIABLES:
+// None.
+//
+// PRIOR REQUIREMENTS:
+//
+// DEFICIENCIES:
+// None.
+//-
+//***********************************************************************
+//
+
+bool cDtsLists::fileWriteLabelPrefix(std::string inPrefixStr, int inPrefixInt)
+{
+
+    std::string filePath = std::string(cDtsStoreManager::permPath()) + std::string("/") + cDtsLists::prefixFilename;
+
+    printf("Attempting to write %s\n", filePath.c_str());
+    std::ofstream outStream(filePath.c_str(), std::ios::trunc);     // open and erase the old file 
+
+    if (outStream.is_open()) {
+        printf("Writing %s%04i\n", inPrefixStr.c_str(), inPrefixInt);
+        outStream << inPrefixStr << std::setfill('0') << std::setw(4) << inPrefixInt;
+        outStream.close();
+	return true;
+    }
+
+    printf("Count not open %s\n", filePath.c_str());
+    return false;
+}
+
+
+
+//
+//***********************************************************************
+//+
+// FUNCTION NAME:
+//        static bool     fileReadLabelPrefix(char** outPrefixStr, int& outPrefixInt);
+//
+// INVOCATION:
+//
+// PARAMETERS:
+//       (char** outPrefixStr, int& outPrefixInt);
+//
+// FUNCTION VALUE:
+// None.
+//
+// PURPOSE:
+// Read the current label prefix file
+//
+// DESCRIPTION:
+// Reads the last written label prefix file and returns string and number parts of the prefix
+//
+// EXTERNAL VARIABLES:
+// None.
+//
+// PRIOR REQUIREMENTS:
+// the label prefix file should exist, if not valuse will be set to empty string and 0 
+//
+// DEFICIENCIES:
+// None.
+//-
+//***********************************************************************
+//
+
+bool cDtsLists::fileReadLabelPrefix(std::string& outPrefixStr, int& outPrefixInt)
+{
+
+    std::string filePath = std::string(cDtsStoreManager::permPath()) + std::string("/") + cDtsLists::prefixFilename;
+
+    printf("Attempting to read %s\n", filePath.c_str());
+    std::ifstream inStream (filePath.c_str());
+
+    if (inStream.is_open()) 
+    { 
+        inStream >> outPrefixStr;
+
+        // if the uniqueName matches continue the count 
+        std::string num = outPrefixStr.substr(outPrefixStr.length() - 4, 4);
+
+        if (num.length() > 0) {                       // if we found a valid prefix number continue the count
+            printf("Found last used prefix: %s\n", outPrefixStr.c_str());
+            outPrefixInt = std::atoi(num.c_str());
+            inStream.close();		
+            return true;
+        }
+        else {                                       // if we didn't find a valid prefix return false
+            printf("Invalid or old prefix in %s\n", filePath.c_str());
+            inStream.close();		
+            return false;
+        }
+    }
+    else {
+        printf("Could not open %s\n", filePath.c_str());
+        return false;
+    }
+}
+
+
 
 
 //
@@ -2396,36 +2522,15 @@ void	cDtsDatasetList::findNameMax
     itmp = 0;
     largestNum = 0;
 
+    std::string strPrefix;
+    int numPrefix;
 
-    //
-    //  Cycle through the dataset list and compare each datasetname
-    //  with the one passed in.
-    //
-
-
-    for( iterator i = cdlDataList.begin(); i != cdlDataList.end();
-		i ++ )
-    {
-	pDsList = (*i).second;
-	if ( ( tmp = strstr( pDsList->cdlDatasetName, uniquePart ) ) 
-		!= NULL )
-	{
-	    //
-	    //  Found a match, check for a '-' and number, 
-	    //  save the number, if its bigger.
-	    //
-	    tmp += strlen(uniquePart);
-	    if ( *tmp == '-' && *(++tmp) != '\0' )
-	    {
-		if (  str2int( tmp, &itmp ) )
-		{
-		    largestNum = ( itmp > largestNum ) ? itmp : largestNum;
-		}
-	    }
-	}
-
+    if (fileReadLabelPrefix(strPrefix, numPrefix)) {                    // found a match - continue the count
+        *num = numPrefix;                                               // where it left off
     }
-    *num = ++largestNum;
+    else {                                                              // no match (aka new day) - start from 0
+        *num = 0;                                                       // count will be incremented 
+    }
 }
 
 //
@@ -2482,6 +2587,7 @@ void		cDtsDatasetList::newDatasetName
     if ( status.standAlone() )
     {
 	findNameMax( status, *datasetName, &num );
+	num++;
     }
     else
     {
@@ -3023,8 +3129,9 @@ void		cDtsUniqueList::composeUName
 
 	sprintf(tmp , "%c%s%c", cDtsLists::defaultLocation(), s, 
 		cDtsLists::defaultSource() );
+
 	findNameMax( status, tmp, &num );
-	num--;
+	num++;
     }
     else
     {
@@ -3107,11 +3214,9 @@ void		cDtsUniqueList::createUniqueName
     //
     //  Check the status.
     //
-
     checkStat( status, return );
 
     cDtsUniqueList::ukNameLock();
-
 
     //
     //  Get the current date, subtract a day if after midnight and 
@@ -3134,13 +3239,12 @@ void		cDtsUniqueList::createUniqueName
     (void) sprintf( tmp2, "%c%s%c", cDtsLists::defaultLocation(), s,
 	    cDtsLists::defaultSource() );
 
-
     //
     //  Check against stored date, if not different, then increment the num.
     //  otherwise set the num back to 0
     //
 
-    if ( strcmp( tmp2, uniquePrefix() ) == 0 )
+    if (uniquePrefix() != NULL &&  strcmp( tmp2, uniquePrefix() ) == 0 )
     {
 	num = nextPrefixNum();
     }
@@ -3280,34 +3384,15 @@ void	cDtsUniqueList::findNameMax
     itmp = 0;
     largestNum = 0;
   
+    std::string strPrefix;	
+    int numPrefix;
 
-    //
-    //  Cycle through the list and compare each name
-    //  with the one passed in.
-    //
-
-    for( iterator i = culUniqueList.begin(); i != culUniqueList.end();
-		i ++ )
-    {
-	pUqList = (*i).second;
-	if ( ( tmp = strstr( pUqList->culUniqueName, uniquePart ) ) != NULL )
-	{
-	    //
-	    //  Found a match, check for a number, 
-	    //  save the number, if its bigger.
-	    //
-
-	    tmp += strlen(uniquePart);
-	    if ( *tmp != '\0' )
-	    {
-		if (  str2int( tmp, &itmp ) )
-		{
-		    largestNum = ( itmp > largestNum ) ? itmp : largestNum;
-		}
-	    }
-	}
+    if (fileReadLabelPrefix(strPrefix, numPrefix)) {		        // found a match - continue the count
+        *num = numPrefix;						// where it left off
     }
-    *num = ++largestNum;
+    else {								// no match (aka new day) - start from 1 
+        *num = 1;
+    }
 }
 
 //
