@@ -2525,10 +2525,15 @@ void	cDtsDatasetList::findNameMax
     std::string strPrefix;
     int numPrefix;
 
-    if (fileReadLabelPrefix(strPrefix, numPrefix)) {                    // found a match - continue the count
-        *num = numPrefix;                                               // where it left off
+    if (fileReadLabelPrefix(strPrefix, numPrefix)) {                    // got the previous prefix 
+	if (strstr(strPrefix.c_str(), uniquePart)) {                    // if same day continue the count where we left off
+            *num = numPrefix;                                               
+        }
+        else {
+            *num = 0;                                                   // no match (aka new day) - start from 0
+        }
     }
-    else {                                                              // no match (aka new day) - start from 0
+    else {                                                              // no file - start from 0
         *num = 0;                                                       // count will be incremented 
     }
 }
@@ -3387,11 +3392,16 @@ void	cDtsUniqueList::findNameMax
     std::string strPrefix;	
     int numPrefix;
 
-    if (fileReadLabelPrefix(strPrefix, numPrefix)) {		        // found a match - continue the count
-        *num = numPrefix;						// where it left off
+    if (fileReadLabelPrefix(strPrefix, numPrefix)) {                    // got the previous prefix 
+	if (strstr(strPrefix.c_str(), uniquePart)) {                    // if same day continue the count where we left off
+            *num = numPrefix;                                               
+        }
+        else {
+            *num = 0;                                                   // no match (aka new day) - start from 0
+        }
     }
-    else {								// no match (aka new day) - start from 1 
-        *num = 1;
+    else {                                                              // no file - start from 0
+        *num = 0;                                                       // count will be incremented 
     }
 }
 
