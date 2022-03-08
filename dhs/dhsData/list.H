@@ -176,6 +176,8 @@ class 	cDtsLists
     protected:
         static bool     fileWriteLabelPrefix(std::string inPrefixStr, int inPrefixInt);
         static bool     fileReadLabelPrefix(std::string& outPrefixStr, int& outPrefixInt); 
+	
+	static const    std::string prefixFilename;
 
     private:
 	static boolean	nameInfo( int, char ** );	// Using in config.
@@ -189,7 +191,6 @@ class 	cDtsLists
 
 
 
-	static const std::string prefixFilename;
 };
 
 
