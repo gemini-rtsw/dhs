@@ -2533,8 +2533,17 @@ void	cDtsDatasetList::findNameMax
             *num = 0;                                                   // no match (aka new day) - start from 0
         }
     }
-    else {                                                              // no file - start from 0
-        *num = 0;                                                       // count will be incremented 
+    else {                                                              // no file - read last fits file and recreate the persistent filename in perm
+        std::string cmd = std::string(std::string("cd ") + cDtsStoreManager::permPath() + std::string(";") + std::string("echo `ls -tr *.fits | tail -n 1 | cut -f 1 -d .` > ") + cDtsLists::prefixFilename);
+	system(cmd.c_str());                                             // run the system command
+
+	fileReadLabelPrefix(strPrefix, numPrefix);                      // try again with the new file
+	if (strstr(strPrefix.c_str(), uniquePart)) {                    // if same day continue the count where we left off
+	    *num = numPrefix;
+	}
+	else {
+	    *num = 0;                                                   // no match (aka new day) - start from 0
+	}
     }
 }
 
@@ -3400,8 +3409,17 @@ void	cDtsUniqueList::findNameMax
             *num = 0;                                                   // no match (aka new day) - start from 0
         }
     }
-    else {                                                              // no file - start from 0
-        *num = 0;                                                       // count will be incremented 
+    else {                                                              // no file - read last fits file and recreate the persistent filename in perm
+        std::string cmd = std::string(std::string("cd ") + cDtsStoreManager::permPath() + std::string(";") + std::string("echo `ls -tr *.fits | tail -n 1 | cut -f 1 -d .` > ") + cDtsLists::prefixFilename);
+	system(cmd.c_str());                                             // run the system command
+
+	fileReadLabelPrefix(strPrefix, numPrefix);                      // try again with the new file
+	if (strstr(strPrefix.c_str(), uniquePart)) {                    // if same day continue the count where we left off
+	    *num = numPrefix;
+	}
+	else {
+	    *num = 0;                                                   // no match (aka new day) - start from 0
+	}
     }
 }
 
