@@ -1466,7 +1466,7 @@ void cDtsPutDs::fileProcess
     DHS_STATUS	dhsStatus( DHS_S_SUCCESS );
 					// Dhs status.
     FILE        *fp;                    // File pointer.
-    char	*path;			// Path to write to.
+    std::string	path;			// Path to write to.
     void	*buf;			// Buffer pointer.
     
 
@@ -1494,16 +1494,22 @@ void cDtsPutDs::fileProcess
     }
     else
     {
-	path = filePath;
+        path = std::string(filePath) + std::string(".tmp");
     }
-    
+   
 
-    //
+
+    //  If file does not already exist 
     //  Open the file for writing.
     //
 
-    if ( ( fp = fopen( path,  "w" ) ) == NULL )
+    if ( ( fp = fopen( path.c_str(),  "r" ) ) != NULL || ( fp = fopen( path.c_str(),  "w" ) ) == NULL) 
     {
+	if ( fp != NULL) {
+	    printf("File already exists: %s\n", path.c_str());    
+	    fclose(fp);
+	}
+
 	status.E_FILE_OPEN( status, path );
 	status.sysErrno();
 	status.display();
@@ -1536,7 +1542,11 @@ void cDtsPutDs::fileProcess
 	return;
     }
     (void) fclose ( fp );
+
+    rename(path.c_str(), filePath);  // remove the .tmp
+
     status.S_WROTE_FILE( status, path );
+
 }
 
 //

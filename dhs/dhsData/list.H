@@ -166,7 +166,11 @@ class 	cDtsLists
 	static inline int 
 			nextPrefixNum ( void )
 			    { 
-				return( ++lstUkPrefixNum ); 
+				lstUkPrefixNum++;
+
+				fileWriteLabelPrefix(lstUkPrefix, lstUkPrefixNum);
+
+				return lstUkPrefixNum; 
 			    };
 
 	static void	config( cDtsStatus & );		// Reads config.
