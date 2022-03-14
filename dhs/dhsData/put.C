@@ -435,7 +435,7 @@ void cDtsDhsPut::fileProcess
 	    fclose(fp);
 	}
 
-	status.E_FILE_OPEN( status, path );
+	status.E_FILE_OPEN( status, path.c_str() );
 	status.sysErrno();
 	status.display();
 	putStatus.S_FILE_OPEN( putStatus, label() );
@@ -450,7 +450,7 @@ void cDtsDhsPut::fileProcess
 
     if ( ( actWritten = fwrite(buffer(), 1, bufSize, fp ) ) != bufSize )
     {
-	status.E_FILE_WRITE( status, path );
+	status.E_FILE_WRITE( status, path.c_str() );
 	status.sysErrno();
 	putStatus.S_FILE_WRITE( putStatus, label() );
 	(void) fclose ( fp );
@@ -460,7 +460,7 @@ void cDtsDhsPut::fileProcess
 
     rename(path.c_str(), filePath);  // remove the .tmp
 
-    status.S_WROTE_FILE( status, path );
+    status.S_WROTE_FILE( status, path.c_str() );
 
 
 }
