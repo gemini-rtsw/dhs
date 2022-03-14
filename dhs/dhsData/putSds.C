@@ -1543,9 +1543,24 @@ void cDtsPutDs::fileProcess
     }
     (void) fclose ( fp );
 
-    rename(path.c_str(), filePath);  // remove the .tmp
+    //
+    // Check if the real name file exists
+    // if not rename tmp to real name
+    // otherwise keep it as tmp
+    // 
 
-    status.S_WROTE_FILE( status, path.c_str() );
+    if (( fp = fopen( filePath,  "r" ) ) == NULL) 
+    {
+        rename(path.c_str(), filePath);  // remove the .tmp
+        status.S_WROTE_FILE( status, filePath );
+    }
+    else
+    {
+	printf("Error file already exists, saving as tmp: %s\n", filePath);
+	fclose(fp);
+        status.S_WROTE_FILE( status, path.c_str() );
+    }
+
 
 }
 

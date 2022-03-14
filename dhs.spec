@@ -2,7 +2,7 @@
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
-%define release 15
+%define release 16
 %define repository gemini
 
 Summary: The DHS Server
