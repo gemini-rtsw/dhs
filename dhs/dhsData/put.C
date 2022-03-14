@@ -424,17 +424,24 @@ void cDtsDhsPut::fileProcess
     
 
     //
+    //  If file does not already exist 
     //  Open the file for writing.
     //
 
-    if ( ( fp = fopen( path.c_str(),  "w" ) ) == NULL )
-     {
+    if ( ( fp = fopen( path.c_str(),  "r" ) ) != NULL || ( fp = fopen( path.c_str(),  "w" ) ) == NULL )
+    {
+	if ( fp != NULL) {
+	    printf("File already exists: %s\n", path.c_str());    
+	    fclose(fp);
+	}
+
 	status.E_FILE_OPEN( status, path );
 	status.sysErrno();
 	status.display();
 	putStatus.S_FILE_OPEN( putStatus, label() );
 	return;
-     }
+    }
+
 
 
     //
@@ -454,6 +461,7 @@ void cDtsDhsPut::fileProcess
     rename(path.c_str(), filePath);  // remove the .tmp
 
     status.S_WROTE_FILE( status, path );
+
 
 }
 
