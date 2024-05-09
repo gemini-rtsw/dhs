@@ -45,7 +45,11 @@
 
 #define DIST_BUFSIZE 0x8000 	/* buffer for distances, see trees.c	*/
 
+#ifdef DBUF
 unsigned short	*dbuf;		/* buffer for distances, see trees.c	*/
+#else
+extern unsigned short  *dbuf;
+#endif
 static unsigned char	*window;/* Sliding window and suffix table (unlzw) */
 #define tab_suffix window
 #define tab_prefix prev		/* hash link (see deflate.c) 		*/

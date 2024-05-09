@@ -38,7 +38,7 @@ DHS_LITE = @DHS_LITE@
 
 SKYCAT = @SKYCAT@
 SKYCAT_INCLUDES = -I$(SKYCAT)/include/astrotcl -I$(SKYCAT)/include/tclutil 
-SKYCAT_LDLIBS = -L$(SKYCAT)/lib -lastrotcl2.0 -ltclutil2.0 -Wl,-rpath=$(SKYCAT)/lib
+SKYCAT_LDLIBS = -L$(SKYCAT)/lib -lastrotcl2.1.0 -ltclutil2.1.0 -Wl,-rpath=$(SKYCAT)/lib
 
 # Root dir for Sybase include files and libs
 SYBASE = @SYBASE@

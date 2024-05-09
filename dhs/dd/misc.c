@@ -116,7 +116,7 @@ static char rcsid[] = "$Id: misc.c,v 1.1.1.1 2002-11-24 20:24:15 brighton Exp $"
 #include "local_dd.h"
 #include "dd.h"
 
-
+#define _EPTR_DD
 #define	KEY_KEYWORD		"OK"
 
 

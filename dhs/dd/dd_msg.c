@@ -98,7 +98,7 @@ static char rcsid[] = "$Id: dd_msg.c,v 1.1.1.1 2002-11-24 20:24:13 brighton Exp 
 #include "dd.h"
 #include "local_dd.h"
 
-
+#define _EPTR_DD
 
 #define	DD_PREFIX	"dd"
 
@@ -106,7 +106,6 @@ static char rcsid[] = "$Id: dd_msg.c,v 1.1.1.1 2002-11-24 20:24:13 brighton Exp 
  *  ddMsg, ie. either remove a message from the stack and add the
  *  latest one, or allocate more memory
  */
-
 char		ddMsg[MSG_MAX_LEN];
 static MSG	ddMsgs[] = {
     {

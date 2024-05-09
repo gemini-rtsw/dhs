@@ -386,22 +386,31 @@ extern "C" {
  ************************************************************************
  */
 	
-EPTR	 	*ddAttrib;
-EPTR 		*ddColumn;
-EPTR 		*ddKeyword;
+/*extern EPTR	*ddAttrib;
+extern EPTR 	*ddColumn;
+extern EPTR 	*ddKeyword;*/
 
-extern	int	config_init();
-extern	int	ddCompAttrib( DD_ROW*, DD_ROW* );
-extern	int	ddCompColumn( DD_ROW*, DD_ROW* );
-extern 	int	ddCompKeyword( DD_ROW*, DD_ROW* );
-extern	void 	ddEptrFree( DD_ROW * );
-extern	void	uniqueCheck( DD_ROW*, DD_STATUS* );
+extern int	config_init();
+extern int	ddCompAttrib( DD_ROW*, DD_ROW* );
+extern int	ddCompColumn( DD_ROW*, DD_ROW* );
+extern int	ddCompKeyword( DD_ROW*, DD_ROW* );
+extern void 	ddEptrFree( DD_ROW * );
+extern void	uniqueCheck( DD_ROW*, DD_STATUS* );
 
 
 #ifdef    __cplusplus
 }
 #endif
 
-  
-  
+
 #endif /* _local_dd_h */
+
+#ifndef _EPTR_DD
+EPTR     *ddAttrib;
+EPTR     *ddColumn;
+EPTR     *ddKeyword;
+#else
+extern EPTR   *ddAttrib;
+extern EPTR     *ddColumn;
+extern EPTR     *ddKeyword;
+#endif
