@@ -404,13 +404,8 @@ extern void	uniqueCheck( DD_ROW*, DD_STATUS* );
 
 
 #endif /* _local_dd_h */
-
-#ifndef _EPTR_DD
-EPTR     *ddAttrib;
+#ifdef  __EDD
+EPTR   *ddAttrib;
 EPTR     *ddColumn;
 EPTR     *ddKeyword;
-#else
-extern EPTR   *ddAttrib;
-extern EPTR     *ddColumn;
-extern EPTR     *ddKeyword;
 #endif

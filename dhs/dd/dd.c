@@ -118,7 +118,7 @@ static char rcsid[] = "$Id: dd.c,v 1.1.1.1 2002-11-24 20:24:12 brighton Exp $";
  *  dd library include files.
  ************************************************************************
  */
-
+#define __EDD
 #include "dd.h"
 #include "local_dd.h"
 
