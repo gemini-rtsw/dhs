@@ -18,7 +18,7 @@ BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer
 Requires: rsyslog
-BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel%{?_isa}
+BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel
 BuildRequires: gemini-build
 Source0: %{name}-%{version}.tar.gz
 
@@ -40,9 +40,9 @@ dhs
 Summary: dhs
 Group: Development/Gemini
 BuildRequires: gemini-build
-Requires: ocswish drama >= 1.7 skycat%{?_isa} qlplugins%{?_isa} itk%{?_isa} iwidgets%{?_isa} cfitsio ds9 dhs-libs dhs-QlServer
+Requires: ocswish drama >= 1.7 skycat qlplugins%{?_isa} itk%{?_isa} iwidgets cfitsio ds9 dhs-libs dhs-QlServer
 Requires: tclx%{?_isa} xpa-tcl%{?_isa}
-BuildRequires: imake, byacc, itk-devel%{?_isa}, drama-devel >= 1.7, skycat-devel%{?_isa}, dhsClient-devel >= 0.5, cfitsio-devel
+BuildRequires: imake, byacc, itk-devel%{?_isa}, drama-devel >= 1.7, skycat-devel, dhsClient-devel >= 0.5, cfitsio-devel
 %description QlTools
 dhs
 
