@@ -200,7 +200,7 @@ CC = @CC@ -m32
 CXX = @CXX@ -m32
 
 # For now, assume gcc, otherwise this needs to go into configure.in
-SHLIB_CFLAGS += -fPIC
+SHLIB_CFLAGS += -fPIC -fpermissive
 SHLIB_LDFLAGS += -shared
 
 # C Compiler options
