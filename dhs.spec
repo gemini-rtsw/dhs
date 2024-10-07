@@ -1,4 +1,4 @@
-%define _prefix __auto__
+%define _prefix /gemsoft
 %define gemopt opt
 %define name dhs
 %define version 1.8.5
@@ -24,6 +24,7 @@ Source0: %{name}-%{version}.tar.gz
 
 # stop rpm from stripping binaries (for debugging)
 %define debug_package %{nil}
+%define _build_id_links none
 %define __strip /bin/true
 
 %description
