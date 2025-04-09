@@ -1,26 +1,19 @@
-%define _prefix /gemsoft
-%define gemopt opt
-%define name dhs
-%define version 1.8.5
-%define release 16
-%define repository gemini
-
 Summary: The DHS Server
 Name: %{name}
-Version: %{version}
-Release: %{release}.%{dist}.%{repository}
+Version: %{auto_version}
+Release: %{auto_release}.%{dist}.%{repository}
 URL: http://www.gemini.edu
 Packager: Matthieu Bec <mbec@gemini.edu>, Vasu Upadhya <vupadhya@gemini.edu>
 License: Gemini
 Group: Gemini
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-%{auto_version}-%{auto_release}-%(%{__id_u} -n)
 BuildArch: %{arch}
 Prefix: %{_prefix}
 Requires: gemini-top gemini-setup drama >= 1.7 dhsClient >= 0.5 cfitsio dhs-config-server dhs-libs dhs-QlServer
 Requires: rsyslog
 BuildRequires: gemini-top, imake, byacc, drama-devel >= 1.7, dhsClient-devel >= 0.5, cfitsio-devel skycat-devel
 BuildRequires: gemini-build
-Source0: %{name}-%{version}.tar.gz
+Source0: %{name}-%{auto_version}.tar.gz
 
 # stop rpm from stripping binaries (for debugging)
 %define debug_package %{nil}
@@ -128,7 +121,7 @@ else
 	exit 1
 fi
 
-/tmp/createDhsConfigDirs.sh %{version}
+/tmp/createDhsConfigDirs.sh %{auto_version}
 if ! grep ^gemdhs /etc/passwd > /dev/null ; then
 	if ! grep ^gemini /etc/group > /dev/null ; then
 		groupadd -g 2000 gemini
@@ -181,7 +174,7 @@ service dhs start
 exit 0
 
 #%post QlTools
-#/tmp/createDhsConfigDirs.sh %{version}
+#/tmp/createDhsConfigDirs.sh %{auto_version}
 
 %post libs
 /sbin/ldconfig
