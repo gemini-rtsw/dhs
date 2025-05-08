@@ -386,9 +386,6 @@ extern "C" {
  ************************************************************************
  */
 	
-EPTR	 	*ddAttrib;
-EPTR 		*ddColumn;
-EPTR 		*ddKeyword;
 
 extern	int	config_init();
 extern	int	ddCompAttrib( DD_ROW*, DD_ROW* );
@@ -405,3 +402,9 @@ extern	void	uniqueCheck( DD_ROW*, DD_STATUS* );
   
   
 #endif /* _local_dd_h */
+#ifdef  __EDD
+￼
+EPTR   *ddAttrib;
+EPTR     *ddColumn;
+EPTR     *ddKeyword;
+#endif

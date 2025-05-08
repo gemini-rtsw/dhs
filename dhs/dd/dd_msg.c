@@ -99,7 +99,6 @@ static char rcsid[] = "$Id: dd_msg.c,v 1.1.1.1 2002-11-24 20:24:13 brighton Exp 
 #include "local_dd.h"
 
 
-
 #define	DD_PREFIX	"dd"
 
 /* ??? Need to ensure that the messages don't exceed the size of
