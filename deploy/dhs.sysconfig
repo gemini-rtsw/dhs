@@ -1,0 +1,10 @@
+# Host-specific DHS settings. %config(noreplace): survives package upgrades.
+# Mirrors etc/dhs.profile.d, which is what an interactive login gets.
+GEMINI_TOP=/gemsoft
+DHS_BASE=/gemsoft/opt/dhs
+DEFAULT_CONFIG_DIR=/gemsoft/etc/dhs
+DHS_STAGING=/staging
+DHS_USER=gemdhs
+DRAMA_USER=gemdhs
+IMP_NET_KBYTES=4096
+PATH=/usr/local/bin:/usr/bin:/bin:/gemsoft/opt/dhs/bin:/gemsoft/opt/dhs/scripts

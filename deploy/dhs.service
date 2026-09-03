@@ -1,0 +1,28 @@
+# Minimal faithful translation of the sysvinit script in etc/dhs.init.d.
+#
+# GemBootStart launches five daemons (dhsSim4Data, dhsStatus, dhsData,
+# dhsQlServer, dhsCommand) into the background and returns, so this is a
+# oneshot unit that stays "active" afterwards -- systemd does NOT supervise
+# the individual processes and cannot restart one that dies. Making systemd
+# own them properly means one unit per daemon, which also has to account for
+# drama's own /etc/init.d/imp_master that GemBootStart starts first. That is a
+# design change, not a mechanical port; see MIGRATION.md.
+[Unit]
+Description=Gemini Data Handling System server
+After=network-online.target rsyslog.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=gemdhs
+Group=gemini
+# The daemons read DHS_BASE, DEFAULT_CONFIG_DIR, DHS_STAGING and the DRAMA
+# variables from the gemsoft profile; a systemd unit gets no login shell.
+EnvironmentFile=/etc/sysconfig/dhs
+ExecStart=/gemsoft/opt/dhs/scripts/GemBootStart server
+ExecStop=/gemsoft/opt/dhs/scripts/GemBootStart stop
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+name: Build
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    # DHS is a 32-bit (-m32) build against the legacy /gemsoft stack, which is
+    # only published for el9. There is no el8 leg.
+    uses: gemini-rtsw/gemini-rtsw-ci/.github/workflows/ci.yml@main
+    secrets: inherit
+    with:
+      scripts_dir: gemini-rtsw-ci
+      el_version: '9'
+
+  publish:
+    needs: build
+    uses: gemini-rtsw/gemini-rtsw-ci/.github/workflows/publish.yml@main
+    secrets: inherit

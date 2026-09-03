@@ -31,10 +31,28 @@ ifneq ($(SYBASE),)
         SUBDIRS += fh           # FITS  header storage routines
 endif
 
-SUBDIRS += arrayMath            # only for qldp
-SUBDIRS += qldp                 # tcl plugin for QlTool
+# The Tcl/Tk GUI components. They ship in dhs-QlTools and dhs-Console, which
+# are deployed on workstations from their own build line -- the DHS server
+# (mkodhs1) has neither installed. DHS_GUI=NO drops them and, with them, the
+# ocswish/itk/iwidgets/tclx dependencies. Defaults to YES so an existing GUI
+# build is unchanged.
+DHS_GUI ?= YES
+# NB: arrayMath is NOT GUI-only, despite the comment it used to carry.
+# conf/include.mk.in:127 puts libarrayMath.a in LOCAL_LIBS, and every
+# cxx_bin.mk target depends on ${LOCAL_LIBS} -- so dhsCommand and friends
+# fail with "No rule to make target ../arrayMath/libarrayMath.a" without it.
+SUBDIRS += arrayMath
+# qldp is not GUI-gated either, even though it is the QlTool plugin: it
+# installs libqldp.so and pkgIndex.tcl into release/lib, and BOTH ship in
+# dhs-libs -- which is a shared package (mkodhs1 and the workstations each
+# have one). Skipping it makes dhs-libs a silent regression that would
+# remove the plugin QlTools loads. It needs only skycat, not the Tcl GUI
+# stack, so building it costs nothing the server does not already pull in.
+SUBDIRS += qldp
 SUBDIRS += dhsCommand
-SUBDIRS += dhsConsole
+ifeq ($(DHS_GUI),YES)
+        SUBDIRS += dhsConsole
+endif
 SUBDIRS += dhsData
 
 ifneq ($(DHS_LITE),YES)
@@ -47,8 +65,10 @@ endif
 
 SUBDIRS += dhsPut
 SUBDIRS += dhsQlServer
-SUBDIRS += dhsQlTool            # check, all tcl stuff
-SUBDIRS += dhsQlToolDS9         # check, all tcl stuff
+ifeq ($(DHS_GUI),YES)
+        SUBDIRS += dhsQlTool            # check, all tcl stuff
+        SUBDIRS += dhsQlToolDS9         # check, all tcl stuff
+endif
 SUBDIRS += dhsStatus
 
 ifneq ($(SYBASE),)
@@ -90,15 +110,19 @@ SCRIPTS = \
 	scripts/MakePrImages \
 	scripts/MakeUserMedia \
 	scripts/newsyslog \
-	scripts/qlToolInst.sh \
-	scripts/qlToolWFS.sh \
-	scripts/qlToolAltair.sh \
 	scripts/dhsServerStart.sh \
 	scripts/dhsServerStop.sh \
 	scripts/dhsServerRestart.sh \
-	scripts/rescue \
+	scripts/rescue
+
+ifeq ($(DHS_GUI),YES)
+SCRIPTS += \
+	scripts/qlToolInst.sh \
+	scripts/qlToolWFS.sh \
+	scripts/qlToolAltair.sh \
 	dhsQlTool/dhsQlTool \
 	dhsQlToolDS9/dhsQlToolDS9
+endif
 
 RELEASE_DIRS = \
 	release \

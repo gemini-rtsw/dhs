@@ -1,0 +1,55 @@
+Support 32-bit (i686) target packages in build_rpm.sh
+
+DHS, and the rest of the legacy /gemsoft stack (drama, dhsClient, skycat,
+tcl/tk 8.5), is built with `gcc -m32` and ships as i686. A spec that says
+`BuildArch: i686` currently cannot be built by the pipeline at all:
+
+  $ rpmbuild -ba dhs.spec
+  error: No compatible architectures found for build
+
+rpm refuses to build for i686 while its personality is x86_64. `setarch i686`
+fixes it, and is the only thing missing -- the existing BUILD_ARCH logic
+already reads `BuildArch:` and finds RPMS/i686/ on its own.
+
+Three changes, all inside the two `docker run` blocks:
+
+ 1. Derive SETARCH from the spec's BuildArch and prefix both `dnf builddep`
+    and `rpmbuild` with it.
+
+ 2. Pin repo metadata to x86_64 before the setarch'd builddep. Under
+    `setarch i686` dnf asks for $basearch=i386, and EPEL's metalink 404s:
+      Failed to download metadata for repo 'epel': ... arch=i386 ... 404
+
+ 3. Add --nobest to `dnf builddep`. With a pinned 32-bit stack already
+    installed by custom-repo-setup.sh, dnf otherwise refuses the transaction
+    with "problem with installed package tk-devel-1:8.5.13-6.el9.i686"
+    because the x86_64 counterparts are excluded from the base repos.
+
+--- Sketch (line numbers from build_rpm.sh @ 5b5e03f) ---
+
+Near the top of BOTH stage-1 and stage-2 container scripts, after SPEC_FILE
+is resolved:
+
+    # A spec that targets i686 must build under an i686 personality; rpm
+    # refuses the target otherwise ("No compatible architectures found").
+    SETARCH=""
+    if grep -qE "^BuildArch:[[:space:]]*i686" $SPEC_FILE; then
+        SETARCH="setarch i686"
+        # setarch makes dnf resolve $basearch as i386, which EPEL has no
+        # metadata for. Pin every repo to the host arch.
+        sed -i "s/\$basearch/x86_64/g" /etc/yum.repos.d/*.repo
+        sed -i "s#^metalink=.*epel-9.*#baseurl=https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/#" /etc/yum.repos.d/epel*.repo || true
+    fi
+
+Line 330:
+-        if ! dnf builddep -y $SPEC_FILE; then
++        if ! $SETARCH dnf builddep -y --nobest $SPEC_FILE; then
+
+Line 470:
+-        rpmbuild -ba /root/rpmbuild/SPECS/$(basename $SPEC_FILE) --nodeps \
++        $SETARCH rpmbuild -ba /root/rpmbuild/SPECS/$(basename $SPEC_FILE) --nodeps \
+
+Verified on rockylinux:9 against ghcr.io/gemini-rtsw/rpm-repo:latest:
+  - `setarch i686 rpmspec -q dhs.spec` -> dhs-1.9.0-1.git<hash>.el9.i686 (+4 subpackages)
+  - `setarch i686 dnf builddep -y --nobest dhs.spec` -> OK
+  - `setarch i686 rpmbuild -ba` -> RPMS/i686/
