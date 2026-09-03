@@ -1,5 +1,20 @@
 # DHS to GitHub + gemini-rtsw-ci — migration plan
 
+> **STATUS: COMPLETE (2026-09-03).** All four repos are on GitHub with full
+> history and tags, all build on the pipeline, and all publish to rpm-repo:
+>
+> | repo | version | tags | notes |
+> |---|---|---|---|
+> | drama | 2.0-5 | 67 | + drama-devel, first ever |
+> | dhsClient | 0.7-2 | 32 | + dhsClient-devel, first ever |
+> | skycat | 3.1-3 | 26 | + skycat-devel, first ever |
+> | dhs | 1.8.5-17 | 100 | the DHS server, first EL9 build |
+>
+> The dhs, dhs-libs and dhs-QlServer file lists match mkodhs1's deployed
+> packages exactly, except /etc/init.d/dhs which the systemd unit replaces.
+>
+> Phase 5 (deployment) is NOT done and has open questions -- see below.
+
 Four repos, GitLab -> GitHub, each on the pipeline, each publishing its own
 `-devel`. Ordered by dependency: nothing here can be done out of sequence.
 

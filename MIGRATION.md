@@ -124,7 +124,29 @@ Tested locally on `rockylinux:9` against `ghcr.io/gemini-rtsw/rpm-repo:latest`.
   Rocky 9 appstream/baseos/epel/crb. `configure.in` uses pre-2.70 constructs
   (`AC_INIT(file)`, `AC_CANONICAL_SYSTEM`, `AC_TRY_COMPILE`) which 2.69 accepts.
 
-## Blocked
+## Resolved
+
+All three missing -devel packages now exist and are published: drama-devel
+2.0-5, dhsClient-devel 0.7-2, skycat-devel 3.1-3. Each was already defined in
+its spec and had simply never been built. dhs builds against them with no
+hand-copied headers anywhere.
+
+Two further traps found while doing it, both consequences of `setarch i686`:
+
+- **dnf will not install ANY x86_64 package under an i686 personality.**
+  Base arch becomes i386 and x86_64 is not a candidate. Anything a 32-bit
+  build needs that pulls in x86_64 packages -- build tools, cross-repo
+  -devel packages -- must be installed in custom-repo-setup.sh, which runs
+  at native arch BEFORE the setarch'd builddep. Being noarch is not enough:
+  autoconf is noarch but requires m4, which is not.
+- **A failing custom-repo-setup.sh does not fail the build.** build_rpm.sh
+  calls it in a non-final position of an && chain, where `set -e` does not
+  apply, so the failure is swallowed and the build dies much later on an
+  unrelated compile error. build_rpm.sh already guards `dnf builddep` with an
+  explicit `if !` check for exactly this reason; the setup-script call needs
+  the same. Worth a PR to gemini-rtsw-ci.
+
+## Formerly blocked (kept for the record)
 
 ### 1. `ld.bfd` on EL9 segfaults on these libraries
 
